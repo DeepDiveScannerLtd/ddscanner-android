@@ -9,7 +9,7 @@ import java.util.List;
 public class Notifications implements Serializable{
 
     private List<Activity> activities;
-    private List<Notification> notifications;
+    private List<NotificationOld> notificationOlds;
 
     public List<Activity> getActivities() {
         return activities;
@@ -19,11 +19,11 @@ public class Notifications implements Serializable{
         this.activities = activities;
     }
 
-    public List<Notification> getNotifications() {
-        return notifications;
+    public List<NotificationOld> getNotificationOlds() {
+        return notificationOlds;
     }
 
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
+    public void setNotificationOlds(List<NotificationOld> notificationOlds) {
+        this.notificationOlds = notificationOlds;
     }
 }

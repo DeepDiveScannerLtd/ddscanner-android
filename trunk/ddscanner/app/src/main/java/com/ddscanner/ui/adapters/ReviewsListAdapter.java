@@ -1,9 +1,9 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,20 +20,25 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.ui.views.DislikeView;
+import com.ddscanner.ui.views.LikeView;
+import com.ddscanner.ui.views.RatingView;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lashket on 12.3.16.
@@ -41,22 +46,24 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private ArrayList<Comment> comments;
-    private Context context;
-    private String path;
+    private ArrayList<CommentEntity> comments = new ArrayList<>();
+    private Activity context;
     private boolean isAdapterSet = false;
+    private String commentAuthorId;
+    private String userServerId;
 
-    public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
-        this.path = path;
+    public ReviewsListAdapter(ArrayList<CommentEntity> comments, Activity context, String userId, String userServerId) {
         this.comments = comments;
         this.context = context;
+        this.commentAuthorId = userId;
+        this.userServerId = userServerId;
     }
 
     @Override
     public ReviewsListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.review_item, viewGroup, false);
+                inflate(R.layout.divespot_review_item, viewGroup, false);
         Log.i(TAG, "Try showing content");
         return new ReviewsListViewHolder(view);
     }
@@ -65,151 +72,161 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, final int i) {
         boolean isLiked;
         boolean isDisliked;
+        String userId = "";
+        final CommentEntity commentEntity = comments.get(reviewsListViewHolder.getAdapterPosition());
+        switch (commentEntity.getReviewType()) {
+            case USER:
+                userId = commentAuthorId;
+                break;
+            case DIVESPOT:
+                userId = commentEntity.getAuthor().getId();
+                break;
+        }
+
         reviewsListViewHolder.rating.removeAllViews();
         reviewsListViewHolder.date.setText("");
-        reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
-        reviewsListViewHolder.likeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_like_empty));
-       // reviewsListViewHolder.photos.setVisibility(View.GONE);
+        reviewsListViewHolder.photos.setVisibility(View.GONE);
         reviewsListViewHolder.expand.setText("");
-        reviewsListViewHolder.dislikesCount.setText("");
-        reviewsListViewHolder.likesCount.setText("");
-        isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
-        isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
-        if (isLiked) {
-            reviewsListViewHolder.likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                    context, R.drawable.ic_like_review));
-        }
-        if (isDisliked) {
-            reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                    .getDrawable(context, R.drawable.ic_review_dislike));
-        }
+        isLiked = commentEntity.getComment().isLike();
+        isDisliked = commentEntity.getComment().isDislike();
+        reviewsListViewHolder.likeView.setLikeValues(isLiked, commentEntity.getComment().getLikes());
+        reviewsListViewHolder.dislikeView.setDisikeValues(isDisliked, commentEntity.getComment().getDislikes());
         Log.i(TAG, reviewsListViewHolder.toString());
-        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
-       //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
-            reviewsListViewHolder.photos.setHasFixedSize(false);
-            reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getId().equals(SharedPreferenceHelper.getUserServerId())) {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
-            } else {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));
+        if (commentEntity.getComment().getPhotos() != null) {
+            reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
+            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(context, commentEntity.getComment().getPhotos(), false, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId()));
+        }
+        reviewsListViewHolder.likeView.setOnClickListener(null);
+        reviewsListViewHolder.dislikeView.setOnClickListener(null);
+        if (!commentEntity.isRequestSent()) {
+            if (!comments.get(i).getComment().isLike() && !userId.equals(userServerId)) {
+                reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
+                    }
+                });
             }
-        } else {
-            reviewsListViewHolder.photos.setAdapter(null);
+            if (!comments.get(i).getComment().isDislike() && !userId.equals(userServerId)) {
+                reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
+                    }
+                });
+            }
         }
-        if (!isLiked) {
-            reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DDScannerApplication.bus.post(new LikeCommentEvent(i));
-                }
-            });
-        }
-        if (!isDisliked) {
-            reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DDScannerApplication.bus.post(new DislikeCommentEvent(i));
-                }
-            });
-        }
-        if (comments.get(i).isEdit()) {
+        if (userId.equals(userServerId)) {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()), comments.get(i));
+                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         } else {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()), comments.get(i));
+                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         }
-
-        reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
-        reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
-        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
-        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
+        reviewsListViewHolder.user_review.setText(commentEntity.getComment().getReview());
         isAdapterSet = true;
 
-        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
-            Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
-                    .transform(new CropCircleTransformation())
-                    .centerCrop()
-                    .placeholder(R.drawable.avatar_profile_default)
-                    .into(reviewsListViewHolder.user_avatar);
-            reviewsListViewHolder.rating.removeAllViews();
+        switch (comments.get(reviewsListViewHolder.getAdapterPosition()).getReviewType()) {
+            case DIVESPOT:
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new CropCircleTransformation()).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
+                reviewsListViewHolder.user_name.setText(commentEntity.getAuthor().getName());
+                break;
+            case USER:
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getDiveSpot().getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
+                reviewsListViewHolder.user_name.setText(commentEntity.getDiveSpot().getName());
+                break;
+        }
+        reviewsListViewHolder.rating.removeAllViews();
+        reviewsListViewHolder.rating.setRating(commentEntity.getComment().getRating(), R.drawable.ic_list_star_full, R.drawable.ic_list_star_empty);
+        reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
+        if (commentEntity.getSealifes() != null) {
+            reviewsListViewHolder.sealifesLayout.setVisibility(View.VISIBLE);
+            reviewsListViewHolder.sealifesList.setAdapter(new SealifeReviewListAdapter(context, commentEntity.getSealifes()));
         } else {
-            reviewsListViewHolder.user_avatar.setImageResource(R.drawable.avatar_profile_default);
-        }
-        for (int k = 0; k < Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
-        if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
-            reviewsListViewHolder.date.setText(Helpers.getCommentDate(comments.get(i).getDate()));
+            reviewsListViewHolder.sealifesLayout.setVisibility(View.GONE);
         }
     }
 
     public void commentLiked(int position) {
-        if (comments.get(position).isDislike()) {
-            comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) - 1));
-            comments.get(position).setDislike(false);
+        if (comments.get(position).getComment().isDislike()) {
+            comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) - 1));
+            comments.get(position).getComment().setDislike(false);
         }
-        comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) + 1));
-        comments.get(position).setLike(true);
+        comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
+        comments.get(position).getComment().setLike(true);
+        comments.get(position).setRequestSent(false);
         notifyItemChanged(position);
     }
 
     public void commentDisliked(int position) {
-        if (comments.get(position).isLike()) {
-            comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) - 1));
-            comments.get(position).setLike(false);
+        if (comments.get(position).getComment().isLike()) {
+            comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) - 1));
+            comments.get(position).getComment().setLike(false);
         }
-        comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) + 1));
-        comments.get(position).setDislike(true);
+        comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) + 1));
+        comments.get(position).getComment().setDislike(true);
+        comments.get(position).setRequestSent(false);
         notifyItemChanged(position);
     }
 
-    private void showPopupMenu(View view, int commentId, Comment comment) {
+    public void rateReviewRequestStarted(int position) {
+        comments.get(position).setRequestSent(true);
+        notifyItemChanged(position);
+    }
+
+    public void rateReviewFaled(int position) {
+        comments.get(position).setRequestSent(false);
+        notifyItemChanged(position);
+    }
+
+    public void deleteComment(String id) {
+        for (CommentEntity comment : comments) {
+            if (comment.getComment().getId().equals(id)) {
+                int i = comments.indexOf(comment);
+                comments.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
+    public ArrayList<CommentEntity> getCommentsList() {
+        return comments;
+    }
+
+    private void showPopupMenu(View view, int commentId, CommentEntity CommentEntity) {
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, CommentEntity));
         popup.show();
     }
 
-    private void showReportMenu(View view, int commentId, Comment comment) {
+    private void showReportMenu(View view, int commentId, CommentEntity CommentEntity) {
         // inflate menu
         Context wrapper = new ContextThemeWrapper(context, R.style.popupMenuStyle);
         PopupMenu popup = new PopupMenu(wrapper, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment_report, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, CommentEntity));
         popup.show();
     }
 
-    public void imageDeleted(int commentPosition, ArrayList<String> deletedImages) {
-        ArrayList<String> newImagesList = (ArrayList<String>) comments.get(commentPosition).getImages();
+    public void imageDeleted(int commentPosition, ArrayList<DiveSpotPhoto> deletedImages) {
+        ArrayList<DiveSpotPhoto> newImagesList = comments.get(commentPosition).getComment().getPhotos();
         newImagesList.removeAll(deletedImages);
         if (newImagesList.size() == 0) {
             newImagesList = null;
         }
-        comments.get(commentPosition).setImages(newImagesList);
+        comments.get(commentPosition).getComment().setPhotos(newImagesList);
         notifyItemChanged(commentPosition);
     }
 
@@ -224,11 +241,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int commentId;
-        private Comment comment;
+        private CommentEntity commentEntity;
 
-        public MenuItemClickListener(int commentId, Comment comment) {
+        public MenuItemClickListener(int commentId, CommentEntity commentEntity) {
             this.commentId = commentId;
-            this.comment = comment;
+            this.commentEntity = commentEntity;
         }
 
         @Override
@@ -236,7 +253,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
                     EventsTracker.trackEditReview();
-                    DDScannerApplication.bus.post(new EditCommentEvent(comment));
+                    if (commentEntity.getSealifes() == null) {
+                        DDScannerApplication.bus.post(new EditCommentEvent(commentEntity.getComment(), false));
+                        return true;
+                    }
+                    DDScannerApplication.bus.post(new EditCommentEvent(commentEntity.getComment(), true));
                     return true;
                 case R.id.comment_delete:
                     EventsTracker.trackDeleteReview();
@@ -251,26 +272,22 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             return false;
         }
     }
+
     public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
-        private LinearLayout rating;
+        private RatingView rating;
         private TextView user_name;
         private TextView user_review;
         private RecyclerView photos;
-        private LinearLayout like;
-        private LinearLayout dislike;
-        private TextView likesCount;
-        private TextView dislikesCount;
-        private ImageView likeImage;
-        private ImageView dislikeImage;
-        private LinearLayout stars;
+        private RatingView stars;
         private TextView date;
         private ImageView menu;
         private TextView expand;
-        private boolean isLiked = false;
-        private boolean isDisliked = false;
-
+        private LinearLayout sealifesLayout;
+        private RecyclerView sealifesList;
+        private LikeView likeView;
+        private DislikeView dislikeView;
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -278,18 +295,24 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             expand = (TextView) v.findViewById(R.id.button_toggle);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (LinearLayout) v.findViewById(R.id.stars);
+            rating = (RatingView) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
-            like = (LinearLayout) v.findViewById(R.id.like_layout);
-            dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
-            likesCount = (TextView) v.findViewById(R.id.likes_count);
-            dislikesCount = (TextView) v.findViewById(R.id.dislikes_count);
-            likeImage = (ImageView) v.findViewById(R.id.likes_image);
-            dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
-
+            sealifesLayout = (LinearLayout) v.findViewById(R.id.sealifes_layout);
+            sealifesList = (RecyclerView) v.findViewById(R.id.sealifes_list);
+            likeView = (LikeView) v.findViewById(R.id.like_layout);
+            dislikeView = (DislikeView) v.findViewById(R.id.dislike_layout);
             user_avatar.setOnClickListener(this);
+
+
+            LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(context);
+            sealifeLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            sealifesList.setLayoutManager(sealifeLayoutManager);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 5);
+            photos.setNestedScrollingEnabled(false);
+            photos.setLayoutManager(gridLayoutManager);
+
         }
 
         @Override
@@ -297,15 +320,21 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getUser().getId());
+                    switch (comments.get(getAdapterPosition()).getReviewType()) {
+                        case USER:
+                            DiveSpotDetailsActivity.show(context, String.valueOf(comments.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_PROFILE_REVIEWS);
+                            break;
+                        case DIVESPOT:
+                            EventsTracker.trackReviewerProfileView();
+                            UserProfileActivity.show(context, comments.get(getAdapterPosition()).getAuthor().getId(), comments.get(getAdapterPosition()).getAuthor().getType());
+                            break;
+                    }
                     break;
                 case R.id.like_layout:
-                    if (!isLiked) {
-                    }
+
                     break;
                 case R.id.dislike_layout:
-                    if (!isDisliked) {
-                    }
+
                     break;
             }
         }

@@ -1,8 +1,6 @@
 package com.ddscanner.rest;
 
 
-import android.support.v4.content.ContextCompat;
-
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 
@@ -21,16 +19,29 @@ public abstract class RestClient {
 
     private static DDScannerRestService ddscannerServiceInstance;
     private static GoogleApisRestService googleApisServiceInstance;
+    private static GoogleMapsApiRestService googleMapsApiServiceInstance;
 
     public static DDScannerRestService getDdscannerServiceInstance() {
         if (ddscannerServiceInstance == null) {
             Interceptor interceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                        Request request = chain.request();
+                        request = request.newBuilder()
+                               // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                                //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                                .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                                .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserToken())
+                                .build();
+                        Response response = chain.proceed(request);
+                        return response;
+                    }
                     Request request = chain.request();
                     request = request.newBuilder()
-                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
-                         //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                            //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
                             .build();
                     Response response = chain.proceed(request);
                     return response;
@@ -39,8 +50,8 @@ public abstract class RestClient {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.interceptors().add(interceptor);
-            builder.connectTimeout(10, TimeUnit.SECONDS);
-            builder.readTimeout(10, TimeUnit.SECONDS);
+            builder.connectTimeout(30, TimeUnit.SECONDS);
+            builder.readTimeout(30, TimeUnit.SECONDS);
             builder.writeTimeout(10, TimeUnit.MINUTES);
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -80,4 +91,25 @@ public abstract class RestClient {
         }
         return googleApisServiceInstance;
     }
+
+    public static GoogleMapsApiRestService getGoogleMapsApiService() {
+        if (googleMapsApiServiceInstance == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://maps.googleapis.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            googleMapsApiServiceInstance = retrofit.create(GoogleMapsApiRestService.class);
+        }
+        return googleMapsApiServiceInstance;
+    }
+
 }

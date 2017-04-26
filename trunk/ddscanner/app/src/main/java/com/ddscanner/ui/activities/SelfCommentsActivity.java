@@ -15,27 +15,27 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.reiews.edit.EditCommentActivity;
 import com.ddscanner.ui.adapters.SelfReviewsListAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SelfCommentsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class SelfCommentsActivity extends AppCompatActivity implements DialogClosedListener {
 
-    private ArrayList<Comment> comments;
+    private ArrayList<CommentOld> commentOlds;
     private RecyclerView commentsRc;
     private ProgressView progressView;
 
@@ -44,36 +44,33 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     private String commentToDelete;
     private String userId;
-    private String path;
 
-    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+    private DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>> commentsResultListener = new DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>>() {
         @Override
-        public void onSuccess(Comments result) {
-            Comments comments = result;
+        public void onSuccess(ArrayList<SelfCommentEntity> result) {
+           // Comments comments = result;
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
-            path = comments.getDiveSpotPathMedium();
-            commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<Comment>) comments.getComments(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
+           // path = comments.getDiveSpotPathMedium();
+            commentsRc.setAdapter(new SelfReviewsListAdapter(result, null));
         }
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
-                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
-                    break;
-            }
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> deleteCommentResulListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -84,31 +81,26 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND, false);
-                    break;
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
-                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
-                    break;
-                default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
-                    break;
-            }
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
-        userId = getIntent().getStringExtra(Constants.SELF_REVIEWS_ACTIVITY_INTENT_USER_ID);
+        userId = getIntent().getStringExtra("id");
         findViews();
         getComments();
     }
@@ -132,12 +124,12 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getDdScannerRestClient().getUsersComments(userId, commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserComments(commentsResultListener, userId);
     }
 
     public static void show(Context context, String userId) {
         Intent intent = new Intent(context, SelfCommentsActivity.class);
-        intent.putExtra(Constants.SELF_REVIEWS_ACTIVITY_INTENT_USER_ID, userId);
+        intent.putExtra("id", userId);
         context.startActivity(intent);
     }
 
@@ -164,7 +156,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
-                if (resultCode == RESULT_CANCELED && !SharedPreferenceHelper.isUserLoggedIn()) {
+                if (resultCode == RESULT_CANCELED && !DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     finish();
                 }
 
@@ -183,7 +175,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getDdScannerRestClient().deleteUserComment(id, deleteCommentResulListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResulListener, id);
     }
 
     @Subscribe
@@ -198,7 +190,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), path, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW, editCommentEvent.isHaveSealife());
     }
 
     @Override

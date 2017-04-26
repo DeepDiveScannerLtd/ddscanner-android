@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
-    android:layout_height="400dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <ImageView
+    <com.ddscanner.ui.views.ScallingImageView
         android:id="@+id/slider_image"
-        android:layout_width="350dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center" />
 
     <ProgressBar

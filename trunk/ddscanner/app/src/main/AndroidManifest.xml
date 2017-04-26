@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -38,6 +38,15 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
         <receiver
             android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
             android:exported="true" >
@@ -71,36 +80,18 @@
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action
+                    android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <!--<data android:scheme="http"-->
-                <!--android:host="www.ddscanner.com"-->
-                <!--android:pathPrefix="/splash" />-->
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data android:scheme="ddscanner"
-                    android:host="splash" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
-            <intent-filter>
-                <data android:scheme="com.ddscanner" />
-
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
         </activity>
-        <activity
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -121,16 +112,10 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
-            android:name=".ui.activities.DiveSpotsListActivity"
+            android:name=".screens.divespots.list.DiveSpotsListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SelfCommentsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.LocationProvidersNotAvailableActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.LocationPermissionNotGrantedActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.InternetClosedActivity"
@@ -143,13 +128,10 @@
             android:name=".ui.activities.SearchSpotOrLocationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AddDiveSpotActivity"
+            android:name=".screens.divespot.add.AddDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.PickLocationActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.DiveSpotPhotosActivity"
+            android:name=".screens.divespot.photos.DiveSpotPhotosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.FilterActivity"
@@ -158,13 +140,10 @@
             android:name=".ui.activities.EditorsListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ReviewImageSliderActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activities.CheckInPeoplesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ReviewsActivity"
+            android:name=".screens.reiews.list.ReviewsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.TermsOfServiceActivity"
@@ -176,40 +155,37 @@
             android:name=".ui.activities.DiveCentersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AddSealifeActivity"
+            android:name=".screens.sealife.add.AddSealifeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.EditDiveSpotActivity"
+            android:name=".screens.divespot.edit.EditDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.sealife.details.SealifeDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.EditCommentActivity"
+            android:name=".screens.reiews.edit.EditCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.LeaveReviewActivity"
+            android:name=".screens.reiews.add.LeaveReviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.DiveSpotDetailsActivity"
+            android:name=".screens.divespot.details.DiveSpotDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PickLocationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SearchSealifeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ImageSliderActivity"
+            android:name=".screens.photo.slider.ImageSliderActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.PrivacyPolicyActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.ForeignProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.ForeignUserDiveSpotList"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.UserLikesDislikesActivity"
@@ -236,39 +212,66 @@
             android:name=".ui.activities.AboutDDSActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AchievementsActivity"
+            android:name=".screens.achievements.AchievementsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.LicensesActivity"
             android:screenOrientation="portrait" />
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
-            </intent-filter>
-        </receiver>
-
+        <activity
+            android:name=".ui.activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activities.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.FragmentTestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.user.profile.UserProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PhotosGalleryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PickLanguageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.EditUserProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.EditDiveCenterProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.instructors.InstructorsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PickCountryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.divecenter.DiveCenterSpotsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ChangeAddressActivity"
+            android:screenOrientation="portrait" />
         <service
-            android:name=".services.GCMListenerService"
-            android:exported="false" >
+            android:name=".services.FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <service
-            android:name=".services.DDSInstanceIDListenerService"
-            android:exported="false" >
+            android:name=".services.FirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-        <service
-            android:name=".services.RegistrationIntentService"
-            android:exported="false" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

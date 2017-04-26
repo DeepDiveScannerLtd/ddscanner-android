@@ -1,53 +1,32 @@
 package com.ddscanner.entities.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by lashket on 10.8.16.
  */
 public class ReportRequest {
 
+    @SerializedName("report_type")
     private String type;
     private String description;
-    private String token;
-    private String social;
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String id;
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public String getId() {
+        return id;
+    }
+
+    public ReportRequest(String type, String description, String id) {
+        this.type = type;
         this.description = description;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getSocial() {
-        return social;
-    }
-
-    public void setSocial(String social) {
-        this.social = social;
+        this.id = id;
     }
 }

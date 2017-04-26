@@ -1,16 +1,16 @@
 package com.ddscanner.events;
 
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 
 public class ShowUserDialogEvent {
 
-    private User user;
+    private UserOld userOld;
 
-    public ShowUserDialogEvent(User user) {
-        this.user = user;
+    public ShowUserDialogEvent(UserOld userOld) {
+        this.userOld = userOld;
     }
 
-    public User getUser() {
-        return this.user;
+    public UserOld getUserOld() {
+        return this.userOld;
     }
 }

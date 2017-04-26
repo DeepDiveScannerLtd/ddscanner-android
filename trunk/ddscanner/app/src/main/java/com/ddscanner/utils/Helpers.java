@@ -2,6 +2,7 @@ package com.ddscanner.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -22,28 +24,32 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Countries;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
-import com.ddscanner.entities.Sealife;
-import com.ddscanner.entities.errors.Field;
-import com.ddscanner.entities.errors.ValidationError;
-import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.ddscanner.entities.SealifeShort;
+import com.google.gson.Gson;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import id.zelory.compressor.Compressor;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by lashket on 9.4.16.
@@ -144,13 +150,13 @@ public class Helpers {
         return allPhotos;
     }
 
-    public static ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
-        ArrayList<Image> allPhotos = new ArrayList<>();
+    public static ArrayList<DiveSpotPhoto> compareObjectsArray(ArrayList<DiveSpotPhoto> first, ArrayList<DiveSpotPhoto> second) {
+        ArrayList<DiveSpotPhoto> allPhotos = new ArrayList<>();
         if (first == null && second == null) {
             return allPhotos;
         }
         if (first != null) {
-            allPhotos = (ArrayList<Image>) first.clone();
+            allPhotos = (ArrayList<DiveSpotPhoto>) first.clone();
             if (second != null) {
                 for (int i = 0; i < second.size(); i++) {
                     allPhotos.add(second.get(i));
@@ -159,7 +165,7 @@ public class Helpers {
             return allPhotos;
         }
         if (second != null) {
-            allPhotos = (ArrayList<Image>) second.clone();
+            allPhotos = (ArrayList<DiveSpotPhoto>) second.clone();
         }
         return allPhotos;
     }
@@ -187,19 +193,13 @@ public class Helpers {
      * @param errorsMap
      * @param validationError
      */
-    public static void errorHandling(Map<String, TextView> errorsMap, ValidationError validationError) {
-        for (Field field : validationError.getFields()) {
-            if ("token".equals(field.getName())) {
-                return;
-            }
-            if ("lat".equals(field.getName()) || "lng".equals(field.getName())) {
-                errorsMap.get("location").setVisibility(View.VISIBLE);
-                errorsMap.get("location").setText("Please choose location");
-            }
-            if (errorsMap.get(field.getName()) != null) {
-                String key = field.getName();
-                errorsMap.get(key).setVisibility(View.VISIBLE);
-                errorsMap.get(key).setText(field.getErrors().toString().replace("[", "").replace("]", ""));
+    public static void errorHandling(Map<String, TextView> errorsMap, String validationError) {
+        Map<String, ArrayList<String>> fields = new HashMap<>();
+        fields = new Gson().fromJson(validationError, fields.getClass());
+        for (Map.Entry<String, ArrayList<String>> entry : fields.entrySet()) {
+            if (errorsMap.get(entry.getKey()) != null) {
+                errorsMap.get(entry.getKey()).setText(entry.getValue().get(0));
+                errorsMap.get(entry.getKey()).setVisibility(View.VISIBLE);
             }
         }
     }
@@ -404,8 +404,8 @@ public class Helpers {
         return returningString;
     }
 
-    public static boolean checkIsSealifeAlsoInList(ArrayList<Sealife> sealifes, String id) {
-        for (Sealife sealife : sealifes) {
+    public static boolean checkIsSealifeAlsoInList(ArrayList<SealifeShort> sealifes, String id) {
+        for (SealifeShort sealife : sealifes) {
             if (sealife.getId().equals(id)) {
                 return true;
             }
@@ -445,7 +445,7 @@ public class Helpers {
     public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage, int titleResId, int messageResId) {
         // TODO May be should use another tracking mechanism
         EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
-        InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
+//        InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
     }
 
     public static Countries getCountries() {
@@ -485,6 +485,199 @@ public class Helpers {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static boolean isFileImage(String file) {
+        final String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
+        for (String extension : okFileExtensions) {
+            if (file.toLowerCase().endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void copyFileStream(File dest, Uri uri, Context context) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = context.getContentResolver().openInputStream(uri);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
+    public static int getUserType(String userType) {
+        List<String> list = new ArrayList<>();
+        list.add(Constants.USER_TYPE_DIVE_CENTER);
+        list.add(Constants.USER_TYPE_DIVER);
+        list.add(Constants.USER_TYPE_INSTRUCTOR);
+        return list.indexOf(userType);
+    }
+
+    public static List<String> getDiveSpotTypes() {
+        List<String> types = new ArrayList<>();
+        types.add("Cave");
+        types.add("Reef");
+        types.add("Wreck");
+        types.add("Other");
+        return types;
+    }
+
+    public static List<String> getDiveLevelTypes() {
+        List<String> levels = new ArrayList<>();
+        levels.add("Beginner");
+        levels.add("Advanced");
+        levels.add("Expert");
+        return levels;
+    }
+
+    public static List<String> getListOfCurrentsTypes() {
+        List<String> currents = new ArrayList<>();
+        currents.add("None");
+        currents.add("Variable");
+        currents.add("Low");
+        currents.add("Low - Moderate");
+        currents.add("Mild");
+        currents.add("Mild - Moderate");
+        currents.add("Moderate");
+        currents.add("Moderate - Strong");
+        currents.add("Strong");
+        return currents;
+    }
+
+    public static String getDiveSpotType(int position) {
+        List<String> types = getDiveSpotTypes();
+        if (types.get(position - 1) == null) {
+            return "";
+        }
+        return types.get(position - 1);
+    }
+
+    public static String getDiverLevel(Integer position) {
+        if (position != null && position > 0) {
+            List<String> levels = getDiveLevelTypes();
+            if (levels.get(position - 1) == null) {
+                return "";
+            }
+            return levels.get(position - 1);
+        }
+        return "";
+    }
+
+    public static String getCurrentsValue(int position) {
+        List<String> currents = getListOfCurrentsTypes();
+        if (currents.get(position - 1) == null) {
+            return "";
+        }
+        return currents.get(position - 1);
+    }
+
+    public static String getUserType(int position) {
+        List<String> userType = new ArrayList<>();
+        userType.add("Dive center");
+        userType.add("Diver");
+        userType.add("Instructor");
+        if (userType.get(position) == null) {
+            return "";
+        }
+        return userType.get(position);
+    }
+
+    public static ArrayList<String> getPhotosFromIntent(Intent data, Activity activity) {
+        if (data.getClipData() != null) {
+            return getPhotosList(data, activity);
+        }
+        return getOnePhoto(data, activity);
+    }
+
+    private static ArrayList<String> getPhotosList(Intent data, Activity activity) {
+        Uri uri = Uri.parse("");
+        ArrayList<String> urisList = new ArrayList<>();
+        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+            try {
+                uri = data.getClipData().getItemAt(i).getUri();
+                String mimeType = activity.getContentResolver().getType(uri);
+                String sourcePath = activity.getExternalFilesDir(null).toString();
+                File file = new File(sourcePath + "/" + filename);
+                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                    try {
+                        Helpers.copyFileStream(file, uri, activity);
+                        Log.i(TAG, file.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    urisList.add(file.getPath());
+                } else {
+                    Toast.makeText(activity, "You can choose only images", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return urisList;
+            }
+        }
+        return urisList;
+    }
+
+    private static ArrayList<String> getOnePhoto(Intent data, Activity activity) {
+        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+        Uri uri = Uri.parse("");
+        ArrayList<String> urisList = new ArrayList<>();
+        try {
+            uri = data.getData();
+            String mimeType = activity.getContentResolver().getType(uri);
+            String sourcePath = activity.getExternalFilesDir(null).toString();
+            File file = new File(sourcePath + "/" + filename);
+            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                try {
+                    Helpers.copyFileStream(file, uri, activity);
+                    Log.i(TAG, file.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                urisList.add(file.getPath());
+            } else {
+                Toast.makeText(activity, "You can choose only images", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return urisList;
+        }
+        return urisList;
+    }
+
+    public static RequestBody createRequestBodyForString(String string) {
+        return RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), string);
+    }
+
+    public static ArrayList<String> getReportTypes() {
+        ArrayList<String> reportTypes = new ArrayList<>();
+        reportTypes.add("Adult content");
+        reportTypes.add("Child pornography");
+        reportTypes.add("Violence");
+        reportTypes.add("Advocacy");
+        reportTypes.add("Insult");
+        reportTypes.add("Spam");
+        reportTypes.add("Other");
+        return reportTypes;
+    }
+
+    public static File compressFile(File inputFile, Context context) {
+        Compressor compressor = new Compressor.Builder(context).setMaxHeight(1080).setMaxHeight(1080).build();
+        File outputFile = compressor.compressToFile(inputFile);
+        return outputFile;
     }
 
 }

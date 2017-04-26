@@ -1,7 +1,5 @@
 package com.ddscanner.entities;
 
-import android.content.Intent;
-
 /**
  * Created by lashket on 5.8.16.
  */

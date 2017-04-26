@@ -1,9 +1,15 @@
 package com.ddscanner.rest;
 
 
-import com.ddscanner.entities.request.IdentifyRequest;
+import com.ddscanner.entities.request.DeleteImageRequest;
+import com.ddscanner.entities.request.InstructorsSeeRequests;
+import com.ddscanner.entities.request.NotificationsReadRequest;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
+import com.ddscanner.entities.request.SignUpRequest;
+import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.List;
@@ -16,11 +22,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
@@ -31,13 +37,6 @@ public interface DDScannerRestService {
     @GET("/diving/divecenters")
     Call<ResponseBody> getDiveCenters(@QueryMap Map<String, String> map);
 
-    @GET("/diving/divespot/{id}")
-    Call<ResponseBody> getDiveSpotById(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @Headers("Content-type: application/json")
-    @GET("/diving/divespots")
-    Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
-
     @POST("/diving/login")
     Call<ResponseBody> login(@Body RegisterRequest registerRequest);
 
@@ -46,32 +45,6 @@ public interface DDScannerRestService {
             @Path("id") String id,
             @Body ValidationRequest validationReguest
             );
-
-    @POST("/diving/divespot/{id}/favorite")
-    Call<ResponseBody> addDiveSpotToFavourites(
-            @Path("id") String id,
-            @Body RegisterRequest registerRequest
-            );
-
-    @DELETE("/diving/divespot/{id}/favorite")
-    Call<ResponseBody> deleteDiveSpotFromFavourites(
-            @Path("id") String id,
-            @Body RegisterRequest registerRequest
-            );
-
-    @POST("/diving/divespot/comment")
-    @Multipart
-    Call<ResponseBody> addCommentToDiveSpot(
-            @Part("diveSpotId") RequestBody id,
-            @Part("comment") RequestBody comment,
-            @Part("rating") RequestBody rating,
-            @Part List<MultipartBody.Part> image,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
-    @POST("/diving/identify")
-    Call<ResponseBody> identify(@Body IdentifyRequest identifyRequest);
 
     @POST("/diving/sealife")
     @Multipart
@@ -108,19 +81,6 @@ public interface DDScannerRestService {
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
             );
-
-    @GET("diving/sealife")
-    Call<ResponseBody> getSealifes();
-
-    @POST("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkIn(
-      @Path("id") String id,
-      @Body RegisterRequest registerRequest
-      );
-
-    @DELETE("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkOut(@Path("id") String id,
-                                @QueryMap Map<String, String> map);
 
     @POST("diving/divespot/{id}")
     @Multipart
@@ -166,54 +126,6 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
-    @GET("diving/user/{id}")
-    Call<ResponseBody> getUserInfo(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/user/{id}")
-    @Multipart
-    Call<ResponseBody> updateUserById(
-            @Path("id") String id,
-            @Part MultipartBody.Part image,
-            @Part("_method") RequestBody _method,
-            @Part("name") RequestBody name,
-            @Part("username") RequestBody username,
-            @Part("about") RequestBody about,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
-    @GET("diving/user/{id}/divespot/checkins")
-    Call<ResponseBody> getUsersCheckins(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/favorites")
-    Call<ResponseBody> getUsersFavorites(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @DELETE("diving/divespot/{id}/favorite")
-    Call<ResponseBody> removeSpotFromFavorites( @Path("id") String id,
-                                     @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/added")
-    Call<ResponseBody> getUsersAdded(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/edited")
-    Call<ResponseBody> getUsersEdited(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/logout")
-    Call<ResponseBody> logout(@Body RegisterRequest registerRequest);
-
-    @GET("diving/user/{id}/notifications")
-    Call<ResponseBody> getNotifications(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/divespot/{id}/images")
-    @Multipart
-    Call<ResponseBody> addImagesToDiveSpot(
-            @Path("id") String id,
-            @Part List<MultipartBody.Part> images,
-            @Part("_method") RequestBody _method,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
     @GET("/diving/divespot/{id}/editors")
     Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
 
@@ -256,15 +168,323 @@ public interface DDScannerRestService {
     @POST("diving/image/report")
     Call<ResponseBody> reportImage(@Body ReportRequest reportRequest);
 
-    @DELETE("diving/image/{name}")
-    Call<ResponseBody> deleteImage(@Path("name") String imageName, @QueryMap Map<String, String> map);
+    @POST("v2_0/user.login")
+    Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
 
-    @GET("diving/divespot/{id}/images")
-    Call<ResponseBody> getDiveSpotImages(@Path("id") String id, @QueryMap Map<String, String> map);
+    @POST("v2_0/user.sign_up")
+    Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 
-    @GET("diving/user/{id}/comments")
-    Call<ResponseBody> getUserComments(@Path("id") String id, @QueryMap Map<String, String> map);
+    @GET("v2_0/user.profile.get")
+    Call<ResponseBody> getSelfProfileInformation(@Query("include_photo_details") int value);
 
-    @GET("diving/user/{id}/achievements")
-    Call<ResponseBody> getUserAchievements(@Path("id") String id, @QueryMap Map<String, String> map);
+    @GET("v2_0/user.divecenter.profile.get")
+    Call<ResponseBody> getSelfDiveCenterInformation(@Query("include_photo_details") int value);
+
+    @GET("v2_0/user.profile.get")
+    Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/user.divecenter.profile.get")
+    Call<ResponseBody> getDiveCenterInformation(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/user.achievements.get")
+    Call<ResponseBody> getUserAchievements();
+
+    @GET("v2_0/divespots.filter")
+    Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map, @Query(value = "sealifes[]", encoded = true) List<String> s);
+
+    @GET("v2_0/divespot.get")
+    Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
+
+    @Multipart
+    @POST("v2_0/divespot.maps.add")
+    Call<ResponseBody> addMapsToDiveSpot(@Part("id") RequestBody  id, @Part List<MultipartBody.Part> image);
+
+    @Multipart
+    @POST("v2_0/divespot.photos.add")
+    Call<ResponseBody> addPhotosToDiveSpot(@Part("id") RequestBody  id, @Part List<MultipartBody.Part> image);
+
+    @GET("v2_0/sealife.get")
+    Call<ResponseBody> getSealifeDetails(@Query("id") String id);
+
+    @GET("v2_0/divespots.search")
+    Call<ResponseBody> getDivespotsByName(@Query("query") String query);
+
+    @POST("v2_0/divespot.check_in")
+    Call<ResponseBody> postCheckin(@Query("id") String diveSpotId);
+
+    @POST("v2_0/divespot.check_out")
+    Call<ResponseBody> postCheckout(@Query("id") String diveSpotId);
+
+    @GET("v2_0/divespot.checked_in.get")
+    Call<ResponseBody> getDiveSpotsCheckedInUsers(@Query("id") String diveSpotId);
+
+    @GET("v2_0/divespot.editors.get")
+    Call<ResponseBody> getDiveSpotEditorsList(@Query("id") String diveSpotId);
+
+    @GET("v2_0/divecenters.search")
+    Call<ResponseBody> getDiveCentersList(@Query("query") String query, @Query("limit") String limit);
+
+    @GET("v2_0/divespot.photos.get")
+    Call<ResponseBody> getDiveSpotPhotos(@Query("id") String diveSpotId);
+
+    @POST("v2_0/photo.like")
+    Call<ResponseBody> postLikePhoto(@Query("id") String id);
+
+    @POST("v2_0/photo.unlike")
+    Call<ResponseBody> postDislikePhoto(@Query("id") String id);
+
+    @GET("v2_0/divespot.maps.get")
+    Call<ResponseBody> getDiveSpotMaps(@Query("id") String diveSpotId);
+
+    @POST("v2_0/images.remove")
+    Call<ResponseBody> postDeleteImage(@Body DeleteImageRequest images);
+
+    @POST("v2_0/user.favorites.add")
+    Call<ResponseBody> postAddToFavorites(@Query("id") String divespotId);
+
+    @POST("v2_0/user.favorites.remove")
+    Call<ResponseBody> postRemoveFromFavorites(@Query("id") String divespotId);
+
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
+
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getAllSealifes();
+
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getAllSealifesByLocation(@Query("lat") double lat, @Query("lng") double lng);
+
+    @Multipart
+    @POST("v2_0/divespot.add")
+    Call<ResponseBody> postAddDiveSpot(
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("type") RequestBody type,
+            @Part("is_editable") RequestBody isEditable,
+            @Part("is_working_here") RequestBody isWorkingHere,
+            @Part List<MultipartBody.Part> photos,
+            @Part List<MultipartBody.Part> maps,
+            @Part List<MultipartBody.Part> sealife
+
+    );
+
+    @Multipart
+    @POST("v2_0/divespot.update")
+    Call<ResponseBody> postUpdateDiveSpot(
+            @Part("id") RequestBody id,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("type") RequestBody type,
+            @Part("is_editable") RequestBody isEditable,
+            @Part("is_working_here") RequestBody isWorkingHere,
+            @Part("cover_id") RequestBody cover_id,
+            @Part List<MultipartBody.Part> new_photos,
+            @Part List<MultipartBody.Part> deleted_photos,
+            @Part List<MultipartBody.Part> new_maps,
+            @Part List<MultipartBody.Part> deleted_maps,
+            @Part List<MultipartBody.Part> sealife
+    );
+
+    @GET("v2_0/languages.get")
+    Call<ResponseBody> getDivespotLanguages();
+
+    @POST("v2_0/divecenter.divespot.add")
+    Call<ResponseBody> postAddDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divecenter.divespot.remove")
+    Call<ResponseBody> postRemoveDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divespot.approve")
+    Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") String value);
+
+    @GET("v2_0/divespot.translations.get")
+    Call<ResponseBody> getDiveSpotsTranslations(@Query("id") String id);
+
+    @POST("v2_0/user.password.forgot")
+    Call<ResponseBody> postForgotPassword(@Query("email") String email);
+
+    @Multipart
+    @POST("v2_0/user.profile.update")
+    Call<ResponseBody> postUpdateUserProfile(
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("about") RequestBody about,
+            @Part("dive_center_id") RequestBody diveCenterId,
+            @Part("diving_skill") RequestBody skill
+    );
+
+    @Multipart
+    @POST("v2_0/user.divecenter.profile.update")
+    Call<ResponseBody> postUpdateDiveCenterProfile(
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("country") RequestBody country,
+            @Part("addresses") RequestBody adresses,
+            @Part("service") RequestBody service,
+            @Part List<MultipartBody.Part> languages,
+            @Part List<MultipartBody.Part> emails,
+            @Part List<MultipartBody.Part> phones,
+            @Part List<MultipartBody.Part> divespots
+    );
+
+    @GET("v2_0/countries.get")
+    Call<ResponseBody> getListCountries();
+
+    @Multipart
+    @POST("v2_0/divespot.review.add")
+    Call<ResponseBody> postLeaveComment(
+            @Part List<MultipartBody.Part> photos,
+            @Part("id") RequestBody id,
+            @Part("rating") RequestBody rating,
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
+    );
+
+    @Multipart
+    @POST("v2_0/divespot.review.update")
+    Call<ResponseBody> postUpdateReview(
+            @Part List<MultipartBody.Part> newPhotos,
+            @Part List<MultipartBody.Part> deletedPhotos,
+            @Part("id") RequestBody id,
+            @Part("rating") RequestBody rating,
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
+    );
+
+    @POST("v2_0/divespot.review.delete")
+    Call<ResponseBody> postDeleteReview(@Query("id") String commentId);
+
+    @POST("v2_0/divespot.review.report")
+    Call<ResponseBody> postReportReview(@Body ReportRequest reportRequest);
+
+    @POST("v2_0/divespot.review.dislike")
+    Call<ResponseBody> postDislikeReview(@Query("id") String commentId);
+
+    @POST("v2_0/divespot.review.like")
+    Call<ResponseBody> postLikeReview(@Query("id") String commentId);
+
+    @GET("v2_0/user.dislikes.get")
+    Call<ResponseBody> getUserDislikes(@Query("id") String userId);
+
+    @GET("v2_0/user.likes.get")
+    Call<ResponseBody> getUserLikes(@Query("id") String userId);
+
+    @GET("v2_0/user.photos_added.get")
+    Call<ResponseBody> getUserPhotos(@Query("id") String userId);
+
+    @GET("v2_0/user.divespots.added.get")
+    Call<ResponseBody> getUserAddedDiveSpots(@Query("id") String userId);
+
+    @GET("v2_0/user.divespots.edited.get")
+    Call<ResponseBody> getUserEditedDiveSpots(@Query("id") String userId);
+
+    @GET("v2_0/user.divespots.checked_in.get")
+    Call<ResponseBody> getUserCheckedInSpots(@Query("id") String userId);
+
+    @GET("v2_0/user.divespots.favorites.get")
+    Call<ResponseBody> getUserFavoritesSpots(@Query("id") String userId);
+
+    @POST("v2_0/user.location.update")
+    Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);
+
+    @POST("v2_0/image.report")
+    Call<ResponseBody> postReportImage(@Body ReportImageRequest reportImageRequest);
+
+    @GET("v2_0/divespot.reviews.get")
+    Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId, @Query("include_photo_details") int value);
+
+    @GET("v2_0/user.reviews.get")
+    Call<ResponseBody> getUserComments(@Query("id") String diveCenterId, @Query("include_photo_details") int value);
+
+    @POST("v2_0/instructor.divecenter.add")
+    Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);
+
+    @GET("v2_0/divecenter.instructors.get")
+    Call<ResponseBody> getInstructorsList(@Query("id") String diveCenterId);
+
+    @POST("v2_0/divecenter.instructors.see")
+    Call<ResponseBody> postInstructorsSees(@Body InstructorsSeeRequests instructorsSeeRequests);
+
+    @GET("v2_0/divecenter.divespots.get")
+    Call<ResponseBody> getDiveSpotsForDiveCenter(@Query("id") String id);
+
+    @POST("v2_0/divecenter.instructor.remove")
+    Call<ResponseBody> postRemoveInstructorFromDIveCenter(@Query("id") String instructorId);
+
+    @GET("v2_0/divecenter.languages.get")
+    Call<ResponseBody> getDiveCenterLanguages(@Query("id") String diveCenterId);
+
+    @GET("v2_0/divecenter.status_in.divespot.get")
+    Call<ResponseBody> getDiveCenterStatusInSpot(@Query("id") String id);
+
+    @GET("v2_0/user.status_in.divespot.get")
+    Call<ResponseBody> getUserStatusInSpot(@Query("id") String id);
+
+    @GET("v2_0/divespot.review.photos.get")
+    Call<ResponseBody> getReviewPhotos(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divespot.review.sealifes.get")
+    Call<ResponseBody> getReviewSealifes(@Query("id") String reviewId);
+
+    @Multipart
+    @POST("v2_0/sealife.add")
+    Call<ResponseBody> postAddSealife(
+            @Part MultipartBody.Part image,
+            @Part("translations") RequestBody translations
+    );
+
+    @Multipart
+    @POST("v2_0/sealife.update")
+    Call<ResponseBody> postUpdateSealife(
+            @Part MultipartBody.Part image,
+            @Part("translations") RequestBody translations,
+            @Part("id") RequestBody id
+    );
+
+    @GET("v2_0/divespot.review.get")
+    Call<ResponseBody> getSingleReview(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divecenters.filter")
+    Call<ResponseBody> getDiveCentersForDiveSpot(@Query("dive_spot_id") String id);
+
+    @GET("v2_0/user.notifications.get")
+    Call<ResponseBody> getNotifications();
+
+    @GET("v2_0/user.notifications.activity.get")
+    Call<ResponseBody> getActivityNotifications(@Query("start_from") String date, @Query("limit") int limit, @Query("include_photo_details") int value);
+
+    @GET("v2_0/user.notifications.personal.get")
+    Call<ResponseBody> getPersonalNotifications(@Query("start_from") String date, @Query("limit") int limit, @Query("include_photo_details") int value);
+
+    @GET("v2_0/user.notification.photos.get")
+    Call<ResponseBody> getNotificationPhotos(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divecenter.divespots.to_approve.count.get")
+    Call<ResponseBody> getApproveCount();
+
+    @GET("v2_0/divecenter.divespots.to_approve.get")
+    Call<ResponseBody> getDiveSpotsToApprove();
+
+    @GET("v2_0/user.notifications.new.count.get")
+    Call<ResponseBody> getNewNotificationsCount();
+
+    @POST("v2_0/user.notifications.read")
+    Call<ResponseBody> postNotificationsRead(@Body NotificationsReadRequest notifictionsReadedRequest);
+
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_star_title"
+        android:scaleType="center"
+        />
+
+    <com.klinker.android.link_builder.LinkConsumableTextView
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="18dp"
+        android:id="@+id/notification_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Alexander Korshin started working as an instructor at your dive center."
+        android:layout_centerVertical="true"
+        android:textColor="@color/black_text"
+        android:textSize="13sp"
+        android:layout_toRightOf="@+id/user_avatar"/>
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
+</RelativeLayout>

@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="java.lang.String" />
+
+        <variable
+            name="dcViewModel"
+            type="com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivityViewModel" />
+
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity" />
+    </data>
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar" />
+
+        <ScrollView
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="25dp">
+
+                            <LinearLayout
+                                android:id="@+id/attach_photo_btn"
+                                android:layout_width="65dp"
+                                android:layout_height="65dp"
+                                android:background="@drawable/gray_rectangle_attach"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:id="@+id/pick_photos"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="center"
+                                    android:src="@drawable/ic_attach_camera"
+                                    app:loadImageFrom="@{dcViewModel}"
+                                    android:onClick="@{handlers::changePhotoButtonCLicked}"/>
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <com.rey.material.widget.EditText
+                                style="@style/DiveCenterProfileEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/name"
+                                android:hint="@string/name"
+                                android:lines="1"
+                                android:maxLength="31"
+                                android:text="@{dcViewModel.diveCenterProfile.name}"/>
+
+                            <TextView
+                                android:text="@string/name_is_required_edit_dc"
+                                android:layout_marginLeft="0dp"
+                                android:id="@+id/name_error"
+                                style="@style/ValidationErrorTextView" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/phones"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
+                    <TextView
+                        android:id="@+id/add_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:onClick="@{handlers::addPhoneClicked}"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="100dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/add_phone"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/emails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
+                    <TextView
+                        android:id="@+id/add_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:onClick="@{handlers::addEmailClicked}"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="100dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/add_e_mail"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <LinearLayout
+                        android:id="@+id/addresses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
+                    <Button
+                        android:id="@+id/pick_address_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/border_button_blue_2px"
+                        android:text="@string/choose_address"
+                        android:textColor="#c4ceee"
+                        android:onClick="@{handlers::chooseAddressClicked}"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/provide_your_address_to_be_shown_on_the_map"
+                        android:textSize="12sp"
+                        android:textColor="#bbbbbb"
+                        android:layout_marginLeft="20dp"/>
+                    <ImageView
+                        android:layout_marginTop="12dp"
+                        style="@style/DividerStyleFull" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/my_dive_spots"
+                        android:textColor="#bbbbbb"
+                        android:textSize="15sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/dive_spot_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="3dp" />
+
+                    <LinearLayout
+                        android:id="@+id/add_dive_spot_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/add_photo_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:onClick="@{handlers::addDiveSpotClicked}">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_addds_plus_sl" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:text="@string/add_ds"
+                            android:textColor="#a9a9a9" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dive_spot_error"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/dive_spot_is_required"
+                        android:layout_marginLeft="20dp"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:layout_marginTop="20dp"
+                        style="@style/DividerStyleFull" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/languages"
+                        android:textColor="#bbbbbb"
+                        android:textSize="15sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/languages_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="3dp" />
+
+                    <LinearLayout
+                        android:id="@+id/add_language_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/add_photo_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:onClick="@{handlers::addLanguageClicked}">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_addds_plus_sl" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:text="@string/add_lang"
+                            android:textColor="#a9a9a9" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_marginTop="20dp"
+                        style="@style/DividerStyleFull" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_marginTop="@dimen/base_block_margin_top"
+                    style="@style/DividerStyleFull" />
+
+                <LinearLayout
+                    style="@style/ContentBlockStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioGroup
+                        android:id="@+id/radio_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.AppCompatRadioButton
+                            android:id="@+id/company_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#3b518b"
+                            android:textSize="16sp"
+                            app:checkCompanyRadioButton="@{dcViewModel}"
+                            android:drawablePadding="10dp"
+                            android:text="Company"/>
+
+                        <android.support.v7.widget.AppCompatRadioButton
+                            android:id="@+id/reseller_radio"
+                            android:textSize="16sp"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#3b518b"
+                            app:checkResellerRadioButton="@{dcViewModel}"
+                            android:text="Reseller"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/DividerStyleFull" />
+                <Button
+                    android:layout_margin="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="@string/save_changes"
+                    android:background="@drawable/border_button_orange_2px"
+                    android:onClick="@{handlers::saveChangesClicked}"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

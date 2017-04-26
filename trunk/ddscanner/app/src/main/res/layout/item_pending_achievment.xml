@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="achievementViewModel"
+            type="com.ddscanner.screens.achievements.PendingAchievementItemViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@color/white">
+
+        <ImageView
+            style="@style/DividerStyleFull"
+            android:layout_alignParentTop="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="7dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+
+                <com.ddscanner.ui.views.AchievementCountryFlagView
+                    android:id="@+id/country_flag"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    app:loadCountryFlagFrom="@{achievementViewModel}"/>
+
+                <LinearLayout
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/country_flag"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="@{achievementViewModel.pendingAchievement.name}"
+                        android:textColor="@color/black_text" />
+
+                    <TextView
+                        android:id="@+id/country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:textColor="#959595"
+                        android:textSize="11sp"
+                        android:text="@{achievementViewModel.pendingAchievement.country.name}"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    app:changeProgressTextFrom="@{achievementViewModel}"
+                    android:textColor="#bbbbbb"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <com.ddscanner.ui.views.AchievementProgressView
+                android:id="@+id/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/shark_progress_background"
+                app:changeSharkViewProgress="@{achievementViewModel}"/>
+
+        </LinearLayout>
+
+        <ImageView
+            style="@style/DividerStyleFull"
+            android:layout_alignParentBottom="true" />
+
+
+    </RelativeLayout>
+</layout>

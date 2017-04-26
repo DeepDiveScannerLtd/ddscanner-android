@@ -9,7 +9,7 @@ public class ForeignUserLike {
     private String diveSpotName;
     private String comment;
     private String date;
-    private User user;
+    private UserOld userOld;
 
     public int getDiveSpotId() {
         return diveSpotId;
@@ -43,11 +43,11 @@ public class ForeignUserLike {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 }

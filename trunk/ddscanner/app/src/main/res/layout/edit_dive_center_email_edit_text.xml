@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<com.rey.material.widget.EditText android:id="@+id/email"
+    style="@style/DiveCenterProfileEditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:hint="@string/email"
+    android:maxLength="252"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <TextView
+        android:layout_marginLeft="0dp"
+        android:text="@string/enter_a_valid_email_address"
+        android:id="@+id/email_error"
+        style="@style/ValidationErrorTextView" />
+</LinearLayout>

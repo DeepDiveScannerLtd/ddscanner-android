@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,12 +13,12 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.ForeignUserDislikesWrapper;
-import com.ddscanner.entities.ForeignUserLike;
-import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.LikeEntity;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.screens.user.dislikes.DislikesListAdapter;
+import com.ddscanner.screens.user.likes.LikesListAdapter;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -28,7 +27,7 @@ import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class UserLikesDislikesActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class UserLikesDislikesActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -36,58 +35,63 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
     private String userId;
     private ProgressView progressView;
 
-    private DDScannerRestClient.ResultListener<ForeignUserLikeWrapper> foreignUserLikeWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserLikeWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<LikeEntity>> likesResultListener = new DDScannerRestClient.ResultListener<ArrayList<LikeEntity>>() {
         @Override
-        public void onSuccess(ForeignUserLikeWrapper result) {
-            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getLikes(), true));
+        public void onSuccess(ArrayList<LikeEntity> result) {
+            recyclerView.setAdapter(new LikesListAdapter(result, UserLikesDislikesActivity.this));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
-                    break;
-            }
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
-    private DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper> foreignUserDislikesWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<LikeEntity>> dislikesResultListener = new DDScannerRestClient.ResultListener<ArrayList<LikeEntity>>() {
         @Override
-        public void onSuccess(ForeignUserDislikesWrapper result) {
-            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getDislikes(), false));
+        public void onSuccess(ArrayList<LikeEntity> result) {
+            recyclerView.setAdapter(new DislikesListAdapter(result, UserLikesDislikesActivity.this));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Override
@@ -95,36 +99,24 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foreign_user_likes_dislikes);
         isLikes = getIntent().getBooleanExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, false);
-        userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
+        userId = getIntent().getStringExtra("id");
         findViews();
         if (isLikes) {
-            DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+            setupToolbar(R.string.user_likes, R.id.toolbar);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
         } else {
-            DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+            setupToolbar(R.string.user_dislikes, R.id.toolbar);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
         }
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.likesRecyclerView);
         progressView = (ProgressView) findViewById(R.id.progressBar);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        toolbarSettings();
     }
-    private void toolbarSettings() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        if (!isLikes) {
-            getSupportActionBar().setTitle(R.string.user_dislikes);
-        } else {
-            getSupportActionBar().setTitle(R.string.user_likes);
-        }
-    }
-
-
 
     public static void showForResult(Activity context, boolean isLikes, String userId, int requestCode) {
         Intent intent = new Intent(context, UserLikesDislikesActivity.class);
@@ -136,7 +128,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
     public static void show(Activity context, boolean isLikes, String userId) {
         Intent intent = new Intent(context, UserLikesDislikesActivity.class);
         intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, isLikes);
-        intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID, userId);
+        intent.putExtra("id", userId);
         context.startActivity(intent);
     }
 
@@ -156,9 +148,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
                     } else {
-                        DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
                     }
                 } else {
                     setResult(RESULT_CANCELED);

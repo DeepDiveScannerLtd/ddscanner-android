@@ -11,9 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
-import com.ddscanner.events.ShowUserDialogEvent;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -27,10 +25,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     private Context context;
-    private ArrayList<User> userArrayList;
+    private ArrayList<User> users;
 
-    public UserListAdapter(Context context, ArrayList<User> users) {
-        userArrayList = users;
+    public  UserListAdapter(Context context, ArrayList<User> userOlds) {
+        users = userOlds;
         this.context = context;
     }
 
@@ -45,19 +43,20 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
-                .load(userArrayList.get(position).getPicture())
+                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
+                .placeholder(R.drawable.gray_circle_placeholder)
+                .error(R.drawable.avatar_profile_default)
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
-        holder.userName.setText(userArrayList.get(position).getName());
-        holder.info.setText(userArrayList.get(position).getCountComment() + " reviews, " +
-                userArrayList.get(position).getCountLike() + " likes");
+        holder.userName.setText(users.get(position).getName());
+        holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count, String.valueOf(users.get(position).getCounters().getCommentsCount())));
     }
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return users.size();
     }
 
     public class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -78,7 +77,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+           UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
         }
     }
 

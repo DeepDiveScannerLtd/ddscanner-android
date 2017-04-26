@@ -1,6 +1,5 @@
 package com.ddscanner.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -40,7 +38,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         View view = inflater.inflate(R.layout.fragment_search_location, container, false);
         findViews(view);
         if (places != null && googleApiClient != null) {
-            setList(places, googleApiClient);
+            setList(places, googleApiClient, false);
         }
         return view;
 
@@ -57,7 +55,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         locationRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    public void setList(ArrayList<String> places, GoogleApiClient googleApiClient) {
+    public void setList(ArrayList<String> places, GoogleApiClient googleApiClient, boolean isVisible) {
         if (locationRecyclerView == null) {
             this.places = places;
             this.googleApiClient = googleApiClient;
@@ -66,7 +64,9 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         if (places == null || places.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             content.setVisibility(View.GONE);
-            Helpers.hideKeyboard(getActivity());
+            if (isVisible) {
+                Helpers.hideKeyboard(getActivity());
+            }
         } else {
             noResultsView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);

@@ -8,29 +8,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lashket on 17.2.16.
  */
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
-    public ArrayList<Sealife> sealifes;
+    public ArrayList<SealifeShort> sealifes;
     private Context context;
-    private String pathSmall;
-    private String pathMedium;
 
-    public SealifeListAdapter(ArrayList<Sealife> sealifes, Context context, String pathSmall, String pathMedium) {
+    public SealifeListAdapter(ArrayList<SealifeShort> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
-        this.pathMedium = pathMedium;
-        this.pathSmall = pathSmall;
     }
 
     @Override
@@ -44,13 +43,16 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
-        Sealife sealife = sealifes.get(i);
-        Picasso.with(context).load(pathSmall + sealife.getImage()).into(sealifeListViewHolder.sealifeLogo);
+        SealifeShort sealife = sealifes.get(i);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 
     @Override
     public int getItemCount() {
+        if (sealifes == null) {
+            return 0;
+        }
         return sealifes.size();
     }
 
@@ -71,8 +73,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
         @Override
         public void onClick(View v) {
-            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()), pathMedium);
-            EventsTracker.trackDiveSpotSealifeView();
+            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId());
         }
     }
 }

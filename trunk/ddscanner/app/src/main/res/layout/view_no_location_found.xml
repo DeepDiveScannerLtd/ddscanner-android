@@ -14,7 +14,7 @@
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_nolocation"/>
+            android:src="@drawable/ic_nospots"/>
         <TextView
             style="@style/ErrorsViewTitleStyle"
             android:text="@string/no_results"/>

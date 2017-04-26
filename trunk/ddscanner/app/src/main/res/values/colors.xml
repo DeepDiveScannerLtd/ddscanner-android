@@ -3,11 +3,13 @@
 <resources>
 
     <!--Green-->
-    <color name="primary">#095370</color>
+    <color name="primary">#1b284b</color>
     <color name="secondary">#1565C0</color>
-    <color name="primary_dark">#074E69</color>
+    <color name="primary_dark">#172342</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="empty_buttons">#2e80a0</color>
+    <color name="radio_button_fill">#2d80a1</color>
+    <color name="radio_button_empty">#7b797a</color>
 
     <color name="green_100">#C8E6C9</color>
     <color name="green_600">#43A047</color>
@@ -55,10 +57,24 @@
 
     <color name="gray_bg">#f6f6f6</color>
 
+    <color name="diactive_button_photo_color">#afafaf</color>
+
     <color name="error">#d50001</color>
 
     <color name="defaultGrayTitleColor">#B2B2B2</color>
 
     <color name="tw__composer_red">#ffe81c4f</color>
+
+    <color name="notification_time_color">#bfbfbf</color>
+    
+    <color name="empty_login_button_text">#66202020</color>
+
+    <color name="notification_clickable_text_color">#3b528b</color>
+
+    <color name="photos_placeholder">#EFEFEF</color>
+
+    <color name="spinner_triangle_color">#b9b9b9</color>
+
+    <color name="blue_button_text_color">#e3e9fb</color>
 
 </resources>

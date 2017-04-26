@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.rey.material.widget.EditText xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/phone"
+        style="@style/DiveCenterProfileEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/phone"
+        android:inputType="phone"
+        android:lines="1"
+        android:maxLength="32"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:layout_marginLeft="0dp"
+        android:text="@string/enter_a_valid_phone_number"
+        android:id="@+id/phone_error"
+        style="@style/ValidationErrorTextView" />
+</LinearLayout>

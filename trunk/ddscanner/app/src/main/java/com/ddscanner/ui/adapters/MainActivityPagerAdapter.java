@@ -1,22 +1,19 @@
 package com.ddscanner.ui.adapters;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import com.ddscanner.R;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
+import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
+import com.ddscanner.screens.notifications.DiverNotificationsFragment;
+import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
-import com.ddscanner.ui.fragments.NeedToLoginFragment;
-import com.ddscanner.ui.fragments.NotificationsFragment;
-import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.ui.views.LoginView;
-import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by lashket on 20.4.16.
@@ -27,22 +24,31 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     private MapListFragment mapListFragment = new MapListFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
-    private NotificationsFragment notificationsFragment = new NotificationsFragment();
+    private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
+    private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
 
     public MainActivityPagerAdapter(FragmentManager manager) {
         super(manager);
+
     }
 
     @Override
     public Fragment getItem(int position) {
-        LogUtils.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.isUserLoggedIn() = " + SharedPreferenceHelper.isUserLoggedIn());
         switch (position) {
             case 0:
                 return mapListFragment;
             case 1:
-                return notificationsFragment;
+                return diverNotificationsFragment;
             case 2:
-                return profileFragment;
+                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                    case DIVECENTER:
+                        return diveCenterProfileFragment;
+                    case DIVER:
+                    case INSTRUCTOR:
+                        return profileFragment;
+                    case NONE:
+                        return profileFragment;
+                }
             default:
                 return null;
         }
@@ -54,43 +60,57 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        Log.i(TAG, "getItemPosition");
+        return POSITION_NONE;
+    }
+
+    @Override
     public CharSequence getPageTitle(int position) {
         return null;
-    }
-
-    public void setProfileImage(String uri) {
-        profileFragment.setImage(uri);
-    }
-
-    public void setProfileImageFromCamera(Uri uri) {
-        profileFragment.setImage(uri);
     }
 
     @Override
     public void onLoggedIn() {
         profileFragment.onLoggedIn();
-        notificationsFragment.onLoggedIn();
+        diverNotificationsFragment.onLoggedIn();
     }
 
     @Override
     public void onLoggedOut() {
         profileFragment.onLoggedOut();
-        notificationsFragment.onLoggedOut();
+        diverNotificationsFragment.onLoggedOut();
     }
 
     public void setProfileFragment(ProfileFragment profileFragment) {
         this.profileFragment = profileFragment;
     }
 
-    public void setNotificationsFragment(NotificationsFragment notificationsFragment) {
-        this.notificationsFragment = notificationsFragment;
+    public void setDiverNotificationsFragment(DiverNotificationsFragment diverNotificationsFragment) {
+        this.diverNotificationsFragment = diverNotificationsFragment;
     }
 
     public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
-        this.notificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
+        this.diverNotificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
-        this.notificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
+    public void setAllNotificationsFragment(PersonalNotificationsFragment personalNotificationsFragment) {
+        this.diverNotificationsFragment.setPersonalNotificationsFragment(personalNotificationsFragment);
+    }
+
+    public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
+        this.diveCenterProfileFragment = diveCenterProfileFragment;
+    }
+
+    public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
+//        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
+    }
+
+    public ProfileFragment getProfileFragment() {
+        return profileFragment;
+    }
+
+    public DiveCenterProfileFragment getDiveCenterProfileFragment() {
+        return diveCenterProfileFragment;
     }
 }

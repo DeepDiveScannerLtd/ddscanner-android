@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="58dp"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="58dp">
 
-    <ImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="@dimen/editor_item_height"
-        android:layout_height="@dimen/editor_item_height"
-        android:padding="12dp"
-        android:src="@drawable/avatar_checkin" />
+    <RelativeLayout
+        android:id="@+id/avatar_layout"
+        android:layout_width="58dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/editor_item_height"
+            android:layout_height="@dimen/editor_item_height"
+            android:padding="12dp"
+            android:src="@drawable/avatar_checkin" />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/creator_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_creator" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/user_data"
         android:layout_width="wrap_content"
         android:layout_height="57dp"
-        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_toRightOf="@+id/avatar_layout"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -23,28 +41,28 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lines="1"
-            android:ellipsize="end"
             android:layout_marginRight="10dp"
-            tools:text="Andrei lashkevich"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="@color/black_text"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="Andrei lashkevich" />
 
         <TextView
             android:id="@+id/count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            tools:text="159reviews, 31 likes"
             android:textColor="#a3a3a3"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="159reviews, 31 likes" />
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_data"
-        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_toRightOf="@+id/avatar_layout"
         android:scaleType="centerCrop"
         android:src="@drawable/divider" />
 </RelativeLayout>

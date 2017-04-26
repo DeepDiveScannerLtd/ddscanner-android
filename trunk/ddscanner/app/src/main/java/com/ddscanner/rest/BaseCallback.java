@@ -1,7 +1,5 @@
 package com.ddscanner.rest;
 
-import android.util.Log;
-
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.ValidationError;
@@ -34,14 +32,14 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
 
     @Override
     public final void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        if (resultListenerWeakReference.get() != null) {
+        if (resultListenerWeakReference.get() != null && !resultListenerWeakReference.get().isCancelled()) {
             onResponse(resultListenerWeakReference.get(), call, response);
         }
     }
 
     @Override
     public final void onFailure(Call<ResponseBody> call, Throwable t) {
-        if (resultListenerWeakReference.get() != null) {
+        if (resultListenerWeakReference.get() != null && !resultListenerWeakReference.get().isCancelled()) {
             if (t instanceof ConnectException) {
                 resultListenerWeakReference.get().onConnectionFailure();
             } else if (t instanceof SocketTimeoutException) {
@@ -63,7 +61,15 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 // bad request. for example event already happened or event preconditions are not held
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
-                    resultListener.onError(DDScannerRestClient.ErrorType.BAD_REQUEST_ERROR_400, generalError, call.request().url().toString(), generalError.getMessage());
+                    resultListener.onError(DDScannerRestClient.ErrorType.BAD_REQUEST_ERROR_400, generalError, call.request().url().toString(), json);
+                } catch (JsonSyntaxException e) {
+                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                }
+                break;
+            case 401:
+                try {
+                    generalError = gson.fromJson(json, GeneralError.class);
+                    resultListener.onError(DDScannerRestClient.ErrorType.UNAUTHORIZED_401, generalError, call.request().url().toString(), generalError.getMessage());
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }
@@ -77,30 +83,32 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 }
                 break;
             case 404:
-                // entity not found
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
-                    switch (generalError.getStatusCode()) {
-                        case 801:
-                            // user not found
-                            resultListener.onError(DDScannerRestClient.ErrorType.USER_NOT_FOUND_ERROR_C801, generalError, call.request().url().toString(), generalError.getMessage());
-                            break;
-                        case 802:
-                            // dive spot not found
-                            resultListener.onError(DDScannerRestClient.ErrorType.DIVE_SPOT_NOT_FOUND_ERROR_C802, generalError, call.request().url().toString(), generalError.getMessage());
-                            break;
-                        case 803:
-                            // dive spot comment not found
-                            resultListener.onError(DDScannerRestClient.ErrorType.COMMENT_NOT_FOUND_ERROR_C803, generalError, call.request().url().toString(), generalError.getMessage());
-                            break;
-                        default:
-                            // There is no error that comes with 404 http response code and statusCode not in [801, 802, 803] in API doc. So handle this case as an unknown error
-                            resultListener.onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, generalError, call.request().url().toString(), generalError.getMessage());
-                            break;
-                    }
+                    resultListener.onError(DDScannerRestClient.ErrorType.ENTITY_NOT_FOUND_404, generalError, call.request().url().toString(), generalError.getMessage());
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }
+                // entity not found
+//                try {
+//                    generalError = gson.fromJson(json, GeneralError.class);
+//                    switch (generalError.getStatusCode()) {
+//                        case 802:
+//                            // dive spot not found
+//                            resultListener.onError(DDScannerRestClient.ErrorType.DIVE_SPOT_NOT_FOUND_ERROR_C802, generalError, call.request().url().toString(), generalError.getMessage());
+//                            break;
+//                        case 803:
+//                            // dive spot comment not found
+//                            resultListener.onError(DDScannerRestClient.ErrorType.COMMENT_NOT_FOUND_ERROR_C803, generalError, call.request().url().toString(), generalError.getMessage());
+//                            break;
+//                        default:
+//                            // There is no error that comes with 404 http response code and statusCode not in [801, 802, 803] in API doc. So handle this case as an unknown error
+//                            resultListener.onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, generalError, call.request().url().toString(), generalError.getMessage());
+//                            break;
+//                    }
+//                } catch (JsonSyntaxException e) {
+//                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+//                }
                 break;
             case 422:
                 // unprocessable entity error, aka validation error
@@ -129,6 +137,14 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
                     resultListener.onError(DDScannerRestClient.ErrorType.SERVER_INTERNAL_ERROR_500, generalError, call.request().url().toString(), generalError.getMessage());
+                } catch (JsonSyntaxException e) {
+                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                }
+                break;
+            case 409:
+                try {
+                    generalError = gson.fromJson(json, GeneralError.class);
+                    resultListener.onError(DDScannerRestClient.ErrorType.DATA_ALREADY_EXIST_409, generalError, call.request().url().toString(), generalError.getMessage());
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }

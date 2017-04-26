@@ -66,6 +66,7 @@ public class DialogsRequestCodes {
 // AddDiveSpotActivity
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;
+    public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED = 2303;
 
     // LeaveReviewActivity
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;
@@ -91,7 +92,7 @@ public class DialogsRequestCodes {
     public static final int DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT = 3101;
     public static final int DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR = 3102;
 
-    //NotificationsFragment
+
     public static final int DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT = 3301;
     public static final int DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR = 3302;
 
@@ -110,5 +111,51 @@ public class DialogsRequestCodes {
     //AchievementsActivity
     public static final int DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT = 3701;
     public static final int DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR = 3702;
+
+    //SealifeDetailsActivity
+    public static final int DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT = 3801;
+
+    //UserProfileActivity
+    public static final int DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT = 3901;
+
+    //PhotosGalleryActivity
+    public static final int DRC_MAPS_ACTIVITY_FAILED = 4001;
+
+    //Checkin peoples activity
+    public static final int DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY = 4101;
+
+    //Editors list activity
+    public static final int DRC_EDITORS_ATIVITY_HIDE = 4201;
+
+    //Pick language activity
+    public static final int DRC_PICK_LANG_ACTIVITY_HIDE = 4301;
+
+    //Pick country activity
+    public static final int DRC_PICK_COUNTRY_ACTIVITY_HIDE = 4401;
+
+    //Edit dive spot activity
+    public static final int DRC_EDIT_SPOT_ACTIVITY_HIDE = 4501;
+
+    //Instructors acivity
+    public static final int DRC_INSTRUCTORS_ACTIVITY_HIDE = 4601;
+
+    //Edit dive center
+    public static final int DRC_EDIT_DC_ACTIVITY_HIDE = 4701;
+
+    //Search dive center activity
+    public static final int DRC_SEARCH_DIVE_CENTER_ACTIVITY = 4801;
+
+    //Dive center spots activity
+    public static final int DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE = 4901;
+
+    //LeaveReviewActivity
+    public static final int DRC_LEAVE_REVIEW_ACTIVITY_CLOSE = 5001;
+
+    //ForgotPasswordActivity
+    public static final int DRC_FORGOT_PASSWORD_ACTIVITY_CONNECTION_FAILURE = 5101;
+    public static final int DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS = 5102;
+
+    //Dive Center Languages Activity
+    public static final int DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT = 5201;
 
 }

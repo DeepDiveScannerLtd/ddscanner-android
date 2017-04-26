@@ -23,18 +23,19 @@ public class Constants {
     public static final String SEARCH_ACTIVITY_INTENT_KEY = "LATLNGBOUNDS";
 
     /*Maplist fragment*/
-    public static final String OBJECT_TYPE_REEF = "reef";
-    public static final String OBJECT_TYPE_CAVE = "cave";
-    public static final String OBJECT_TYPE_WRECK = "wreck";
-    public static final String OBJECT_TYPE_OTHER = "other";
+    public static final String OBJECT_TYPE_REEF = "Reef";
+    public static final String OBJECT_TYPE_CAVE = "Cave";
+    public static final String OBJECT_TYPE_WRECK = "Wreck";
+    public static final String OBJECT_TYPE_OTHER = "Other";
 
     /*Add dive spot activity*/
     public static final String ADD_DIVE_SPOT_ACTIVITY_LATLNG = "location";
     public static final String ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG = "new_spot_location";
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE = "sealife";
     public static final String ADD_DIVE_SPOT_ACTIVITY_DIVESPOT = "divespot";
-    public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealife[]";
-    public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealifes[]";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "photos[]";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_MAPS_ARRAY = "maps[]";
     public static final String ADD_DIVE_SPOT_INTENT_LOCATION_NAME = "LOCATIONNAME";
     public static final String ADD_DIVE_SPOT_INTENT_DIVESPOT_ID = "divespot_id";
     public static final String ADD_DIVE_SPOT_INTENT_IS_FROM_MAP = "is_from_map";
@@ -54,7 +55,7 @@ public class Constants {
     public static final String FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN = "ISCHECKIN";
     public static final String FOREIGN_USER_ACTIVITY_INTENT_USER_ID = "USERID";
 
-    /*User Likes activity*/
+    /*UserOld Likes activity*/
     public static final String USER_LIKES_ACTIVITY_INTENT_IS_LIKE = "ISLIKE";
     public static final String USER_LIKES_ACTIVITY_INTENT_USER_ID = "USERID";
 
@@ -82,4 +83,26 @@ public class Constants {
 
     /*Main activity*/
     public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
+
+    public static final String USER_TYPE_DIVE_CENTER = "divecenter";
+    public static final String USER_TYPE_DIVER = "diver";
+    public static final String USER_TYPE_INSTRUCTOR = "diver";
+
+    /*Images path constants*/
+    public static final String IMAGE_PATH_PREVIEW = "/images/divespots/preview/";
+    public static final String IMAGE_PATH_MEDIUM = "/images/divespots/medium/";
+    public static final String IMAGE_PATH_ORIGIN = "/images/divespots/origin/";
+
+    public static final String SEALIFE_IMAGE_PATH_PREVIEW = "/images/sealife/preview/";
+    public static final String SEALIFE_IMAGE_PATH_MEDIUM = "/images/sealife/medium/";
+    public static final String SEALIFE_IMAGE_PATH_ORIGIN = "/images/sealife/origin/";
+
+    public static final String DISTRICT_IMAGE_PATH_PREVIEW = "/images/district/preview/";
+    public static final String DISTRICT_IMAGE_PATH_MEDIUM = "/images/district/medium/";
+    public static final String DISTRICT_IMAGE_PATH_ORIGIN = "/images/district/origin/";
+
+    public static final String USER_IMAGE_PATH_PREVIEW = "/images/social/preview/";
+    public static final String USER_IMAGE_PATH_MEDIUM = "/images/social/medium/";
+    public static final String USER_IMAGE_PATH_ORIGIN = "/images/social/origin/";
+
 }

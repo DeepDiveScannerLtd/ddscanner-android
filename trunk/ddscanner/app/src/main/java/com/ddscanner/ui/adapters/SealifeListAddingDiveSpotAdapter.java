@@ -7,14 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lashket on 6.5.16.
@@ -22,13 +20,15 @@ import java.util.List;
 public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<SealifeListAddingDiveSpotAdapter.SealifeListAddingDivespotViewHolder>{
 
     private Context context;
-    private ArrayList<Sealife> sealifes;
-    private TextView title;
+    private ArrayList<SealifeShort> sealifes = new ArrayList<>();
 
-    public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context, TextView title) {
+    public SealifeListAddingDiveSpotAdapter(ArrayList<SealifeShort> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
-        this.title = title;
+    }
+
+    public SealifeListAddingDiveSpotAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -42,50 +42,65 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     @Override
     public void onBindViewHolder(SealifeListAddingDivespotViewHolder holder, final int position) {
         holder.sealifeName.setText(sealifes.get(position).getName());
-        holder.ic_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sealifes.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeRemoved(position, sealifes.size());
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        if (sealifes.size() > 0) {
-            title.setVisibility(View.GONE);
-        } else {
-            title.setVisibility(View.VISIBLE);
-        }
         return sealifes.size();
     }
 
-    public void add(Sealife sealife) {
+    public void add(SealifeShort sealife) {
         if (Helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
-            Helpers.showToast(context, R.string.sealife_already_added);
             return;
         }
         sealifes.add(sealife);
         notifyDataSetChanged();
     }
 
-    public List<Sealife> getSealifes() {
+    public void addSealifesList(ArrayList<SealifeShort> sealifes) {
+        this.sealifes.addAll(sealifes);
+        notifyDataSetChanged();
+    }
+
+    public void deleteSealife(int position) {
+        this.sealifes.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public ArrayList<SealifeShort> getSealifes() {
+        if (this.sealifes == null) {
+            return new ArrayList<>();
+        }
         return this.sealifes;
     }
 
-    public class SealifeListAddingDivespotViewHolder extends RecyclerView.ViewHolder{
+    public ArrayList<String> getSealifesIds() {
+        if (this.sealifes.size() == 0) {
+            return null;
+        }
+        ArrayList<String> ids = new ArrayList<>();
+        for (SealifeShort sealifeShort : this.sealifes) {
+            ids.add(sealifeShort.getId());
+        }
+        return ids;
+    }
 
-        protected ImageView ic_delete;
+    public class SealifeListAddingDivespotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        protected ImageView deleteButton;
         protected TextView sealifeName;
 
         public SealifeListAddingDivespotViewHolder(View v) {
             super(v);
-            ic_delete = (ImageView) v.findViewById(R.id.delete_item);
+            deleteButton = (ImageView) v.findViewById(R.id.delete_item);
             sealifeName = (TextView) v.findViewById(R.id.sealife_name);
+            deleteButton.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            deleteSealife(getAdapterPosition());
+        }
     }
 
 }

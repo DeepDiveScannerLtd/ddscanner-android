@@ -18,7 +18,6 @@
         app:pv_circular="true"
         app:pv_progressMode="indeterminate"
         app:pv_progressStyle="@style/CircularProgress" />
-
     <ScrollView
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
@@ -32,47 +31,45 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white">
 
                 <TextView
-                    android:id="@+id/add_photo_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/add_divespot_s_photo"
-                    android:textColor="#b2b2b2"
-                    android:textSize="14sp" />
-
-                <TextView
+                    android:id="@+id/photos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/photos_title"
-                    android:textColor="@color/black_text"
-                    android:textSize="15sp" />
-
-                <ImageButton
-                    android:id="@+id/btn_add_photo"
+                    style="@style/PhotosTabActive"/>
+                <TextView
+                    android:id="@+id/maps"
+                    android:layout_toRightOf="@+id/photos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:scaleType="fitCenter"
-                    android:paddingLeft="15dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_addds_plus"/>
+                    android:text="@string/maps"
+                    android:layout_marginTop="15dp"
+                    style="@style/PhotosTabDisabled"/>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/photos_rc"
                     android:layout_width="wrap_content"
-                    android:layout_height="90dp"
-                    android:layout_below="@+id/btn_add_photo"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/maps"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/maps_rc"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/maps"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"/>
 
             </RelativeLayout>
 
@@ -83,13 +80,78 @@
                 android:src="@drawable/divider" />
 
             <TextView
+                android:layout_marginLeft="20dp"
+                android:text="@string/at_least_one_photo_should_be_added"
                 android:id="@+id/error_images"
                 style="@style/ValidationErrorTextView" />
 
             <ImageView
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                style="@style/DividerStyleFull" />
+
+            <LinearLayout
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/languages_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/button_add_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp">
+
+                    <LinearLayout
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_text"
+                            android:text="@string/add_langueage"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#8b8b8b"
+                            android:text="@string/add_language_subtitle"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/add_nme_and_description"
+                android:id="@+id/error_translations"
+                style="@style/ValidationErrorTextView" />
+
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_block_margin_top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/divider" />
 
@@ -99,6 +161,30 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/country_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:src="@drawable/ic_ds_country" />
+
+                    <TextView
+                        android:id="@+id/country_title"
+                        style="@style/AddDsCharTitleStyle"
+                        android:text="@string/country_characteristic"
+                        android:textColor="#b2b2b2" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyle" />
+
+                <TextView
+                    android:text="@string/select_country_error"
+                    android:id="@+id/error_country"
+                    style="@style/ValidationErrorTextView" />
                 <LinearLayout
                     android:id="@+id/location_layout"
                     android:layout_width="match_parent"
@@ -120,6 +206,7 @@
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/pick_the_dive_spot_location"
                     android:id="@+id/error_location"
                     style="@style/ValidationErrorTextView" />
 
@@ -131,41 +218,20 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_spotname" />
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/name"
-                        style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/name" />
-                </LinearLayout>
-
-                <ImageView style="@style/DividerStyle" />
-
-                <TextView
-                    android:id="@+id/error_name"
-                    style="@style/ValidationErrorTextView" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_deep" />
+                        android:src="@drawable/ic_ds_deep_2" />
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/depth"
                         style="@style/AddDsCharTitleStyle"
                         android:hint="@string/max_depth_meters"
                         android:inputType="number"
-                        android:maxLength="5" />
+                        android:maxLength="3" />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/depth_required"
                     android:id="@+id/error_depth"
                     style="@style/ValidationErrorTextView" />
 
@@ -179,51 +245,91 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_visibility" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:gravity="center"
-                        android:text="@string/details_visibility"
-                        android:textColor="#B2B2B2"
-                        android:fontFamily="sans-serif-medium"
-                        android:textSize="16sp" />
+                    <android.support.percent.PercentRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/minVisibility"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center"
-                        android:hint="@string/min"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp" />
+                        <LinearLayout
+                            android:id="@+id/min_visibility_layout"
+                            app:layout_widthPercent="50%"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/maxVisibility"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center"
-                        android:hint="@string/max"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp" />
+                            <EditText
+                                android:id="@+id/minVisibility"
+                                style="@style/AddDsCharTitleStyle"
+                                android:layout_width="match_parent"
+                                android:layout_marginRight="20dp"
+                                android:layout_height="56dp"
+                                android:hint="@string/min"
+                                android:inputType="number"
+                                android:maxLength="5" />
+
+                            <ImageView
+                                style="@style/DividerStyleFull" />
+
+                            <TextView
+                                android:id="@+id/min_visibility_hint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#a9a9a9"
+                                android:textSize="12sp"
+                                android:text="@string/min_1"/>
+
+                            <TextView
+                                android:text="@string/incorrect_data"
+                                android:layout_marginLeft="0dp"
+                                android:id="@+id/error_visibility_min"
+                                style="@style/ValidationErrorTextView" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_toRightOf="@+id/min_visibility_layout"
+                            android:id="@+id/max_visibility_layout"
+                            app:layout_widthPercent="50%"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                                <EditText
+                                    android:id="@+id/maxVisibility"
+                                    style="@style/AddDsCharTitleStyle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="56dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:hint="@string/max"
+                                    android:inputType="number"
+                                    android:maxLength="5" />
+
+                                <ImageView
+                                    android:layout_marginLeft="15dp"
+                                    style="@style/DividerStyleFull" />
+
+
+                            <TextView
+                                android:id="@+id/max_visibility_hint"
+                                android:layout_marginLeft="15dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#a9a9a9"
+                                android:textSize="12sp"
+                                android:text="@string/max_100"/>
+
+                            <TextView
+                                android:text="@string/incorrect_data"
+                                android:layout_marginLeft="15dp"
+                                android:id="@+id/error_visibility_max"
+                                style="@style/ValidationErrorTextView" />
+
+                        </LinearLayout>
+
+                    </android.support.percent.PercentRelativeLayout>
 
                 </LinearLayout>
 
-                <ImageView style="@style/DividerStyle" />
-
                 <TextView
-                    android:id="@+id/error_visibility_min"
-                    style="@style/ValidationErrorTextView" />
-
-                <TextView
-                    android:id="@+id/error_visibility_max"
+                    android:text="@string/visibility_rquired"
+                    android:id="@+id/error_visibility"
                     style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
@@ -234,38 +340,24 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_currents" />
+                        android:src="@drawable/ic_ds_currents" />
+                    
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/current"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/currents_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
-                            android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
+                            android:popupBackground="@color/white" />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+
+                <TextView
+                    android:text="@string/current_is_required"
+                    android:id="@+id/error_current"
+                    style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -275,38 +367,24 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_level" />
+                        android:src="@drawable/ic_ds_level" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/level"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/level_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
                             android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
+                             />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+
+                <TextView
+                    android:text="@string/level_is_required"
+                    android:id="@+id/error_level"
+                    style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -318,62 +396,22 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_object" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/object"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/object_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
-                            android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView style="@style/DividerStyle" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/CharacteristicsDiveSpotListIcons"
-                        android:layout_height="56dp"
-                        android:src="@drawable/ic_addds_desc" />
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:paddingRight="10dp"
-                        android:id="@+id/description"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:fontFamily="sans-serif"
-                        android:hint="@string/description_at_least_150_symbols"
-                        android:paddingBottom="7dp" />
+                            android:popupBackground="@color/white" />
+                    
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/error_description"
+                    android:text="@string/object_is_required"
+                    android:id="@+id/error_object"
                     style="@style/ValidationErrorTextView" />
+
+
             </LinearLayout>
 
             <ImageView
@@ -385,7 +423,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/base_block_margin_top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/divider" />
 
@@ -395,6 +433,7 @@
                 android:background="@color/white">
 
                 <TextView
+                    android:id="@+id/sealife_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -404,57 +443,98 @@
                     android:textColor="@color/black_text"
                     android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/add_sealife_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="87dp"
-                    android:text="@string/add_sealife"
-                    android:textColor="#b2b2b2"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/btn_add_sealife"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:scaleType="fitCenter"
-                    android:paddingLeft="15dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_addds_plus" />
-
                 <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/sealifes_rc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/btn_add_sealife"
-                    android:layout_marginBottom="15dp"
+                    android:layout_below="@+id/sealife_title"
                     android:layout_marginLeft="20dp"
                     android:visibility="visible" />
+                <LinearLayout
+                    style="@style/AddSealifeButtonStyle"
+                    android:id="@+id/btn_add_sealife"
+                    android:layout_marginTop="11dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_below="@+id/sealifes_rc"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_sea_life"
+                        android:textColor="#a9a9a9" />
+                </LinearLayout>
             </RelativeLayout>
 
             <ImageView style="@style/DividerStyle" />
 
             <TextView
+                android:text="@string/one_sealife"
                 android:id="@+id/error_sealife"
                 style="@style/ValidationErrorTextView" />
+
+            <ImageView
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                style="@style/DividerStyleFull" />
+            <LinearLayout
+                android:id="@+id/working_layout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_ds_divecenter"
+                    android:layout_marginLeft="21dp"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:paddingLeft="23dp"
+                    android:id="@+id/switch_button_working"
+                    android:layout_width="match_parent"
+                    android:textSize="15sp"
+                    android:layout_height="match_parent"
+                    android:text="@string/i_am_working_here"
+                    android:paddingRight="20dp"
+                    app:theme="@style/ColorSwitchStyle"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/edit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_edit"
+                    android:layout_marginLeft="21dp"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:paddingLeft="23dp"
+                    android:id="@+id/switch_button_edit"
+                    android:layout_width="match_parent"
+                    android:textSize="15sp"
+                    android:layout_height="match_parent"
+                    android:text="@string/everyone_can_edit"
+                    android:paddingRight="20dp"
+                    app:theme="@style/ColorSwitchStyle"
+                    />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/border_button_orange_2px"
-                android:text="@string/btn_save"
-                android:textColor="@color/black_text"
-                android:textSize="15sp" />
+                style="@style/OrangeButtons"
+                android:text="@string/btn_save" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

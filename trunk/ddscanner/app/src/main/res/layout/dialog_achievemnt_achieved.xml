@@ -9,7 +9,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/gongrats"
+        tools:text="@string/gongrats"
         android:textColor="@color/black_text"
         android:gravity="center"
         android:layout_marginTop="20dp"
@@ -27,9 +27,10 @@
         android:gravity="center"
         tools:text="Your first check in brought you first points! Make more to get the title of diver."/>
     <Button
+        android:id="@+id/close_button"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@drawable/dialog_achievement_button_background"
+        style="@style/DialogCloseButtonStyle"
         android:text="@string/close"/>
 </LinearLayout>

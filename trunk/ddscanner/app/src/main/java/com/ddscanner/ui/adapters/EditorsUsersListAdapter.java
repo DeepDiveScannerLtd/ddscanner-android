@@ -11,8 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
-import com.ddscanner.events.ShowUserDialogEvent;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -26,10 +25,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersListAdapter.EditorsUsersListViewHolder> {
 
     private Context context;
-    private ArrayList<User> userArrayList;
+    private ArrayList<User> users;
 
-    public EditorsUsersListAdapter(Context context, ArrayList<User> users) {
-        userArrayList = users;
+    public EditorsUsersListAdapter(Context context, ArrayList<User> Users) {
+        users = Users;
         this.context = context;
     }
 
@@ -43,40 +42,20 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
-        if (!userArrayList.get(position).getPicture().contains("http")) {
-            Picasso.with(context)
-                    .load(R.drawable.avatar_profile_dds)
-                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
-                    .centerCrop()
-                    .transform(new CropCircleTransformation())
-                    .into(holder.userAvatar);
-        } else {
-            Picasso.with(context)
-                    .load(userArrayList.get(position).getPicture())
-                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
-                    .centerCrop()
-                    .transform(new CropCircleTransformation())
-                    .into(holder.userAvatar);
-        }
-        holder.userName.setText(userArrayList.get(position).getName());
-        if (position == 0) {
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context))).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).transform(new CropCircleTransformation()).into(holder.userAvatar);
+        holder.userName.setText(users.get(position).getName());
+        if (users.get(position).isCreator()) {
+            holder.creatorLabel.setVisibility(View.VISIBLE);
             holder.info.setText(R.string.creator);
         } else {
+            holder.creatorLabel.setVisibility(View.GONE);
             holder.info.setText(R.string.editor);
-        }
-        if (userArrayList.get(position).getAuthor() != null && userArrayList.get(position).getAuthor().equals("social")) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ForeignProfileActivity.show(context, userArrayList.get(position).getId());
-                }
-            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return users.size();
     }
 
     public class EditorsUsersListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -84,20 +63,20 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         private ImageView userAvatar;
         private TextView userName;
         private TextView info;
+        private ImageView creatorLabel;
 
         public EditorsUsersListViewHolder(View v) {
             super(v);
-//            v.setOnClickListener(this);
+            v.setOnClickListener(this);
             userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
             userName = (TextView) v.findViewById(R.id.user_name);
             info = (TextView) v.findViewById(R.id.count);
+            creatorLabel = (ImageView) v.findViewById(R.id.creator_label);
         }
 
         @Override
         public void onClick(View v) {
-//            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
-//                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
-//            }
+            UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
         }
     }
 

@@ -9,12 +9,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.events.LocationReadyEvent;
+import com.ddscanner.rest.DDScannerRestClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class LocationHelper implements LocationListener {
 
@@ -30,19 +34,41 @@ public class LocationHelper implements LocationListener {
     private Activity context;
     private HashSet<Integer> requestCodes = new HashSet<>();
 
+    private DDScannerRestClient.ResultListener<Void> updateLocationResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
     public LocationHelper(Activity context) {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     public void checkLocationConditions() throws LocationProvidersNotAvailableException, LocationPPermissionsNotGrantedException {
-        LogUtils.i(TAG, "checkLocationConditions start");
+        Log.i(TAG, "checkLocationConditions start");
         if (!isLocationPermissionsGranted(context)) {
-            LogUtils.i(TAG, "checkLocationConditions isLocationPermissionsGranted = false");
+            Log.i(TAG, "checkLocationConditions isLocationPermissionsGranted = false");
             throw new LocationPPermissionsNotGrantedException();
         }
         if (!isLocationProvidersAvailable()) {
-            LogUtils.i(TAG, "checkLocationConditions isLocationProvidersAvailable = false");
+            Log.i(TAG, "checkLocationConditions isLocationProvidersAvailable = false");
             throw new LocationProvidersNotAvailableException();
         }
     }
@@ -73,7 +99,7 @@ public class LocationHelper implements LocationListener {
     }
 
     public void requestLocation(HashSet<Integer> requestCodes) {
-        LogUtils.i(TAG, "location check: requestLocation codes = " + requestCodes);
+        Log.i(TAG, "location check: requestLocation codes = " + requestCodes);
         this.requestCodes.addAll(requestCodes);
         Location lastKnownLocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Location lastKnownLocationNetwork = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -81,19 +107,23 @@ public class LocationHelper implements LocationListener {
         if (isLocationOk(lastKnownLocationGps) && isLocationOk(lastKnownLocationNetwork)) {
             if (isBetterLocation(lastKnownLocationNetwork, lastKnownLocationGps)) {
                 DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+                sendUpdateLocationRequest(new LatLng(lastKnownLocationNetwork.getLatitude(), lastKnownLocationNetwork.getLongitude()));
                 this.requestCodes.clear();
                 return;
             } else {
                 DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+                sendUpdateLocationRequest(new LatLng(lastKnownLocationGps.getLatitude(), lastKnownLocationGps.getLongitude()));
                 this.requestCodes.clear();
                 return;
             }
         } else if (isLocationOk(lastKnownLocationGps)) {
             DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+            sendUpdateLocationRequest(new LatLng(lastKnownLocationGps.getLatitude(), lastKnownLocationGps.getLongitude()));
             this.requestCodes.clear();
             return;
         } else if (isLocationOk(lastKnownLocationNetwork)) {
             DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+            sendUpdateLocationRequest(new LatLng(lastKnownLocationNetwork.getLatitude(), lastKnownLocationNetwork.getLongitude()));
             this.requestCodes.clear();
             return;
         }
@@ -107,6 +137,13 @@ public class LocationHelper implements LocationListener {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         }
 
+    }
+
+    private void sendUpdateLocationRequest(LatLng latLng) {
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserLocation(latLng);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateUserLocation(updateLocationResultListener, new UpdateLocationRequest(FirebaseInstanceId.getInstance().getId(), String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 2));
+        }
     }
 
     private boolean isLocationOk(Location lastKnownLocation) {
@@ -169,7 +206,7 @@ public class LocationHelper implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         if (isLocationOk(location)) {
-            LogUtils.i(TAG, "Found good location, sending bus event.");
+            Log.i(TAG, "Found good location, sending bus event.");
             DDScannerApplication.bus.post(new LocationReadyEvent(location, requestCodes));
             requestCodes.clear();
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

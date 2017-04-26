@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/view_toolbar" />
+    <RelativeLayout
+        android:id="@+id/login_view_first"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_nologin" />
+
+        <TextView
+            android:id="@+id/need_to_login_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/login_to_continue"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:text="@string/sign_up"
+            android:id="@+id/sign_up"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/need_to_login_message"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="133dp"
+            style="@style/OrangeButtons" />
+
+        <Button
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/sign_up"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:text="@string/login"
+            style="@style/BlueButton" />
+    </RelativeLayout>
+</LinearLayout>

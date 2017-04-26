@@ -5,27 +5,62 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivitySealifeFullBinding;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.sealife.add.AddSealifeActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.gson.Gson;
 
-public class SealifeDetailsActivity extends AppCompatActivity {
+public class SealifeDetailsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     public static final String EXTRA_SEALIFE = "SEALIFE";
     public static final String EXTRA_PATH = "PATH";
+    private float dpWidth;
+    private String id;
 
     private ActivitySealifeFullBinding binding;
 
-    public static void show(Context context, Sealife sealife, String pathMedium) {
+    private DDScannerRestClient.ResultListener<Sealife> resultListener = new DDScannerRestClient.ResultListener<Sealife>() {
+        @Override
+        public void onSuccess(Sealife result) {
+            binding.setSealifeViewModel(new SealifeViewModel(result, dpWidth, binding.progressBar));
+            binding.progressView.setVisibility(View.GONE);
+            binding.mainLayout.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+        }
+
+    };
+
+    public static void show(Context context, String id) {
         Intent intent = new Intent(context, SealifeDetailsActivity.class);
-        intent.putExtra(EXTRA_SEALIFE, sealife);
-        intent.putExtra(EXTRA_PATH, pathMedium);
+        intent.putExtra(EXTRA_SEALIFE, id);
         context.startActivity(intent);
     }
 
@@ -33,15 +68,12 @@ public class SealifeDetailsActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sealife_full);
-
-        Sealife sealife = (Sealife) getIntent().getSerializableExtra(EXTRA_SEALIFE);
-        String pathMedium = getIntent().getStringExtra(EXTRA_PATH);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        id = getIntent().getStringExtra(EXTRA_SEALIFE);
         Display display = getWindowManager().getDefaultDisplay();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
-        float dpWidth = outMetrics.widthPixels / density;
-        binding.setSealifeViewModel(new SealifeViewModel(sealife, pathMedium, dpWidth, binding.progressBar));
+        dpWidth = outMetrics.widthPixels / density;
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -61,21 +93,39 @@ public class SealifeDetailsActivity extends AppCompatActivity {
             }
         });
 
-        setSupportActionBar(binding.toolbar);
-        //getSupportActionBar().setTitle(sealife.getName());
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        EventsTracker.trackDiveSpotSealifeView();
+        setupToolbar(R.string.empty_string, R.id.toolbar, R.menu.menu_sealife_details);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
+            case R.id.edit_sealife:
+                AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
+                return true;
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    binding.progressView.setVisibility(View.VISIBLE);
+                    binding.mainLayout.setVisibility(View.GONE);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
+                }
+                break;
         }
     }
 
@@ -89,5 +139,10 @@ public class SealifeDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }

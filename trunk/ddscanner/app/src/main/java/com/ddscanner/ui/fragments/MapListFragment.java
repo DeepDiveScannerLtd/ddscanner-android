@@ -1,9 +1,10 @@
 package com.ddscanner.ui.fragments;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.graphics.BitmapFactory;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +30,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
@@ -38,16 +40,14 @@ import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
-import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
-import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LocationHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -116,6 +116,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RecyclerView rc;
     private RelativeLayout please;
     private DiveSpotsListAdapter productListAdapter;
+    private int diveSpotInfoHeight;
 
     @Override
     public void onAttach(Context context) {
@@ -177,7 +178,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         findViews();
         setMapView(savedInstanceState);
         Log.i(TAG, "MapListFragment getLocation 1");
-        baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
+        if (LocationHelper.isLocationProvidersAvailable(getContext()) && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
+        }
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(110, getContext()));
         return view;
     }
 
@@ -231,17 +235,17 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) view.findViewById(R.id.mapView);
-        LogUtils.i(TAG, "mMapView inited");
+        Log.i(TAG, "mMapView inited");
         mMapView.onCreate(new Bundle());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                LogUtils.i(TAG, "onMapReady, googleMap = " + googleMap);
+                Log.i(TAG, "onMapReady, googleMap = " + googleMap);
                 mGoogleMap = googleMap;
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
+                        Log.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
@@ -343,8 +347,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
                 break;
             case R.id.add_ds_fab:
-//                if (SharedPreferenceHelper.isUserLoggedIn()) {
-//                    AddDiveSpotActivity.show(getActivity());
+//                if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//                    AddDiveSpotActivity.showForResult(getActivity());
 //                } else {
 //                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
 //                }
@@ -360,9 +364,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @Subscribe
     public void getDiveSpotInfow(MarkerClickEvent event) {
         DDScannerApplication.bus.post(new InfowWindowOpenedEvent(null));
-        mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
-        addDsFab.animate().translationY(-diveSpotInfo.getHeight());
-        mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
+        mapControlLayout.animate().translationY(-diveSpotInfoHeight);
+        addDsFab.animate().translationY(-diveSpotInfoHeight);
+        mapListFAB.animate().translationY(-diveSpotInfoHeight);
         diveSpotInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)
@@ -374,22 +378,18 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         diveSpotInfo.setVisibility(View.VISIBLE);
                     }
                 });
-        diveSpotName.setText(event.getDiveSpot().getName());
-        diveSpotType.setText(event.getDiveSpot().getObject());
-        if (infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()) != null) {
-            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()));
-        } else {
-            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Constants.OBJECT_TYPE_OTHER));
-        }
-        lastDiveSpotId = event.getDiveSpot().getId();
+        diveSpotName.setText(event.getDiveSpotShort().getName());
+        diveSpotType.setText(event.getDiveSpotShort().getObject());
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpotShort().getObject()));
+        lastDiveSpotId = event.getDiveSpotShort().getId();
         rating.removeAllViews();
-        for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
+        for (int k = 0; k < Math.round(event.getDiveSpotShort().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_full);
             iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Math.round(event.getDiveSpot().getRating()); k++) {
+        for (int k = 0; k < 5 - Math.round(event.getDiveSpotShort().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_empty);
             iv.setPadding(0, 0, 5, 0);
@@ -416,7 +416,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
         diveSpotInfo.animate()
-                .translationY(diveSpotInfo.getHeight())
+                .translationY(diveSpotInfoHeight)
                 .alpha(0.0f)
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
@@ -460,16 +460,16 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    public void fillDiveSpots(ArrayList<DiveSpot> diveSpots) {
+    public void fillDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
         if (productListAdapter == null) {
-            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
+            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         } else {
-            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
+            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         }
 
-        if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
+        if (diveSpotShorts == null || diveSpotShorts.isEmpty() || diveSpotShorts.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
         } else {
@@ -481,7 +481,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
+        Log.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
@@ -504,7 +504,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                                 .strokeColor(android.R.color.transparent)
                                 .fillColor(Color.parseColor("#1A0668a1"));
                         circle = mGoogleMap.addCircle(circleOptions);
-                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        if (diveSpotsClusterManager != null) {
+                            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        }
                     } else {
                         circle.setCenter(myLocation);
                         myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
@@ -513,7 +515,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
-                    LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
+                    Log.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
                     if (diveSpotsClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.
                         userLocationOnFragmentStart = event.getLocation();

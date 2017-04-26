@@ -7,20 +7,73 @@
     android:background="@color/black_text"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <com.ddscanner.ui.views.SliderViewPager
+        android:id="@+id/image_slider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@drawable/slider_top_gradient">
+        <ImageView
+            android:layout_width="58dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/ic_ac_back"
+            android:id="@+id/close_btn"/>
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/close_btn"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="All photos"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/images_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="7 of 15"
+                android:textSize="12sp"
+                android:textColor="#B3ffffff"/>
+        </LinearLayout>
+        <ImageView
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:id="@+id/options"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:src="@drawable/ic_ac_more"
+            android:scaleType="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/slider_bottom_gradient">
+        <LinearLayout
+            android:layout_toLeftOf="@+id/likes_layout"
             android:layout_width="match_parent"
             android:layout_height="57dp"
-            android:layout_toLeftOf="@+id/options"
             android:orientation="horizontal">
             <ImageView
                 android:id="@+id/user_avatar"
                 android:layout_marginTop="11dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="35dp"
-                android:layout_height="35dp" />
+                android:layout_height="35dp"
+                tools:src="@drawable/avatar_checkin"/>
             <LinearLayout
                 android:layout_marginLeft="15dp"
                 android:layout_width="match_parent"
@@ -45,43 +98,28 @@
                     tools:text= "21 may 2016, 20:37"/>
             </LinearLayout>
         </LinearLayout>
-        <ImageView
-            android:visibility="gone"
-            android:layout_toLeftOf="@+id/close_btn"
-            android:id="@+id/options"
-            android:layout_width="30dp"
-            android:layout_height="57dp"
-            android:src="@drawable/ic_ac_more"
-            android:scaleType="center"/>
-        <ImageView
-            android:id="@+id/close_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
             android:layout_alignParentRight="true"
-            android:padding="20dp"
-            android:src="@drawable/ic_close" />
-    </RelativeLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/image_slider"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_gravity="center" />
-
-    <RelativeLayout
-        android:id="@+id/viewPagerIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="5dp"
-        android:gravity="center">
-
-        <LinearLayout
-            android:id="@+id/viewPagerCountDots"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:orientation="horizontal" />
+            android:id="@+id/likes_layout"
+            android:layout_gravity="bottom"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_like_photo_empty"/>
+            <TextView
+                android:id="@+id/likes_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/icon"
+                android:textColor="#dee9ed"
+                android:textSize="15sp"
+                tools:text="15"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"/>
+        </RelativeLayout>
     </RelativeLayout>
 </FrameLayout>

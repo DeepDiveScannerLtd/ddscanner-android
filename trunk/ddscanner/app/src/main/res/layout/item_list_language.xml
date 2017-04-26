@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="57dp"
+    android:background="@color/white"
+    android:paddingLeft="15dp">
+    <TextView
+        android:textColor="@color/black_text"
+        android:id="@+id/language_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/checking_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_list_check"/>
+
+    <ImageView
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull"
+        />
+
+</RelativeLayout>

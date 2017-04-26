@@ -96,11 +96,11 @@ public class EditDiveSpotEntity {
 
     private Boolean isValidation;
 
-    public User getCreator() {
+    public UserOld getCreator() {
         return creator;
     }
 
-    public void setCreator(User creator) {
+    public void setCreator(UserOld creator) {
         this.creator = creator;
     }
 
@@ -120,7 +120,7 @@ public class EditDiveSpotEntity {
         this.lng = lng;
     }
 
-    private User creator;
+    private UserOld creator;
     private List<Image> commentImages;
 
     public String getObject() {

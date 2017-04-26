@@ -1,6 +1,5 @@
 package com.ddscanner.rest;
 
-import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -28,7 +27,6 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
                 resultListener.onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
                 return;
             }
-            LogUtils.i("response body is " + responseString);
             try {
                 handleResponseString(resultListener, responseString);
             } catch (JsonSyntaxException | JSONException e) {

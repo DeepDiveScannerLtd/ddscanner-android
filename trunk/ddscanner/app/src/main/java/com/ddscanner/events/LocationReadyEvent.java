@@ -1,11 +1,8 @@
 package com.ddscanner.events;
 
 import android.location.Location;
-import android.util.SparseArray;
+import android.util.Log;
 
-import com.ddscanner.utils.LogUtils;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class LocationReadyEvent {
@@ -17,7 +14,7 @@ public class LocationReadyEvent {
     public LocationReadyEvent(Location location, HashSet<Integer> requestCodes) {
         this.location = location;
         this.requestCodes.addAll(requestCodes);
-        LogUtils.i(TAG, "location check: requestCodes = " + requestCodes);
+        Log.i(TAG, "location check: requestCodes = " + requestCodes);
 
     }
 

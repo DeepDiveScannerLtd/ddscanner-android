@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:auto="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="handlers"
+            type="com.ddscanner.ui.activities.PickLocationActivity" />
+    </data>
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/primary"
+            android:minHeight="?actionBarSize"
+            android:titleTextColor="@color/white"
+            android:transitionName="toolbar"
+            app:titleTextColor="@color/white"
+            auto:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_lat"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp">
+
+                <EditText
+                    android:id="@+id/latitude"
+                    android:maxLength="10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:lines="1"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/latitude"
+                    android:inputType="numberDecimal"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_toRightOf="@+id/input_layout_lat"
+                android:id="@+id/input_layout_lng"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp">
+
+                <EditText
+                    android:id="@+id/longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:maxLength="10"
+                    android:lines="1"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/longitude"
+                    android:inputType="numberDecimal"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </android.support.percent.PercentRelativeLayout>
+        <RelativeLayout
+            android:id="@+id/mapFragmentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_fragment"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/empty_view"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_ds" />
+
+            <View
+                android:id="@+id/empty_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/apply_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:src="@drawable/ic_acb_check"
+        android:scaleType="center"
+        app:backgroundTint="@color/orange"
+        android:layout_gravity="bottom|right"
+        android:onClick="@{handlers::saveLocationClicked}"/>
+</android.support.design.widget.CoordinatorLayout>
+</layout>

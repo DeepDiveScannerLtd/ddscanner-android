@@ -1,6 +1,5 @@
 package com.ddscanner.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,21 +8,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ScrollView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lashket on 15.6.16.
@@ -33,7 +30,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     private RecyclerView diveSpotsListRc;
     private ScrollView noResultsView;
     private Button addManually;
-    private ArrayList<DiveSpot> diveSpots;
+    private ArrayList<DiveSpotShort> diveSpotShorts;
 
     @Nullable
     @Override
@@ -45,25 +42,27 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         diveSpotsListRc.setLayoutManager(linearLayoutManager);
         addManually.setOnClickListener(this);
-        if (diveSpots != null) {
-            setDiveSpots(diveSpots);
+        if (diveSpotShorts != null) {
+            setDiveSpotShorts(diveSpotShorts, false);
         }
         return view;
     }
 
-    public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
+    public void setDiveSpotShorts(ArrayList<DiveSpotShort> diveSpotShorts, boolean isVisible) {
         if (diveSpotsListRc == null) {
-            this.diveSpots = diveSpots;
+            this.diveSpotShorts = diveSpotShorts;
             return;
         }
-        if (diveSpots == null || diveSpots.size() == 0) {
+        if (diveSpotShorts == null || diveSpotShorts.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);
-            Helpers.hideKeyboard(getActivity());
+            if (isVisible) {
+                Helpers.hideKeyboard(getActivity());
+            }
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);
-            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpots, getContext()));
+            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpotShorts, getContext()));
         }
     }
 
@@ -71,7 +70,8 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_spot:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                EventsTracker.trackDiveSpotCreation();
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     AddDiveSpotActivity.show(getContext());
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());

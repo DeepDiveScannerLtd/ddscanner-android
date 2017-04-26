@@ -1,5 +1,7 @@
 package com.ddscanner.events;
 
+import com.ddscanner.entities.DiveSpotPhoto;
+
 import java.util.ArrayList;
 
 /**
@@ -9,11 +11,11 @@ import java.util.ArrayList;
 public class ShowSliderForReviewImagesEvent {
 
     private boolean isSelfReview;
-    private ArrayList<String> photos;
+    private ArrayList<DiveSpotPhoto> photos;
     private int position;
     private int commentPosition;
 
-    public ShowSliderForReviewImagesEvent(boolean isSelfReview, ArrayList<String> photos, int position, int commentPosition) {
+    public ShowSliderForReviewImagesEvent(boolean isSelfReview, ArrayList<DiveSpotPhoto> photos, int position, int commentPosition) {
         this.isSelfReview = isSelfReview;
         this.photos = photos;
         this.position = position;
@@ -24,7 +26,7 @@ public class ShowSliderForReviewImagesEvent {
         return isSelfReview;
     }
 
-    public ArrayList<String> getPhotos() {
+    public ArrayList<DiveSpotPhoto> getPhotos() {
         return photos;
     }
 

@@ -1,189 +1,63 @@
 package com.ddscanner.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.ddscanner.utils.Helpers;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-/**
- * Created by lashket on 10.3.16.
- */
-public class User implements Serializable, Parcelable{
+public class User implements Serializable {
 
     private String name;
-    private String picture;
-    private String link;
-    private String type;
-    private String socialId;
-    private String username;
+    private String photo;
+    private ProfileCounters counters;
+    private List<ProfileAchievement> achievements;
+    private List<DiveSpotPhoto> photos;
+    private int type;
+    private String token;
+    @SerializedName("diving_skill")
+    private Integer diverLevel;
+    @SerializedName("about")
     private String about;
-    private String countLike;
-    private String countDislike;
-    private String countCheckin;
-    private String countEdit;
-    private String countAdd;
-    private String countComment;
     private String id;
-    private String countFavorite;
-    private String author;
+    @SerializedName("photos_count")
+    private int photosCount;
+    @SerializedName("dive_center")
+    private DiveCenterProfile diveCenter;
+    @SerializedName("is_creator")
+    private boolean isCreator;
+    private String link;
 
-    public String getAuthor() {
-        return author;
+    public String getLink() {
+        return link;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setLink(String link) {
+        this.link = link;
     }
 
-    private boolean imageContainsHttp = true;
-
-    public String getCountFavorite() {
-        return countFavorite;
+    public boolean isCreator() {
+        return isCreator;
     }
 
-    public void setCountFavorite(String countFavorite) {
-        this.countFavorite = countFavorite;
+    public void setCreator(boolean creator) {
+        isCreator = creator;
     }
 
-    public User(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
+    public DiveCenterProfile getDiveCenter() {
+        return diveCenter;
     }
 
-    protected User(Parcel in) {
-        name = in.readString();
-        picture = in.readString();
-        link = in.readString();
-        type = in.readString();
-        socialId = in.readString();
-        username = in.readString();
-        about = in.readString();
-        countLike = in.readString();
-        countDislike = in.readString();
-        countCheckin = in.readString();
-        countEdit = in.readString();
-        countAdd = in.readString();
-        countComment = in.readString();
-        id = in.readString();
-        countFavorite = in.readString();
-        author = in.readString();
+    public void setDiveCenter(DiveCenterProfile diveCenter) {
+        this.diveCenter = diveCenter;
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(android.os.Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getPhotosCount() {
+        return photosCount;
     }
 
-    @Override
-    public void writeToParcel(android.os.Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(picture);
-        dest.writeString(link);
-        dest.writeString(type);
-        dest.writeString(socialId);
-        dest.writeString(username);
-        dest.writeString(about);
-        dest.writeString(countLike);
-        dest.writeString(countDislike);
-        dest.writeString(countCheckin);
-        dest.writeString(countEdit);
-        dest.writeString(countAdd);
-        dest.writeString(countComment);
-        dest.writeString(id);
-        dest.writeString(countFavorite);
-        dest.writeString(author);
-    }
-
-    public String getSocialId() {
-        return socialId;
-    }
-
-    public void setSocialId(String socialId) {
-        this.socialId = socialId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
-    }
-
-    public String getCountLike() {
-        return countLike;
-    }
-
-    public void setCountLike(String countLike) {
-        this.countLike = countLike;
-    }
-
-    public String getCountDislike() {
-        return countDislike;
-    }
-
-    public void setCountDislike(String countDislike) {
-        this.countDislike = countDislike;
-    }
-
-    public String getCountCheckin() {
-        return countCheckin;
-    }
-
-    public void setCountCheckin(String countCheckin) {
-        this.countCheckin = countCheckin;
-    }
-
-    public String getCountEdit() {
-        return countEdit;
-    }
-
-    public void setCountEdit(String countEdit) {
-        this.countEdit = countEdit;
-    }
-
-    public String getCountAdd() {
-        return countAdd;
-    }
-
-    public void setCountAdd(String countAdd) {
-        this.countAdd = countAdd;
-    }
-
-    public String getCountComment() {
-        return countComment;
-    }
-
-    public void setCountComment(String countComment) {
-        this.countComment = countComment;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
     }
 
     public String getId() {
@@ -194,6 +68,78 @@ public class User implements Serializable, Parcelable{
         this.id = id;
     }
 
+    public Integer getDiverLevel() {
+        return diverLevel;
+    }
+
+    public void setDiverLevel(Integer diverLevel) {
+        this.diverLevel = diverLevel;
+    }
+
+    public String getDiverLevelString() {
+        switch (type) {
+            case 1:
+                return Helpers.getDiverLevel(diverLevel);
+            case 2:
+                return "Instructor";
+            default:
+                return "";
+        }
+
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public List<DiveSpotPhoto> getPhotos() {
+        if (photos != null) {
+            for (DiveSpotPhoto diveSpotPhoto : photos) {
+                PhotoAuthor photoAuthor = new PhotoAuthor(id, name, photo, type);
+                photos.get(photos.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+            }
+            return photos;
+        }
+        return photos;
+    }
+
+    public String getUserTypeString() {
+        switch (type) {
+            case 0:
+                return "Dive center";
+            case 1:
+                return "Diver";
+            case 2:
+                return "Instructor";
+            default:
+                return "";
+        }
+    }
+
+    public void setPhotos(List<DiveSpotPhoto> photos) {
+        this.photos = photos;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
     public String getName() {
         return name;
     }
@@ -202,23 +148,30 @@ public class User implements Serializable, Parcelable{
         this.name = name;
     }
 
-    public String getPicture() {
-        if (picture != null && imageContainsHttp) {
-            picture = picture.replace("http:", "https:");
-            imageContainsHttp = false;
+    public String getPhoto() {
+        if (photo == null) {
+            return "";
         }
-        return picture;
+        return photo;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
-    public String getLink() {
-        return link;
+    public ProfileCounters getCounters() {
+        return counters;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setCounters(ProfileCounters counters) {
+        this.counters = counters;
+    }
+
+    public List<ProfileAchievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<ProfileAchievement> achievements) {
+        this.achievements = achievements;
     }
 }

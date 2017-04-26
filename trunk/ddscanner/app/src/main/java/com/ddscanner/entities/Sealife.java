@@ -1,38 +1,23 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
  * Created by lashket on 22.1.16.
  */
-public class Sealife implements Serializable {
-    private String id;
-    private String name;
+public class Sealife extends SealifeShort implements Serializable {
     private String length;
     private String weight;
     private String depth;
+    @SerializedName("sc_name")
     private String scName;
     private String order;
     private String distribution;
+    @SerializedName("class")
     private String scClass;
     private String habitat;
-    private String image;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getLength() {
         return length;
@@ -96,14 +81,6 @@ public class Sealife implements Serializable {
 
     public void setHabitat(String habitat) {
         this.habitat = habitat;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
 }

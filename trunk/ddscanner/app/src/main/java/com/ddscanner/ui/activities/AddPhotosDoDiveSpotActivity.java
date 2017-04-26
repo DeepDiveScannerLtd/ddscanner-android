@@ -17,27 +17,22 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 /**
  * Created by lashket on 26.5.16.
  */
-public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener{
+public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private RecyclerView recyclerView;
     private Button button;
@@ -45,17 +40,14 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private MaterialDialog materialDialog;
     private Toolbar toolbar;
     private String dsId;
-    private RequestBody requestSecret = null;
-    private RequestBody requestSocial = null;
-    private RequestBody requestToken = null;
-    private RequestBody requestType = null;
     private List<String> imagesToShow = new ArrayList<>();
+    private boolean isMap;
 
-    private DDScannerRestClient.ResultListener<Void> addingPhotosToDiveSpotResultListener = new DDScannerRestClient.ResultListener<Void>() {
+    private DDScannerRestClient.ResultListener<Void> photosAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            materialDialog.dismiss();
             EventsTracker.trackDiveSpotPhotoAdded();
+            materialDialog.dismiss();
             setResult(RESULT_OK);
             finish();
         }
@@ -63,25 +55,28 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
-                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
                 default:
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     @Override
@@ -93,6 +88,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         materialDialog = Helpers.getMaterialDialog(this);
+        isMap = getIntent().getBooleanExtra("isMap", false);
         images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
         dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
         button = (Button) findViewById(R.id.button_share);
@@ -116,27 +112,11 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
     private void sendRequest() {
         materialDialog.show();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
-            }
+        if (isMap) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postMapsToDiveSpot(dsId, images, photosAddedResultListener, this);
+            return;
         }
-
-        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
-        List<MultipartBody.Part> imagesToSend = new ArrayList<>();
-        for (int i = 0; i < images.size(); i++) {
-            File image = new File(images.get(i));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
-                    image.getName(), requestFile);
-            imagesToSend.add(part);
-        }
-        DDScannerApplication.getDdScannerRestClient().postAddPhotosToDiveSpot(dsId, imagesToSend, addingPhotosToDiveSpotResultListener, requestType, requestToken, requestSocial);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postPhotosToDiveSpot(dsId, images, photosAddedResultListener, this);
     }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
@@ -165,6 +145,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
                 if (resultCode == RESULT_OK) {
                     sendRequest();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                 }
                 if (resultCode == RESULT_CANCELED) {
                     finish();
@@ -201,4 +182,15 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                 break;
         }
     }
+
+    public static void showForAddPhotos(boolean isMap, Activity context, ArrayList<String> images, String diveSpotId, int requestcode) {
+        Intent intent = new Intent(context, AddPhotosDoDiveSpotActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("IMAGES", images);
+        bundle.putString("id", diveSpotId);
+        bundle.putBoolean("isMap", isMap);
+        intent.putExtras(bundle);
+        context.startActivityForResult(intent, requestcode);
+    }
+
 }

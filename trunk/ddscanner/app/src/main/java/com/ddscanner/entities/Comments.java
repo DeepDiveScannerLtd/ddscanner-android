@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Comments implements Serializable {
 
-    private List<Comment> comments;
+    private List<CommentOld> commentOlds;
     private String diveSpotPathMedium;
 
     public String getDiveSpotPathMedium() {
@@ -19,11 +19,11 @@ public class Comments implements Serializable {
         this.diveSpotPathMedium = diveSpotPathMedium;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<CommentOld> getCommentOlds() {
+        return commentOlds;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCommentOlds(List<CommentOld> commentOlds) {
+        this.commentOlds = commentOlds;
     }
 }

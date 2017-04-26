@@ -9,8 +9,6 @@ import android.widget.ImageView;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.ui.activities.ImageSliderActivity;
-import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +63,7 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ReviewImageSliderActivity.show(context, images, getAdapterPosition(), false, false, null);
+            //TODO change according new slider
         }
     }
 

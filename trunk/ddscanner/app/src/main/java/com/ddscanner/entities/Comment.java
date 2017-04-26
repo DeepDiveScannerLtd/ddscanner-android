@@ -1,64 +1,37 @@
 package com.ddscanner.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by lashket on 12.3.16.
- */
-public class Comment implements Serializable{
-    private String comment;
-    private String rating;
+public class Comment {
+
     private String id;
-    private List<String> images;
-    private String date;
+    private String review;
+    private int rating;
+    private ArrayList<DiveSpotPhoto> photos;
     private String likes;
     private String dislikes;
-    private User user;
-    private boolean isLike;
-    private boolean isDislike;
-    private boolean isEdit;
-    private String diveSpotName;
-    private String diveSpotImage;
-    private String diveSpotId;
+    private String date;
+    @SerializedName("is_liked")
+    private Boolean isLike;
+    @SerializedName("is_disliked")
+    private Boolean isDislike;
+    @SerializedName("photos_count")
+    private int photosCount;
 
-    public String getDiveSpotName() {
-        return diveSpotName;
+    public int getPhotosCount() {
+        return photosCount;
     }
 
-    public void setDiveSpotName(String diveSpotName) {
-        this.diveSpotName = diveSpotName;
-    }
-
-    public String getDiveSpotImage() {
-        return diveSpotImage;
-    }
-
-    public void setDiveSpotImage(String diveSpotImage) {
-        this.diveSpotImage = diveSpotImage;
-    }
-
-    public String getDiveSpotId() {
-        return diveSpotId;
-    }
-
-    public void setDiveSpotId(String diveSpotId) {
-        this.diveSpotId = diveSpotId;
-    }
-
-    public boolean isEdit() {
-        return isEdit;
-    }
-
-    public void setEdit(boolean edit) {
-        isEdit = edit;
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
     }
 
     public boolean isLike() {
+        if (isLike == null) {
+            return false;
+        }
         return isLike;
     }
 
@@ -67,6 +40,9 @@ public class Comment implements Serializable{
     }
 
     public boolean isDislike() {
+        if (isDislike == null) {
+            return false;
+        }
         return isDislike;
     }
 
@@ -74,28 +50,36 @@ public class Comment implements Serializable{
         isDislike = dislike;
     }
 
-    /*  protected Comment(Parcel in) {
-            comment = in.readString();
-            rating = in.readString();
-            id = in.readString();
-            images = in.readList(images, List.class.getClassLoader());
-            date = in.readString();
-        }
-    */
-    public List<String> getImages() {
-        return images;
+    public String getId() {
+        return id;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getDate() {
-        return date;
+    public String getReview() {
+        return review;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public ArrayList<DiveSpotPhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<DiveSpotPhoto> photos) {
+        this.photos = photos;
     }
 
     public String getLikes() {
@@ -114,35 +98,11 @@ public class Comment implements Serializable{
         this.dislikes = dislikes;
     }
 
-    public String getId() {
-        return id;
+    public String getDate() {
+        return date;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/checked_in_dialog_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="59dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/checkd_in"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/image_close"
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_popup_close" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_text"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:paddingRight="28dp"
+        android:paddingLeft="28dp"
+        android:text="@string/checked_in_dialog_text"/>
+
+    <Button
+        android:id="@+id/button_close"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="29dp"
+        android:background="@drawable/dialog_achievement_button_background"
+        android:text="@string/write_areview_dialog" />
+</LinearLayout>

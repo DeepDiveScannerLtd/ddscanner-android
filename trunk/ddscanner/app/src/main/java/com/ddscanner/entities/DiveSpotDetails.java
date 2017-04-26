@@ -4,37 +4,37 @@ import java.util.List;
 
 public class DiveSpotDetails {
 
-    private List<Comment> comments;
+    private List<CommentOld> commentOlds;
     private DiveSpotFull divespot;
     private List<Sealife> sealifes;
-    private List<User> checkins;
-    private List<User> editors;
+    private List<UserOld> checkins;
+    private List<UserOld> editors;
 
     public void setDivespot(DiveSpotFull divespot) {
         this.divespot = divespot;
     }
 
-    public List<User> getCheckins() {
+    public List<UserOld> getCheckins() {
         return checkins;
     }
 
-    public void setCheckins(List<User> checkins) {
+    public void setCheckins(List<UserOld> checkins) {
         this.checkins = checkins;
     }
 
-    public List<User> getEditors() {
+    public List<UserOld> getEditors() {
         return editors;
     }
 
-    public void setEditors(List<User> editors) {
+    public void setEditors(List<UserOld> editors) {
         this.editors = editors;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<CommentOld> getCommentOlds() {
+        return commentOlds;
     }
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCommentOlds(List<CommentOld> commentOlds) {
+        this.commentOlds = commentOlds;
     }
 
     public DiveSpotFull getDivespot() { return divespot; }

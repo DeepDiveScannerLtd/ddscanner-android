@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swiperefresh"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -17,17 +12,6 @@
         android:visibility="visible"
         app:tabMode="fixed" />
 
-    <com.rey.material.widget.ProgressView
-        android:id="@+id/progressBarFull"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_below="@+id/notif_tab_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        app:pv_autostart="true"
-        app:pv_circular="true"
-        app:pv_progressMode="indeterminate"
-        app:pv_progressStyle="@style/CircularProgress" />
     <android.support.v4.view.ViewPager
         android:id="@+id/notif_view_pager"
         android:layout_width="match_parent"
@@ -35,8 +19,8 @@
         android:layout_below="@id/notif_tab_layout"
         android:visibility="gone" />
     <com.ddscanner.ui.views.LoginView
+        android:id="@+id/login_view"
         app:title="@string/notifications_need_to_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>

@@ -2,24 +2,22 @@ package com.ddscanner;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.InternetClosedActivity;
-import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.DialogHelpers;
+import com.ddscanner.utils.DiveSpotPhotosContainer;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by Vitaly on 28.11.2015.
- */
 public class DDScannerApplication extends Application {
 
     private static final String TAG = DDScannerApplication.class.getName();
@@ -30,7 +28,13 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
-    private static DDScannerRestClient ddScannerRestClient;
+
+    // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
+    private DDScannerRestClient ddScannerRestClient;
+    private SharedPreferenceHelper sharedPreferenceHelper;
+    private DialogHelpers dialogHelpers;
+    private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
+    private ArrayList<String> notificationsContainer = new ArrayList<>();
 
     private static DDScannerApplication instance;
 
@@ -50,6 +54,8 @@ public class DDScannerApplication extends Application {
         AnalyticsSystemsManager.initAnalyticsSystems(this);
 
         ddScannerRestClient = new DDScannerRestClient();
+        sharedPreferenceHelper = new SharedPreferenceHelper();
+        dialogHelpers = new DialogHelpers();
     }
 
     protected void attachBaseContext(Context base) {
@@ -58,10 +64,14 @@ public class DDScannerApplication extends Application {
     }
 
     public static void showErrorActivity(Context context) {
-        LogUtils.i(TAG, "showErrorActivity");
-        Intent error = new Intent(context, InternetClosedActivity.class);
-        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(error);
+//        Log.i(TAG, "showErrorActivity");
+//        Intent error = new Intent(context, InternetClosedActivity.class);
+//        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(error);
+    }
+
+    public DialogHelpers getDialogHelpers() {
+        return dialogHelpers;
     }
 
     public static boolean isActivityVisible() {
@@ -76,8 +86,28 @@ public class DDScannerApplication extends Application {
         activityVisible = false;
     }
 
-    public static DDScannerRestClient getDdScannerRestClient() {
+    public DDScannerRestClient getDdScannerRestClient() {
         return ddScannerRestClient;
+    }
+
+    public SharedPreferenceHelper getSharedPreferenceHelper() {
+        return sharedPreferenceHelper;
+    }
+
+    public DiveSpotPhotosContainer getDiveSpotPhotosContainer() {
+        return diveSpotPhotosContainer;
+    }
+
+    public ArrayList<String> getNotificationsContainer() {
+        return notificationsContainer;
+    }
+
+    public void addNotificationToList(String id) {
+        notificationsContainer.add(id);
+    }
+
+    public void clearNotificationsContainer() {
+        this.notificationsContainer.clear();
     }
 
 }

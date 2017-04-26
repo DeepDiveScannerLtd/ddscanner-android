@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,10 +15,7 @@ import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 
 import com.ddscanner.R;
 
@@ -47,6 +43,7 @@ public class AchievementProgressView extends View {
     private Matrix sharkMatrix = new Matrix();
     Paint paintRect= new Paint();
     private float percents;
+    private float firstPointXAxis = 0;
     private Camera camera = new Camera();
 
     private Bitmap backgroundBitmap;
@@ -96,6 +93,8 @@ public class AchievementProgressView extends View {
 
         linePath.reset();
 
+        firstPointXAxis = 18 * koefX;
+
         linePath.moveTo(18 * koefX,40 * koefY);
         linePath.quadTo(61 * koefX, 14 * koefY, 105 * koefX, 26 * koefY);
         linePath.quadTo(146 * koefX, 34 * koefY, 165 * koefX, 22 * koefY);
@@ -108,10 +107,10 @@ public class AchievementProgressView extends View {
 
         linePathMeasure = new PathMeasure(linePath, false);
         this.animationLength = linePathMeasure.getLength() * percents;
-        valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
-        valueAnimator.setDuration(animationDuration);
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.start();
+//        valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
+//        valueAnimator.setDuration(animationDuration);
+//        valueAnimator.setInterpolator(new DecelerateInterpolator());
+//        valueAnimator.start();
     }
 
     @Override
@@ -122,19 +121,21 @@ public class AchievementProgressView extends View {
         tempPath.reset();
         matrix.reset();
         float[] points = new float[20];
-        linePathMeasure.getMatrix((Float)valueAnimator.getAnimatedValue(), matrix, PathMeasure.POSITION_MATRIX_FLAG);
-        linePathMeasure.getSegment(0, (Float) valueAnimator.getAnimatedValue(), tempPath, true);
+        linePathMeasure.getMatrix(animationLength, matrix, PathMeasure.POSITION_MATRIX_FLAG);
+        linePathMeasure.getSegment(0, animationLength, tempPath, true);
         canvas.drawPath(tempPath, linePaint);
         matrix.mapPoints(points);
         canvas.drawBitmap(sharkBitmap, points[0], (getMeasuredHeight() - sharkBitmap.getHeight()) / 2, null);
 
-        if(elapsedTime < animationDuration && points[0] < animationLength) {
-            this.postInvalidateDelayed(1000 / framesPerSecond);
-        }
+//        if(elapsedTime < animationDuration && points[0] < animationLength) {
+//            this.postInvalidateDelayed(1000 / framesPerSecond);
+//        }
     }
 
     public void setPercent(float percents) {
         this.percents = percents;
+        initAfterFindingKoefs();
+        invalidate();
     }
 
     @Override
@@ -142,5 +143,13 @@ public class AchievementProgressView extends View {
         koefX = (float) w / 660;
         koefY = (float) h / 56;
         initAfterFindingKoefs();
+        invalidate();
+    }
+
+    @Override
+    public void invalidate() {
+        if (percents != 0f && koefX != 0f && koefY != 0) {
+            super.invalidate();
+        }
     }
 }

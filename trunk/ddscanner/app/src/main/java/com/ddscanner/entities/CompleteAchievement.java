@@ -3,7 +3,7 @@ package com.ddscanner.entities;
 public class CompleteAchievement {
 
     private String type;
-    private String country;
+    private CountryEntity country;
     private String points;
     private String name;
 
@@ -23,11 +23,11 @@ public class CompleteAchievement {
         this.type = type;
     }
 
-    public String getCountry() {
+    public CountryEntity getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(CountryEntity country) {
         this.country = country;
     }
 
