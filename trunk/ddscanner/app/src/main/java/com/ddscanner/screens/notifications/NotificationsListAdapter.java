@@ -38,6 +38,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_AVATAR_TEXT = 0;
     private static final int VIEW_TYPE_WITH_PHOTO = 1;
     private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
+    private static final int VIEW_TYPE_PAGINATION = 3;
 
     private Activity context;
     private boolean isSelf;
@@ -63,6 +64,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case VIEW_TYPE_PAGINATION:
+                return new PaginationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_paginaion_loader, parent, false));
             case VIEW_TYPE_AVATAR_TEXT:
                 return new TextAndPhotoItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_photo_and_text, parent, false));
             case VIEW_TYPE_WITH_PHOTO:
@@ -76,6 +79,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == VIEW_TYPE_PAGINATION) {
+            return;
+        }
         NotificationEntity notification = notifications.get(position);
         if (notification.isNew()) {
             DDScannerApplication.getInstance().addNotificationToList(notification.getId());
@@ -134,6 +140,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         return "";
     }
 
+    public void startLoading() {
+        notifications.add(null);
+        notifyItemInserted(notifications.size() - 1);
+    }
+
+    public void dataLoaded() {
+        notifications.remove(notifications.size() - 1);
+        notifyItemRemoved(notifications.size() - 1);
+    }
+
     private void loadUserPhoto(String photoId, ImageView view) {
         Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
     }
@@ -145,6 +161,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemViewType(int position) {
+        if (notifications.get(position) == null) {
+            return VIEW_TYPE_PAGINATION;
+        }
         switch (notifications.get(position).getActivityType()) {
             case DIVE_SPOT_ADDED:
             case DIVE_SPOT_CHANGED:
@@ -287,6 +306,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     }
             }
         }
+    }
+
+    class PaginationViewHolder extends RecyclerView.ViewHolder {
+
+        PaginationViewHolder(View view){
+            super(view);
+        }
+
     }
 
 }

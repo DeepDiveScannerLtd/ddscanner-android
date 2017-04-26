@@ -143,7 +143,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
                 DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
-                binding.progressBarPagination.setVisibility(View.VISIBLE);
+                notificationsListAdapter.startLoading();
                 isLoading = true;
             }
         }
@@ -173,6 +173,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
                     return;
                 }
                 if (isFromPagination) {
+                    notificationsListAdapter.dataLoaded();
                     notificationsListAdapter.add(result);
                 } else {
                     if (result.size() > 0 && !result.get(0).getId().equals(notificationsListAdapter.getFirstNotificationId())) {

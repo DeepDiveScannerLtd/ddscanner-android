@@ -156,7 +156,8 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
                 DDScannerApplication.getInstance().getDdScannerRestClient().getPersonalNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
-                binding.progressBarPagination.setVisibility(View.VISIBLE);
+                notificationsListAdapter.startLoading();
+//                binding.progressBarPagination.setVisibility(View.VISIBLE);
                 isLoading = true;
             }
         }
@@ -226,7 +227,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
             isNotificationsLoaded = true;
             binding.swipeRefreshLayout.setRefreshing(false);
             if (binding != null) {
-                binding.progressBarPagination.setVisibility(View.GONE);
+//                binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 binding.activityRc.setVisibility(View.VISIBLE);
                 binding.noNotifsView.setVisibility(View.GONE);
@@ -239,6 +240,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
                     return;
                 }
                 if (isFromPagination) {
+                    notificationsListAdapter.dataLoaded();
                     notificationsListAdapter.add(result);
                 } else {
                     if (result.size() > 0) {
