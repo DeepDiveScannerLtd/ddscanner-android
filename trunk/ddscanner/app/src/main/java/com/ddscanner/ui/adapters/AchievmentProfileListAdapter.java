@@ -58,7 +58,7 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
                 try {
                     resiId = Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class);
                     imageView.setFlagBitmap(resiId);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(28, context)), Math.round(Helpers.convertDpToPixel(28, context)));
                     if (i != 0) {
                         layoutParams.setMargins(Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(18, context)))), 0, 0, 0);
                     }

@@ -52,10 +52,12 @@ public class UserProfileFragment extends Fragment {
         View v = binding.getRoot();
         binding.setHandlers(this);
         if (user.getAchievements() != null) {
-            binding.achievmentRv.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.achievmentRv.setNestedScrollingEnabled(false);
+            binding.achievmentRv.setLayoutManager(new GridLayoutManager(getContext(), 2));
             binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getActivity()));
         }
         if (user.getPhotos() != null) {
+            binding.photosList.setNestedScrollingEnabled(false);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity(), binding.getUserProfileViewModel().getUser().getId()));
         }

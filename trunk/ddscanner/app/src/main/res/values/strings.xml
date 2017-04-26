@@ -50,7 +50,6 @@
     <string name="details_access">Access</string>
     <string name="details_btn_book_now">Contact Dive Centers</string>
 
-    <string name="facebook_app_id">1691716511044593</string>
     <string name="server_client_id">200652897389-onnv3dgvcnf7bj8dku3psjntif6hiua0.apps.googleusercontent.comm</string>
 
     <string name="twitter_consumer_key">tT7PhwjwXb8dEXbhQzI529VR4</string>
@@ -307,9 +306,9 @@
     <string name="error_no_rights_to_edit_dive_spot">Sorry, but only dive centers can edit this dive spot.</string>
     <string name="error_connection_failed_while_getting_dive_spots">Failed to connect to DDScanner service while requesting dive spots. Please check your internet connection.</string>
     <string name="error_unexpected_error_while_getting_dive_spots">Opps. Looks like we have an unexpected issue while trying to get dive spots. Report was captured</string>
-    <string name="reviews_profile">REVIEWS</string>
-    <string name="likes_profile">LIKES</string>
-    <string name="dislikes">DISLIKES</string>
+    <string name="reviews_profile">reviews</string>
+    <string name="likes_profile">likes</string>
+    <string name="dislikes">dislikes</string>
     <string name="achievements">Achievements</string>
     <string name="no_title_yet">You didn’t get the title yet</string>
     <string name="no_achievements_yet">No achievements yet</string>
@@ -505,4 +504,7 @@
     <string name="what_to_do_with_dive_spot">Choose what you want to do with this dive spot</string>
     <string name="edit_spot_dialog">EDIT</string>
     <string name="dialog_remove_spot">REMOVE</string>
+    <string name="open_on_facebook_profile">Open on facebook</string>
+    <string name="review_sent_toast">Review sent</string>
+    <string name="profile_dive_center">Dive Center</string>
 </resources>

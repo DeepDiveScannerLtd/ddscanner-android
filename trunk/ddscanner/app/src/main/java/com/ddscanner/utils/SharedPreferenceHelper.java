@@ -125,6 +125,12 @@ public class SharedPreferenceHelper {
         return prefs.getString(LEVEL, "");
     }
 
+    public boolean isFiltersApplyied() {
+        if (getLevel().isEmpty() && getObject().isEmpty() && getSealifesList() == null) {
+            return false;
+        }
+        return true;
+    }
 
     public void setVisibility(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());

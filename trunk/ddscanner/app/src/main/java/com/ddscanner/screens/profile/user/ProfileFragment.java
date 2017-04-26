@@ -261,6 +261,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         }
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
             binding.noPhotosView.setVisibility(View.GONE);
+            binding.photosList.setNestedScrollingEnabled(false);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
             binding.photosList.setVisibility(View.VISIBLE);
@@ -268,7 +269,8 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
         if (binding.getProfileFragmentViewModel().getUser().getAchievements() != null && binding.getProfileFragmentViewModel().getUser().getAchievements().size() > 0) {
             achievmentProfiles = (ArrayList<ProfileAchievement>) binding.getProfileFragmentViewModel().getUser().getAchievements();
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
+            binding.achievmentRv.setNestedScrollingEnabled(false);
             binding.achievmentRv.setLayoutManager(linearLayoutManager);
             binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
             binding.noAchievementsView.setVisibility(View.GONE);

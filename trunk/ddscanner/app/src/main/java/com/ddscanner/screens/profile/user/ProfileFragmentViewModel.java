@@ -57,7 +57,7 @@ public class ProfileFragmentViewModel {
     @BindingAdapter({"diverLevelFrom"})
     public static void diverLevelLabel(TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
         if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null) {
-            view.setText(profileFragmentViewModel.getUser().getDiverLevelString().toUpperCase());
+            view.setText(profileFragmentViewModel.getUser().getDiverLevelString());
         }
     }
 
@@ -65,8 +65,8 @@ public class ProfileFragmentViewModel {
     public static void loadImage(ImageView view, ProfileFragmentViewModel profileFragmentViewModel) {
         if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getPhoto() != null) {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, profileFragmentViewModel.getUser().getPhoto(), "2"))
-                    .resize(Math.round(Helpers.convertDpToPixel(100, view.getContext())),
-                            Math.round(Helpers.convertDpToPixel(100, view.getContext()))).centerCrop()
+                    .resize(Math.round(Helpers.convertDpToPixel(50, view.getContext())),
+                            Math.round(Helpers.convertDpToPixel(50, view.getContext()))).centerCrop()
                     .placeholder(R.drawable.gray_circle_placeholder)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
@@ -79,8 +79,8 @@ public class ProfileFragmentViewModel {
             if (viewModel.getUser().getDiveCenter() != null && viewModel.getUser().getDiveCenter().getPhoto() != null) {
                 view.setVisibility(View.VISIBLE);
                 Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getUser().getDiveCenter().getPhoto(), "1"))
-                        .resize(Math.round(Helpers.convertDpToPixel(22, view.getContext())),
-                                Math.round(Helpers.convertDpToPixel(22, view.getContext()))).centerCrop()
+                        .resize(Math.round(Helpers.convertDpToPixel(36, view.getContext())),
+                                Math.round(Helpers.convertDpToPixel(36, view.getContext()))).centerCrop()
                         .placeholder(R.drawable.placeholder_photos_activity)
                         .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL)).into(view);
             } else {

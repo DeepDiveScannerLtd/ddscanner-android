@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -630,6 +631,11 @@ public class MainActivity extends BaseAppCompatActivity
         getIsHasNewotifications();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
+        }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFiltersApplyied()) {
+            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
+        } else {
+            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
         }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.onLoggedIn();
