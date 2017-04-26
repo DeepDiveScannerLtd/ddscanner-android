@@ -547,6 +547,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
+                materialDialog.dismiss();
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {

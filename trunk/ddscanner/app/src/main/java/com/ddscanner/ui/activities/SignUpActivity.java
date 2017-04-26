@@ -423,6 +423,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
                 finish();
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
+                materialDialog.dismiss();
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
                     GoogleSignInAccount acct = result.getSignInAccount();
