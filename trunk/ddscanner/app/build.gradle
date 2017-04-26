@@ -43,6 +43,8 @@ android {
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
             resValue "string", "server_api_address", "https://ddsapi.ilave.pro"
             resValue "string", "facebook_app_id", "1876585075891068"
+            resValue "string", "application_id", "com.ddscanner.debug"
+            resValue "string", "external_path", "Android/data/com.ddscanner.debug/files/Pictures"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
@@ -54,6 +56,8 @@ android {
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
             resValue "string", "server_api_address", "https://api.ddscanner.com"
             resValue "string", "facebook_app_id", "1691716511044593"
+            resValue "string", "application_id", "com.ddscanner"
+            resValue "string", "external_path", "Android/data/com.ddscanner/files/Pictures"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

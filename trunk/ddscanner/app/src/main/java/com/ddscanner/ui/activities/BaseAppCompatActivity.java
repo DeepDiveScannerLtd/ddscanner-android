@@ -103,7 +103,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void pickSinglePhotoFromGallery() {
-        if (checkReadStoragePermission(this)) {
+        if (checkReadStoragePermission()) {
             pickphotoFromGallery();
         } else {
             android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE);
@@ -111,15 +111,15 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void pickPhotoFromCamera() {
-        if (checkWriteStoragePermission()) {
+        if (checkWriteStoragePermission() && checkReadStoragePermission()) {
             dispatchTakePictureIntent();
         } else {
-            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
+            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
         }
     }
 
     public void pickPhotosFromGallery() {
-        if (checkReadStoragePermission(this)) {
+        if (checkReadStoragePermission()) {
             Intent intent = new Intent();
             intent.setType("image/*");
             if (Build.VERSION.SDK_INT >= 18) {
@@ -133,8 +133,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkReadStoragePermission(Activity context) {
-        if (android.support.v13.app.ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    private boolean checkReadStoragePermission() {
+        if (android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
         return true;
@@ -241,7 +241,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.ddscanner.debug", photoFile);
+                //TODO when release version create change to com.ddscanner and in paths.xml
+                Uri photoURI = FileProvider.getUriForFile(this, getString(R.string.application_id), photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA);
             }
