@@ -414,4 +414,12 @@
         <item name="android:layout_height">@dimen/button_height</item>
     </style>
 
+    <style name="FacebookLoginButtonBackground">
+        <item name="android:background">@drawable/fb_login_btn_background</item>
+    </style>
+
+    <style name="GoogleLoginButtonBackground">
+        <item name="android:background">@drawable/google_login_button</item>
+    </style>
+
 </resources>

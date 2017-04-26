@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/skip"
         android:textColor="#c4ceee"
+        android:background="?attr/selectableItemBackground"
         android:fontFamily="sans-serif-medium"/>
 
     <ImageView

@@ -103,7 +103,6 @@
                         <LinearLayout
                             android:id="@+id/comments_layout"
                             android:layout_height="64dp"
-                            android:background="?attr/selectableItemBackground"
                             android:gravity="center_vertical"
                             android:onClick="@{handlers::showComments}"
                             android:orientation="vertical"
@@ -127,7 +126,6 @@
                             android:id="@+id/likeLayout"
                             android:layout_height="64dp"
                             android:layout_toRightOf="@+id/comments_layout"
-                            android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showLikes}"
                             android:gravity="center_vertical"
                             android:orientation="vertical"
@@ -153,7 +151,6 @@
                             android:id="@+id/dislikeLayout"
                             android:layout_height="64dp"
                             android:layout_toRightOf="@+id/likeLayout"
-                            android:background="?attr/selectableItemBackground"
                             android:gravity="center_vertical"
                             android:onClick="@{handlers::showDislikes}"
                             android:orientation="vertical"
