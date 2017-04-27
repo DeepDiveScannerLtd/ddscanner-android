@@ -135,7 +135,7 @@
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
         <item name="cpd_strokeColor">@color/primary</item>
-        <item name="cpd_strokeSize">2dp</item>
+        <item name="cpd_strokeSize">2.5dp</item>
     </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Holo.Light">

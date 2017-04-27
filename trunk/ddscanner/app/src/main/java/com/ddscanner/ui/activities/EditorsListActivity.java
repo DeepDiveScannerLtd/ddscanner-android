@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -17,6 +18,7 @@ import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
     private RecyclerView usersRecyclerView;
     private User creator;
     private ArrayList<User> users = new ArrayList<>();
+    private ProgressView progressView;
 
     private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
         @Override
@@ -62,10 +65,13 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
     }
 
     private void findViews() {
+        progressView = (ProgressView) findViewById(R.id.progress_bar);
         usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
     }
 
     private void setUi(ArrayList<User> users) {
+        progressView.setVisibility(View.GONE);
+        usersRecyclerView.setVisibility(View.VISIBLE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
         usersRecyclerView.setAdapter(new EditorsUsersListAdapter(this, users));
