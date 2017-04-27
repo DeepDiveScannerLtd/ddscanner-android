@@ -154,7 +154,7 @@ public class UserProfileFragment extends Fragment {
             } else { //older versions of fb app
                 return "fb://page/" + FACEBOOK_PAGE_ID;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             return FACEBOOK_URL + FACEBOOK_PAGE_ID; //normal web url
         }
     }

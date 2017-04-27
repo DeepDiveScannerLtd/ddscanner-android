@@ -211,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:paddingBottom="12dp"
                         android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
+                        android:paddingRight="15dp"
                         android:paddingTop="12dp" />
 
                     <ImageView style="@style/DividerStyleFull" />
@@ -227,21 +227,23 @@
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/reviews_activity"
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:onClick="@{handlers::showComments}"
-                        android:orientation="horizontal"
+                        android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <ImageView
+                            android:id="@+id/icon_reviews"
                             style="@style/CharacteristicsDiveSpotListIcons"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_profile_reviews" />
 
                         <LinearLayout
+                            android:layout_toRightOf="@+id/icon_reviews"
                             android:layout_width="258dp"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
@@ -259,28 +261,31 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="match_parent"
                             android:scaleType="center"
                             android:src="@drawable/ic_arrow" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/checkins_activity"
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:onClick="@{handlers::showCheckinns}"
-                        android:orientation="horizontal"
+                        android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <ImageView
+                            android:id="@+id/checkins_icon"
                             style="@style/CharacteristicsDiveSpotListIcons"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_profile_checkin" />
 
                         <LinearLayout
+                            android:layout_toRightOf="@+id/checkins_icon"
                             android:layout_width="258dp"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
@@ -298,28 +303,31 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="match_parent"
                             android:scaleType="center"
                             android:src="@drawable/ic_arrow" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/created_activity"
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:onClick="@{handlers::showAdded}"
-                        android:orientation="horizontal"
+                        android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <ImageView
+                            android:id="@+id/icon_added"
                             style="@style/CharacteristicsDiveSpotListIcons"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_profile_added" />
 
                         <LinearLayout
+                            android:layout_toRightOf="@+id/icon_added"
                             android:layout_width="258dp"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
@@ -337,28 +345,31 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="match_parent"
                             android:scaleType="center"
                             android:src="@drawable/ic_arrow" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/edited_activity"
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:onClick="@{handlers::showEdited}"
-                        android:orientation="horizontal"
+                        android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <ImageView
+                            android:id="@+id/icon_edited"
                             style="@style/CharacteristicsDiveSpotListIcons"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_profile_edited" />
 
                         <LinearLayout
+                            android:layout_toRightOf="@+id/icon_edited"
                             android:layout_width="258dp"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
@@ -376,11 +387,12 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="match_parent"
                             android:scaleType="center"
                             android:src="@drawable/ic_arrow" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <ImageView style="@style/DividerStyle" />
 
