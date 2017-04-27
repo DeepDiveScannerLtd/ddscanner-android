@@ -1,6 +1,9 @@
 package com.ddscanner.screens.user.profile;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +37,8 @@ public class UserProfileFragment extends Fragment {
 
     private User user;
     FragmentUserProfileBinding binding;
+    private String FACEBOOK_URL = "https://www.facebook.com/";
+    private String FACEBOOK_PAGE_ID;
 
     public static UserProfileFragment newInstance(User user) {
         UserProfileFragment userProfileFragment = new UserProfileFragment();
@@ -130,6 +135,28 @@ public class UserProfileFragment extends Fragment {
 
     public void showDiveCenter(View view) {
         UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), 0);
+    }
+
+    public void openFacebook(View view) {
+        Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+        String facebookUrl = getFacebookPageURL();
+        facebookIntent.setData(Uri.parse(facebookUrl));
+        startActivity(facebookIntent);
+    }
+
+    public String getFacebookPageURL() {
+        FACEBOOK_PAGE_ID = binding.getUserProfileViewModel().getUser().getFacebookLink();
+        PackageManager packageManager = getActivity().getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL + FACEBOOK_PAGE_ID;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL + FACEBOOK_PAGE_ID; //normal web url
+        }
     }
 
 }

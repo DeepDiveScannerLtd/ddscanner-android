@@ -87,6 +87,7 @@
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="14dp"
+                        android:paddingBottom="14dp"
                         android:id="@+id/user_about"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -94,85 +95,6 @@
                         android:textColor="#616161"
                         android:textSize="13sp"
                         android:visibility="@{userProfileViewModel.user.about != null ? View.VISIBLE : View.GONE}" />
-
-                    <android.support.percent.PercentRelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp">
-
-                        <LinearLayout
-                            android:id="@+id/comments_layout"
-                            android:layout_height="64dp"
-                            android:gravity="center_vertical"
-                            android:onClick="@{handlers::showComments}"
-                            android:orientation="vertical"
-                            app:layout_widthPercent="25%">
-
-                            <TextView
-                                android:layout_marginLeft="0dp"
-                                android:id="@+id/user_comments"
-                                style="@style/ProfileNumberDivespotsSrtyle"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.commentsCount)}" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/reviews_profile"
-                                android:textColor="#959595"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/likeLayout"
-                            android:layout_height="64dp"
-                            android:layout_toRightOf="@+id/comments_layout"
-                            android:onClick="@{handlers::showLikes}"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical"
-                            app:layout_widthPercent="25%">
-
-                            <TextView
-                                android:layout_marginLeft="0dp"
-                                android:id="@+id/user_likes"
-                                style="@style/ProfileNumberDivespotsSrtyle"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.likesCount)}"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/likes_profile"
-                                android:textColor="#959595"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/dislikeLayout"
-                            android:layout_height="64dp"
-                            android:layout_toRightOf="@+id/likeLayout"
-                            android:gravity="center_vertical"
-                            android:onClick="@{handlers::showDislikes}"
-                            android:orientation="vertical"
-                            app:layout_widthPercent="25%">
-
-                            <TextView
-                                android:layout_marginLeft="0dp"
-                                android:id="@+id/user_dislikes"
-                                style="@style/ProfileNumberDivespotsSrtyle"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.dislikesCount)}"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/dislikes"
-                                android:textColor="#959595"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-                    </android.support.percent.PercentRelativeLayout>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyleFull" />
@@ -202,12 +124,12 @@
                         <ImageView
                             app:loadDiveCenterImageFrom="@{userProfileViewModel}"
                             android:layout_width="36dp"
-                            android:layout_height="36dp" />
+                            android:layout_height="36dp"
+                            android:layout_marginRight="14dp"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginLeft="14dp">
+                            android:orientation="vertical">
                             <TextView
                                 android:text="@{userProfileViewModel.user.diveCenter.name}"
                                 android:layout_width="wrap_content"
@@ -463,12 +385,16 @@
                     <ImageView style="@style/DividerStyle" />
 
                     <LinearLayout
+                        android:visibility="@{userProfileViewModel.user.providerType == 1 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::openFacebook}"
                         android:orientation="horizontal">
                         <ImageView
+                            android:layout_marginTop="0dp"
                             style="@style/CharacteristicsDiveSpotListIcons"
-                            android:layout_height="66dp"
+                            android:layout_height="53dp"
                             android:src="@drawable/ic_profile_open" />
 
                         <TextView
@@ -477,7 +403,6 @@
                             android:fontFamily="sans-serif-medium"
                             style="@style/CharacteristicsDiveSpotListTitle"
                             android:text="@string/open_on_facebook_profile" />
-
 
                     </LinearLayout>
 

@@ -26,7 +26,27 @@ public class User implements Serializable {
     private DiveCenterProfile diveCenter;
     @SerializedName("is_creator")
     private boolean isCreator;
+    @SerializedName("provider_id")
+    private String facebookLink;
+    @SerializedName("provider_type")
+    private int providerType;
     private String link;
+
+    public String getFacebookLink() {
+        return facebookLink;
+    }
+
+    public void setFacebookLink(String facebookLink) {
+        this.facebookLink = facebookLink;
+    }
+
+    public int getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(int providerType) {
+        this.providerType = providerType;
+    }
 
     public String getLink() {
         return link;
