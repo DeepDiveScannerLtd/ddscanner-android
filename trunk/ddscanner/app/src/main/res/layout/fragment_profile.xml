@@ -560,6 +560,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:layout_marginTop="0dp"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:src="@drawable/ic_profile_edit" />
 
@@ -585,6 +586,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:layout_marginTop="0dp"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:src="@drawable/ic_profile_about" />
 
