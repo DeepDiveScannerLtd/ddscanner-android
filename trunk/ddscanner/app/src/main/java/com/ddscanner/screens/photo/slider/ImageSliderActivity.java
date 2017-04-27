@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +84,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private boolean isLikeRequestStarted = false;
     private RelativeLayout topLayout;
     private RelativeLayout bottomLayout;
+    private LinearLayout userDataLayout;
 
     float x1, x2;
     float y1, y2;
@@ -271,6 +273,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void findViews() {
+        userDataLayout = (LinearLayout) findViewById(R.id.user_data);
         bottomLayout = (RelativeLayout) findViewById(R.id.bottom_layout);
         topLayout = (RelativeLayout) findViewById(R.id.top_layout);
         title = (TextView) findViewById(R.id.title);
@@ -320,7 +323,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             likesLayout.setVisibility(View.GONE);
         }
         likesLayout.setOnClickListener(this);
-        avatar.setOnClickListener(this);
+        userDataLayout.setOnClickListener(this);
     }
 
     @Override
@@ -342,7 +345,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     }
                 }
                 break;
-            case R.id.user_avatar:
+            case R.id.user_data:
                 UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
                 break;
         }

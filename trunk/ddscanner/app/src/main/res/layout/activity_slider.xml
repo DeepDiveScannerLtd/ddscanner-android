@@ -63,6 +63,7 @@
         android:layout_gravity="bottom"
         android:background="@drawable/slider_bottom_gradient">
         <LinearLayout
+            android:id="@+id/user_data"
             android:layout_toLeftOf="@+id/likes_layout"
             android:layout_width="match_parent"
             android:layout_height="57dp"
@@ -102,7 +103,7 @@
             android:layout_alignParentRight="true"
             android:id="@+id/likes_layout"
             android:layout_gravity="bottom"
-            android:layout_margin="20dp"
+            android:padding="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
