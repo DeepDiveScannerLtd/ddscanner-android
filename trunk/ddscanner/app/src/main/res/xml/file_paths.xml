@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="dds_images" path="Android/data/com.ddscanner.debug/files/Pictures" />
+    <external-files-path name="dds_images" path="Pictures" />
 </paths>
