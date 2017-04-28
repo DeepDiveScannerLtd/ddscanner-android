@@ -65,7 +65,6 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private RequestBody diveCenterId = null;
     private String dcId;
     private File cameraPhotoToUpload = null;
-    private boolean isLogouting = true;
 
 
     private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -101,10 +100,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     };
 
-    public static void showForResult(Activity context, String userData, boolean isLogouting, int requestCode) {
+    public static void showForResult(Activity context, String userData, int requestCode) {
         Intent intent = new Intent(context, EditUserProfileActivity.class);
         intent.putExtra(ARG_USER, userData);
-        intent.putExtra(ARG_ISLOGOUT, isLogouting);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -112,15 +110,11 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = gson.fromJson(getIntent().getStringExtra(ARG_USER), User.class);
-        isLogouting = getIntent().getBooleanExtra(ARG_ISLOGOUT, true);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile);
         binding.setProfileViewModel(new EditProfileActivityViewModel(user));
         binding.setHandlers(this);
-        if (isLogouting) {
-            setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
-        } else {
-            setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
-        }
+        setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
+
         binding.nameCount.setVisibility(View.GONE);
         createErrorsMap();
         colorStateList = new ColorStateList(
@@ -256,12 +250,6 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
-            case R.id.logout:
-                Intent intent = new Intent();
-                intent.putExtra("id", binding.getProfileViewModel().getUser().getId());
-                setResult(RESULT_CODE_PROFILE_LOGOUT, intent);
-                finish();
                 return true;
         }
         return true;

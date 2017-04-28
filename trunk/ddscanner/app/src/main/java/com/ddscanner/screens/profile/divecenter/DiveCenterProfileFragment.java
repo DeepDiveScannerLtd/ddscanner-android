@@ -26,6 +26,7 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -50,7 +51,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
     private static final String ARG_USER = "ARG_USER";
-    private boolean isLogouting;
     private boolean isHaveSpots = false;
     private LatLng diveCenterLocation = null;
     private BusRegisteringListener busListener = new BusRegisteringListener();
@@ -119,12 +119,11 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         Bundle bundle = new Bundle();
         bundle = getArguments();
         if (getArguments() != null && bundle.getString(ARG_USER) != null) {
-            isLogouting = false;
+            binding.logout.setVisibility(View.GONE);
             diveCenterProfile = new Gson().fromJson(bundle.getString(ARG_USER), DiveCenterProfile.class);
             binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
             setUi();
         } else {
-            isLogouting = true;
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                 DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
             }
@@ -229,7 +228,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     }
 
     public void editProfileButtonClicked(View view) {
-        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY, isHaveSpots, isLogouting);
+        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY, isHaveSpots);
     }
 
     public void showInstructors(View view) {
@@ -278,6 +277,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
+    }
+
+    public void logout(View view) {
+        DDScannerApplication.bus.post(new LogoutEvent());
     }
 
 }

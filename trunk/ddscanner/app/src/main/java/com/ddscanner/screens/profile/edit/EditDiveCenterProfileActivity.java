@@ -70,7 +70,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private static final String ARG_ISLOGOUTABLE = "islogoutable";
     private static final String ARG_COUNTRY = "country";
     private static final String ARG_ADDRESS = "address";
-    private boolean isLogoutable;
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
@@ -203,11 +202,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         finish();
     }
 
-    public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots, boolean isLogoutable) {
+    public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots) {
         Intent intent = new Intent(context, EditDiveCenterProfileActivity.class);
         intent.putExtra(ARG_DIVECENTER, diveCenterString);
         intent.putExtra(ARG_ISSPOTS, isHaveSpots);
-        intent.putExtra(ARG_ISLOGOUTABLE, isLogoutable);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -217,7 +215,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
         isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
-        isLogoutable = getIntent().getBooleanExtra(ARG_ISLOGOUTABLE, true);
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_DIVECENTER), DiveCenterProfile.class)));
         countryCode = binding.getDcViewModel().getDiveCenterProfile().getCountryCode();
@@ -231,11 +228,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         , ContextCompat.getColor(this, R.color.radio_button_fill),
                 }
         );
-        if (isLogoutable) {
-            setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
-        } else {
-            setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
-        }
+        setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
+
         setupUi();
     }
 
@@ -577,12 +571,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             case android.R.id.home:
                 DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
                 return true;
-            case R.id.logout:
-                Intent intent = new Intent();
-                intent.putExtra("id", String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
-                setResult(RESULT_CODE_PROFILE_LOGOUT, intent);
-                finish();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }

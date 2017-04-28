@@ -553,6 +553,7 @@
                             android:layout_marginTop="10dp" />
 
                         <LinearLayout
+                            android:background="?attr/selectableItemBackground"
                             android:id="@+id/edit_profile"
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
@@ -576,6 +577,33 @@
                         </LinearLayout>
 
                         <ImageView style="@style/DividerStyle" />
+
+                        <RelativeLayout
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/logout"
+                            android:layout_width="match_parent"
+                            android:layout_height="55dp"
+                            android:onClick="@{handlers::logout}">
+
+                            <ImageView
+                                android:id="@+id/logout_icon"
+                                android:layout_marginTop="0dp"
+                                style="@style/CharacteristicsDiveSpotListIcons"
+                                android:src="@drawable/ic_profile_logout" />
+
+                            <TextView
+                                android:layout_toRightOf="@+id/logout_icon"
+                                style="@style/CharacteristicsDiveSpotListTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_vertical"
+                                android:text="@string/log_out" />
+                            <ImageView
+                                android:layout_alignParentBottom="true"
+                                style="@style/DividerStyle" />
+                        </RelativeLayout>
+
 
                         <LinearLayout
                             android:id="@+id/about_dss_layout"

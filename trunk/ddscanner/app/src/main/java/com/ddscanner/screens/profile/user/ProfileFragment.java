@@ -31,6 +31,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -139,7 +140,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         setupUi();
         binding.setHandlers(this);
         if (getArguments() != null && bundle.getString(ARG_USER) != null) {
-            isLogouting = false;
+            binding.logout.setVisibility(View.GONE);
             user = new Gson().fromJson(bundle.getString(ARG_USER), User.class);
             binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(user));
             binding.about.setVisibility(View.VISIBLE);
@@ -375,7 +376,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showEditLayout(View view) {
         if (user != null) {
-            EditUserProfileActivity.showForResult(getActivity(), new Gson().toJson(user), isLogouting, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY);
+            EditUserProfileActivity.showForResult(getActivity(), new Gson().toJson(user), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY);
         }
     }
 
@@ -394,6 +395,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showDiveCenter(View view) {
         UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
+    }
+
+    public void logout(View view) {
+        DDScannerApplication.bus.post(new LogoutEvent());
     }
 
 }

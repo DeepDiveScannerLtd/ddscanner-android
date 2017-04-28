@@ -507,4 +507,5 @@
     <string name="open_on_facebook_profile">Open on facebook</string>
     <string name="review_sent_toast">Review sent</string>
     <string name="profile_dive_center">Dive Center</string>
+    <string name="log_out">Log out</string>
 </resources>

@@ -41,6 +41,7 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
@@ -499,16 +500,16 @@ public class MainActivity extends BaseAppCompatActivity
                     }
                 }
                 if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                        mainViewPagerAdapter.notifyDataSetChanged();
-                        mainViewPager.destroyDrawingCache();
-                        setupTabLayout();
-                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-                    } else {
-                        mainViewPagerAdapter.onLoggedOut();
-                        changeVisibilityChangeAccountLayout(View.GONE);
-                    }
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
+//                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+//                        mainViewPagerAdapter.notifyDataSetChanged();
+//                        mainViewPager.destroyDrawingCache();
+//                        setupTabLayout();
+//                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+//                    } else {
+//                        mainViewPagerAdapter.onLoggedOut();
+//                        changeVisibilityChangeAccountLayout(View.GONE);
+//                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
@@ -938,6 +939,20 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void openDiveSpotDetails(OpenDiveSpotDetailsActivityEvent event) {
         DiveSpotDetailsActivity.show(this, event.getId(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+    }
+
+    @Subscribe
+    public void logoutUser(LogoutEvent event) {
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            mainViewPagerAdapter.notifyDataSetChanged();
+            mainViewPager.destroyDrawingCache();
+            setupTabLayout();
+            DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+        } else {
+            mainViewPagerAdapter.onLoggedOut();
+            changeVisibilityChangeAccountLayout(View.GONE);
+        }
     }
 
 }
