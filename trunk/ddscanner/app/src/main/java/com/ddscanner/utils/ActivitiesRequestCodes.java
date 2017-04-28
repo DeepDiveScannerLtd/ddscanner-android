@@ -220,4 +220,7 @@ public class ActivitiesRequestCodes {
     //DiveSpotListAdapter
     public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER = 6001;
 
+    //SearchSpotActivity
+    public static final int REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT = 6101;
+
 }

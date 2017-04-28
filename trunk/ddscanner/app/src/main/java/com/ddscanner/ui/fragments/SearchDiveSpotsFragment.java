@@ -18,6 +18,7 @@ import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
             case R.id.add_spot:
                 EventsTracker.trackDiveSpotCreation();
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                    AddDiveSpotActivity.show(getContext());
+                    AddDiveSpotActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT, true);
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
                 }

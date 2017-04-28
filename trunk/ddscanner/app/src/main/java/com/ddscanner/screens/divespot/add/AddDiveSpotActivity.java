@@ -697,7 +697,18 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private void showSuccessDialog(final String diveSpotId) {
         this.createdSpotId = diveSpotId;
-        UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED, false);
+        if (!isFromMap) {
+            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, createdSpotId, EventsTracker.SpotViewSource.UNKNOWN);
+            finish();
+        } else {
+            Intent intent = new Intent();
+            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, createdSpotId);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+//        UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED, false);
     }
 
     public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
@@ -712,19 +723,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR:
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR:
                 finish();
-                break;
-            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED:
-                if (!isFromMap) {
-                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, createdSpotId, EventsTracker.SpotViewSource.UNKNOWN);
-                            finish();
-                        } else {
-                            Intent intent = new Intent();
-                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, createdSpotId);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
                 break;
         }
     }

@@ -20,9 +20,9 @@
             android:text="@string/no_results"/>
         <Button
             android:id="@+id/add_spot"
-            android:layout_marginTop="100dp"
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="75dp"
+            android:layout_width="match_parent"
+            android:layout_margin="20dp"
             style="@style/OrangeButtons"
             android:text="@string/add_new"/>
     </LinearLayout>

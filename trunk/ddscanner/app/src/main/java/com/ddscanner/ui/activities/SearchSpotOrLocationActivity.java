@@ -48,7 +48,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
+public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
 
     private static final String TAG = SearchSpotOrLocationActivity.class.getName();
 
@@ -255,6 +255,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     }
 
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -322,6 +323,12 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                         EventsTracker.trackDiveSpotCreation();
                         AddDiveSpotActivity.show(SearchSpotOrLocationActivity.this);
                     }
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_CODE_DIVE_SPOT_ADDED, data);
+                    finish();
                 }
                 break;
         }

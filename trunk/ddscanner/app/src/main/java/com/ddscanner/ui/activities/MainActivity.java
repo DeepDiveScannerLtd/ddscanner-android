@@ -480,6 +480,9 @@ public class MainActivity extends BaseAppCompatActivity
                         Log.i(TAG, "MainActivity getLocation 2");
                         getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION);
                         break;
+                    case RESULT_CODE_DIVE_SPOT_ADDED:
+                        diveSpotAdded(data);
+                        break;
                 }
 
                 break;
@@ -562,11 +565,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
-                    String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
-                    if (latLng != null) {
-                        DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
-                    }
+                    diveSpotAdded(data);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT:
@@ -588,6 +587,15 @@ public class MainActivity extends BaseAppCompatActivity
                     facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+        }
+    }
+
+    private void diveSpotAdded(Intent data) {
+        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, false);
+        LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
+        String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
+        if (latLng != null) {
+            DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
         }
     }
 
