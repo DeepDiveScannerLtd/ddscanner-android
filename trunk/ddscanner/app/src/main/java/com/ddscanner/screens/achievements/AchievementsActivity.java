@@ -20,6 +20,7 @@ import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.PendingAchievement;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -29,7 +30,7 @@ import com.rey.material.widget.ProgressView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AchievementsActivity extends AppCompatActivity implements DialogClosedListener {
+public class AchievementsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;

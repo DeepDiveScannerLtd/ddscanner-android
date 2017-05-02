@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-public class PrivacyPolicyActivity extends AppCompatActivity {
+public class PrivacyPolicyActivity extends BaseAppCompatActivity {
 
     private Toolbar toolbar;
 

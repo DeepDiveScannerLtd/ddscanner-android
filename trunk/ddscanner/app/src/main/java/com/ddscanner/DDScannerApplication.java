@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.dialogs.AchievementPopupDialogFrament;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;

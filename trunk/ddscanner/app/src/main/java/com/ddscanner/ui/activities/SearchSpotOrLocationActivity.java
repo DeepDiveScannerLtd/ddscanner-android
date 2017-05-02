@@ -241,7 +241,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     @Override
     protected void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
         if (!isForDiveCenter) {
             googleApiClient.connect();
         }
@@ -278,7 +278,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe

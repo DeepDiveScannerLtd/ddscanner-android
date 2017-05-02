@@ -40,7 +40,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener, DialogClosedListener {
+public class SearchSealifeActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener, DialogClosedListener {
 
     private static final String ARG_LOCATION = "LATLNG";
 
@@ -230,13 +230,13 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-public class TermsOfServiceActivity extends AppCompatActivity {
+public class TermsOfServiceActivity extends BaseAppCompatActivity {
 
     private Toolbar toolbar;
 

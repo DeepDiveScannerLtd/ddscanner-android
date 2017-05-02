@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
     public void onResponse(DDScannerRestClient.ResultListener<T> resultListener, Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
             String responseString;
+            JSONObject responseJsonObject;
             try {
                 responseString = response.body().string();
             } catch (IOException e) {
@@ -28,6 +30,19 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
                 return;
             }
             try {
+                responseJsonObject = new JSONObject(responseString);
+                responseString = responseJsonObject.getString("response");
+                try {
+                    if (!responseJsonObject.getString("popup").isEmpty()) {
+                        try {
+//                            DDScannerApplication.bus.post(new ShowPopupEvent(responseJsonObject.getString("popup")));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
                 handleResponseString(resultListener, responseString);
             } catch (JsonSyntaxException | JSONException e) {
                 resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());

@@ -115,14 +115,14 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     protected void onStop() {
         super.onStop();
      //   handler.removeCallbacks(showMainActivityRunnable);
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Subscribe

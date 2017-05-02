@@ -35,6 +35,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.screens.reiews.edit.EditCommentActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -49,7 +50,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private static final String ARG_OPENED_SOURCE = "isuser";
 
@@ -448,13 +449,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe

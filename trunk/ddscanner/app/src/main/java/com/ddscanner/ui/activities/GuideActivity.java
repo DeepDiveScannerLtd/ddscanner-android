@@ -14,7 +14,7 @@ import com.ddscanner.ui.adapters.GuideListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
     private Toolbar toolbar;

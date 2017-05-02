@@ -604,7 +604,7 @@ public class MainActivity extends BaseAppCompatActivity
     public void onStart() {
         super.onStart();
         Log.i(TAG, "onStart");
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
         if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
@@ -617,7 +617,7 @@ public class MainActivity extends BaseAppCompatActivity
         super.onStop();
         Log.i(TAG, "onStop");
         newotificationsCountEntity.setCancelled(true);
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
         if (mainViewPager.getCurrentItem() == 1) {
             DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
         }

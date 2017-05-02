@@ -59,7 +59,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class SignUpActivity extends AppCompatActivity implements ConfirmationDialogClosedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class SignUpActivity extends BaseAppCompatActivity implements ConfirmationDialogClosedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SignUpActivity.class.getSimpleName();
 

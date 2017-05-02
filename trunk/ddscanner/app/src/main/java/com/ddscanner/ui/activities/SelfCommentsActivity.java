@@ -33,7 +33,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SelfCommentsActivity extends AppCompatActivity implements DialogClosedListener {
+public class SelfCommentsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private ArrayList<CommentOld> commentOlds;
     private RecyclerView commentsRc;
@@ -196,13 +196,13 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override

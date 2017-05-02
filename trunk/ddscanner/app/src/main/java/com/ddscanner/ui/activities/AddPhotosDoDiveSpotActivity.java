@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by lashket on 26.5.16.
  */
-public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private RecyclerView recyclerView;
     private Button button;

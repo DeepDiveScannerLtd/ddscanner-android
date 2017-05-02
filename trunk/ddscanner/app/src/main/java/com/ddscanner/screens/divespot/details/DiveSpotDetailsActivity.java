@@ -39,6 +39,7 @@ import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
+import com.ddscanner.events.ShowPopupEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -55,6 +56,7 @@ import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.AchievementPopupDialogFrament;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -712,17 +714,21 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     break;
                 case INSTRUCTOR:
                 case DIVER:
-                    menu.findItem(R.id.menu_three_dots).setVisible(true);
-                    menu.findItem(R.id.favorite).setVisible(true);
-                    if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite()) {
-                        menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
-                    } else {
-                        menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
-                    }
-                    if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable()) {
-                        menu.findItem(R.id.edit_dive_spot).setVisible(true);
-                    } else {
-                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    try {
+                        menu.findItem(R.id.menu_three_dots).setVisible(true);
+                        menu.findItem(R.id.favorite).setVisible(true);
+                        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite()) {
+                            menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
+                        } else {
+                            menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
+                        }
+                        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable()) {
+                            menu.findItem(R.id.edit_dive_spot).setVisible(true);
+                        } else {
+                            menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                        }
+                    } catch (Exception e) {
+
                     }
                     break;
             }
@@ -763,13 +769,13 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe
@@ -1226,5 +1232,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     }
 
+
+    @Subscribe
+    public void showpopup(ShowPopupEvent event) {
+        AchievementPopupDialogFrament.show(getSupportFragmentManager());
+    }
 
 }

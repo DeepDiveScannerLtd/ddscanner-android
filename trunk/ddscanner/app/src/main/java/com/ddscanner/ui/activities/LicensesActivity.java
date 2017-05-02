@@ -11,7 +11,7 @@ import android.webkit.WebView;
 
 import com.ddscanner.R;
 
-public class LicensesActivity extends AppCompatActivity {
+public class LicensesActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

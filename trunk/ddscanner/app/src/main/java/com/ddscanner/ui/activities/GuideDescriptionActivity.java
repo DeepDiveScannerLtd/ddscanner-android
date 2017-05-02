@@ -16,7 +16,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.GuideItem;
 import com.ddscanner.utils.Constants;
 
-public class GuideDescriptionActivity extends AppCompatActivity implements View.OnClickListener {
+public class GuideDescriptionActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
     private TextView title;
     private TextView description;

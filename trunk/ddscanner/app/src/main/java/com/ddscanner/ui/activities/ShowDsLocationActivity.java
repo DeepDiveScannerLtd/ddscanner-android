@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ShowDsLocationActivity extends AppCompatActivity {
+public class ShowDsLocationActivity extends BaseAppCompatActivity {
 
     public static final String LATLNG = "LATLNG";
 

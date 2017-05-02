@@ -1,6 +1,13 @@
 package com.ddscanner.rest;
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.Popup;
+import com.ddscanner.events.ShowPopupEvent;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -17,6 +24,25 @@ class NoResponseEntityCallback extends BaseCallback<Void> {
     @Override
     public void onResponse(DDScannerRestClient.ResultListener<Void> resultListener, Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
+            String responseString;
+            JSONObject responseJsonObject;
+            try {
+                responseString = response.body().string();
+            } catch (IOException e) {
+                return;
+            }
+            try {
+                responseJsonObject = new JSONObject(responseString);
+                if (responseJsonObject.getString("popup") != null) {
+                    try {
+                        DDScannerApplication.bus.post(new ShowPopupEvent(responseJsonObject.getString("popup")));
+                    } catch (Exception e) {
+
+                    }
+                }
+            } catch (JsonSyntaxException | JSONException e) {
+//                resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+            }
             resultListener.onSuccess(null);
         } else {
             String responseString;

@@ -36,6 +36,7 @@ import com.ddscanner.events.HidePhotoInfoEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogClosedListener {
+public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogClosedListener {
 
     private SliderImagesAdapter sliderImagesAdapter;
     private FrameLayout baseLayout;
@@ -437,7 +438,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     @Override
     protected void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     private class MenuItemsClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -488,7 +489,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     @Override
     protected void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
         DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
     }
 

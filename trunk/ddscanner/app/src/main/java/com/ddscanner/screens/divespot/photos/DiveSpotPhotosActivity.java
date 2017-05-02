@@ -28,6 +28,7 @@ import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -41,7 +42,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener, ViewPager.OnPageChangeListener {
+public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, ViewPager.OnPageChangeListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
 

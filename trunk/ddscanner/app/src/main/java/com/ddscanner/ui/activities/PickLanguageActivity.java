@@ -30,7 +30,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
+public class PickLanguageActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
     private static final String TAG = PickLanguageActivity.class.getSimpleName();
 
@@ -103,13 +103,13 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
