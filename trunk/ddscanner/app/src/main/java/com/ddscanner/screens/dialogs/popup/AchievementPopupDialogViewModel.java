@@ -49,8 +49,8 @@ public class AchievementPopupDialogViewModel {
                 link.setText(highight);
                 links.add(link);
             }
-            LinkBuilder.on(view).addLinks(links).build();
             view.setText(text);
+            LinkBuilder.on(view).addLinks(links).build();
         }
     }
 }

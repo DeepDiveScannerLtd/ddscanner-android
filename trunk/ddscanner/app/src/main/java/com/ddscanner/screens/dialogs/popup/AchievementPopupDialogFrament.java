@@ -32,6 +32,7 @@ public class AchievementPopupDialogFrament extends DialogFragment {
 
     public static void showDialog(FragmentManager fragmentManager, String popup) {
         AchievementPopupDialogFrament achievementPopupDialogFrament = new AchievementPopupDialogFrament();
+        achievementPopupDialogFrament.setCancelable(false);
         Bundle bundle = new Bundle();
         bundle.putString("POPUP", popup);
         achievementPopupDialogFrament.setArguments(bundle);

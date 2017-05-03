@@ -8,7 +8,7 @@
     <color name="primary_dark">#172342</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="empty_buttons">#2e80a0</color>
-    <color name="radio_button_fill">#2d80a1</color>
+    <color name="radio_button_fill">#3b518b</color>
     <color name="radio_button_empty">#7b797a</color>
 
     <color name="green_100">#C8E6C9</color>
