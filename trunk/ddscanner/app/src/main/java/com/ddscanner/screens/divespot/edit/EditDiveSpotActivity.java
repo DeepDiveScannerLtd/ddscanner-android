@@ -322,9 +322,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         diveSpotDetailsEntity = new Gson().fromJson(getIntent().getStringExtra("divespot"), DiveSpotDetailsEntity.class);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         languages.add("Language");
         setupToolbar(R.string.edit_dive_spot, R.id.toolbar);
@@ -525,9 +525,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
     private void sendUpdateDiveSpotRequest() {
         progressDialogUpload.show();
-        //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-//        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
+        //   DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+//        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
     }
 
     @Override

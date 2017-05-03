@@ -360,7 +360,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         if (diveCenterLatLng != null) {
                             diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
                         }
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(DiveCenterSpotsActivity.this).getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
                         //     diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
                     }
                 });

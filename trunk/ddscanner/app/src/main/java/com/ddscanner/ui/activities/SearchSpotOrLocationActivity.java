@@ -185,7 +185,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
             @Override
             public void run() {
                 if (!newText.isEmpty()) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(newText, divespotsWrapperResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(SearchSpotOrLocationActivity.this).getDivespotsByName(newText, divespotsWrapperResultListener);
                     if (!isForDiveCenter) {
                         placeList = new ArrayList<String>();
                         Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(

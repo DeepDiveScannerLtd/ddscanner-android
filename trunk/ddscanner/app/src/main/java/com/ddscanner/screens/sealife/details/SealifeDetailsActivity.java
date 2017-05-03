@@ -95,7 +95,7 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
 
         EventsTracker.trackDiveSpotSealifeView();
         setupToolbar(R.string.empty_string, R.id.toolbar, R.menu.menu_sealife_details);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getSealifeDetails(id, resultListener);
     }
 
 
@@ -123,7 +123,7 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
                 if (resultCode == RESULT_OK) {
                     binding.progressView.setVisibility(View.VISIBLE);
                     binding.mainLayout.setVisibility(View.GONE);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).getSealifeDetails(id, resultListener);
                 }
                 break;
         }

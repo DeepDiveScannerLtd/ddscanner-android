@@ -338,11 +338,11 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                         if (!images.get(position).isLiked()) {
                             likeUi();
-                            DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).postLikePhoto(images.get(position).getId(), likeResultListener);
                             break;
                         }
                         dislikeUi();
-                        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                     }
                 }
                 break;
@@ -469,7 +469,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteImage(images.get(position).getId(), deleteImageRequestistener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDeleteImage(images.get(position).getId(), deleteImageRequestistener);
 
     }
 
@@ -504,13 +504,13 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                         case DIVESPOT:
                         case REVIEWS:
                         case ALL:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(sourceId, imagesResulListener);
                             break;
                         case REVIEW:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(photosResultListenr, sourceId);
                             break;
                         case PROFILE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(photosResultListenr, sourceId);
                             break;
                     }
 
@@ -524,13 +524,13 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                         case DIVESPOT:
                         case REVIEWS:
                         case ALL:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(sourceId, imagesResulListener);
                             break;
                         case REVIEW:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(photosResultListenr, sourceId);
                             break;
                         case PROFILE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(photosResultListenr, sourceId);
                             break;
                     }
                 }
@@ -542,13 +542,13 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                         case DIVESPOT:
                         case REVIEWS:
                         case ALL:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(sourceId, imagesResulListener);
                             break;
                         case REVIEW:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(photosResultListenr, sourceId);
                             break;
                         case PROFILE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(photosResultListenr, sourceId);
                             break;
                     }
                 }
@@ -561,7 +561,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         isChanged = true;
         materialDialog.show();
         EventsTracker.trackPhotoReport();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportImageRequestListener, new ReportImageRequest(imageName, reportType, reportDescription));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postReportImage(reportImageRequestListener, new ReportImageRequest(imageName, reportType, reportDescription));
     }
 
 

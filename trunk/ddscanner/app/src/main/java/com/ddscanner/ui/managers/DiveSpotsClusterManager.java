@@ -490,7 +490,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
             Log.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(sealifesIds, diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(context).getDiveSpotsByArea(sealifesIds, diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }
 
     @Subscribe

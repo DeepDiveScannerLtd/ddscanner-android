@@ -73,7 +73,10 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
+            if (!isPopupShown) {
+                Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
+            }
+            materialDialog.dismiss();
             setResult(RESULT_OK);
             finish();
         }
@@ -201,7 +204,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, sealifes, requestId, requestRating, requestComment);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postLeaveCommentForDiveSpot(commentAddedResultListener, images, sealifes, requestId, requestRating, requestComment);
     }
 
 

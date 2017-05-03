@@ -1,8 +1,12 @@
 package com.ddscanner.rest;
 
+import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.Popup;
 import com.ddscanner.events.ShowPopupEvent;
+import com.ddscanner.interfaces.ShowPopupLstener;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -10,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -17,8 +22,11 @@ import retrofit2.Response;
 
 class NoResponseEntityCallback extends BaseCallback<Void> {
 
-    NoResponseEntityCallback(Gson gson, DDScannerRestClient.ResultListener<Void> resultListener) {
+    private WeakReference<Activity> weakReference;
+
+    NoResponseEntityCallback(Gson gson, DDScannerRestClient.ResultListener<Void> resultListener, Activity context) {
         super(gson, resultListener);
+        weakReference= new WeakReference<Activity>(context);
     }
 
     @Override
@@ -35,7 +43,10 @@ class NoResponseEntityCallback extends BaseCallback<Void> {
                 responseJsonObject = new JSONObject(responseString);
                 if (responseJsonObject.getString("popup") != null) {
                     try {
-                        DDScannerApplication.bus.post(new ShowPopupEvent(responseJsonObject.getString("popup")));
+                        ShowPopupLstener showPopupLstener;
+                        showPopupLstener = (ShowPopupLstener) weakReference.get();
+                        showPopupLstener.onPopupMustBeShown(responseJsonObject.getString("popup"));
+//                        DDScannerApplication.bus.post(new ShowPopupEvent(responseJsonObject.getString("popup")));
                     } catch (Exception e) {
 
                     }

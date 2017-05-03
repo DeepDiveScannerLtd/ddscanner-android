@@ -124,7 +124,7 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserComments(commentsResultListener, userId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserComments(commentsResultListener, userId);
     }
 
     public static void show(Context context, String userId) {
@@ -175,7 +175,7 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResulListener, id);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDeleteReview(deleteCommentResulListener, id);
     }
 
     @Subscribe

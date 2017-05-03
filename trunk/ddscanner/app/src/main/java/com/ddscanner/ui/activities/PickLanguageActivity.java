@@ -82,7 +82,7 @@ public class PickLanguageActivity extends BaseAppCompatActivity implements Searc
         setContentView(R.layout.activity_search);
         isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotLanguages(resultListener);
     }
 
     private void findViews() {

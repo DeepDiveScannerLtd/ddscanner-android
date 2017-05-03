@@ -2,6 +2,8 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class Popup {
 
     private String message;
@@ -10,6 +12,15 @@ public class Popup {
     private String titleName;
     private String points;
     private String image;
+    private ArrayList<String> highlight;
+
+    public ArrayList<String> getHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(ArrayList<String> highlight) {
+        this.highlight = highlight;
+    }
 
     public String getImage() {
         return image;

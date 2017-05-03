@@ -243,11 +243,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         if (isHaveSpots) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterDiveSpotsList(diveSpotsResultListener, binding.getDcViewModel().getDiveCenterProfile().getId().toString());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterDiveSpotsList(diveSpotsResultListener, binding.getDcViewModel().getDiveCenterProfile().getId().toString());
         } else {
             isDiveSpotsDownloaded = true;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(new LinearLayoutManager(this));
@@ -513,7 +513,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 break;
         }
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, serviceRequest);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, serviceRequest);
         materialDialog.show();
     }
 

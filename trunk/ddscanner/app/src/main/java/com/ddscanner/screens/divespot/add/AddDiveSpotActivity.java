@@ -212,7 +212,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         findViews();
         setUi();
         requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
-        //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
+        //  DDScannerApplication.getInstance().getDdScannerRestClient(this).getFilters(filtersResultListener);
         makeErrorsMap();
     }
 
@@ -384,8 +384,8 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-        //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
+        //   DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
     }
 
     @Override

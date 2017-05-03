@@ -1,5 +1,9 @@
 package com.ddscanner.rest;
 
+import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+
+import com.ddscanner.interfaces.ShowPopupLstener;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -7,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -14,8 +19,11 @@ import retrofit2.Response;
 
 abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
 
-    ResponseEntityCallback(Gson gson, DDScannerRestClient.ResultListener<T> resultListener) {
+    private WeakReference<Activity> weakReference;
+
+    ResponseEntityCallback(Gson gson, DDScannerRestClient.ResultListener<T> resultListener, Activity context) {
         super(gson, resultListener);
+        weakReference= new WeakReference<Activity>(context);
     }
 
     @Override
@@ -34,7 +42,10 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
                 responseString = responseJsonObject.getString("response");
                 try {
                     if (!responseJsonObject.getString("popup").isEmpty()) {
+                        ShowPopupLstener showPopupLstener;
                         try {
+                            showPopupLstener = (ShowPopupLstener) weakReference.get();
+                            showPopupLstener.onPopupMustBeShown(responseJsonObject.getString("popup"));
 //                            DDScannerApplication.bus.post(new ShowPopupEvent(responseJsonObject.getString("popup")));
                         } catch (Exception e) {
 

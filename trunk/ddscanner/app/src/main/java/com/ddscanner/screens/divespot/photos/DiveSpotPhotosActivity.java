@@ -306,7 +306,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     private void getDiveSpotPhotos() {
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
     }
 
     private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {

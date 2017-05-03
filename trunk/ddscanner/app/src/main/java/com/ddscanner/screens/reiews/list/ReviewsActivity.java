@@ -421,13 +421,13 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         isHasNewComment = true;
         switch (openedSource) {
             case USER:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(sourceId, commentsResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersComments(sourceId, commentsResultListener);
                 break;
             case DIVESPOT:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, sourceId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getCommentsForDiveSpot(commentsResultListener, sourceId);
                 break;
             case SINGLE:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getSingleReview(sourceId, commentsResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getSingleReview(sourceId, commentsResultListener);
                 break;
         }
     }
@@ -515,7 +515,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         EventsTracker.trackDeleteReview();
         materialDialog.show();
         commentToDelete = id;
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResultListener, id);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDeleteReview(deleteCommentResultListener, id);
     }
 
     @Subscribe
@@ -564,7 +564,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
             return;
         }
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postReportReview(reportCommentResultListener, new ReportRequest(String.valueOf(reportType), description, reportCommentId));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postReportReview(reportCommentResultListener, new ReportRequest(String.valueOf(reportType), description, reportCommentId));
     }
 
     private void likeComment(String id, final int position) {
@@ -573,7 +573,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
             return;
         }
         reviewsListAdapter.rateReviewRequestStarted(position);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postLikeReview(id, likeCommentResultListener);
     }
 
     private void dislikeComment(String id, final int position) {
@@ -582,7 +582,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
             return;
         }
         reviewsListAdapter.rateReviewRequestStarted(position);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDislikeReview(id, dislikeCommentResultListener);
     }
 
     @Subscribe

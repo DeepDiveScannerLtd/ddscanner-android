@@ -105,7 +105,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
             case R.id.send:
                 if (isEmailValid(email.getText().toString())) {
                     materialDialog.show();
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postForgotPassword(email.getText().toString(), resultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postForgotPassword(email.getText().toString(), resultListener);
                 } else {
                     //TODO change text
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.sc_name, false);

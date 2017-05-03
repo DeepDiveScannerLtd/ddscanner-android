@@ -135,7 +135,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         EventsTracker.trackDiveCentersListView();
         toggleMapListView();
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
     }
 
     private void findViews() {

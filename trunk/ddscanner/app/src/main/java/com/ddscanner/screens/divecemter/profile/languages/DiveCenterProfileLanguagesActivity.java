@@ -71,7 +71,7 @@ public class DiveCenterProfileLanguagesActivity extends BaseAppCompatActivity im
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list_with_progress);
         setupToolbar(R.string.languages, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(resultListener, getIntent().getStringExtra(ARG_ID));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(resultListener, getIntent().getStringExtra(ARG_ID));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class DiveCenterProfileLanguagesActivity extends BaseAppCompatActivity im
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_LANGUAGES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(resultListener, getIntent().getStringExtra(ARG_ID));
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(resultListener, getIntent().getStringExtra(ARG_ID));
                     break;
                 }
                 finish();

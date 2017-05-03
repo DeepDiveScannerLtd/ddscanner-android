@@ -79,7 +79,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
         setContentView(R.layout.activity_search);
         setupToolbar(R.string.chose_country, R.id.toolbar);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getListOfCountries(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getListOfCountries(resultListener);
     }
 
 

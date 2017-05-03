@@ -103,10 +103,10 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         findViews();
         if (isLikes) {
             setupToolbar(R.string.user_likes, R.id.toolbar);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserLikes(likesResultListener, userId);
         } else {
             setupToolbar(R.string.user_dislikes, R.id.toolbar);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserDislikes(dislikesResultListener, userId);
         }
     }
 
@@ -148,9 +148,9 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserLikes(likesResultListener, userId);
                     } else {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserDislikes(dislikesResultListener, userId);
                     }
                 } else {
                     setResult(RESULT_CANCELED);

@@ -166,7 +166,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         sealifeList.setAdapter(sealifesAdapter);
         if (isHaveSealifes) {
             materialDialog.show();
-            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewSealifes(sealifeResultListener, comment.getId());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewSealifes(sealifeResultListener, comment.getId());
             //
             //sealifesAdapter.addSealifesList(comment.getSealifes());
         }
@@ -294,7 +294,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         for (SealifeShort sealife : sealifesAdapter.getSealifes()) {
             sealifes.add(MultipartBody.Part.createFormData("sealifes[]", sealife.getId()));
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, sealifes, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateReview(editCommentResultListener, newImages, deletedImages, sealifes, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
     }
 
     @Override

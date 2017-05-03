@@ -59,7 +59,7 @@ public class DiveCenterNotificationsFragment extends Fragment implements LoginVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getNotifications(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getNotifications(resultListener);
     }
 
     @TargetApi(23)

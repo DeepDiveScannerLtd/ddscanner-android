@@ -39,7 +39,6 @@ import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
-import com.ddscanner.events.ShowPopupEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -56,7 +55,6 @@ import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
-import com.ddscanner.ui.dialogs.AchievementPopupDialogFrament;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -213,7 +211,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
 
     private void findViews() {
@@ -454,7 +452,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             return;
         }
         isCheckedInRequestStarted = true;
-        DDScannerApplication.getInstance().getDdScannerRestClient().postCheckIn(diveSpotId, checkInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postCheckIn(diveSpotId, checkInResultListener);
     }
 
     private void checkInUi() {
@@ -479,7 +477,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             return;
         }
         isCheckedInRequestStarted = true;
-        DDScannerApplication.getInstance().getDdScannerRestClient().postCheckOut(diveSpotId, checkOutResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postCheckOut(diveSpotId, checkOutResultListener);
     }
 
     @Override
@@ -516,7 +514,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         }
         materialDialog.show();
         diveSpotValidationResultListener.setValid(isValid);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
     }
 
     private void addDiveSpotToFavorites() {
@@ -525,7 +523,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpotToFavourites(diveSpotId, addToFavouritesResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpotToFavourites(diveSpotId, addToFavouritesResultListener);
     }
 
     private void removeFromFavorites() {
@@ -533,7 +531,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().deleteDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).deleteDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
     }
 
     @Override
@@ -581,7 +579,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotDetails(String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), diveSpotDetailsResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), diveSpotDetailsResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
@@ -757,11 +755,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             case DIVECENTER:
                 isClickedCkeckin = false;
                 isClickedFavorite = false;
-                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterStatusInDiveSpot(flagsResultListener, diveSpotId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterStatusInDiveSpot(flagsResultListener, diveSpotId);
                 break;
             case DIVER:
             case INSTRUCTOR:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUserStatusInDiveSpot(flagsResultListener, diveSpotId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserStatusInDiveSpot(flagsResultListener, diveSpotId);
                 break;
         }
     }
@@ -802,11 +800,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.switchWorkingButton.setClickable(false);
         if (!isWorkingHere) {
 //            updateMenuItems(menu, false, true);
-            DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
             return;
         }
 //        updateMenuItems(menu, false, false);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveDiveSpotToDiveCenter(diveSpotId, removeWorkngResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postRemoveDiveSpotToDiveCenter(diveSpotId, removeWorkngResultListener);
     }
 
     @Override
@@ -911,7 +909,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void trueApproveDiveSpot(View view) {
-        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
     }
 
     public void showCreatorsActivity(View view) {
@@ -924,7 +922,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     @Override
     public void onPositiveDialogClicked() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
     }
 
     @Override
@@ -1056,7 +1054,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 DiveSpotDetailsActivityViewModel.setCheckinsCount(binding.numberOfCheckingPeople, binding.getDiveSpotViewModel());
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
                 checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, DiveSpotDetailsActivity.this);
-                checkedInDialogFragment.show(getSupportFragmentManager(), "");
+                if (!isPopupShown) {
+                    checkedInDialogFragment.show(getSupportFragmentManager(), "");
+                }
             } else {
                 DiveSpotDetailsActivity.this.isCheckedIn = false;
                 binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() - 1);
@@ -1230,12 +1230,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
-    }
-
-
-    @Subscribe
-    public void showpopup(ShowPopupEvent event) {
-        AchievementPopupDialogFrament.show(getSupportFragmentManager());
     }
 
 }

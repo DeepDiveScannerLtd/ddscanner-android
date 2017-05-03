@@ -109,7 +109,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
         materialDialog = Helpers.getMaterialDialog(this);
         userId = getIntent().getStringExtra("id");
         setupToolbar(R.string.instructors, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterInstructorsList(resultListener, userId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterInstructorsList(resultListener, userId);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
 
     @Override
     public void onPositiveDialogClicked() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveInstructorFromDivecenter(removeResultListener, instructorForRemoveId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postRemoveInstructorFromDivecenter(removeResultListener, instructorForRemoveId);
 
     }
 

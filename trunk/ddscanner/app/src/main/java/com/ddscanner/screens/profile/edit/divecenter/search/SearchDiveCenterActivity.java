@@ -118,7 +118,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         setupToolbar(R.string.choose_dc, R.id.toolbar);
         isAfterSignUp = getIntent().getBooleanExtra(ARG_IS_AFTER_SIGN_UP, false);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCentersList(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCentersList(resultListener);
     }
 
     private void findViews() {
@@ -137,7 +137,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
             case R.id.checked_fab:
                 if (isAfterSignUp) {
                     materialDialog.show();
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
                     break;
                 }
                 Intent intent = new Intent();
@@ -219,7 +219,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
             diveCenterId = event.getBaseIdNamePhotoEntity().getId();
 //            if (isAfterSignUp) {
 //                materialDialog.show();
-//                DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+//                DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
 //            }
 //            Intent intent = new Intent();
 //            intent.putExtra("id", diveCenterId);

@@ -105,7 +105,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
     }
 
     public void loadNotifications() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(simpleResultListener, null);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(simpleResultListener, null);
     }
 
     @TargetApi(23)
@@ -142,7 +142,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
+                DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
                 notificationsListAdapter.startLoading();
                 isLoading = true;
             }

@@ -63,7 +63,7 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
         setContentView(R.layout.activity_peoples_checkin);
         findViews();
         setupToolbar(R.string.people, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsCheckedInUsers(usersResultListener, getIntent().getStringExtra("id"));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsCheckedInUsers(usersResultListener, getIntent().getStringExtra("id"));
     }
 
     private void findViews() {

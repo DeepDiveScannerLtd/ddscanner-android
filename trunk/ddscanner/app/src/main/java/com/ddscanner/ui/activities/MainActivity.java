@@ -349,7 +349,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void getIsHasNewotifications() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getNewNotificationsCount(newotificationsCountEntity);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getNewNotificationsCount(newotificationsCountEntity);
     }
 
     public static void show(Context context, boolean isHasInternet) {
@@ -370,7 +370,7 @@ public class MainActivity extends BaseAppCompatActivity
                 changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
                 if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
                 }
                 break;
             case 1:
@@ -384,7 +384,7 @@ public class MainActivity extends BaseAppCompatActivity
                 EventsTracker.trackUserProfileView();
                 hideSearchFilterMenuItems();
                 if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
                 }
                 break;
         }
@@ -514,7 +514,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -619,7 +619,7 @@ public class MainActivity extends BaseAppCompatActivity
         newotificationsCountEntity.setCancelled(true);
 //        DDScannerApplication.bus.unregister(this);
         if (mainViewPager.getCurrentItem() == 1) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
         }
     }
 
@@ -657,7 +657,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
         // TODO Debug: switch calls after tests
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, null, null, signInType, token, signInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -695,9 +695,9 @@ public class MainActivity extends BaseAppCompatActivity
         //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), null, null, null, null, signInResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(event.getEmail(), event.getPassword(), null, null, null, null, signInResultListener);
         }
     }
 

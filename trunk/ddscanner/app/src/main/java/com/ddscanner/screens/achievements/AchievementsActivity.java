@@ -100,7 +100,7 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
         EventsTracker.trackUserAchievementsView();
         setContentView(R.layout.activity_ahievments);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAchivements(responseEntityResultListener);
     }
 
     private void findViews() {
@@ -147,7 +147,7 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAchivements(responseEntityResultListener);
                 } else {
                     finish();
                 }

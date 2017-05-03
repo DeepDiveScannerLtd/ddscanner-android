@@ -64,7 +64,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
         getSupportActionBar().setTitle("Filter");
-     //   DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
+     //   DDScannerApplication.getInstance().getDdScannerRestClient(this).getFilters(getFiltersResultListener);
     }
 
     private void findViews() {

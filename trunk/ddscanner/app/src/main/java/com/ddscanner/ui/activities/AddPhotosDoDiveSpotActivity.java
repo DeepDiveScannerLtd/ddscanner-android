@@ -113,10 +113,10 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
     private void sendRequest() {
         materialDialog.show();
         if (isMap) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postMapsToDiveSpot(dsId, images, photosAddedResultListener, this);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postMapsToDiveSpot(dsId, images, photosAddedResultListener, this);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postPhotosToDiveSpot(dsId, images, photosAddedResultListener, this);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postPhotosToDiveSpot(dsId, images, photosAddedResultListener, this);
     }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

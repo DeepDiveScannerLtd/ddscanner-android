@@ -81,19 +81,19 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
         diveSpotListSource = (DiveSpotListSource) getIntent().getSerializableExtra("source");
         switch (diveSpotListSource) {
             case ADDED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsListResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getAddedDiveSpots(divespotsListResultListener, userId);
                 break;
             case EDITED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsListResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getEditedDiveSpots(divespotsListResultListener, userId);
                 break;
             case FAVORITES:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsListResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersFavourites(divespotsListResultListener, userId);
                 break;
             case CHECKINS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsListResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersCheckins(divespotsListResultListener, userId);
                 break;
             case APPROVE:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsForApprove(divespotsListResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsForApprove(divespotsListResultListener);
                 break;
         }
         findViews();
@@ -107,19 +107,19 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
                 if (resultCode == RESULT_OK) {
                     switch (diveSpotListSource) {
                         case ADDED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsListResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getAddedDiveSpots(divespotsListResultListener, userId);
                             break;
                         case EDITED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsListResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getEditedDiveSpots(divespotsListResultListener, userId);
                             break;
                         case FAVORITES:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsListResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersFavourites(divespotsListResultListener, userId);
                             break;
                         case CHECKINS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsListResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersCheckins(divespotsListResultListener, userId);
                             break;
                         case APPROVE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsForApprove(divespotsListResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsForApprove(divespotsListResultListener);
                             break;
                     }
                     if (resultCode == RESULT_CANCELED) {

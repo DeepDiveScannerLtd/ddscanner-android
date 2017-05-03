@@ -155,7 +155,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().getPersonalNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
+                DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getPersonalNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
                 notificationsListAdapter.startLoading();
 //                binding.progressBarPagination.setVisibility(View.VISIBLE);
                 isLoading = true;
@@ -202,9 +202,9 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
 
     public void loadNotifications() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER)) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getApproveCount(resultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getApproveCount(resultListener);
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getPersonalNotifications(simpleResultListener, null);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getPersonalNotifications(simpleResultListener, null);
     }
 
     @Override

@@ -115,9 +115,9 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
         if (!isHasLocation) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getAllSealifes(sealifeResponseEntityResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getSealifesByLocation(sealifeResponseEntityResultListener, diveSpotLocation);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getSealifesByLocation(sealifeResponseEntityResultListener, diveSpotLocation);
         }
     }
 

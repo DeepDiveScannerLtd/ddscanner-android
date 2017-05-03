@@ -18,15 +18,12 @@ import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.events.ShowPopupEvent;
+import com.ddscanner.interfaces.ShowPopupLstener;
+import com.ddscanner.screens.dialogs.popup.AchievementPopupDialogFrament;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LocationHelper;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
-public class BaseAppCompatActivity extends AppCompatActivity {
+public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopupLstener, AchievementPopupDialogFrament.PopupHideListener {
 
     private static final String TAG = BaseAppCompatActivity.class.getName();
     public static final int RESULT_CODE_PROFILE_LOGOUT = 1010;
@@ -49,6 +46,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private int menuResourceId = -1;
     private PictureTakenListener takedListener;
     private File tempFile;
+    public boolean isPopupShown = false;
+    private boolean isCloseActivityAfterPopupClosed = false;
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
@@ -259,16 +258,34 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
         DDScannerApplication.bus.unregister(this);
     }
 
+    @Override
+    public void onPopupMustBeShown(String popup) {
+        AchievementPopupDialogFrament.showDialog(getSupportFragmentManager(), popup);
+        isPopupShown = true;
+    }
 
+    @Override
+    public void finish() {
+        if (isPopupShown) {
+            isCloseActivityAfterPopupClosed = true;
+            return;
+        }
+        super.finish();
+    }
 
+    @Override
+    public void onPopupClosed() {
+        isPopupShown = false;
+        if (isCloseActivityAfterPopupClosed) {
+            finish();
+        }
+    }
 }

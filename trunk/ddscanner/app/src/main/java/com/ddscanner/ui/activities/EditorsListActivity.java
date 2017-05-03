@@ -60,7 +60,7 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
         setContentView(R.layout.activity_peoples_checkin);
         findViews();
         setupToolbar(R.string.people, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotEditors(usersResultListener, getIntent().getStringExtra("id"));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotEditors(usersResultListener, getIntent().getStringExtra("id"));
 
     }
 

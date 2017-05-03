@@ -125,7 +125,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             setUi();
         } else {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             }
         }
         return view;
@@ -206,13 +206,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
         }
     }
 
     public void reloadData() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             binding.scrollView.scrollTo(0,0);
         }
     }

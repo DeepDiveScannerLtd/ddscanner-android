@@ -248,7 +248,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     private void getUserDataRequest() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getUserSelfInformation(userResultListener);
         binding.about.scrollTo(0,0);
     }
 
@@ -315,7 +315,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getUserSelfInformation(userResultListener);
       //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
     }
 

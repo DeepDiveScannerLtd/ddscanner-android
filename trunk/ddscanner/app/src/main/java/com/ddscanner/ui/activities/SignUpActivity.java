@@ -294,10 +294,10 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
             case R.id.btn_login_or_sign_up_via_email:
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signInResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signInResultListener);
                 break;
         }
     }
@@ -407,7 +407,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, null, null, signInType, token, signInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
     }
 
     @Override

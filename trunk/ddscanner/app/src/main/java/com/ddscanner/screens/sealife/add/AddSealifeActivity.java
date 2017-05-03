@@ -231,9 +231,9 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
                 body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
             }
             if (!isForEdit) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
             } else {
-                DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateSealife(updateResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)), Helpers.createRequestBodyForString(binding.getSealifeViewModel().getSealife().getId()));
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateSealife(updateResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)), Helpers.createRequestBodyForString(binding.getSealifeViewModel().getSealife().getId()));
             }
         }
     }

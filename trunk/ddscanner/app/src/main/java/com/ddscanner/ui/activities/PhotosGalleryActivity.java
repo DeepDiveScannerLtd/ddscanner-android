@@ -115,16 +115,16 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         switch (source) {
             case PROFILE:
                 photoAuthor = new Gson().fromJson(getIntent().getStringExtra("user"), PhotoAuthor.class);
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(resultListener, loadedInfoId);
                 break;
             case MAPS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(loadedInfoId, resultListener);
                 break;
             case REVIEW:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(resultListener, loadedInfoId);
                 break;
             case NOTIFICATION:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getNotificationPhotos(resultListener, loadedInfoId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getNotificationPhotos(resultListener, loadedInfoId);
         }
     }
 
@@ -152,13 +152,13 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
                     isDataChanged = true;
                     switch (source) {
                         case PROFILE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(resultListener, loadedInfoId);
                             break;
                         case MAPS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(loadedInfoId, resultListener);
                             break;
                         case REVIEW:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(resultListener, loadedInfoId);
                             break;
                     }
                 }
