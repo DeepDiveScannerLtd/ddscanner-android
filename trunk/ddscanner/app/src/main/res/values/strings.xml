@@ -509,4 +509,14 @@
     <string name="profile_dive_center">Dive Center</string>
     <string name="log_out">Log out</string>
     <string name="ok_i_got_it">OK, I GOT IT</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="current_password">Current password</string>
+    <string name="change_password_edit">Change password</string>
+    <string name="password_changed">Your password has been changed</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="old_password_incorrect">Old password is incorrect</string>
+    <string name="error_dialog_titile">Ooops…</string>
+    <string name="message_sent">Message sent!</string>
+    <string name="forgot_password_messagesent">Please, check your email and create a new password</string>
 </resources>

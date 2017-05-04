@@ -450,6 +450,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         addressEditText.setText(country + ", " + address);
     }
 
+    public void changePassword(View view) {
+        ChangePasswordActivity.show(this);
+    }
+
     public void saveChangesClicked(View view) {
 
         if (!isDataValid()) {
@@ -596,5 +600,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     public void onPositiveDialogClicked() {
         finish();
     }
+
+
 
 }

@@ -35,6 +35,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.request.ChangePasswordRequest;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
@@ -77,25 +78,11 @@ public class DDScannerRestClient {
         this.context = context;
     }
 
-    public void getCountryCode(String lat, String lng, final ResultListener<String> resultListener) {
-        Call<ResponseBody> call = RestClient.getGoogleMapsApiService().getCountryName(lat + "," + lng);
-        call.enqueue(new ResponseEntityCallback<String>(gson, resultListener, context) {
-            @Override
-            void handleResponseString(ResultListener<String> resultListener, String responseString) throws JSONException {
-                GoogleMapsGeocodeResponseEntity responseEntity = gson.fromJson(responseString, GoogleMapsGeocodeResponseEntity.class);
-                if (responseEntity.getResults().size() > 0 && responseEntity.getResults().get(0).getAddressComponents() != null) {
-                    for (AddressComponent addressComponent : responseEntity.getResults().get(0).getAddressComponents()) {
-                        if (addressComponent != null && addressComponent.getShortName() != null && addressComponent.getShortName().length() == 2) {
-                            resultListener.onSuccess(addressComponent.getShortName());
-                            return;
-                        }
-                    }
-                }
-            }
-        });
-    }
-
     public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetailsEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId);
         call.enqueue(new ResponseEntityCallback<DiveSpotDetailsEntity>(gson, resultListener, context) {
             @Override
@@ -107,51 +94,30 @@ public class DDScannerRestClient {
     }
 
     public void postCheckOut(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postCheckout(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
     public void postAddDiveSpotToFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddToFavorites(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
     public void deleteDiveSpotFromFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveFromFavorites(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
-    }
-
-    public void getComments(String diveSpotId, @NonNull final ResultListener<Comments> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<Comments>(gson, resultListener, context) {
-            @Override
-            void handleResponseString(DDScannerRestClient.ResultListener<Comments> resultListener, String responseString) {
-                Comments comments = new Gson().fromJson(responseString, Comments.class);
-                resultListener.onSuccess(comments);
-            }
-        });
-    }
-
-    public void getUserLikes(String userId, final ResultListener<ForeignUserLikeWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<ForeignUserLikeWrapper>(gson, resultListener, context) {
-            @Override
-            void handleResponseString(ResultListener<ForeignUserLikeWrapper> resultListener, String responseString) {
-                ForeignUserLikeWrapper foreignUserLikeWrapper = new Gson().fromJson(responseString, ForeignUserLikeWrapper.class);
-                resultListener.onSuccess(foreignUserLikeWrapper);
-            }
-        });
-    }
-
-    public void getUserDislikes(String userId, final ResultListener<ForeignUserDislikesWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<ForeignUserDislikesWrapper>(gson, resultListener, context) {
-            @Override
-            void handleResponseString(ResultListener<ForeignUserDislikesWrapper> resultListener, String responseString) {
-                ForeignUserDislikesWrapper foreignUserDislikesWrapper = new Gson().fromJson(responseString, ForeignUserDislikesWrapper.class);
-                resultListener.onSuccess(foreignUserDislikesWrapper);
-            }
-        });
     }
 
     public void getSingleReview(String reviewId, ResultListener<ArrayList<CommentEntity>> resultListener) {
@@ -185,11 +151,6 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(comments);
             }
         });
-    }
-
-    public void putEditComment(String commentId, RequestBody _method, RequestBody comment, RequestBody rating, List<MultipartBody.Part> images_new, List<MultipartBody.Part> images_del, RequestBody token, RequestBody sn, ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateComment(commentId, _method, comment, rating, images_new, images_del, token, sn);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
     public void postAddSealife(final ResultListener<SealifeShort> resultListener, MultipartBody.Part image, RequestBody translations) {
@@ -310,6 +271,16 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postChangeUserPassword(ResultListener<Void> resultListener, String oldPassword, String newPassword) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(oldPassword, newPassword);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postChangeUserPassword(changePasswordRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
+    }
 
     public void getDiveCenterStatusInDiveSpot(ResultListener<FlagsEntity> resultListener, String diveSpotId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {

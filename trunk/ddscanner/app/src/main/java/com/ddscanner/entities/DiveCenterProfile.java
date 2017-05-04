@@ -43,6 +43,16 @@ public class DiveCenterProfile implements Serializable{
     private boolean isNewInstructors;
     @SerializedName("service_type")
     private int serviceType;
+    @SerializedName("provider_type")
+    private Integer providerType;
+
+    public Integer getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(Integer providerType) {
+        this.providerType = providerType;
+    }
 
     public DiveCenterServiceType getServiceType() {
         switch (serviceType) {

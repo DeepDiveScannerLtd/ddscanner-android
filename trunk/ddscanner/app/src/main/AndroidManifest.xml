@@ -131,6 +131,9 @@
             android:name=".screens.divespot.add.AddDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".screens.profile.edit.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".screens.divespot.photos.DiveSpotPhotosActivity"
             android:screenOrientation="portrait" />
         <activity

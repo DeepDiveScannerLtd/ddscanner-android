@@ -32,7 +32,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
         public void onSuccess(Void result) {
             //TODO change text
             materialDialog.dismiss();
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.sorry, R.string.success_added, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.message_sent, R.string.forgot_password_messagesent, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
         }
 
         @Override

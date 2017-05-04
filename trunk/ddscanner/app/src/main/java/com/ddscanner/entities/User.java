@@ -29,7 +29,7 @@ public class User implements Serializable {
     @SerializedName("provider_id")
     private String facebookLink;
     @SerializedName("provider_type")
-    private int providerType;
+    private Integer providerType;
     private String link;
 
     public String getFacebookLink() {
@@ -40,11 +40,11 @@ public class User implements Serializable {
         this.facebookLink = facebookLink;
     }
 
-    public int getProviderType() {
+    public Integer getProviderType() {
         return providerType;
     }
 
-    public void setProviderType(int providerType) {
+    public void setProviderType(Integer providerType) {
         this.providerType = providerType;
     }
 

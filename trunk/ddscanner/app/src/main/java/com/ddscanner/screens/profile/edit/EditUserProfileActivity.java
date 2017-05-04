@@ -306,4 +306,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     public void onPositiveDialogClicked() {
         finish();
     }
+
+    public void changePassword(View view) {
+        ChangePasswordActivity.show(this);
+    }
+
 }

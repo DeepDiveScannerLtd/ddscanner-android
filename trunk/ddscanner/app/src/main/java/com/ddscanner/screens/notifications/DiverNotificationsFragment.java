@@ -138,19 +138,8 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void onResume() {
         super.onResume();
-        if (DDScannerApplication.isActivitiesFragmentVisible) {
-            Date date1 = new Date();
-            long currentDateInMillis = date1.getTime();
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
-        } else {
-//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//                progressView.setVisibility(View.VISIBLE);
-//                notificationsViewPager.setVisibility(View.GONE);
-//               // getUserNotifications();
-//            }
-        }
-        if (!getUserVisibleHint()) {
-            return;
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            onLoggedOut();
         }
     }
 
@@ -171,24 +160,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible) {
-            if (getView() != null) {
-                isViewNull = false;
-                if (DDScannerApplication.isActivitiesFragmentVisible) {
-                    Date date1 = new Date();
-                    long currentDateInMillis = date1.getTime();
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
-                } else {
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//                        progressView.setVisibility(View.VISIBLE);
-//                        notificationsViewPager.setVisibility(View.GONE);
-//                   //     getUserNotifications();
-                    }
-                }
-            } else {
-                isViewNull = true;
-            }
-        }
+
     }
 
     private void getUserNotifications() {

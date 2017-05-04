@@ -217,7 +217,9 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
+                    <TextView
+                        android:id="@+id/error_about"
+                        style="@style/ValidationErrorTextView" />
                     <LinearLayout
                         android:id="@+id/level_layout"
                         android:layout_width="match_parent"
@@ -248,13 +250,34 @@
                             android:popupBackground="@color/white" />
                     </LinearLayout>
                 </LinearLayout>
+                    <ImageView style="@style/DividerStyleFull" />
+                    <RelativeLayout
+                        android:background="?attr/selectableItemBackground"
+                        android:id="@+id/change_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:visibility="@{profileViewModel.user.providerType != null ? View.GONE : View.VISIBLE}"
+                        android:onClick="@{handlers::changePassword}">
+
+                        <ImageView
+                            android:id="@+id/change_password_icon"
+                            android:layout_marginTop="0dp"
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:src="@drawable/ic_profile_edit" />
+
+                        <TextView
+                            android:layout_toRightOf="@+id/change_password_icon"
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_vertical"
+                            android:text="@string/change_password_edit" />
+                        <ImageView
+                            android:layout_alignParentBottom="true"
+                            style="@style/DividerStyle" />
+                    </RelativeLayout>
                 </LinearLayout>
-
-                <ImageView style="@style/DividerStyleFull" />
-
-                <TextView
-                    android:id="@+id/error_about"
-                    style="@style/ValidationErrorTextView" />
 
 
                 <ImageView
