@@ -112,7 +112,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     // other libraries
-    compile 'com.facebook.android:facebook-android-sdk:4.9.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.22.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.parceler:parceler-api:1.0.4'
     compile 'com.github.rey5137:material:1.2.2'
@@ -122,7 +122,7 @@ dependencies {
     compile 'com.appsflyer:af-android-sdk:4.6.0@aar'
     compile 'id.zelory:compressor:1.0.4'
     compile 'com.klinkerapps:link_builder:1.5.2'
-
+    compile 'com.android.support:multidex:1.0.1'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
