@@ -465,6 +465,12 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
 
+                        <LinearLayout
+                            android:visibility="@{diveSpotViewModel.diveSpotDetailsEntity.sealifes != null ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -502,7 +508,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
-
+                        </LinearLayout>
                         <LinearLayout
                             app:reviewsRatingLayoutVisibilityFrom="@{diveSpotViewModel}"
                             android:id="@+id/reviews_rating_layout"

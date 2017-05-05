@@ -161,13 +161,13 @@ public class ContactUsActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
         super.onStop();
     }
 

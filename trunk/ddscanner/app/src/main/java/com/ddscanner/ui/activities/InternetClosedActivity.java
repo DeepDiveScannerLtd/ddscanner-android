@@ -44,13 +44,13 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     public static void show(Context context) {

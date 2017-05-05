@@ -46,6 +46,10 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
     @Override
     public int getItemCount() {
+        if (sealifes == null) {
+            sealifes = new ArrayList<>();
+            return 0;
+        }
         return sealifes.size();
     }
 

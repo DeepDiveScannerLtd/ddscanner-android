@@ -67,6 +67,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
                 android:hint="@string/password"
+                android:fontFamily="sans-serif"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textColor="@color/black_text"
