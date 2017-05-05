@@ -43,6 +43,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -68,10 +69,14 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     private Runnable sendingSearchRequestRunnable;
     private boolean isForDiveCenter;
 
+    private ProgressView progressView;
+
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotShort> result) {
             searchDiveSpotFragment.setDiveSpotShorts(result, viewPager.getCurrentItem() == 1);
+            progressView.setVisibility(View.GONE);
+            viewPager.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -108,6 +113,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     }
 
     private void findViews() {
+        progressView = (ProgressView) findViewById(R.id.progress_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         viewPager = (ViewPager) findViewById(R.id.search_view_pager);
         tabLayout = (TabLayout) findViewById(R.id.search_tab_layout);
@@ -185,6 +191,8 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
             @Override
             public void run() {
                 if (!newText.isEmpty()) {
+                    viewPager.setVisibility(View.GONE);
+                    progressView.setVisibility(View.VISIBLE);
                     DDScannerApplication.getInstance().getDdScannerRestClient(SearchSpotOrLocationActivity.this).getDivespotsByName(newText, divespotsWrapperResultListener);
                     if (!isForDiveCenter) {
                         placeList = new ArrayList<String>();
