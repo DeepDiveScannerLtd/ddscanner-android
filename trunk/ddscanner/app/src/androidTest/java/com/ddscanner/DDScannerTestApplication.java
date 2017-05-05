@@ -17,11 +17,6 @@ public class DDScannerTestApplication extends DDScannerApplication {
     }
 
     @Override
-    public DDScannerRestClient getDdScannerRestClient() {
-        return ddScannerTestRestClient;
-    }
-
-    @Override
     public SharedPreferenceHelper getSharedPreferenceHelper() {
         return sharedPreferenceHelper;
     }
