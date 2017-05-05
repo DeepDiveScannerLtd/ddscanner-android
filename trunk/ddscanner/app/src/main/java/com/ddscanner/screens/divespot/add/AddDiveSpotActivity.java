@@ -591,7 +591,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         } else {
             downestCoordinate = visibilityMax.getBottom();
             if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
-                if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
+                if (Float.parseFloat(visibilityMax.getText().toString()) < Float.parseFloat(visibilityMin.getText().toString())) {
                     isSomethingWrong = true;
                     errorVisibility.setVisibility(View.VISIBLE);
                     errorVisibility.setText(R.string.error_visivibility_append);
@@ -599,13 +599,13 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     maxVisibilityHint.setVisibility(View.GONE);
                 }
             } else {
-                if (visibilityMin.getText().toString().isEmpty() || Integer.parseInt(visibilityMin.getText().toString()) < 1 || Integer.parseInt(visibilityMin.getText().toString()) > 100) {
+                if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
                     isSomethingWrong = true;
                     errorVisibilityMin.setVisibility(View.VISIBLE);
                     minVisibilityHint.setVisibility(View.GONE);
                 }
 
-                if (visibilityMax.getText().toString().isEmpty() || Integer.parseInt(visibilityMax.getText().toString()) < 1 || Integer.parseInt(visibilityMax.getText().toString()) > 100) {
+                if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
                     isSomethingWrong = true;
                     errorVisibilityMin.setVisibility(View.VISIBLE);
                     maxVisibilityHint.setVisibility(View.GONE);
@@ -619,7 +619,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = depth.getBottom();
         } else {
             downestCoordinate = depth.getBottom();
-            if (Integer.parseInt(depth.getText().toString()) < 5 || Integer.parseInt(depth.getText().toString()) > 1092) {
+            if (Float.parseFloat(depth.getText().toString()) < 5 || Float.parseFloat(depth.getText().toString()) > 1092) {
                 isSomethingWrong = true;
                 errorDepth.setText(R.string.depth_vlue);
                 errorDepth.setVisibility(View.VISIBLE);
