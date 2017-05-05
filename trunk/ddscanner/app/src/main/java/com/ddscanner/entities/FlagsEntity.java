@@ -67,8 +67,8 @@ public class FlagsEntity {
     }
 
     public Boolean isApproved() {
-        if (isApproved == false) {
-            return null;
+        if (isApproved == null) {
+            return false;
         }
         return isApproved;
     }
