@@ -106,7 +106,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
@@ -321,7 +321,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void logoutUser(View view) {
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(0);
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
         onLoggedOut();
     }
 

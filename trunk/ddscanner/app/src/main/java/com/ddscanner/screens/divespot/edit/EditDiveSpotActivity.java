@@ -258,7 +258,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
