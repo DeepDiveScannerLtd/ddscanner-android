@@ -77,4 +77,6 @@
 
     <color name="blue_button_text_color">#e3e9fb</color>
 
+    <color name="blue_button_background_color">#283E75</color>
+
 </resources>

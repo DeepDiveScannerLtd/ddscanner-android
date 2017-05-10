@@ -422,4 +422,13 @@
         <item name="android:background">@drawable/google_login_button</item>
     </style>
 
+    <style name="SigningInputStyle">
+        <item name="android:background">android:background="@android:color/transparent"</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:lines">1</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColorHint">#a3a3a3</item>
+    </style>
+
 </resources>

@@ -35,13 +35,9 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
                 android:hint="@string/name_register"
-                android:lines="1"
                 android:maxLength="32"
-                android:textColor="@color/black_text"
-                android:textColorHint="#a3a3a3" />
+                style="@style/SigningInputStyle"/>
 
             <ImageView style="@style/DividerStyleFull" />
 
@@ -49,13 +45,9 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
                 android:hint="@string/email_input"
                 android:inputType="textEmailAddress"
-                android:lines="1"
-                android:textColor="@color/black_text"
-                android:textColorHint="#a3a3a3" />
+                style="@style/SigningInputStyle" />
 
 
             <ImageView style="@style/DividerStyleFull" />
@@ -64,14 +56,10 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
                 android:hint="@string/password"
                 android:fontFamily="sans-serif"
                 android:inputType="textPassword"
-                android:lines="1"
-                android:textColor="@color/black_text"
-                android:textColorHint="#a3a3a3" />
+                style="@style/SigningInputStyle"/>
         </LinearLayout>
 
         <Button
@@ -157,6 +145,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="12dp"
             android:gravity="center"
+            android:layout_marginLeft="42dp"
+            android:layout_marginRight="42dp"
+            android:textSize="12sp"
             android:text="@string/show_privacy_policy"
             android:textColor="#a3a3a3" />
     </RelativeLayout>
