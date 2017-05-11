@@ -43,6 +43,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
+            app:backgroundTint="@color/spinner_triangle_color"
             />
 
         <android.support.v7.widget.AppCompatSpinner
@@ -55,6 +56,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:popupBackground="@color/white"
+            app:backgroundTint="@color/spinner_triangle_color"
             />
         <TextView
             android:layout_marginLeft="20dp"

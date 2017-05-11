@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/no_results"
+<RelativeLayout
     android:visibility="gone"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:id="@+id/no_results"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <ImageView
-            android:layout_marginTop="50dp"
+            android:id="@+id/icon"
+            android:layout_marginTop="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_nospots"/>
         <TextView
+            android:layout_below="@id/icon"
             style="@style/ErrorsViewTitleStyle"
             android:text="@string/no_results"/>
         <Button
+            android:layout_alignParentBottom="true"
             android:id="@+id/add_spot"
-            android:layout_marginTop="75dp"
             android:layout_width="match_parent"
-            android:layout_margin="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="70dp"
             style="@style/OrangeButtons"
             android:text="@string/add_new"/>
-    </LinearLayout>
-</ScrollView>
+    </RelativeLayout>

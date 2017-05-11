@@ -26,7 +26,7 @@
 
         <include layout="@layout/view_toolbar" />
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -84,7 +84,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/name"
                                 android:hint="@string/name"
-                                android:lines="1"
+
                                 android:maxLength="31"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
 
@@ -194,20 +194,14 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/add_photo_background"
+                        style="@style/AddSealifeButtonStyle"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:onClick="@{handlers::addDiveSpotClicked}">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_addds_plus_sl" />
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
                             android:text="@string/add_ds"
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
@@ -247,17 +241,12 @@
                         android:background="@drawable/add_photo_background"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        style="@style/AddSealifeButtonStyle"
                         android:onClick="@{handlers::addLanguageClicked}">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_addds_plus_sl" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
                             android:text="@string/add_lang"
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
@@ -341,6 +330,6 @@
                     android:onClick="@{handlers::saveChangesClicked}"/>
 
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </layout>

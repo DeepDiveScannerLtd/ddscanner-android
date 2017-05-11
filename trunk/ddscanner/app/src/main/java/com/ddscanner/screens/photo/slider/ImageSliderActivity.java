@@ -347,7 +347,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 }
                 break;
             case R.id.user_data:
-                if (!images.get(position).getAuthor().getId().equals(R.string.dds_server_id)) {
+                if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
                     UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
                 }
                 break;

@@ -127,10 +127,11 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="70dp"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:background="@color/white"
                             android:gravity="center"
+                            android:layout_marginTop="15dp"
                             android:orientation="horizontal"
                             android:paddingLeft="14dp">
 
@@ -207,18 +208,21 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@+id/ic_layout_working"
-                                android:fontFamily="sans-serif-medium"
                                 android:paddingRight="13dp"
                                 android:text="@string/i_am_working_here"
                                 android:textSize="15sp"
                                 app:theme="@style/ColorSwitchStyle" />
                         </RelativeLayout>
-
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="vertical">
                         <RelativeLayout
                             android:id="@+id/check_in_peoples"
                             android:layout_width="match_parent"
                             android:layout_height="58dp"
-                            android:background="@color/white"
+                            android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showCheckinsActivity}">
 
                             <ImageView
@@ -233,7 +237,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="57dp"
                                 android:layout_toRightOf="@+id/ic_layout_check_in"
-                                android:fontFamily="sans-serif-medium"
                                 android:gravity="center"
                                 android:text="@string/no_one_has_checked_in_here"
                                 android:textColor="@color/black_text"
@@ -252,11 +255,11 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showCreatorsActivity}"
                             android:id="@+id/creator"
                             android:layout_width="match_parent"
-                            android:layout_height="58dp"
-                            android:background="@color/white">
+                            android:layout_height="58dp">
 
                             <View
                                 android:id="@+id/anchor"
@@ -301,7 +304,7 @@
                                 android:src="@drawable/ic_arrow"
                                 android:visibility="visible" />
                         </RelativeLayout>
-
+                        </LinearLayout>
                         <RelativeLayout
                             android:id="@+id/editors_wrapper"
                             android:layout_width="match_parent"
@@ -488,21 +491,13 @@
                             android:textColor="@color/black_text"
                             android:textSize="16sp" />
 
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="140dp"
-                            android:background="@color/white"
-                            android:visibility="visible">
-
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/sealife_rc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="20dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginTop="20dp" />
-                        </RelativeLayout>
+                                android:layout_marginTop="5dp" />
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -563,17 +558,17 @@
                                 android:textSize="15sp"
                                 app:setCountReviewsFrom="@{diveSpotViewModel}"
                                 tools:text="Show all reviews (7)" />
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/divider" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/divider" />
 
                             <LinearLayout
                                 android:id="@+id/map_layout"

@@ -13,6 +13,12 @@
         <item name="colorControlHighlight">@color/spinner_triangle_color</item>
     </style>
 
+    <style name="tabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">#293e75</item>
+        <item name="tabIndicatorColor">#3b518b</item>
+        <item name="tabTextAppearance">@style/customTabText</item>
+        <item name="android:elevation">2dp</item>
+    </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_bar</item>

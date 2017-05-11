@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +24,24 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
     private ArrayList<String> data;
     public Resources res;
     LayoutInflater inflater;
+    private int padding;
 
     public CharacteristicSpinnerItemsAdapter(Activity activitySpinner, int textViewResourceId, ArrayList<String> objects) {
         super(activitySpinner, textViewResourceId, objects);
         this.data = objects;
         inflater = (LayoutInflater)activitySpinner.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        padding = Math.round(Helpers.convertDpToPixel(15, getContext()));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = getRowView(position, parent);
+        View view = getRowView(position, parent, false);
         return view;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View view = getRowView(position, parent);
+        View view = getRowView(position, parent, true);
         return view;
     }
 
@@ -47,12 +50,15 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
         return data.size();
     }
 
-    private View getRowView(int position, ViewGroup parent) {
+    private View getRowView(int position, ViewGroup parent, boolean isDropDown) {
         View row = inflater.inflate(R.layout.item_language_spinner, parent, false);
         TextView textView = (TextView) row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
         if (position == 0) {
             textView.setTextColor(ContextCompat.getColor(getContext(), R.color.defaultGrayTitleColor));
+            if (!isDropDown) {
+                row.setPadding(0, padding, padding, padding);
+            }
         }
         return row;
     }

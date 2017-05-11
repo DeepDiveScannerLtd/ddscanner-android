@@ -829,7 +829,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void showCheckinsActivity(View view) {
-        CheckInPeoplesActivity.show(this, diveSpotId);
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() > 0) {
+            CheckInPeoplesActivity.show(this, diveSpotId);
+        }
     }
 
     public void addPhotoToDiveSpotButtonClicked(View view) {

@@ -56,8 +56,11 @@ public class ProfileFragmentViewModel {
 
     @BindingAdapter({"diverLevelFrom"})
     public static void diverLevelLabel(TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null) {
+        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null && profileFragmentViewModel.getUser().getDiverLevel() > 0) {
             view.setText(profileFragmentViewModel.getUser().getDiverLevelString());
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
         }
     }
 
