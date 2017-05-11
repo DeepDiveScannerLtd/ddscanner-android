@@ -79,4 +79,6 @@
 
     <color name="blue_button_background_color">#283E75</color>
 
+    <color name="achievement_progress_color">#5a74b7</color>
+
 </resources>
