@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.achievements.AchievementTitleViewModel" />
+    </data>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginBottom="15dp">
+    <ImageView
+        style="@style/DividerStyleFull" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="66dp">
@@ -16,8 +25,10 @@
             android:background="@drawable/achievement_title_icon_backgound">
             <ImageView
                 android:layout_centerInParent="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="12dp"
+                android:scaleType="fitCenter"
+                app:loadImageFrom="@{viewModel}"/>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/info_block"
@@ -33,7 +44,7 @@
                 android:fontFamily="sans-serif"
                 android:textStyle="normal"
                 android:textColor="#212121"
-                tools:text="Underwater photographer"
+                android:text="@{viewModel.achievementTitle.name}"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -43,13 +54,13 @@
                 android:fontFamily="sans-serif"
                 android:textStyle="normal"
                 android:textColor="#a3a3a3"
-                tools:text="2 completed"
+                android:text="@{viewModel.achievementTitle.subtitle}"
                 />
         </LinearLayout>
         <TextView
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="17dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"
@@ -57,7 +68,7 @@
             android:textStyle="normal"
             android:textColor="#526cae"
             android:gravity="end"
-            tools:text="100 photos"
+            android:text="@{viewModel.achievementTitle.goal}"
             />
         <ImageView
             style="@style/DividerStyleFull"
@@ -65,8 +76,12 @@
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:layout_marginTop="17dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:loadDetails="@{viewModel}"/>
+    <ImageView
+        style="@style/DividerStyleFull" />
 </LinearLayout>
+</layout>
