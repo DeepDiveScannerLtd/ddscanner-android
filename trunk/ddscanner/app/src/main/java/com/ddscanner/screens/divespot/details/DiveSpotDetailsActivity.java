@@ -149,9 +149,13 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         public void onSuccess(DiveSpotDetailsEntity result) {
             diveSpotDetailsEntity = result;
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                isCheckedIn = result.getFlags().isCheckedIn();
-                isWorkingHere = result.getFlags().isWorkingHere();
-                isFavorite = result.getFlags().isFavorite();
+                if (result.getFlags() == null) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
+                } else {
+                    isCheckedIn = result.getFlags().isCheckedIn();
+                    isWorkingHere = result.getFlags().isWorkingHere();
+                    isFavorite = result.getFlags().isFavorite();
+                }
             }
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
@@ -825,7 +829,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void showCheckinsActivity(View view) {
-        CheckInPeoplesActivity.show(this, diveSpotId);
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() > 0) {
+            CheckInPeoplesActivity.show(this, diveSpotId);
+        }
     }
 
     public void addPhotoToDiveSpotButtonClicked(View view) {
@@ -1090,7 +1096,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     if (isCheckIn) {
                         checkOutUi();
                         LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
@@ -1145,7 +1151,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     if (isAddToFavourites) {
                         LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
                     } else {
@@ -1209,7 +1215,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
                     break;
                 case BAD_REQUEST_ERROR_400:

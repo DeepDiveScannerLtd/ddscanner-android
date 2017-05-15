@@ -181,7 +181,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (LocationHelper.isLocationProvidersAvailable(getContext()) && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         }
-        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(110, getContext()));
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
         return view;
     }
 

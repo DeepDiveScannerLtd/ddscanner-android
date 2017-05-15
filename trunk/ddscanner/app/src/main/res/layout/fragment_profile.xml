@@ -68,13 +68,12 @@
                                     android:layout_marginRight="20dp"
                                     android:src="@drawable/avatar_profile_default"
                                     app:loadImageFrom="@{profileFragmentViewModel}" />
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="50dp"
                                 android:orientation="vertical"
                                 android:paddingRight="20dp"
-                                android:gravity="center_vertical"
-                                android:paddingTop="3dp">
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:id="@+id/user_name"
@@ -88,12 +87,14 @@
                                     android:textSize="16sp"
                                     android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}" />
                                 <TextView
+                                    android:layout_below="@+id/user_name"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="#526cae"
                                     android:textSize="13sp"
+                                    android:visibility="gone"
                                     app:diverLevelFrom="@{profileFragmentViewModel}" />
-                            </LinearLayout>
+                            </RelativeLayout>
                         </LinearLayout>
 
                         <TextView

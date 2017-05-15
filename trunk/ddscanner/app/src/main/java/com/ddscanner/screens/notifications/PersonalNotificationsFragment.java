@@ -22,6 +22,7 @@ import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
@@ -70,7 +71,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    DDScannerApplication.bus.post(new LogoutEvent());
                     break;
             }
         }

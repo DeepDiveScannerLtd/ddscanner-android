@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.PendingAchievement;
@@ -40,29 +41,38 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
     private ProgressView progressView;
     private String userId;
     private RelativeLayout noAchievementsView;
+    private AchievementTitleListAdapter achievementTitleListAdapter = new AchievementTitleListAdapter();
 
-    private DDScannerRestClient.ResultListener<AchievmentsResponseEntity> responseEntityResultListener = new DDScannerRestClient.ResultListener<AchievmentsResponseEntity>() {
+    private DDScannerRestClient.ResultListener<ArrayList<AchievementTitle>> responseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<AchievementTitle>>() {
         @Override
-        public void onSuccess(AchievmentsResponseEntity result) {
+        public void onSuccess(ArrayList<AchievementTitle> result) {
             progressView.setVisibility(View.GONE);
-            achievmentsResponseEntity = result;
-            completeAchievements = new ArrayList<>();
-            pendingAchievements = new ArrayList<>();
-            if (achievmentsResponseEntity.getPendingAchievements() != null) {
-                pendingAchievements = achievmentsResponseEntity.getPendingAchievements();
-                completeAchievements.addAll(pendingAchievements);
-            }
-            if (achievmentsResponseEntity.getCompleteAchievements() != null) {
-                completeAchievements.addAll(achievmentsResponseEntity.getCompleteAchievements());
-            }
-            if (completeAchievements.size() > 0) {
+//            achievmentsResponseEntity = result;
+//            completeAchievements = new ArrayList<>();
+//            pendingAchievements = new ArrayList<>();
+//            if (achievmentsResponseEntity.getPendingAchievements() != null) {
+//                pendingAchievements = achievmentsResponseEntity.getPendingAchievements();
+//                completeAchievements.addAll(pendingAchievements);
+//            }
+//            if (achievmentsResponseEntity.getCompleteAchievements() != null) {
+//                completeAchievements.addAll(achievmentsResponseEntity.getCompleteAchievements());
+//            }
+//            if (completeAchievements.size() > 0) {
+//                recyclerView.setVisibility(View.VISIBLE);
+//                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AchievementsActivity.this);
+//                recyclerView.setLayoutManager(linearLayoutManager);
+//                recyclerView.setAdapter(new AchievementsActivityListAdapter((ArrayList<CompleteAchievement>) completeAchievements, AchievementsActivity.this));
+//            } else {
+//                noAchievementsView.setVisibility(View.VISIBLE);
+//            }
+            if (result.size() > 0) {
                 recyclerView.setVisibility(View.VISIBLE);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AchievementsActivity.this);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setAdapter(new AchievementsActivityListAdapter((ArrayList<CompleteAchievement>) completeAchievements, AchievementsActivity.this));
-            } else {
-                noAchievementsView.setVisibility(View.VISIBLE);
+                recyclerView.setLayoutManager(new LinearLayoutManager(AchievementsActivity.this));
+                achievementTitleListAdapter.setAchievementTitles(result);
+                recyclerView.setAdapter(achievementTitleListAdapter);
+                return;
             }
+            noAchievementsView.setVisibility(View.VISIBLE);
         }
 
         @Override

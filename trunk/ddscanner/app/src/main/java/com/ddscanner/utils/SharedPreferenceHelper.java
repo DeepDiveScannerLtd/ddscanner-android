@@ -272,15 +272,6 @@ public class SharedPreferenceHelper {
         return prefs.getString(SECRET, "");
     }
 
-    public void logout() {
-      //  SharedPreferenceHelper.setToken("");
-        setUserServerId("");
-        setSecret("");
-        setSn("");
-        setToken("");
-        setIsUserSignedIn(false, null);
-    }
-
     public void setUserServerId(String id) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
@@ -372,6 +363,11 @@ public class SharedPreferenceHelper {
         users = new ArrayList<>();
         users.add(baseUser);
         setUsersList(users);
+    }
+
+    public void logoutFromAllAccounts() {
+        setIsUserSignedIn(false, null);
+        setUsersList(new ArrayList<BaseUser>());
     }
 
     public static void removeUserFromList(String id) {

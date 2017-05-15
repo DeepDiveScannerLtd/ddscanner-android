@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
@@ -929,17 +930,18 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserAchivements(final ResultListener<AchievmentsResponseEntity> resultListener) {
+    public void getUserAchivements(final ResultListener<ArrayList<AchievementTitle>> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements();
-        call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener, context) {
+        call.enqueue(new ResponseEntityCallback<ArrayList<AchievementTitle>>(gson, resultListener, context) {
 
             @Override
-            void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
-                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
+            void handleResponseString(ResultListener<ArrayList<AchievementTitle>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<AchievementTitle>>(){}.getType();
+                ArrayList<AchievementTitle> achievmentsResponseEntity = new Gson().fromJson(responseString, listType);
                 resultListener.onSuccess(achievmentsResponseEntity);
             }
         });

@@ -76,7 +76,9 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-            UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            if (!users.get(getAdapterPosition()).getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
+                UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            }
         }
     }
 

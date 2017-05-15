@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.ddscanner.DDScannerApplication;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 public class SearchDiveSpotsFragment extends Fragment implements View.OnClickListener{
 
     private RecyclerView diveSpotsListRc;
-    private ScrollView noResultsView;
+    private RelativeLayout noResultsView;
     private Button addManually;
     private ArrayList<DiveSpotShort> diveSpotShorts;
 
@@ -38,7 +39,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_serach_dive_spot, container, false);
         diveSpotsListRc = (RecyclerView) view.findViewById(R.id.spots_list_rc);
-        noResultsView = (ScrollView) view.findViewById(R.id.no_results);
+        noResultsView = (RelativeLayout) view.findViewById(R.id.no_results);
         addManually = (Button) view.findViewById(R.id.add_spot);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         diveSpotsListRc.setLayoutManager(linearLayoutManager);

@@ -247,7 +247,8 @@
                             android:layout_height="wrap_content"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
-                            android:popupBackground="@color/white" />
+                            android:popupBackground="@color/white"
+                            app:backgroundTint="@color/spinner_triangle_color"/>
                     </LinearLayout>
                 </LinearLayout>
                     <ImageView style="@style/DividerStyleFull" />

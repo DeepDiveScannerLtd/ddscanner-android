@@ -733,14 +733,6 @@ public class MainActivity extends BaseAppCompatActivity
         mainViewPagerAdapter.onLoggedIn();
     }
 
-    @Subscribe
-    public void onLoggedOut(LoggedOutEvent event) {
-        mainViewPagerAdapter.notifyDataSetChanged();
-        setupTabLayout();
-
-        mainViewPagerAdapter.onLoggedOut();
-    }
-
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }

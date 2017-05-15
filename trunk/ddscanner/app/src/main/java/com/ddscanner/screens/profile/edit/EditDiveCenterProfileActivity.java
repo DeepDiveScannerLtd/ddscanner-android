@@ -96,6 +96,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isDiveSpotsDownloaded = false;
     private ColorStateList colorStateList;
     private TextView editAddress;
+    private LinearLayoutManager diveSpotsLayoutManager;
+    private LinearLayoutManager languagesLayoutManager;
 
     private EditDcProfileViewBinding binding;
 
@@ -213,6 +215,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        diveSpotsLayoutManager = new LinearLayoutManager(this);
+        languagesLayoutManager = new LinearLayoutManager(this);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
         isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
         binding.setHandlers(this);
@@ -240,6 +244,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     private void setupUi() {
+        binding.name.setInputType(InputType.TYPE_CLASS_TEXT);
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         if (isHaveSpots) {
@@ -248,10 +253,12 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             isDiveSpotsDownloaded = true;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
-        binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
+        binding.diveSpotList.setLayoutManager(diveSpotsLayoutManager);
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
-        binding.languagesList.setLayoutManager(new LinearLayoutManager(this));
+        binding.languagesList.setLayoutManager(languagesLayoutManager);
         binding.languagesList.setAdapter(languagesListAdapter);
+        binding.diveSpotList.setNestedScrollingEnabled(false);
+        binding.languagesList.setNestedScrollingEnabled(false);
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
             diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
         }
@@ -272,7 +279,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
             locationLatitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat());
             locationLongitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng());
-            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
+            if (binding.getDcViewModel().getDiveCenterProfile().getCountry() != null) {
+                addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
+            } else {
+                addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), "");
+            }
             binding.pickAddressButton.setVisibility(View.GONE);
         }
     }
@@ -447,7 +458,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 }
             });
         }
-        addressEditText.setText(country + ", " + address);
+        if (!country.isEmpty()) {
+            addressEditText.setText(country + ", " + address);
+        } else {
+            addressEditText.setText(address);
+        }
     }
 
     public void changePassword(View view) {

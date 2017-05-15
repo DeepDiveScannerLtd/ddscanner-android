@@ -28,9 +28,8 @@ android {
         minSdkVersion 18
         targetSdkVersion 25
         multiDexEnabled true
-        versionCode 27
-        versionName "3.0.2"
-
+        versionCode 28
+        versionName "3.0.3"
         testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
     buildTypes {
@@ -45,6 +44,8 @@ android {
             resValue "string", "facebook_app_id", "1876585075891068"
             resValue "string", "application_id", "com.ddscanner.debug"
             resValue "string", "external_path", "Android/data/com.ddscanner.debug/files/Pictures"
+            resValue "string", "base_photo_url", "https://ddsapi.ilave.pro/v2_0/image/%1\$s?size=%2\$s"
+            resValue "string", "dds_server_id", "163"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
@@ -55,9 +56,11 @@ android {
             resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
             resValue "string", "server_api_address", "https://api.ddscanner.com/v2_0/"
+            resValue "string", "base_photo_url", "https://api.ddscanner.com/v2_0/image/%1\$s?size=%2\$s"
             resValue "string", "facebook_app_id", "1691716511044593"
             resValue "string", "application_id", "com.ddscanner"
             resValue "string", "external_path", "Android/data/com.ddscanner/files/Pictures"
+            resValue "string", "dds_server_id", "416"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -123,6 +126,7 @@ dependencies {
     compile 'id.zelory:compressor:1.0.4'
     compile 'com.klinkerapps:link_builder:1.5.2'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }

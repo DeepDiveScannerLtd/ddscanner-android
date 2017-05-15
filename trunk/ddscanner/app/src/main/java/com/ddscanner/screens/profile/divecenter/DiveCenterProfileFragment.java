@@ -85,8 +85,8 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
+                    DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);

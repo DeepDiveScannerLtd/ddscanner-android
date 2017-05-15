@@ -26,7 +26,7 @@ public class LocationHelper implements LocationListener {
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000L * 60 * 1;
-    private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 60 * 60 * 1000; // in millis
+    private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 60 * 1000; // in millis
     private static final int LOCATION_ACCURACY = 2000; // in meters
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 

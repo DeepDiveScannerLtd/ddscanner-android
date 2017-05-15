@@ -251,7 +251,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     break;
                 default:

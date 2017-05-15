@@ -170,7 +170,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
                 default:
@@ -205,7 +205,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;
                 default:
@@ -347,7 +347,9 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 }
                 break;
             case R.id.user_data:
-                UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
+                if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
+                    UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
+                }
                 break;
         }
     }

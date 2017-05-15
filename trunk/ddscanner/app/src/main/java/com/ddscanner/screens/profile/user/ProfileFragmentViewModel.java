@@ -56,14 +56,17 @@ public class ProfileFragmentViewModel {
 
     @BindingAdapter({"diverLevelFrom"})
     public static void diverLevelLabel(TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null) {
+        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null && profileFragmentViewModel.getUser().getDiverLevel() > 0) {
             view.setText(profileFragmentViewModel.getUser().getDiverLevelString());
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
         }
     }
 
     @BindingAdapter({"loadImageFrom"})
     public static void loadImage(ImageView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getPhoto() != null) {
+        if (profileFragmentViewModel != null && !profileFragmentViewModel.getUser().getPhoto().isEmpty()) {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, profileFragmentViewModel.getUser().getPhoto(), "2"))
                     .resize(Math.round(Helpers.convertDpToPixel(50, view.getContext())),
                             Math.round(Helpers.convertDpToPixel(50, view.getContext()))).centerCrop()
