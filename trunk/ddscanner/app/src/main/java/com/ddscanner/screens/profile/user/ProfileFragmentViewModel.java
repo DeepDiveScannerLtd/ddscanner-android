@@ -66,7 +66,7 @@ public class ProfileFragmentViewModel {
 
     @BindingAdapter({"loadImageFrom"})
     public static void loadImage(ImageView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getPhoto() != null) {
+        if (profileFragmentViewModel != null && !profileFragmentViewModel.getUser().getPhoto().isEmpty()) {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, profileFragmentViewModel.getUser().getPhoto(), "2"))
                     .resize(Math.round(Helpers.convertDpToPixel(50, view.getContext())),
                             Math.round(Helpers.convertDpToPixel(50, view.getContext()))).centerCrop()

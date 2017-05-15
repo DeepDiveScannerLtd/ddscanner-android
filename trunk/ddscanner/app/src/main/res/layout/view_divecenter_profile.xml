@@ -23,471 +23,473 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <com.rey.material.widget.ProgressView
                 android:id="@+id/progress_bar_loading"
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_marginTop="50dp"
+                android:visibility="gone"
                 app:pv_autostart="true"
                 app:pv_circular="true"
                 app:pv_progressMode="indeterminate"
-                android:visibility="gone"
                 app:pv_progressStyle="@style/CircularProgress" />
-        <LinearLayout
-            android:id="@+id/about_layout"
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/about_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginBottom="13dp"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginTop="13dp"
-                    android:src="@drawable/avatar_dc_profile"
-                    app:loadImageFrom="@{diveCenterViewModel}" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="20dp"
-                    android:text="@{diveCenterViewModel.diveCenterProfile.name}"
-                    android:textColor="@color/black_text"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <ImageView style="@style/DividerStyleFull" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
-
-                <ImageView style="@style/DividerStyleFull" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/offer"
-                    android:textColor="#afafaf"
-                    android:textSize="15sp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="14dp" />
-
-                <ImageView style="@style/DividerStyleFull" />
-            </LinearLayout>
-
-
-            <ImageView
-                style="@style/DividerStyleFull"
-                android:layout_marginTop="@dimen/base_block_margin_top" />
-
-            <LinearLayout
-                android:paddingBottom="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:visibility="@{diveCenterViewModel.diveCenterProfile.addresses == null ? View.GONE : View.VISIBLE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_dc_location" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicName"
-                            android:text="@string/dc_address" />
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicDesciption"
-                            app:setAddressFrom="@{diveCenterViewModel}" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:visibility="@{diveCenterViewModel.diveCenterProfile.emails == null ? View.GONE : View.VISIBLE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_dc_mail" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicName"
-                            android:text="@string/dc_email" />
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicDesciption"
-                            app:setEmails="@{diveCenterViewModel}" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:visibility="@{diveCenterViewModel.diveCenterProfile.phones == null ? View.GONE : View.VISIBLE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_dc_phone" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicName"
-                            android:text="@string/dc_phone" />
-
-                        <TextView
-                            style="@style/DiveCenterProfileCharacteristicDesciption"
-                            app:setPhones="@{diveCenterViewModel}" />
-                    </LinearLayout>
-                </LinearLayout>
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{handlers::showInstructors}"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_dc_instructors" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicName"
-                                android:text="@string/dc_instructors" />
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicDesciption"
-                                android:text="@{diveCenterViewModel.diveCenterProfile.instructorsCount}" />
-                        </LinearLayout>
-
-                        <View
-                            android:visibility="@{diveCenterViewModel.diveCenterProfile.newInstructors ? View.VISIBLE : View.GONE}"
-                            android:layout_width="6dp"
-                            android:layout_height="6dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="11dp"
-                            android:layout_toLeftOf="@+id/instructors_arrow"
-                            android:background="@drawable/red_oval" />
-
-                        <ImageView
-                            android:visibility="visible"
-                            android:id="@+id/instructors_arrow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/ic_arrow" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:visibility="@{diveCenterViewModel.diveCenterProfile.languages == null ? View.GONE : View.VISIBLE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:onClick="@{handlers::showLanguages}">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_dc_language" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicName"
-                                android:text="@string/dc_languages" />
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicDesciption"
-                                android:text="@{diveCenterViewModel.diveCenterProfile.languages != null ? String.valueOf(diveCenterViewModel.diveCenterProfile.languages.size()) : String.valueOf(0)}" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:visibility="@{diveCenterViewModel.diveCenterProfile.languages != null ? View.VISIBLE : View.GONE}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/ic_arrow" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView style="@style/DividerStyleFull" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/base_block_margin_top"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="@{diveCenterViewModel.diveCenterProfile.photos != null ? View.VISIBLE : View.GONE}">
-
-                <ImageView style="@style/DividerStyleFull" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/photos"
-                    android:textColor="#afafaf"
-                    android:textSize="15sp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/photos_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="14dp" />
-
-                <ImageView style="@style/DividerStyleFull" />
-
-            </LinearLayout>
-
-
-            <ImageView
-                style="@style/DividerStyleFull"
-                android:layout_marginTop="@dimen/base_block_margin_top" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="20dp"
-                    android:orientation="horizontal"
-                    android:background="?attr/selectableItemBackground"
-                    android:onClick="@{handlers::showCreated}">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_profile_added" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicName"
-                                android:text="@string/added_ds" />
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicDesciption"
-                                app:countAddedFrom="@{diveCenterViewModel}" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/ic_arrow" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="20dp"
-                    android:orientation="horizontal"
-                    android:background="?attr/selectableItemBackground"
-                    android:onClick="@{handlers::showEdited}">
-
-                    <ImageView
-                        style="@style/DiveCenterProfileCharacteristicIcon"
-                        android:src="@drawable/ic_profile_edited" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicName"
-                                android:text="@string/edited_ds" />
-
-                            <TextView
-                                style="@style/DiveCenterProfileCharacteristicDesciption"
-                                app:countEditedFrom="@{diveCenterViewModel}" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/ic_arrow" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    style="@style/BlueButton"
-                    android:fontFamily="sans-serif-medium"
-                    android:textAllCaps="false"
-                    android:visibility="gone"
-                    app:myDiveSpotsCount="@{diveCenterViewModel}"
-                    android:onClick="@{handlers::showDiveSpots}"/>
-            </LinearLayout>
-
-            <ImageView style="@style/DividerStyleFull" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/white"
-                android:layout_marginTop="10dp">
-
-            <ImageView
-                style="@style/DividerStyleFull" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{handlers::editProfileButtonClicked}">
-
-                <ImageView
-                    android:id="@+id/ic_edit"
-                    android:layout_marginTop="0dp"
-                    style="@style/CharacteristicsDiveSpotListIcons"
-                    android:src="@drawable/ic_profile_edit" />
-
-                <TextView
-                    style="@style/CharacteristicsDiveSpotListTitle"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-medium"
+                    android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/ic_edit"
-                    android:text="@string/edit_profile" />
-            </RelativeLayout>
+                    android:orientation="horizontal">
 
-            <ImageView
-                style="@style/DividerStyleFull" />
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="13dp"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginTop="13dp"
+                        android:src="@drawable/avatar_dc_profile"
+                        app:loadImageFrom="@{diveCenterViewModel}" />
 
-            <RelativeLayout
-                android:background="?attr/selectableItemBackground"
-                android:id="@+id/logout"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:onClick="@{handlers::logout}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginRight="20dp"
+                        android:text="@{diveCenterViewModel.diveCenterProfile.name}"
+                        android:textColor="@color/black_text"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyleFull" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/offer"
+                        android:textColor="#afafaf"
+                        android:textSize="15sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="14dp" />
+
+                    <ImageView style="@style/DividerStyleFull" />
+                </LinearLayout>
+
 
                 <ImageView
-                    android:id="@+id/logout_icon"
-                    android:layout_marginTop="0dp"
-                    style="@style/CharacteristicsDiveSpotListIcons"
-                    android:src="@drawable/ic_profile_logout" />
+                    style="@style/DividerStyleFull"
+                    android:layout_marginTop="@dimen/base_block_margin_top" />
 
-                <TextView
-                    android:layout_toRightOf="@+id/logout_icon"
-                    style="@style/CharacteristicsDiveSpotListTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center_vertical"
-                    android:text="@string/log_out" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="@{diveCenterViewModel.diveCenterProfile.addresses == null ? View.GONE : View.VISIBLE}">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_dc_location" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicName"
+                                android:text="@string/dc_address" />
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicDesciption"
+                                app:setAddressFrom="@{diveCenterViewModel}" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="@{diveCenterViewModel.diveCenterProfile.emails == null ? View.GONE : View.VISIBLE}">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_dc_mail" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicName"
+                                android:text="@string/dc_email" />
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicDesciption"
+                                app:setEmails="@{diveCenterViewModel}" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="@{diveCenterViewModel.diveCenterProfile.phones == null ? View.GONE : View.VISIBLE}">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_dc_phone" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicName"
+                                android:text="@string/dc_phone" />
+
+                            <TextView
+                                style="@style/DiveCenterProfileCharacteristicDesciption"
+                                app:setPhones="@{diveCenterViewModel}" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{handlers::showInstructors}"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_dc_instructors" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicName"
+                                    android:text="@string/dc_instructors" />
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                                    android:text="@{diveCenterViewModel.diveCenterProfile.instructorsCount}" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="6dp"
+                                android:layout_height="6dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="11dp"
+                                android:layout_toLeftOf="@+id/instructors_arrow"
+                                android:background="@drawable/red_oval"
+                                android:visibility="@{diveCenterViewModel.diveCenterProfile.newInstructors ? View.VISIBLE : View.GONE}" />
+
+                            <ImageView
+                                android:id="@+id/instructors_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_arrow"
+                                android:visibility="visible" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{handlers::showLanguages}"
+                        android:orientation="horizontal"
+                        android:visibility="@{diveCenterViewModel.diveCenterProfile.languages == null ? View.GONE : View.VISIBLE}">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_dc_language" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicName"
+                                    android:text="@string/dc_languages" />
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                                    android:text="@{diveCenterViewModel.diveCenterProfile.languages != null ? String.valueOf(diveCenterViewModel.diveCenterProfile.languages.size()) : String.valueOf(0)}" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_arrow"
+                                android:visibility="@{diveCenterViewModel.diveCenterProfile.languages != null ? View.VISIBLE : View.GONE}" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyleFull" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_block_margin_top"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.photos != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/photos"
+                        android:textColor="#afafaf"
+                        android:textSize="15sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/photos_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="14dp" />
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                </LinearLayout>
+
+
                 <ImageView
-                    android:layout_alignParentBottom="true"
-                    style="@style/DividerStyle" />
-            </RelativeLayout>
+                    style="@style/DividerStyleFull"
+                    android:layout_marginTop="@dimen/base_block_margin_top" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showCreated}"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_profile_added" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicName"
+                                    android:text="@string/added_ds" />
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                                    app:countAddedFrom="@{diveCenterViewModel}" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_arrow" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showEdited}"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp">
+
+                        <ImageView
+                            style="@style/DiveCenterProfileCharacteristicIcon"
+                            android:src="@drawable/ic_profile_edited" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicName"
+                                    android:text="@string/edited_ds" />
+
+                                <TextView
+                                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                                    app:countEditedFrom="@{diveCenterViewModel}" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_arrow" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <Button
+                        style="@style/BlueButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:onClick="@{handlers::showDiveSpots}"
+                        android:textAllCaps="false"
+                        android:visibility="gone"
+                        app:myDiveSpotsCount="@{diveCenterViewModel}" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyleFull" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::editProfileButtonClicked}">
+
+                        <ImageView
+                            android:id="@+id/ic_edit"
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:layout_marginTop="0dp"
+                            android:src="@drawable/ic_profile_edit" />
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/ic_edit"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_vertical"
+                            android:text="@string/edit_profile" />
+                    </RelativeLayout>
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <RelativeLayout
+                        android:id="@+id/logout"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::logout}">
+
+                        <ImageView
+                            android:id="@+id/logout_icon"
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:layout_marginTop="0dp"
+                            android:src="@drawable/ic_profile_logout" />
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toRightOf="@+id/logout_icon"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_vertical"
+                            android:text="@string/log_out" />
+
+                        <ImageView
+                            style="@style/DividerStyleFull"
+                            android:layout_alignParentBottom="true" />
+                    </RelativeLayout>
+                </LinearLayout>
+
             </LinearLayout>
-
-        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </layout>

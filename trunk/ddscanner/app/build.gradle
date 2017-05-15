@@ -30,7 +30,7 @@ android {
         multiDexEnabled true
         versionCode 27
         versionName "3.0.2"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
     buildTypes {

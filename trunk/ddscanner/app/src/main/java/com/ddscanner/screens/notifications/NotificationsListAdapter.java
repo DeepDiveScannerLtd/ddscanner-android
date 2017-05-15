@@ -1,6 +1,7 @@
 package com.ddscanner.screens.notifications;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,6 +94,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
                     if (!isSelf || (isSelf && !notification.getActivityType().equals(ActivityTypes.ACHIEVEMENT_GETTED))) {
                         loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
+                    } else {
+                        textAndPhotoItemViewHolder.userAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_star_title));
                     }
                     if (notifications.get(position).getLinks() != null) {
                         try {
@@ -109,7 +112,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                     }
                     loadUserPhoto(notification.getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
-                    Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                    Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
                     break;
                 case VIEW_TYPE_WITH_PHOTOS_LIST:
                     PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
@@ -151,7 +154,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void loadUserPhoto(String photoId, ImageView view) {
-        Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
+        if (!photoId.isEmpty()) {
+            Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.notif_default_avatar).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
+        } else {
+            view.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.notif_default_avatar));
+        }
     }
 
     @Override
