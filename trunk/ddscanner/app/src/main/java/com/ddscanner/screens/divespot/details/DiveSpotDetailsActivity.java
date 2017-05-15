@@ -487,7 +487,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         lastChosedRating = Math.round(rating);
-        tryingToShowLeaveReviewActivity(lastChosedRating);
+        tryingToShowLeaveReviewActivity(lastChosedRating, true);
         EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_RATING_BAR);
     }
 
@@ -682,7 +682,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                         reloadFlags();
                     } else {
                         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                        tryingToShowLeaveReviewActivity(lastChosedRating);
+                        tryingToShowLeaveReviewActivity(lastChosedRating, true);
                     }
 
                 }
@@ -938,10 +938,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public void writeReviewClicked(View view) {
         EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST);
-        tryingToShowLeaveReviewActivity(1);
+        tryingToShowLeaveReviewActivity(1, false);
     }
 
-    private void tryingToShowLeaveReviewActivity(int rating) {
+    private void tryingToShowLeaveReviewActivity(int rating, boolean isFromRatingBar) {
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
@@ -950,6 +950,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             }
         } else {
             EventsTracker.trackReviewShowAll();
+            if (isFromRatingBar) {
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+                return;
+            }
             ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT);
         }
     }
