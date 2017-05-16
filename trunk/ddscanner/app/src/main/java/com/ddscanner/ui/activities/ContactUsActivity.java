@@ -23,7 +23,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactUsActivity extends AppCompatActivity {
+public class ContactUsActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
     private List<ContactUsEntity> contactUsEntities = new ArrayList<>();
