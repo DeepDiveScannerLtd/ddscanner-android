@@ -342,7 +342,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private void init() {
         diveSpotLocation = diveSpotDetailsEntity.getPosition();
         diveSpotLatLngBounds = new LatLngBounds(new LatLng(diveSpotLocation.latitude - 1, diveSpotLocation.longitude - 1), new LatLng(diveSpotLocation.latitude + 1, diveSpotLocation.longitude + 1));
-        sealifes =(ArrayList<SealifeShort>) diveSpotDetailsEntity.getSealifes();
+        if (diveSpotDetailsEntity.getSealifes() != null) {
+            sealifes = (ArrayList<SealifeShort>) diveSpotDetailsEntity.getSealifes();
+        }
     }
 
     private void findViewsAndSetupCurrentData(DiveSpotDetailsEntity diveSpot) {
@@ -474,7 +476,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                     SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
                     if (Helpers.checkIsSealifeAlsoInList((ArrayList<SealifeShort>) sealifes, sealifeShort.getId())) {
-                        Helpers.showToast(EditDiveSpotActivity.this, R.string.sealife_already_added);
                         return;
                     }
                     sealifes.add(sealifeShort);
