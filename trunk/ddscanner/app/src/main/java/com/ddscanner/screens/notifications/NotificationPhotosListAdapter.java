@@ -48,8 +48,8 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
     @Override
     public void onBindViewHolder(NotificationPhotoViewHolder holder, int position) {
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo);
-        if (position == MAX_PHOTOS - 1) {
-            holder.morePhotos.setText(DDScannerApplication.getInstance().getString(R.string.plus_photos_pattern, String.valueOf(photosCount - MAX_PHOTOS - 1)));
+        if (position == MAX_PHOTOS - 1 && photosCount > MAX_PHOTOS) {
+            holder.morePhotos.setText(DDScannerApplication.getInstance().getString(R.string.plus_photos_pattern, String.valueOf(photosCount - MAX_PHOTOS + 1)));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             holder.morePhotos.setVisibility(View.GONE);
