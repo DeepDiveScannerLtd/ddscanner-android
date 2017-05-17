@@ -87,7 +87,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
     private static final String ARG_LOCATION = "location";
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-    private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this);
+    private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
     private PhotosListAdapterWithoutCover mapsListAdapter = new PhotosListAdapterWithoutCover(EditDiveSpotActivity.this);
     private ImageButton btnAddPhoto;
     private LinearLayout btnAddSealife;

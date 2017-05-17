@@ -207,7 +207,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
-        photosListAdapter = new PhotosListAdapterWithCover(this);
+        photosListAdapter = new PhotosListAdapterWithCover(this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         mapsListAdapter = new PhotosListAdapterWithoutCover(this);
         findViews();
         setUi();
