@@ -33,6 +33,7 @@ import com.ddscanner.ui.views.DislikeView;
 import com.ddscanner.ui.views.LikeView;
 import com.ddscanner.ui.views.RatingView;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,12 +52,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private boolean isAdapterSet = false;
     private String commentAuthorId;
     private String userServerId;
+    private SharedPreferenceHelper.UserType userType;
 
     public ReviewsListAdapter(ArrayList<CommentEntity> comments, Activity context, String userId, String userServerId) {
         this.comments = comments;
         this.context = context;
         this.commentAuthorId = userId;
         this.userServerId = userServerId;
+        this.userType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
     }
 
     @Override
@@ -115,6 +118,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     }
                 });
             }
+        }
+        switch (userType) {
+            case DIVECENTER:
+                reviewsListViewHolder.menu.setVisibility(View.GONE);
+                break;
+            default:
+                reviewsListViewHolder.menu.setVisibility(View.VISIBLE);
+                break;
         }
         if (userId.equals(userServerId)) {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
