@@ -24,8 +24,6 @@ public class DDScannerApplication extends Application {
     private static final String TAG = DDScannerApplication.class.getName();
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    public static final String TWITTER_KEY = "tT7PhwjwXb8dEXbhQzI529VR4";
-    public static final String TWITTER_SECRET = "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT";
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
