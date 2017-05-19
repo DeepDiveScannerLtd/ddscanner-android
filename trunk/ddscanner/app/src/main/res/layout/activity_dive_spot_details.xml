@@ -136,6 +136,7 @@
                             android:paddingLeft="14dp">
 
                             <TextView
+                                android:layout_marginRight="60dp"
                                 android:id="@+id/dive_spot_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -163,6 +164,7 @@
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
                             android:paddingTop="15dp"
+                            android:lineSpacingExtra="6sp"
                             android:text="@{diveSpotViewModel.diveSpotDetailsEntity.description}"
                             android:textColor="@color/black_text"
                             android:textSize="15sp"

@@ -19,6 +19,7 @@
             android:paddingBottom="5dp"
             android:textColor="@color/black_text"
             android:textSize="14sp"
+            android:lineSpacingExtra="6sp"
             tools:text="Vwry very good spot in whateewer very good play market bla bla bla bla " />
 
         <TextView

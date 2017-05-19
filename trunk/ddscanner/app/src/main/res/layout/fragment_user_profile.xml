@@ -84,6 +84,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:lineSpacingExtra="6sp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="14dp"
