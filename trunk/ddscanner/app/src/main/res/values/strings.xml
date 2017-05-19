@@ -518,4 +518,5 @@
     <string name="error_dialog_titile">Ooops…</string>
     <string name="message_sent">Message sent!</string>
     <string name="forgot_password_messagesent">Please, check your email and create a new password</string>
+    <string name="points">points</string>
 </resources>
