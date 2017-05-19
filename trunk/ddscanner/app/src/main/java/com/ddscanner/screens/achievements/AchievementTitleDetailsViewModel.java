@@ -32,7 +32,7 @@ public class AchievementTitleDetailsViewModel {
         if (viewModel != null) {
             try {
                 view.setImageDrawable(ContextCompat.getDrawable(view.getContext(), Helpers.getResId(viewModel.getAchievementTitleDetails().getCountry().getCode().toLowerCase(), R.drawable.class)));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }

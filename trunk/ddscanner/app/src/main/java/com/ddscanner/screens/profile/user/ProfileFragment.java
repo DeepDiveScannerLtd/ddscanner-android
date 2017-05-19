@@ -190,9 +190,8 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         try {
             MainActivity mainActivity = (MainActivity) context;
             mainActivity.setProfileFragment(this);
-        } catch (ClassCastException e) {
-            // waaat?
-            e.printStackTrace();
+        } catch (ClassCastException ignored) {
+
         }
     }
 
