@@ -344,7 +344,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     Language language = (Language) data.getSerializableExtra("language");
                     for (Translation temp : translationsListAdapter.getTranslations()) {
                         if (temp.getCode().equals(language.getCode())) {
-                            //TODO pogovorit' s sanei po povody daloga
                             return;
                         }
                     }
@@ -660,12 +659,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void scrollToError(final int bottom) {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mainLayout.scrollTo(0, bottom);
-            }
-        });
+        new Handler().post(() -> mainLayout.scrollTo(0, bottom));
     }
 
     @Override
