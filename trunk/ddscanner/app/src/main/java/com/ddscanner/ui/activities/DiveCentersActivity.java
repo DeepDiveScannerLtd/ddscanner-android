@@ -125,13 +125,13 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dive_centers);
+        infoWindowHeight = Math.round(Helpers.convertDpToPixel(110, this));
         findViews();
         setMapView();
         EventsTracker.trackDiveCentersMapView();
         diveSpotId = getIntent().getStringExtra("id");
         diveSpotLatLng = getIntent().getParcelableExtra("LATLNG");
         diveSpotName = getIntent().getStringExtra("NAME");
-        infoWindowHeight = Math.round(Helpers.convertDpToPixel(110, this));
         EventsTracker.trackDiveCentersListView();
         toggleMapListView();
 
@@ -150,6 +150,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
         // Map mode
         diveCenterInfo = (RelativeLayout) findViewById(R.id.dive_spot_info_layout);
+        diveCenterInfo.animate().translationY(infoWindowHeight);
         diveCenterName = (TextView) findViewById(R.id.dive_spot_title);
         rating = (LinearLayout) findViewById(R.id.rating);
         zoomIn = (ImageView) findViewById(R.id.zoom_plus);
