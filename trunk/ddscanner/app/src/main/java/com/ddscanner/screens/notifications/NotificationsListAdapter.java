@@ -40,6 +40,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_WITH_PHOTO = 1;
     private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
     private static final int VIEW_TYPE_PAGINATION = 3;
+    private static final int VIEW_TYPE_EMPTY = 4;
 
     private Activity context;
     private boolean isSelf;
@@ -73,7 +74,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 return new SinglePhotoItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_single_photo, parent, false));
             case VIEW_TYPE_WITH_PHOTOS_LIST:
                 return new PhotosListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_photo_list, parent, false));
-            default:
+            case VIEW_TYPE_EMPTY:
+                return new EmptyItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_item, parent, false));
+                default:
                 return null;
         }
     }
@@ -112,7 +115,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                     }
                     loadUserPhoto(notification.getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
-                    Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                    switch (notification.getActivityType()) {
+                        case DIVE_SPOT_PHOTOS_ADDED:
+                            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                            break;
+                        case DIVE_SPOT_MAPS_ADDED:
+                            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getMaps().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                            break;
+                    }
                     break;
                 case VIEW_TYPE_WITH_PHOTOS_LIST:
                     PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
@@ -122,8 +132,17 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     }
                     loadUserPhoto(notification.getUser().getPhoto(), photosListItemViewHolder.userAvatar);
                     NotificationPhotosListAdapter adapter = (NotificationPhotosListAdapter) photosListItemViewHolder.photosList.getAdapter();
-                    if (notification.getPhotos() != null) {
-                        adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
+                    switch (notification.getActivityType()) {
+                        case DIVE_SPOT_MAPS_ADDED:
+                            if (notification.getMaps() != null) {
+                                adapter.setData(notification.getMaps(), notification.getPhotosCount(), notification.getId());
+                            }
+                            break;
+                        case DIVE_SPOT_PHOTOS_ADDED:
+                            if (notification.getPhotos() != null) {
+                                adapter.setData(notification.getPhotos(), notification.getMapsCount(), notification.getId());
+                            }
+                            break;
                     }
                     break;
             }
@@ -133,7 +152,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public String getLastNotificationDate() {
-        return notifications.get(notifications.size() - 1).getDate();
+        try {
+            return notifications.get(notifications.size() - 1).getDate();
+        } catch (Exception e) {
+            return notifications.get(notifications.size() - 2).getDate();
+        }
     }
 
     public String getFirstNotificationId() {
@@ -186,13 +209,27 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case DIVE_SPOT_PHOTO_LIKE:
                 return VIEW_TYPE_WITH_PHOTO;
             case DIVE_SPOT_PHOTOS_ADDED:
-            case DIVE_SPOT_MAPS_ADDED:
                 if (notifications.get(position).getPhotos().size() == 1) {
                     return VIEW_TYPE_WITH_PHOTO;
                 }
                 return VIEW_TYPE_WITH_PHOTOS_LIST;
+            case DIVE_SPOT_MAPS_ADDED:
+                if (notifications.get(position).getMaps().size() == 1) {
+                    return VIEW_TYPE_WITH_PHOTO;
+                }
+                return VIEW_TYPE_WITH_PHOTOS_LIST;
+            case VALIDATING_ERROR:
+                return VIEW_TYPE_EMPTY;
         }
         return -1;
+    }
+
+    private class EmptyItemViewHolder extends RecyclerView.ViewHolder {
+
+        EmptyItemViewHolder(View view) {
+            super(view);
+        }
+
     }
 
     private class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -264,6 +301,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
                     break;
                 case R.id.added_photo:
+                    switch (notifications.get(getAdapterPosition()).getActivityType()) {
+                        case DIVE_SPOT_MAPS_ADDED:
+                            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getMaps());
+                            ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                            break;
+                        case DIVE_SPOT_PHOTOS_ADDED:
+                            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
+                            ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                            break;
+                    }
                     if (notifications.get(getAdapterPosition()).getPhotos() != null) {
                         DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
                         ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());

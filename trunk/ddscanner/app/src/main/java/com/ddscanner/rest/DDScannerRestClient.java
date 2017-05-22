@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.R;
 import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.AchievmentsResponseEntity;
+import com.ddscanner.entities.ActivityTypes;
 import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
@@ -147,7 +149,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<CommentEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<CommentEntity>>() {
+                }.getType();
                 ArrayList<CommentEntity> comments = new Gson().fromJson(responseString, listType);
                 resultListener.onSuccess(comments);
             }
@@ -207,7 +210,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void postAddDiveSpot(ResultListener<String> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> iamges,List<MultipartBody.Part> maps, RequestBody... requestBodies ) {
+    public void postAddDiveSpot(ResultListener<String> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> iamges, List<MultipartBody.Part> maps, RequestBody... requestBodies) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -248,8 +251,9 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<List<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<List<DiveSpotShort>> resultListener, String responseString) {
-                Type listType = new TypeToken<List<DiveSpotShort>>(){}.getType();
-                List<DiveSpotShort> diveSpots =gson.fromJson(responseString, listType);
+                Type listType = new TypeToken<List<DiveSpotShort>>() {
+                }.getType();
+                List<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
         });
@@ -264,7 +268,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveCenter>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveCenter>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveCenter>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveCenter>>() {
+                }.getType();
                 ArrayList<DiveCenter> diveCenters = new Gson().fromJson(responseString, listType);
                 resultListener.onSuccess(diveCenters);
             }
@@ -318,7 +323,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<Language>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<Language>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Language>>() {
+                }.getType();
                 ArrayList<Language> languages = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(languages);
             }
@@ -343,7 +349,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> result = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(result);
             }
@@ -375,7 +382,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<Instructor>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<Instructor>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<Instructor>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Instructor>>() {
+                }.getType();
                 ArrayList<Instructor> instructors = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(instructors);
             }
@@ -406,8 +414,10 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<NotificationEntity>>(){}.getType();
-                ArrayList<NotificationEntity> notificationEntities = gson.fromJson(responseString, listType);
+                Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
+                }.getType();
+                ArrayList<NotificationEntity> notificationEntities;
+                notificationEntities = validateNotifications(gson.fromJson(responseString, listType));
                 resultListener.onSuccess(notificationEntities);
             }
         });
@@ -422,8 +432,10 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<NotificationEntity>>(){}.getType();
-                ArrayList<NotificationEntity> notificationEntities = gson.fromJson(responseString, listType);
+                Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
+                }.getType();
+                ArrayList<NotificationEntity> notificationEntities;
+                notificationEntities = validateNotifications(gson.fromJson(responseString, listType));
                 resultListener.onSuccess(notificationEntities);
             }
         });
@@ -438,7 +450,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {
+                }.getType();
                 ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(photos);
             }
@@ -469,7 +482,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpotShorts = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpotShorts);
             }
@@ -481,11 +495,12 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call= RestClient.getDdscannerServiceInstance().getReviewPhotos(id, 1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getReviewPhotos(id, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {
+                }.getType();
                 ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(photos);
             }
@@ -510,7 +525,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>() {
+                }.getType();
                 ArrayList<BaseIdNamePhotoEntity> list = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(list);
             }
@@ -535,7 +551,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<SelfCommentEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<SelfCommentEntity>>() {
+                }.getType();
                 ArrayList<SelfCommentEntity> comments = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(comments);
             }
@@ -551,7 +568,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<LikeEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<LikeEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<LikeEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<LikeEntity>>() {
+                }.getType();
                 ArrayList<LikeEntity> likes = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(likes);
             }
@@ -567,7 +585,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<LikeEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<LikeEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<LikeEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<LikeEntity>>() {
+                }.getType();
                 ArrayList<LikeEntity> dislikes = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(dislikes);
             }
@@ -601,7 +620,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<CommentEntity>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<CommentEntity>>() {
+                }.getType();
                 ArrayList<CommentEntity> comments = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(comments);
             }
@@ -617,7 +637,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images,  List<MultipartBody.Part> sealifes, RequestBody... requestBodies) {
+    public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images, List<MultipartBody.Part> sealifes, RequestBody... requestBodies) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -635,7 +655,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
@@ -651,7 +672,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
@@ -667,7 +689,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
@@ -683,7 +706,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
-                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
@@ -708,7 +732,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<User>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<User>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<User>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<User>>() {
+                }.getType();
                 ArrayList<User> users = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(users);
             }
@@ -724,7 +749,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<User>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<User>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<User>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<User>>() {
+                }.getType();
                 ArrayList<User> users = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(users);
             }
@@ -749,7 +775,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<Language>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<Language>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Language>>() {
+                }.getType();
                 ArrayList<Language> result = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(result);
             }
@@ -765,8 +792,9 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>(){}.getType();
-                ArrayList<BaseIdNamePhotoEntity> countries  = gson.fromJson(responseString, listType);
+                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>() {
+                }.getType();
+                ArrayList<BaseIdNamePhotoEntity> countries = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(countries);
             }
         });
@@ -781,7 +809,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<List<DiveSpotShort>>(){}.getType();
+                Type listType = new TypeToken<List<DiveSpotShort>>() {
+                }.getType();
                 ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
@@ -819,7 +848,6 @@ public class DDScannerRestClient {
         });
 
     }
-
 
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, String name, ResultListener<SignUpResponseEntity> resultListener) {
@@ -940,7 +968,8 @@ public class DDScannerRestClient {
 
             @Override
             void handleResponseString(ResultListener<ArrayList<AchievementTitle>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<AchievementTitle>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<AchievementTitle>>() {
+                }.getType();
                 ArrayList<AchievementTitle> achievmentsResponseEntity = new Gson().fromJson(responseString, listType);
                 resultListener.onSuccess(achievmentsResponseEntity);
             }
@@ -971,7 +1000,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<Translation>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<Translation>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<Translation>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Translation>>() {
+                }.getType();
                 ArrayList<Translation> translations = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(translations);
             }
@@ -1001,7 +1031,7 @@ public class DDScannerRestClient {
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, this.context));
     }
 
@@ -1019,7 +1049,7 @@ public class DDScannerRestClient {
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addPhotosToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addPhotosToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, this.context));
     }
 
@@ -1032,7 +1062,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {
+                }.getType();
                 ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(photos);
             }
@@ -1102,8 +1133,9 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SealifeShort>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
-                ArrayList<SealifeShort> sealifes = gson.fromJson(responseString,listType);
+                Type listType = new TypeToken<ArrayList<SealifeShort>>() {
+                }.getType();
+                ArrayList<SealifeShort> sealifes = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(sealifes);
             }
         });
@@ -1146,7 +1178,8 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {
+                }.getType();
                 ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(photos);
             }
@@ -1247,4 +1280,63 @@ public class DDScannerRestClient {
     public enum ErrorType {
         BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DATA_ALREADY_EXIST_409, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
     }
+
+    private ArrayList<NotificationEntity> validateNotifications(ArrayList<NotificationEntity> notifications) {
+        ArrayList<NotificationEntity> newList = new ArrayList<>();
+        for (NotificationEntity notificationEntity : notifications) {
+            switch (notificationEntity.getActivityType()) {
+                case DIVE_SPOT_ADDED:
+                case DIVE_SPOT_CHANGED:
+                case DIVE_SPOT_CHECKIN:
+                    if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case DIVE_SPOT_PHOTO_LIKE:
+                    if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case DIVE_SPOT_REVIEW_ADDED:
+                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case DIVE_SPOT_PHOTOS_ADDED:
+                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case DIVE_SPOT_MAPS_ADDED:
+                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case DIVE_SPOT_REVIEW_LIKE:
+                case DIVE_SPOT_REVIEW_DISLIKE:
+                    if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case ACHIEVEMENT_GETTED:
+                    if (notificationEntity.getAchievement() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                case INSTRUCTOR_LEFT_DIVE_CENTER:
+                case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                case DIVE_CENTER_INSTRUCTOR_ADD:
+                    if (notificationEntity.getUser() == null) {
+                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            newList.add(notificationEntity);
+        }
+        return newList;
+    }
+
+
 }
