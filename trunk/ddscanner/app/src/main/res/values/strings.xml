@@ -434,7 +434,7 @@
     <string name="at_least_one_photo_should_be_added">At least one photo should be added</string>
     <string name="add_nme_and_description">Add dive spot name and description</string>
     <string name="incorrect_data">Incorrect data</string>
-    <string name="max_100">Max 99</string>
+    <string name="max_100">Max 100</string>
     <string name="min_1">Min 1</string>
     <string name="visibility_rquired">Visibility is required</string>
     <string name="error_visivibility_append">Maximum value should exceed minimum value</string>

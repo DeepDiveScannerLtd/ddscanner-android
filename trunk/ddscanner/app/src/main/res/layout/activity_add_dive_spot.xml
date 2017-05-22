@@ -264,7 +264,7 @@
                                 android:layout_height="56dp"
                                 android:hint="@string/min"
                                 android:inputType="number"
-                                android:maxLength="2" />
+                                android:maxLength="3" />
 
                             <ImageView
                                 style="@style/DividerStyleFull" />
@@ -300,7 +300,7 @@
                                     android:layout_marginLeft="15dp"
                                     android:hint="@string/max"
                                     android:inputType="number"
-                                    android:maxLength="2" />
+                                    android:maxLength="3" />
 
                                 <ImageView
                                     android:layout_marginLeft="15dp"

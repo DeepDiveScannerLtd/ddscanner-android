@@ -606,7 +606,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
                 isSomethingWrong = true;
                 errorVisibility.setVisibility(View.GONE);
-                errorVisibilityMin.setVisibility(View.VISIBLE);
+                errorVisibilityMax.setVisibility(View.VISIBLE);
                 maxVisibilityHint.setVisibility(View.GONE);
             }
 
