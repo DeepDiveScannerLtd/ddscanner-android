@@ -69,6 +69,7 @@
                     android:visibility="gone"
                     app:pv_autostart="true"
                     app:pv_circular="true"
+                    app:cpd_strokeColor="#3b518b"
                     app:pv_progressMode="indeterminate"
                     app:pv_progressStyle="@style/CircularProgress" />
             </RelativeLayout>
@@ -196,9 +197,9 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:indeterminateOnly="true"
-        android:indeterminateTint="#3b518b"
+        android:indeterminateTint="@color/primary"
         android:indeterminateTintMode="src_in"
-        android:progressTint="#3b518b"
+        android:progressTint="@color/primary"
         android:visibility="gone" />
 
     <RelativeLayout
