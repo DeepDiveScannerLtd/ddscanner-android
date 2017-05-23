@@ -30,12 +30,16 @@ public class DiveCenterProfileFragmentViewModel {
     @BindingAdapter({"loadLanguagesFrom"})
     public static void loadLanguagesFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
         if (viewModel != null) {
-            if (viewModel.getDiveCenterProfile().getLanguages() == null) {
+            if (viewModel.getDiveCenterProfile().getLanguages() == null || viewModel.getDiveCenterProfile().getLanguages().size() == 0) {
                 view.setText("0");
                 return;
             }
-            if (viewModel.getDiveCenterProfile().getLanguages().size() < 3) {
+            if (viewModel.getDiveCenterProfile().getLanguages().size() == 2) {
                 view.setText(String.format("%s, %s", viewModel.getDiveCenterProfile().getLanguages().get(0), viewModel.getDiveCenterProfile().getLanguages().get(1)));
+                return;
+            }
+            if (viewModel.getDiveCenterProfile().getLanguages().size() == 1) {
+                view.setText(viewModel.getDiveCenterProfile().getLanguages().get(0));
                 return;
             }
             view.setText(String.valueOf(viewModel.getDiveCenterProfile().getLanguages().size()));
