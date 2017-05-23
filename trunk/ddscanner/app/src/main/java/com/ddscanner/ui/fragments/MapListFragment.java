@@ -529,6 +529,25 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                                 new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1)
                         ), 0), 2000, null);
                     }
+                    if (circle == null) {
+                        myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()))
+                                .anchor(0.5f, 0.5f)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
+                        CircleOptions circleOptions = new CircleOptions()
+                                .center(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()))
+                                .radius(200)
+                                .strokeColor(android.R.color.transparent)
+                                .fillColor(Color.parseColor("#1A0668a1"));
+                        circle = mGoogleMap.addCircle(circleOptions);
+                        if (diveSpotsClusterManager != null) {
+                            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        }
+                    } else {
+                        circle.setCenter(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                        myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                    }
                     break;
             }
         }
