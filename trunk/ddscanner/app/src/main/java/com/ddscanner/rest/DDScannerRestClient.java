@@ -2,6 +2,8 @@ package com.ddscanner.rest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -417,8 +419,9 @@ public class DDScannerRestClient {
                 Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
                 }.getType();
                 ArrayList<NotificationEntity> notificationEntities;
-                notificationEntities = validateNotifications(gson.fromJson(responseString, listType));
-                resultListener.onSuccess(notificationEntities);
+                new UpdateNotifications(resultListener).execute((ArrayList<NotificationEntity>) gson.fromJson(responseString, listType));
+//                validateNotifications(resultListener, gson.fromJson(responseString, listType));
+//                resultListener.onSuccess(notificationEntities);
             }
         });
     }
@@ -435,8 +438,9 @@ public class DDScannerRestClient {
                 Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
                 }.getType();
                 ArrayList<NotificationEntity> notificationEntities;
-                notificationEntities = validateNotifications(gson.fromJson(responseString, listType));
-                resultListener.onSuccess(notificationEntities);
+                new UpdateNotifications(resultListener).execute((ArrayList<NotificationEntity>) gson.fromJson(responseString, listType));
+//                validateNotifications(resultListener, gson.fromJson(responseString, listType));
+//                resultListener.onSuccess(notificationEntities);
             }
         });
     }
@@ -1281,64 +1285,148 @@ public class DDScannerRestClient {
         BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DATA_ALREADY_EXIST_409, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
     }
 
-    private ArrayList<NotificationEntity> validateNotifications(ArrayList<NotificationEntity> notifications) {
+    private void validdateNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener, ArrayList<NotificationEntity> notifications) {
         if (notifications == null || notifications.size() == 0) {
-            return notifications;
+            resultListener.onSuccess(notifications);
         }
-        ArrayList<NotificationEntity> newList = new ArrayList<>();
-        for (NotificationEntity notificationEntity : notifications) {
-            switch (notificationEntity.getActivityType()) {
-                case DIVE_SPOT_ADDED:
-                case DIVE_SPOT_CHANGED:
-                case DIVE_SPOT_CHECKIN:
-                    if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case DIVE_SPOT_PHOTO_LIKE:
-                    if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case DIVE_SPOT_REVIEW_ADDED:
-                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case DIVE_SPOT_PHOTOS_ADDED:
-                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case DIVE_SPOT_MAPS_ADDED:
-                    if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case DIVE_SPOT_REVIEW_LIKE:
-                case DIVE_SPOT_REVIEW_DISLIKE:
-                    if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case ACHIEVEMENT_GETTED:
-                    if (notificationEntity.getAchievement() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                case INSTRUCTOR_LEFT_DIVE_CENTER:
-                case DIVE_CENTER_INSTRUCTOR_REMOVE:
-                case DIVE_CENTER_INSTRUCTOR_ADD:
-                    if (notificationEntity.getUser() == null) {
-                        notificationEntity.setType(-1);
-                    }
-                    break;
-                default:
-                    break;
+        new Handler().post(() -> {
+            ArrayList<NotificationEntity> newList = new ArrayList<>();
+            for (NotificationEntity notificationEntity : notifications) {
+                switch (notificationEntity.getActivityType()) {
+                    case DIVE_SPOT_ADDED:
+                    case DIVE_SPOT_CHANGED:
+                    case DIVE_SPOT_CHECKIN:
+                        if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_PHOTO_LIKE:
+                        if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_REVIEW_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_PHOTOS_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_MAPS_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_REVIEW_LIKE:
+                    case DIVE_SPOT_REVIEW_DISLIKE:
+                        if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case ACHIEVEMENT_GETTED:
+                        if (notificationEntity.getAchievement() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case INSTRUCTOR_LEFT_DIVE_CENTER:
+                    case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                    case DIVE_CENTER_INSTRUCTOR_ADD:
+                        if (notificationEntity.getUser() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                notificationEntity.calculateTime();
+                notificationEntity.buildLinks();
+                newList.add(notificationEntity);
             }
-            newList.add(notificationEntity);
+            resultListener.onSuccess(newList);
+        });
+
+    }
+
+    private class UpdateNotifications extends AsyncTask<ArrayList<NotificationEntity>, Void, ArrayList<NotificationEntity>> {
+
+        ResultListener<ArrayList<NotificationEntity>> resultListener;
+
+        UpdateNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener) {
+            this.resultListener = resultListener;
         }
-        return newList;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<NotificationEntity> notificationEntities) {
+            resultListener.onSuccess(notificationEntities);
+        }
+
+        @Override
+        protected ArrayList<NotificationEntity> doInBackground(ArrayList<NotificationEntity>[] arrayLists) {
+            ArrayList<NotificationEntity> newList = new ArrayList<>();
+            for (NotificationEntity notificationEntity : arrayLists[0]) {
+                switch (notificationEntity.getActivityType()) {
+                    case DIVE_SPOT_ADDED:
+                    case DIVE_SPOT_CHANGED:
+                    case DIVE_SPOT_CHECKIN:
+                        if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_PHOTO_LIKE:
+                        if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_REVIEW_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_PHOTOS_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_MAPS_ADDED:
+                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case DIVE_SPOT_REVIEW_LIKE:
+                    case DIVE_SPOT_REVIEW_DISLIKE:
+                        if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case ACHIEVEMENT_GETTED:
+                        if (notificationEntity.getAchievement() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    case INSTRUCTOR_LEFT_DIVE_CENTER:
+                    case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                    case DIVE_CENTER_INSTRUCTOR_ADD:
+                        if (notificationEntity.getUser() == null) {
+                            notificationEntity.setType(-1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                notificationEntity.calculateTime();
+                notificationEntity.buildLinks();
+                newList.add(notificationEntity);
+            }
+            return newList;
+        }
     }
 
 

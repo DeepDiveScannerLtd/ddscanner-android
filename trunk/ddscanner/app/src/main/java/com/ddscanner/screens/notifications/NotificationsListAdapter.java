@@ -1,6 +1,7 @@
 package com.ddscanner.screens.notifications;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -122,11 +124,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         case DIVE_SPOT_MAPS_ADDED:
                             Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getMaps().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
                             break;
+                        case DIVE_SPOT_PHOTO_LIKE:
+                            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(34, context)), Math.round(Helpers.convertDpToPixel(34, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                            break;
                     }
                     break;
                 case VIEW_TYPE_WITH_PHOTOS_LIST:
                     PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
                     photosListItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
+                    photosListItemViewHolder.photosList.setLayoutManager(new GridLayoutManager(context, 6));
+                    photosListItemViewHolder.photosList.setNestedScrollingEnabled(false);
                     if (notification.getLinks() != null) {
                         LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                     }
@@ -135,12 +142,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     switch (notification.getActivityType()) {
                         case DIVE_SPOT_MAPS_ADDED:
                             if (notification.getMaps() != null) {
-                                adapter.setData(notification.getMaps(), notification.getPhotosCount(), notification.getId());
+//                                photosListItemViewHolder.photosList.setAdapter(new NotificationPhotosListAdapter(context, notification.getMaps(), notification.getMapsCount(), notification.getId()));
+                                adapter.setData(notification.getMaps(), notification.getMapsCount(), notification.getId());
                             }
                             break;
                         case DIVE_SPOT_PHOTOS_ADDED:
                             if (notification.getPhotos() != null) {
-                                adapter.setData(notification.getPhotos(), notification.getMapsCount(), notification.getId());
+//                                photosListItemViewHolder.photosList.setAdapter(new NotificationPhotosListAdapter(context, notification.getPhotos(), notification.getPhotosCount(), notification.getId()));
+                                adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
                             }
                             break;
                     }

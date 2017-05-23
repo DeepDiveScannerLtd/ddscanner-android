@@ -234,6 +234,7 @@
                             android:text="@string/distribution" />
 
                         <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:id="@+id/distribution"
                             style="@style/SealifeCharachteristicValue"
                             android:text="@{sealifeViewModel.sealife.distribution}" />
@@ -252,6 +253,7 @@
                             android:text="@string/habitat" />
 
                         <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:id="@+id/habitat"
                             style="@style/SealifeCharachteristicValue"
                             android:text="@{sealifeViewModel.sealife.habitat}" />

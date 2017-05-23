@@ -54,6 +54,7 @@
                     android:text="@string/share_a_few_words" />
 
                 <EditText
+                    android:lineSpacingExtra="@dimen/line_spacing"
                     android:id="@+id/review_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

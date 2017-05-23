@@ -140,6 +140,7 @@ dependencies {
     compile 'com.klinkerapps:link_builder:1.5.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'cn.gavinliu.android.lib:ShapedImageView:0.8.4'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }

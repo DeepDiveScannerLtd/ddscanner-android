@@ -196,9 +196,9 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:indeterminateOnly="true"
-        android:indeterminateTint="@color/primary"
+        android:indeterminateTint="#3b518b"
         android:indeterminateTintMode="src_in"
-        android:progressTint="@color/primary"
+        android:progressTint="#3b518b"
         android:visibility="gone" />
 
     <RelativeLayout

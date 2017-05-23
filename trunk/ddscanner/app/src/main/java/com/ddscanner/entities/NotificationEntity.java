@@ -33,6 +33,8 @@ public class NotificationEntity {
     @SerializedName("maps_count")
     private int mapsCount;
     private ActivityTypes activityType;
+    private ArrayList<Link> links;
+    private String timeAgo;
 
     public ArrayList<DiveSpotPhoto> getMaps() {
         return maps;
@@ -190,12 +192,15 @@ public class NotificationEntity {
         this.activityType = activityType;
     }
 
+    public void calculateTime() {
+        timeAgo = Helpers.getDate(date);
+    }
+
     public String getText(boolean isSelf, SharedPreferenceHelper.UserType userType) {
         String returnedString = "";
         if (isNew) {
             returnedString += "\u25CF ";
         }
-        String timeAgo = Helpers.getDate(date);
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
                 switch (userType) {
@@ -261,7 +266,11 @@ public class NotificationEntity {
     }
 
     public ArrayList<Link> getLinks() {
-        ArrayList<Link> links = new ArrayList<>();
+        return this.links;
+    }
+    
+    public void buildLinks() {
+        links = new ArrayList<>();
         Link userLink = new Link("");
         Link diveSpotLink = new Link("");
         Link dotLink = new Link("\u25CF");
@@ -294,7 +303,7 @@ public class NotificationEntity {
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
                 links.add(dotLink);
                 links.add(userLink);
-                return links;
+                break;
             case DIVE_SPOT_CHECKIN:
             case DIVE_SPOT_ADDED:
             case DIVE_SPOT_CHANGED:
@@ -303,7 +312,7 @@ public class NotificationEntity {
             case DIVE_SPOT_MAPS_ADDED:
                 links.add(userLink);
                 links.add(diveSpotLink);
-                return links;
+                break;
 //            case DIVE_CENTER_INSTRUCTOR_REMOVE:
 //                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
 //                finalString  = new SpannableString(returnedString);
@@ -314,9 +323,9 @@ public class NotificationEntity {
             case DIVE_SPOT_REVIEW_DISLIKE:
             case ACHIEVEMENT_GETTED:
                 links.add(userLink);
-                return links;
+                break;
             default:
-                return null;
+                break;
         }
     }
 
