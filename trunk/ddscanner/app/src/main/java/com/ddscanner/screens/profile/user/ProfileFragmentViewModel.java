@@ -49,6 +49,13 @@ public class ProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"countPointsFrom"})
+    public static void pointsCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getPoints());
+        }
+    }
+
     @BindingAdapter({"countFavoriteFrom"})
     public static void favoritesCount (TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
         if (profileFragmentViewModel != null) {

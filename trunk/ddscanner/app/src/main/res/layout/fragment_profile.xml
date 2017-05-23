@@ -199,7 +199,7 @@
                                 android:layout_height="64dp"
                                 android:layout_toRightOf="@+id/divider"
                                 android:gravity="center_vertical"
-                                android:onClick="@{handlers::showDislikes}"
+                                android:onClick="@{handlers::showAchievementsDetails}"
                                 android:orientation="vertical"
                                 app:layout_widthPercent="25%">
 
@@ -207,7 +207,7 @@
                                     android:layout_marginLeft="0dp"
                                     android:id="@+id/user_points"
                                     style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"
+                                    app:countPointsFrom="@{profileFragmentViewModel}"
                                     tools:text="321" />
 
                                 <TextView
