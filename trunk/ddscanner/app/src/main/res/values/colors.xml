@@ -85,4 +85,6 @@
 
     <color name="profile_counter_gray_color">#959595</color>
 
+    <color name="swipe_refresh_angle_color">#526CAE</color>
+
 </resources>
