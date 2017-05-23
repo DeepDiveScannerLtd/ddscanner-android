@@ -1282,6 +1282,9 @@ public class DDScannerRestClient {
     }
 
     private ArrayList<NotificationEntity> validateNotifications(ArrayList<NotificationEntity> notifications) {
+        if (notifications == null || notifications.size() == 0) {
+            return notifications;
+        }
         ArrayList<NotificationEntity> newList = new ArrayList<>();
         for (NotificationEntity notificationEntity : notifications) {
             switch (notificationEntity.getActivityType()) {
@@ -1289,45 +1292,45 @@ public class DDScannerRestClient {
                 case DIVE_SPOT_CHANGED:
                 case DIVE_SPOT_CHECKIN:
                     if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case DIVE_SPOT_PHOTO_LIKE:
                     if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case DIVE_SPOT_REVIEW_ADDED:
                     if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case DIVE_SPOT_PHOTOS_ADDED:
                     if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case DIVE_SPOT_MAPS_ADDED:
                     if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case DIVE_SPOT_REVIEW_LIKE:
                 case DIVE_SPOT_REVIEW_DISLIKE:
                     if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case ACHIEVEMENT_GETTED:
                     if (notificationEntity.getAchievement() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 case INSTRUCTOR_LEFT_DIVE_CENTER:
                 case DIVE_CENTER_INSTRUCTOR_REMOVE:
                 case DIVE_CENTER_INSTRUCTOR_ADD:
                     if (notificationEntity.getUser() == null) {
-                        notificationEntity.setActivtyType(ActivityTypes.VALIDATING_ERROR);
+                        notificationEntity.setType(-1);
                     }
                     break;
                 default:

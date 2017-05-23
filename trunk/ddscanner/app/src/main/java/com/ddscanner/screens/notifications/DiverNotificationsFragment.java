@@ -209,6 +209,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
             loginView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.VISIBLE);
+            getUserNotifications();
         }
     }
 

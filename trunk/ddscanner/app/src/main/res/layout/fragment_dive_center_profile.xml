@@ -265,7 +265,7 @@
 
                             <TextView
                                 style="@style/DiveCenterProfileCharacteristicDesciption"
-                                android:text="@{diveCenterViewModel.diveCenterProfile.languages.get(0)}" />
+                                app:loadLanguagesFrom="@{diveCenterViewModel}" />
                         </LinearLayout>
 
                         <ImageView
@@ -329,7 +329,7 @@
                     android:onClick="@{handlers::showCreated}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="5dp"
                     android:orientation="horizontal">
 
                     <ImageView

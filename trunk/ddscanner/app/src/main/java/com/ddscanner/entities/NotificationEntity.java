@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class NotificationEntity {
 
     private String id;
-    private int type;
+    private Integer type;
     @SerializedName("is_new")
     private boolean isNew;
     private String date;
@@ -106,11 +106,11 @@ public class NotificationEntity {
         this.id = id;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

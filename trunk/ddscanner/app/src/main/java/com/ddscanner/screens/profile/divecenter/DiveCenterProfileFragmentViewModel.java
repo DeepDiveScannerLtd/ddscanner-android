@@ -27,6 +27,21 @@ public class DiveCenterProfileFragmentViewModel {
         return diveCenterProfile;
     }
 
+    @BindingAdapter({"loadLanguagesFrom"})
+    public static void loadLanguagesFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getDiveCenterProfile().getLanguages() == null) {
+                view.setText("0");
+                return;
+            }
+            if (viewModel.getDiveCenterProfile().getLanguages().size() < 3) {
+                view.setText(String.format("%s, %s", viewModel.getDiveCenterProfile().getLanguages().get(0), viewModel.getDiveCenterProfile().getLanguages().get(1)));
+                return;
+            }
+            view.setText(String.valueOf(viewModel.getDiveCenterProfile().getLanguages().size()));
+        }
+    }
+
     @BindingAdapter({"countEditedFrom"})
     public static void editedCount(TextView view, DiveCenterProfileFragmentViewModel diveCenterProfileFragmentViewModel) {
         if (diveCenterProfileFragmentViewModel != null) {
@@ -75,21 +90,27 @@ public class DiveCenterProfileFragmentViewModel {
 
     @BindingAdapter({"setEmails"})
     public static void setEmailsFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
-        String outString = "";
+        StringBuilder outString = new StringBuilder();
         if (viewModel != null && viewModel.getDiveCenterProfile().getEmails() != null) {
             for (String email : viewModel.getDiveCenterProfile().getEmails()) {
-                outString = outString + email + " ";
+                StringBuilder append = outString.append(email);
+                if (viewModel.getDiveCenterProfile().getEmails().indexOf(email) != viewModel.getDiveCenterProfile().getEmails().size() - 1) {
+                    append.append(", ");
+                }
             }
         }
-        view.setText(outString);
+        view.setText(outString.toString());
     }
 
     @BindingAdapter({"setPhones"})
     public static void setPhones(TextView view, DiveCenterProfileFragmentViewModel viewModel){
-        String outString = "";
+        StringBuilder outString = new StringBuilder();
         if (viewModel != null && viewModel.getDiveCenterProfile().getPhones() != null) {
             for (String phone : viewModel.getDiveCenterProfile().getPhones()) {
-                outString = outString + phone + " ";
+                StringBuilder append = outString.append(phone);
+                if (viewModel.getDiveCenterProfile().getPhones().indexOf(phone) != viewModel.getDiveCenterProfile().getPhones().size() - 1) {
+                    append.append(", ");
+                }
             }
         }
         view.setText(outString);
