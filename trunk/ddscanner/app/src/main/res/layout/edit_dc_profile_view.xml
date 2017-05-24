@@ -84,7 +84,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/name"
                                 android:hint="@string/name"
-
+                                android:lines="1"
                                 android:maxLength="31"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
 

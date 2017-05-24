@@ -474,19 +474,19 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (!isDataValid()) {
             return;
         }
-        if (!binding.name.getText().toString().isEmpty()) {
-            nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText().toString());
+        if (!binding.name.getText().toString().trim().isEmpty()) {
+            nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText().toString().trim());
         }
 
         for (EditText editText : phonesEditTexts) {
-            if (!editText.getText().toString().isEmpty()) {
-                phones.add(MultipartBody.Part.createFormData("phones[]", editText.getText().toString()));
+            if (!editText.getText().toString().trim().isEmpty()) {
+                phones.add(MultipartBody.Part.createFormData("phones[]", editText.getText().toString().trim()));
             }
         }
 
         for (EditText editText : emailsEditTexts) {
-            if (!editText.getText().toString().isEmpty()) {
-                emails.add(MultipartBody.Part.createFormData("emails[]", editText.getText().toString()));
+            if (!editText.getText().toString().trim().isEmpty()) {
+                emails.add(MultipartBody.Part.createFormData("emails[]", editText.getText().toString().trim()));
             }
         }
 
@@ -547,13 +547,13 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         binding.nameError.setVisibility(View.GONE);
         boolean isDataValid = true;
         for (EditText editText : phonesEditTexts) {
-            if (!validCellPhone(editText.getText().toString()) && !editText.getText().toString().isEmpty()) {
+            if (!validCellPhone(editText.getText().toString().trim()) && !editText.getText().toString().trim().isEmpty()) {
                 phonesErrors.get(phonesEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
                 isDataValid = false;
             }
         }
         for (EditText editText : emailsEditTexts) {
-            if (!validEmail(editText.getText().toString()) && !editText.getText().toString().isEmpty()) {
+            if (!validEmail(editText.getText().toString().trim()) && !editText.getText().toString().trim().isEmpty()) {
                 emailsErrors.get(emailsEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
                 isDataValid = false;
             }
@@ -564,7 +564,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             isDataValid = false;
         }
 
-        if (binding.name.getText().toString().isEmpty()) {
+        if (binding.name.getText().toString().trim().isEmpty()) {
             binding.nameError.setVisibility(View.VISIBLE);
             isDataValid = false;
         }

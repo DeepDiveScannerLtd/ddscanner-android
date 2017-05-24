@@ -212,7 +212,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         if (diverRadio.isChecked()) {
             diveCenterId = null;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
     }
 
     private void hideErrorsMap() {
@@ -223,7 +223,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     private boolean isDataValid() {
         boolean isDataValid = true;
-        if (binding.fullName.getText().toString().length() < 1) {
+        binding.errorName.setVisibility(View.GONE);
+        if (binding.fullName.getText().toString().trim().length() < 1) {
             isDataValid = false;
             binding.errorName.setVisibility(View.VISIBLE);
         }

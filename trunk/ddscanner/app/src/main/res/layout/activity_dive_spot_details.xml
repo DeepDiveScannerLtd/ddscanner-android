@@ -131,7 +131,7 @@
                             android:layout_alignParentBottom="true"
                             android:background="@color/white"
                             android:gravity="center"
-                            android:layout_marginTop="15dp"
+                            android:paddingTop="15dp"
                             android:orientation="horizontal"
                             android:paddingLeft="14dp">
 
