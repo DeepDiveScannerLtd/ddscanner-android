@@ -28,8 +28,8 @@ android {
         minSdkVersion 18
         targetSdkVersion 25
         multiDexEnabled true
-        versionCode 28
-        versionName "3.0.3"
+        versionCode 29
+        versionName "3.0.4"
         testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
     buildTypes {
