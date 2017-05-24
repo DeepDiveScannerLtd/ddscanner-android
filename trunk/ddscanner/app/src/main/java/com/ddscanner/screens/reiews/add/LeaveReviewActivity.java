@@ -59,6 +59,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private EditText text;
     private RatingBar ratingBar;
     private TextView errorText;
+    private TextView errorRating;
     private float rating;
     private LinearLayout buttonAddSealife;
     private MaterialDialog materialDialog;
@@ -125,6 +126,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void findViews() {
+        errorRating = (TextView) findViewById(R.id.rating_error);
         text = (EditText) findViewById(R.id.review_text);
         sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         text.setTag("review");
@@ -142,7 +144,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void setRcSettings() {
-        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<SealifeShort>(), LeaveReviewActivity.this);
+        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<>(), LeaveReviewActivity.this);
         addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(LeaveReviewActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -174,13 +176,27 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         return intent;
     }
 
+    private boolean isDataValid() {
+        boolean isDataValid = true;
+        errorRating.setVisibility(View.GONE);
+        errorText.setVisibility(View.GONE);
+        if (text.getText().toString().trim().length() < 30) {
+            errorText.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        if (ratingBar.getRating() < 1) {
+            errorRating.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        return isDataValid;
+    }
+
     private void sendReview() {
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
-        if (text.getText().toString().trim().length() < 30) {
-            errorText.setVisibility(View.VISIBLE);
+        if (!isDataValid()) {
             return;
         }
         List<MultipartBody.Part> sealifes = new ArrayList<>();
@@ -251,7 +267,9 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
                         sendReview();
                     } else {
-                        //TODO dive center try leave review, must handle this case
+                        Toast.makeText(this, R.string.dc_cant_leave_review, Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {

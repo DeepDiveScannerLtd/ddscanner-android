@@ -143,7 +143,7 @@
     <string name="profile_need_to_login">Login to view profile</string>
     <string name="notifications_need_to_login">Login to view notifications</string>
     <string name="e_mail">E-mail</string>
-    <string name="search_sealife">Search sealife</string>
+    <string name="search_sealife">Search sea life</string>
     <string name="favorites">Favorites</string>
     <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
@@ -519,4 +519,6 @@
     <string name="message_sent">Message sent!</string>
     <string name="forgot_password_messagesent">Please, check your email and create a new password</string>
     <string name="points">points</string>
+    <string name="rate_ds_error">Please, rate the dive spot</string>
+    <string name="dc_cant_leave_review">Dive centers are not allowed to write reviews</string>
 </resources>

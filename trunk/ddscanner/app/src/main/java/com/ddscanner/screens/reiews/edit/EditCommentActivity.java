@@ -70,6 +70,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
     private boolean isHaveSealifes;
+    private TextView errorRating;
 
     private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
         @Override
@@ -173,6 +174,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void findViews() {
+        errorRating = (TextView) findViewById(R.id.rating_error);
         sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         buttonAddSealife.setOnClickListener(this);
@@ -260,10 +262,23 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private void updateReview() {
+    private boolean isDataValid() {
+        boolean isDataValid = true;
+        errorRating.setVisibility(View.GONE);
         errorText.setVisibility(View.GONE);
         if (text.getText().toString().trim().length() < 30) {
             errorText.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        if (ratingBar.getRating() < 1) {
+            errorRating.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        return isDataValid;
+    }
+
+    private void updateReview() {
+        if (!isDataValid()) {
             return;
         }
         materialDialog.show();
