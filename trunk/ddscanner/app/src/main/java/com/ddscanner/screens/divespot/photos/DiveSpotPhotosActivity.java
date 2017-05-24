@@ -370,9 +370,9 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     public void onPageSelected(int position) {
         switch (position) {
             case 0:
+            case 1:
                 fabAddPhoto.show();
                 break;
-            case 1:
             case 2:
                 fabAddPhoto.hide();
                 break;
