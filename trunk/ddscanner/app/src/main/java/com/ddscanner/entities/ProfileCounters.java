@@ -27,6 +27,17 @@ public class ProfileCounters implements Serializable{
     @SerializedName("favorites")
     private int favoritesCount;
 
+    @SerializedName("achievement_points")
+    private int points;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
     public int getLikesCount() {
         return likesCount;
     }

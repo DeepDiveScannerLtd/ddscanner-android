@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,6 @@ import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
@@ -190,9 +188,8 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         try {
             MainActivity mainActivity = (MainActivity) context;
             mainActivity.setProfileFragment(this);
-        } catch (ClassCastException e) {
-            // waaat?
-            e.printStackTrace();
+        } catch (ClassCastException ignored) {
+
         }
     }
 
@@ -267,7 +264,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
             binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
             binding.photosList.setVisibility(View.VISIBLE);
         }
-        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
+        ArrayList<ProfileAchievement> achievmentProfiles;
         if (binding.getProfileFragmentViewModel().getUser().getAchievements() != null && binding.getProfileFragmentViewModel().getUser().getAchievements().size() > 0) {
             achievmentProfiles = (ArrayList<ProfileAchievement>) binding.getProfileFragmentViewModel().getUser().getAchievements();
             GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);

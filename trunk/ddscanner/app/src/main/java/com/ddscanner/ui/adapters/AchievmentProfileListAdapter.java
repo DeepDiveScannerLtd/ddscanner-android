@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.ddscanner.utils.Helpers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AchievmentProfileListAdapter extends RecyclerView.Adapter<AchievmentProfileListAdapter.AchievmentProfileListViewHolder> {
 
@@ -53,14 +56,16 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
                 } else {
                     holder.moreCount.setVisibility(View.VISIBLE);
                 }
-                AchievementCountryFlagView imageView = new AchievementCountryFlagView(context);
+                CircleImageView imageView = new CircleImageView(context);
+                imageView.setBorderColor(ContextCompat.getColor(context, R.color.achievement_item_background));
+                imageView.setBorderWidth(Math.round(Helpers.convertDpToPixel(2, context)));
                 int resiId;
                 try {
                     resiId = Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class);
-                    imageView.setFlagBitmap(resiId);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(28, context)), Math.round(Helpers.convertDpToPixel(28, context)));
+                    imageView.setImageDrawable(ContextCompat.getDrawable(context, resiId));
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(18, context)), Math.round(Helpers.convertDpToPixel(18, context)));
                     if (i != 0) {
-                        layoutParams.setMargins(Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(18, context)))), 0, 0, 0);
+                        layoutParams.setMargins(0, 0, Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(6, context)))),0);
                     }
                     imageView.setLayoutParams(layoutParams);
                     holder.countries.addView(imageView);

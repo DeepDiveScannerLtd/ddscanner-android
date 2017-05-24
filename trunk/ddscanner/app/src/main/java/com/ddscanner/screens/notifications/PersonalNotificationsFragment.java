@@ -259,16 +259,25 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
 
         @Override
         public void onConnectionFailure() {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 

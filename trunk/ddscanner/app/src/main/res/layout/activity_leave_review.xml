@@ -38,7 +38,11 @@
             </LinearLayout>
 
             <ImageView style="@style/DividerStyleFull" />
-
+            <TextView
+                android:id="@+id/rating_error"
+                style="@style/ValidationErrorTextView"
+                android:layout_marginLeft="20dp"
+                android:text="@string/rate_ds_error" />
             <ImageView
                 style="@style/DividerStyleFull"
                 android:layout_marginTop="@dimen/base_block_margin_top" />
@@ -54,6 +58,7 @@
                     android:text="@string/share_a_few_words" />
 
                 <EditText
+                    android:lineSpacingExtra="@dimen/line_spacing"
                     android:id="@+id/review_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

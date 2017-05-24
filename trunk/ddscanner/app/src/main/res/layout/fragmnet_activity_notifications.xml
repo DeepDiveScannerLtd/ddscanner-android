@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
     </data>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.ddscanner.ui.views.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -66,5 +66,5 @@
             app:cpd_strokeSize="10dp"
             app:pv_progressStyle="@style/CircularProgress" />
     </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.ddscanner.ui.views.SwipeRefreshLayout>
 </layout>

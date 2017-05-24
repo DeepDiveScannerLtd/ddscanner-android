@@ -149,7 +149,6 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
 
     @Subscribe
     public void removeInstructorClicked(RemoveInstructorEvent event) {
-        materialDialog.show();
         removedInstructorId = event.getPosition();
         instructorForRemoveId = event.getId();
         ConfirmationDialogFragment.showForActivity(getSupportFragmentManager(), R.string.empty_string, R.string.remove_instructor_confriamtion, R.string.yes, R.string.no);
@@ -162,6 +161,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
 
     @Override
     public void onPositiveDialogClicked() {
+        materialDialog.show();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postRemoveInstructorFromDivecenter(removeResultListener, instructorForRemoveId);
 
     }

@@ -105,6 +105,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private RelativeLayout please;
     private Marker lastClickeMarker;
     private String id;
+    private int diveSpotInfoHeight;
     
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -153,6 +154,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         id = getIntent().getStringExtra("id");
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, this));
         findViews();
         setMapView(savedInstanceState);
     }
@@ -189,6 +191,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
+        diveSpotInfo.animate().translationY(diveSpotInfoHeight);
     }
 
     @Override
@@ -396,11 +399,9 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     }
 
     public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
-        DDScannerApplication.bus.post(new InfowWindowOpenedEvent(null));
-        mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
-        addDsFab.animate().translationY(-diveSpotInfo.getHeight());
-        mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
-        diveSpotInfo.animate()
+        mapControlLayout.animate().translationY(-diveSpotInfoHeight);
+        mapListFAB.animate().translationY(-diveSpotInfoHeight);
+            diveSpotInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)
                 .setDuration(300)
@@ -411,6 +412,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         diveSpotInfo.setVisibility(View.VISIBLE);
                     }
                 });
+
         diveSpotName.setText(diveSpotShort.getName());
         diveSpotType.setText(diveSpotShort.getObject());
         diveSpotInfo.setBackground(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
@@ -436,7 +438,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             addDsFab.animate().translationY(0);
             mapListFAB.animate().translationY(0);
             diveSpotInfo.animate()
-                    .translationY(diveSpotInfo.getHeight())
+                    .translationY(diveSpotInfoHeight)
                     .alpha(0.0f)
                     .setDuration(300)
                     .setListener(new AnimatorListenerAdapter() {

@@ -208,6 +208,8 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+            getUserNotifications();
         }
     }
 
@@ -216,6 +218,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
         }
     }
 

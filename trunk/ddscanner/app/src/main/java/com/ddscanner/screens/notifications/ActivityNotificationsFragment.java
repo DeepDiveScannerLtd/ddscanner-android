@@ -25,9 +25,6 @@ import com.ddscanner.ui.activities.MainActivity;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 25.5.16.
- */
 public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ActivityNotificationsFragment.class.getName();
@@ -110,12 +107,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
 
     @TargetApi(23)
     private void initializeListenerForHighVersions() {
-        RecyclerView.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                tryingToReloadData();
-            }
-        };
+        RecyclerView.OnScrollChangeListener listener = (view, i, i1, i2, i3) -> tryingToReloadData();
         binding.activityRc.setOnScrollChangeListener(listener);
     }
 
@@ -142,9 +134,11 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
-                DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
-                notificationsListAdapter.startLoading();
-                isLoading = true;
+                if (notificationsListAdapter.getLastNotificationDate() != null) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
+                    notificationsListAdapter.startLoading();
+                    isLoading = true;
+                }
             }
         }
     }
@@ -176,7 +170,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
                     notificationsListAdapter.dataLoaded();
                     notificationsListAdapter.add(result);
                 } else {
-                    if (result.size() > 0 && !result.get(0).getId().equals(notificationsListAdapter.getFirstNotificationId())) {
+                    if (result.size() > 0) {
                         notificationsListAdapter.setNotifications(result);
                     }
                 }
@@ -185,16 +179,25 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
 
         @Override
         public void onConnectionFailure() {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            if (isFromPagination) {
+                notificationsListAdapter.dataLoaded();
+            }
             binding.swipeRefreshLayout.setRefreshing(false);
         }
 

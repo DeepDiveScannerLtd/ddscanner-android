@@ -207,7 +207,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
-        photosListAdapter = new PhotosListAdapterWithCover(this);
+        photosListAdapter = new PhotosListAdapterWithCover(this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         mapsListAdapter = new PhotosListAdapterWithoutCover(this);
         findViews();
         setUi();
@@ -344,7 +344,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     Language language = (Language) data.getSerializableExtra("language");
                     for (Translation temp : translationsListAdapter.getTranslations()) {
                         if (temp.getCode().equals(language.getCode())) {
-                            //TODO pogovorit' s sanei po povody daloga
                             return;
                         }
                     }
@@ -517,8 +516,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             case android.R.id.home:
                 if (isSomethingEntered()) {
                     DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-                }
-                else {
+                } else {
                     finish();
                 }
                 // onBackPressed();
@@ -533,6 +531,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         }
         errorDepth.setText(R.string.depth_required);
         errorVisibility.setText(R.string.visibility_rquired);
+        errorVisibility.setVisibility(View.GONE);
         minVisibilityHint.setVisibility(View.VISIBLE);
         maxVisibilityHint.setVisibility(View.VISIBLE);
     }
@@ -582,7 +581,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = currentsAppCompatSpinner.getBottom();
         }
 
-        if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
+        if (visibilityMin.getText().toString().isEmpty() || visibilityMax.getText().toString().isEmpty()) {
             isSomethingWrong = true;
             errorVisibility.setVisibility(View.VISIBLE);
             minVisibilityHint.setVisibility(View.GONE);
@@ -590,27 +589,27 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = visibilityMax.getBottom();
         } else {
             downestCoordinate = visibilityMax.getBottom();
-            if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
-                if (Float.parseFloat(visibilityMax.getText().toString()) < Float.parseFloat(visibilityMin.getText().toString())) {
-                    isSomethingWrong = true;
-                    errorVisibility.setVisibility(View.VISIBLE);
-                    errorVisibility.setText(R.string.error_visivibility_append);
-                    minVisibilityHint.setVisibility(View.GONE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
-            } else {
-                if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    minVisibilityHint.setVisibility(View.GONE);
-                }
-
-                if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
+            if (Float.parseFloat(visibilityMax.getText().toString()) <= Float.parseFloat(visibilityMin.getText().toString())) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.VISIBLE);
+                errorVisibility.setText(R.string.error_visivibility_append);
+                minVisibilityHint.setVisibility(View.GONE);
+                maxVisibilityHint.setVisibility(View.GONE);
             }
+            if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMin.setVisibility(View.VISIBLE);
+                minVisibilityHint.setVisibility(View.GONE);
+            }
+
+            if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMax.setVisibility(View.VISIBLE);
+                maxVisibilityHint.setVisibility(View.GONE);
+            }
+
         }
 
         if (depth.getText().toString().isEmpty()) {
@@ -660,12 +659,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void scrollToError(final int bottom) {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mainLayout.scrollTo(0, bottom);
-            }
-        });
+        new Handler().post(() -> mainLayout.scrollTo(0, bottom));
     }
 
     @Override

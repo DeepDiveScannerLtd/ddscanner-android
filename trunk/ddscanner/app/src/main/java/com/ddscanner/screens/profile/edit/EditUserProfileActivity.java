@@ -1,5 +1,6 @@
 package com.ddscanner.screens.profile.edit;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -10,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -161,8 +164,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         });
     }
 
+    @SuppressLint("RestrictedApi")
     private void setupRadioButtons(String title, boolean isActive, boolean isShowChoseDiveCenter) {
         AppCompatRadioButton button = new AppCompatRadioButton(this);
+        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         button.setSupportButtonTintList(colorStateList);
         button.setText(title);
         if (title.equals("Diver")) {

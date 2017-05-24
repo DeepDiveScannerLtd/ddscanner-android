@@ -47,9 +47,9 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
 
     @Override
     public void onBindViewHolder(NotificationPhotoViewHolder holder, int position) {
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo);
-        if (position == MAX_PHOTOS - 1) {
-            holder.morePhotos.setText(DDScannerApplication.getInstance().getString(R.string.plus_photos_pattern, String.valueOf(photosCount - MAX_PHOTOS - 1)));
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).into(holder.photo);
+        if (position == MAX_PHOTOS - 1 && photosCount > MAX_PHOTOS) {
+            holder.morePhotos.setText(DDScannerApplication.getInstance().getString(R.string.plus_photos_pattern, String.valueOf(photosCount - MAX_PHOTOS + 1)));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             holder.morePhotos.setVisibility(View.GONE);
@@ -75,7 +75,7 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
 
         @Override
         public void onClick(View view) {
-            if (MAX_PHOTOS > photos.size()) {
+            if (photosCount > photos.size()) {
                 DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(photos);
                 ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.NOTIFICATION, sourceId);
                 return;

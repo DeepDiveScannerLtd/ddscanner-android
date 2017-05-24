@@ -34,10 +34,12 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
     private List<SpotPhotoEditScreenEntity> deletedPhotos = new ArrayList<>();
     private int coverPhotoPosition = 0;
     private int previousCoverPhotoPosition;
+    private String userServerId;
 
-    public PhotosListAdapterWithCover(Context context) {
+    public PhotosListAdapterWithCover(Context context, String userServerId) {
         this.context = context;
         this.coverPhotoPosition = -1;
+        this.userServerId = userServerId;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
             EditSpotListPhotoViewHolder viewHolder = (EditSpotListPhotoViewHolder) holder;
             viewHolder.coverLabel.setVisibility(View.GONE);
             viewHolder.icDelete.setVisibility(View.GONE);
-            if (allPhotos.get(viewHolder.getAdapterPosition()).getAuthorId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+            if (allPhotos.get(viewHolder.getAdapterPosition()).getAuthorId().equals(userServerId) && allPhotos.size() > 1) {
                 viewHolder.icDelete.setVisibility(View.VISIBLE);
             }
             if (allPhotos.get(viewHolder.getAdapterPosition()).isCover()) {

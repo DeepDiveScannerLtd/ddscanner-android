@@ -54,6 +54,9 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
         View row = inflater.inflate(R.layout.item_language_spinner, parent, false);
         TextView textView = (TextView) row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
+        if (!isDropDown) {
+            row.setPadding(0, padding, padding, padding);
+        }
         if (position == 0) {
             textView.setTextColor(ContextCompat.getColor(getContext(), R.color.defaultGrayTitleColor));
             if (!isDropDown) {

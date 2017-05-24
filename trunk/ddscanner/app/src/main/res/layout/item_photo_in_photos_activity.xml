@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ddscanner.ui.views.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="2dp">
-    <ImageView
+    <cn.gavinliu.android.lib.shapedimageview.ShapedImageView
+        app:shape_mode="round_rect"
+        app:round_radius="@dimen/photos_radius"
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+       />
 </com.ddscanner.ui.views.SquareLayout>

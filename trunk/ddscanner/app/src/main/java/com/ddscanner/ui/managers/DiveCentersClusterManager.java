@@ -61,7 +61,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         clusterIconGenerator3Symbols.setContentView(clusterView);
         clusterIconGenerator3Symbols.setBackground(null);
 
-        setAlgorithm(new GridBasedAlgorithm<DiveCenter>());
+        setAlgorithm(new GridBasedAlgorithm<>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
     }
@@ -125,7 +125,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             try {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
 //                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
 //                }

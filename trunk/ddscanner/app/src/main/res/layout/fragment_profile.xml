@@ -98,6 +98,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
                             android:paddingTop="14dp"
@@ -122,18 +123,17 @@
                                 android:orientation="vertical"
                                 app:layout_widthPercent="25%">
 
-                                <TextView
+                                <com.ddscanner.ui.views.ProfileCountersTextView
                                     android:layout_marginLeft="0dp"
                                     android:id="@+id/user_comments"
                                     style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"
+                                    app:countReviewsFrom="@{profileFragmentViewModel}"
                                     tools:text="321" />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
                                     android:text="@string/reviews_profile"
-                                    android:textColor="#959595"
+                                    android:textColor="@color/profile_counter_gray_color"
                                     android:textSize="12sp" />
                             </LinearLayout>
 
@@ -146,19 +146,18 @@
                                 android:orientation="vertical"
                                 app:layout_widthPercent="25%">
 
-                                    <TextView
+                                    <com.ddscanner.ui.views.ProfileCountersTextView
                                         android:layout_marginLeft="0dp"
                                         android:id="@+id/user_likes"
                                         style="@style/ProfileNumberDivespotsSrtyle"
-                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"
+                                        app:countLikesFrom="@{profileFragmentViewModel}"
                                         tools:text="321" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:fontFamily="sans-serif-medium"
                                         android:text="@string/likes_profile"
-                                        android:textColor="#959595"
+                                        android:textColor="@color/profile_counter_gray_color"
                                         android:textSize="12sp" />
                             </LinearLayout>
 
@@ -171,19 +170,51 @@
                                 android:orientation="vertical"
                                 app:layout_widthPercent="25%">
 
-                                <TextView
+                                <com.ddscanner.ui.views.ProfileCountersTextView
                                     android:layout_marginLeft="0dp"
                                     android:id="@+id/user_dislikes"
                                     style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"
+                                    app:countDislikesFrom="@{profileFragmentViewModel}"
                                     tools:text="321" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
                                     android:text="@string/dislikes"
-                                    android:textColor="#959595"
+                                    android:textColor="@color/profile_counter_gray_color"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+                            <View
+                                android:id="@+id/divider"
+                                android:layout_toRightOf="@+id/dislikeLayout"
+                                android:layout_height="32dp"
+                                android:layout_width="1dp"
+                                android:background="#ebebeb"
+                                android:layout_centerVertical="true"/>
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:id="@+id/points_layout"
+                                android:layout_height="64dp"
+                                android:layout_toRightOf="@+id/divider"
+                                android:gravity="center_vertical"
+                                android:onClick="@{handlers::showAchievementsDetails}"
+                                android:orientation="vertical"
+                                app:layout_widthPercent="25%">
+
+                                <com.ddscanner.ui.views.ProfileCountersTextView
+                                    android:layout_marginLeft="0dp"
+                                    android:id="@+id/user_points"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    app:countPointsFrom="@{profileFragmentViewModel}"
+                                    tools:text="321" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/points"
+                                    android:textColor="@color/profile_counter_gray_color"
                                     android:textSize="12sp" />
 
                             </LinearLayout>

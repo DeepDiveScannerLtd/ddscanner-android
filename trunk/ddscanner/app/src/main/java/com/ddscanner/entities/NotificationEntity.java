@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class NotificationEntity {
 
     private String id;
-    private int type;
+    private Integer type;
     @SerializedName("is_new")
     private boolean isNew;
     private String date;
@@ -29,6 +29,28 @@ public class NotificationEntity {
     private AchievmentProfile achievement;
     @SerializedName("photos_count")
     private int photosCount;
+    private ArrayList<DiveSpotPhoto> maps;
+    @SerializedName("maps_count")
+    private int mapsCount;
+    private ActivityTypes activityType;
+    private ArrayList<Link> links;
+    private String timeAgo;
+
+    public ArrayList<DiveSpotPhoto> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(ArrayList<DiveSpotPhoto> maps) {
+        this.maps = maps;
+    }
+
+    public int getMapsCount() {
+        return mapsCount;
+    }
+
+    public void setMapsCount(int mapsCount) {
+        this.mapsCount = mapsCount;
+    }
 
     public int getPhotosCount() {
         return photosCount;
@@ -86,11 +108,11 @@ public class NotificationEntity {
         this.id = id;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -121,34 +143,57 @@ public class NotificationEntity {
     public ActivityTypes getActivityType() {
         switch (type) {
             case 1:
-                return ActivityTypes.DIVE_SPOT_ADDED;
+                 activityType = ActivityTypes.DIVE_SPOT_ADDED;
+                 break;
             case 2:
-                return ActivityTypes.DIVE_SPOT_PHOTOS_ADDED;
+                activityType =  ActivityTypes.DIVE_SPOT_PHOTOS_ADDED;
+                break;
             case 3:
-                return ActivityTypes.DIVE_SPOT_CHANGED;
+                activityType =  ActivityTypes.DIVE_SPOT_CHANGED;
+                break;
             case 4:
-                return ActivityTypes.DIVE_SPOT_CHECKIN;
+                activityType =  ActivityTypes.DIVE_SPOT_CHECKIN;
+                break;
             case 5:
-                return ActivityTypes.DIVE_SPOT_REVIEW_ADDED;
+                activityType =  ActivityTypes.DIVE_SPOT_REVIEW_ADDED;
+                break;
             case 6:
-                return ActivityTypes.ACHIEVEMENT_GETTED;
+                activityType =  ActivityTypes.ACHIEVEMENT_GETTED;
+                break;
             case 7:
-                return ActivityTypes.DIVE_SPOT_REVIEW_LIKE;
+                activityType =  ActivityTypes.DIVE_SPOT_REVIEW_LIKE;
+                break;
             case 8:
-                return ActivityTypes.DIVE_SPOT_REVIEW_DISLIKE;
+                activityType =  ActivityTypes.DIVE_SPOT_REVIEW_DISLIKE;
+                break;
             case 9:
-                return ActivityTypes.DIVE_SPOT_PHOTO_LIKE;
+                activityType =  ActivityTypes.DIVE_SPOT_PHOTO_LIKE;
+                break;
             case 10:
-                return ActivityTypes.DIVE_CENTER_INSTRUCTOR_REMOVE;
+                activityType =  ActivityTypes.DIVE_CENTER_INSTRUCTOR_REMOVE;
+                break;
             case 11:
-                return ActivityTypes.DIVE_CENTER_INSTRUCTOR_ADD;
+                activityType =  ActivityTypes.DIVE_CENTER_INSTRUCTOR_ADD;
+                break;
             case 12:
-                return ActivityTypes.INSTRUCTOR_LEFT_DIVE_CENTER;
+                activityType =  ActivityTypes.INSTRUCTOR_LEFT_DIVE_CENTER;
+                break;
             case 13:
-                return ActivityTypes.DIVE_SPOT_MAPS_ADDED;
+                activityType =  ActivityTypes.DIVE_SPOT_MAPS_ADDED;
+                break;
             default:
-                return null;
+                activityType =  ActivityTypes.VALIDATING_ERROR;
+                break;
         }
+        return activityType;
+    }
+
+    public void setActivtyType(ActivityTypes activityType) {
+        this.activityType = activityType;
+    }
+
+    public void calculateTime() {
+        timeAgo = Helpers.getDate(date);
     }
 
     public String getText(boolean isSelf, SharedPreferenceHelper.UserType userType) {
@@ -156,7 +201,6 @@ public class NotificationEntity {
         if (isNew) {
             returnedString += "\u25CF ";
         }
-        String timeAgo = Helpers.getDate(date);
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
                 switch (userType) {
@@ -188,10 +232,10 @@ public class NotificationEntity {
                 }
                 return returnedString;
             case DIVE_SPOT_MAPS_ADDED:
-                if (photos.size() == 1) {
+                if (maps.size() == 1) {
                     returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_single_map_added, user.getName(), diveSpot.getName(), timeAgo);
                 } else {
-                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_maps_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_maps_added, user.getName(), String.valueOf(mapsCount), diveSpot.getName(), timeAgo);
                 }
                 return returnedString;
             case DIVE_SPOT_CHECKIN:
@@ -222,7 +266,11 @@ public class NotificationEntity {
     }
 
     public ArrayList<Link> getLinks() {
-        ArrayList<Link> links = new ArrayList<>();
+        return this.links;
+    }
+    
+    public void buildLinks() {
+        links = new ArrayList<>();
         Link userLink = new Link("");
         Link diveSpotLink = new Link("");
         Link dotLink = new Link("\u25CF");
@@ -239,24 +287,14 @@ public class NotificationEntity {
             userLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
             userLink.setUnderlined(false);
             userLink.setHighlightAlpha(0);
-            userLink.setOnClickListener(new Link.OnClickListener() {
-                @Override
-                public void onClick(String clickedText) {
-                    DDScannerApplication.bus.post(new OpenUserProfileActivityFromNotifications(user.getId(), user.getType()));
-                }
-            });
+            userLink.setOnClickListener(clickedText -> DDScannerApplication.bus.post(new OpenUserProfileActivityFromNotifications(user.getId(), user.getType())));
         }
         if (diveSpot != null) {
             diveSpotLink = new Link(diveSpot.getName());
             diveSpotLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
             diveSpotLink.setUnderlined(false);
             diveSpotLink.setHighlightAlpha(0);
-            diveSpotLink.setOnClickListener(new Link.OnClickListener() {
-                @Override
-                public void onClick(String clickedText) {
-                    DDScannerApplication.bus.post(new OpenDiveSpotDetailsActivityEvent(diveSpot.getId().toString()));
-                }
-            });
+            diveSpotLink.setOnClickListener(clickedText -> DDScannerApplication.bus.post(new OpenDiveSpotDetailsActivityEvent(diveSpot.getId().toString())));
         }
         switch (getActivityType()) {
             case DIVE_CENTER_INSTRUCTOR_ADD:
@@ -265,7 +303,7 @@ public class NotificationEntity {
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
                 links.add(dotLink);
                 links.add(userLink);
-                return links;
+                break;
             case DIVE_SPOT_CHECKIN:
             case DIVE_SPOT_ADDED:
             case DIVE_SPOT_CHANGED:
@@ -274,7 +312,7 @@ public class NotificationEntity {
             case DIVE_SPOT_MAPS_ADDED:
                 links.add(userLink);
                 links.add(diveSpotLink);
-                return links;
+                break;
 //            case DIVE_CENTER_INSTRUCTOR_REMOVE:
 //                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
 //                finalString  = new SpannableString(returnedString);
@@ -285,9 +323,9 @@ public class NotificationEntity {
             case DIVE_SPOT_REVIEW_DISLIKE:
             case ACHIEVEMENT_GETTED:
                 links.add(userLink);
-                return links;
+                break;
             default:
-                return null;
+                break;
         }
     }
 

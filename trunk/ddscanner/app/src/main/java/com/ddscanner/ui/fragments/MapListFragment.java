@@ -3,6 +3,7 @@ package com.ddscanner.ui.fragments;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -175,13 +176,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maplist, container, false);
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
         findViews();
         setMapView(savedInstanceState);
         Log.i(TAG, "MapListFragment getLocation 1");
         if (LocationHelper.isLocationProvidersAvailable(getContext()) && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         }
-        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
         return view;
     }
 
@@ -218,8 +219,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         rc.setItemAnimator(new DefaultItemAnimator());
         continueShowMap = (android.widget.Button) view.findViewById(R.id.showMapContinue);
         continueShowMap.setOnClickListener(this);
+        diveSpotInfo.animate().translationY(diveSpotInfoHeight);
     }
 
+    @SuppressLint("RestrictedApi")
     private void setMapView(Bundle savedInstanceState) {
         MapsInitializer.initialize(getActivity());
 
@@ -525,6 +528,25 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                                 new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1),
                                 new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1)
                         ), 0), 2000, null);
+                    }
+                    if (circle == null) {
+                        myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()))
+                                .anchor(0.5f, 0.5f)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
+                        CircleOptions circleOptions = new CircleOptions()
+                                .center(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()))
+                                .radius(200)
+                                .strokeColor(android.R.color.transparent)
+                                .fillColor(Color.parseColor("#1A0668a1"));
+                        circle = mGoogleMap.addCircle(circleOptions);
+                        if (diveSpotsClusterManager != null) {
+                            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        }
+                    } else {
+                        circle.setCenter(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                        myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
                     }
                     break;
             }

@@ -289,12 +289,7 @@ public class MainActivity extends BaseAppCompatActivity
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
-                            }
-                        }).executeAsync();
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken())).executeAsync();
                     }
 
                     @Override

@@ -1,6 +1,7 @@
 package com.ddscanner.screens.profile.user;
 
 import android.databinding.BindingAdapter;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.ui.views.ProfileCountersTextView;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +26,34 @@ public class ProfileFragmentViewModel {
 
     public User getUser() {
         return user;
+    }
+
+    @BindingAdapter({"countLikesFrom"})
+    public static void likesCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getLikesCount());
+        }
+    }
+
+    @BindingAdapter({"countDislikesFrom"})
+    public static void dislikesCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getDislikesCount());
+        }
+    }
+
+    @BindingAdapter({"countReviewsFrom"})
+    public static void reviewsCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getCommentsCount());
+        }
+    }
+
+    @BindingAdapter({"countPointsFrom"})
+    public static void pointsCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getPoints());
+        }
     }
 
     @BindingAdapter({"countFavoriteFrom"})

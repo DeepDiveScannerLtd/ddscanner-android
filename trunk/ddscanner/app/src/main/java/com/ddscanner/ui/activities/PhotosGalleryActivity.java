@@ -110,7 +110,14 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         progressView = (ProgressView) findViewById(R.id.progress_view);
         source = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         loadedInfoId = getIntent().getStringExtra("id");
-        setupToolbar(R.string.photos, R.id.toolbar);
+        switch (source) {
+            case MAPS:
+                setupToolbar(R.string.maps_toolbar_title, R.id.toolbar);
+                break;
+            default:
+                setupToolbar(R.string.photos, R.id.toolbar);
+                break;
+        }
         setupRecyclerView();
         switch (source) {
             case PROFILE:
