@@ -297,7 +297,7 @@
 
                         <android.support.v7.widget.AppCompatRadioButton
                             android:id="@+id/company_radio"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="#3b518b"
                             android:textSize="16sp"
@@ -309,7 +309,7 @@
                             android:id="@+id/reseller_radio"
                             android:textSize="16sp"
                             android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="#3b518b"
                             app:checkResellerRadioButton="@{dcViewModel}"

@@ -69,9 +69,8 @@
                     android:visibility="gone"
                     app:pv_autostart="true"
                     app:pv_circular="true"
-                    app:cpd_strokeColor="#3b518b"
                     app:pv_progressMode="indeterminate"
-                    app:pv_progressStyle="@style/CircularProgress" />
+                    app:pv_progressStyle="@style/LocationProgress" />
             </RelativeLayout>
         </RelativeLayout>
 

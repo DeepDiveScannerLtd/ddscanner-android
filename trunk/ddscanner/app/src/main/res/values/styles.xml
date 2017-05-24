@@ -137,6 +137,13 @@
         <item name="cpd_strokeSize">2.5dp</item>
     </style>
 
+    <style name="LocationProgress" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_strokeColor">#3b518b</item>
+        <item name="cpd_strokeSize">2.5dp</item>
+    </style>
+
+
+
     <style name="CustomDialog" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowIsFloating">true</item>
