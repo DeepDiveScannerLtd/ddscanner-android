@@ -521,4 +521,6 @@
     <string name="points">points</string>
     <string name="rate_ds_error">Please, rate the dive spot</string>
     <string name="dc_cant_leave_review">Dive centers are not allowed to write reviews</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="add_new_spots"> Add new?</string>
 </resources>

@@ -48,8 +48,7 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
     private RecyclerView sealifeList;
     private TextView results;
     private RelativeLayout notFoundLayout;
-    private TextView textNotFound;
-    private Button addManually;
+    private TextView addManually;
     private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
@@ -101,8 +100,7 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         sealifeList = (RecyclerView) findViewById(R.id.recyclerView);
         notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
-        textNotFound = (TextView) findViewById(R.id.text_not_found);
-        addManually = (Button) findViewById(R.id.add_manualy);
+        addManually = (TextView) findViewById(R.id.add_manualy);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         contentLayout = (RelativeLayout) findViewById(R.id.content_layout);
         addManually.setOnClickListener(this);
@@ -193,7 +191,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         if (filteredModelList.isEmpty()) {
             sealifeList.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
-            Helpers.hideKeyboard(this);
         } else {
             sealifeList.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);

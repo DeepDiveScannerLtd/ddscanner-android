@@ -14,9 +14,6 @@ import com.ddscanner.entities.DiveSpotShort;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 15.6.16.
- */
 public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSpotListAdapter.SearchDiveSpotListViewHolder> {
 
     private ArrayList<DiveSpotShort> diveSpotShorts;
