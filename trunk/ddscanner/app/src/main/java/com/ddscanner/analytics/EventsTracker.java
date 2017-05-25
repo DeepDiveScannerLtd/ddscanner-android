@@ -79,6 +79,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "dive_spot_photo_report_sent";
     private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "reviewer_review_report_sent";
     private static final String EVENT_NAME_REVIEW_SHOW_ALL = "review_show_all";
+    private static final String EVENT_NAME_REVIEW_SENT = "review_sent";
 
     // ----------------------------------------------------
     // UserOld activity
@@ -524,28 +525,40 @@ public class EventsTracker {
 
     }
 
-    public static void trackSendReview(SendReviewSource sendReviewSource) {
+    public static void trackReviewSent() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
 
         // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEND_REVIEW, params);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEW_SENT, null);
 
         // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
+        FlurryAgent.logEvent(EVENT_NAME_REVIEW_SENT);
 
         // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEND_REVIEW, appsflyerParams);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEW_SENT, null);
 
         //Facebook
-        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEND_REVIEW, params);
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEW_SENT);
+    }
+
+    public static void trackSendReview() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEND_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEND_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEND_REVIEW);
     }
 
     public static void trackCommentLiked() {

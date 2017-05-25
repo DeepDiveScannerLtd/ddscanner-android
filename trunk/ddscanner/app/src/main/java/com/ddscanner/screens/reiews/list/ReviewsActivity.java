@@ -436,7 +436,6 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_write_review:
-                EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_REVIEWS_LIST);
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
                 } else {

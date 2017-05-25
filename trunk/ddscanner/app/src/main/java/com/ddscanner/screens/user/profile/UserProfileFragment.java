@@ -145,6 +145,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     public String getFacebookPageURL() {
+        EventsTracker.trackReviewrFacebookOpened();
         FACEBOOK_PAGE_ID = binding.getUserProfileViewModel().getUser().getFacebookLink();
         PackageManager packageManager = getActivity().getPackageManager();
         try {
