@@ -33,28 +33,22 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
     @Override
     public PlacesListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.item_search_dive_spot, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_location, parent,false);
         return new PlacesListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final PlacesListViewHolder holder, int position) {
-        Places.GeoDataApi.getPlaceById(googleApiClient, places.get(position)).setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(PlaceBuffer places) {
-                if (places.getStatus().isSuccess()) {
-                    try {
-                        Place place = places.get(0);
-                        holder.placeName.setText(place.getName());
-                        // placeList.add(place);
-                    } catch (IllegalStateException e) {
+        Places.GeoDataApi.getPlaceById(googleApiClient, places.get(position)).setResultCallback(places -> {
+            if (places.getStatus().isSuccess()) {
+                try {
+                    Place place = places.get(0);
+                    holder.placeName.setText(place.getName());
+                } catch (IllegalStateException ignored) {
 
-                    }
                 }
-                places.release();
             }
+            places.release();
         });
     }
 

@@ -36,7 +36,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private Boolean isEdit;
     @SerializedName("cover_id")
     private String coverPhotoId;
-    private CountryEntity country;
     @SerializedName("is_somebody_working_here")
     private boolean isSomebodyWorkingHere;
 
@@ -46,14 +45,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     public void setSomebodyWorkingHere(boolean somebodyWorkingHere) {
         isSomebodyWorkingHere = somebodyWorkingHere;
-    }
-
-    public CountryEntity getCountry() {
-        return country;
-    }
-
-    public void setCountry(CountryEntity country) {
-        this.country = country;
     }
 
     public String getCoverPhotoId() {

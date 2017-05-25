@@ -29,15 +29,15 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
 
     @Override
     public SearchDiveSpotListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.item_search_dive_spot, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_dive_spot, parent,false);
         return new SearchDiveSpotListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SearchDiveSpotListViewHolder holder, int position) {
         holder.diveSpotName.setText(diveSpotShorts.get(position).getName());
+        //TODO uncomment 26.05.17
+//        holder.countryName.setText(diveSpotShorts.get(position).getCountry().getName());
     }
 
     @Override
@@ -51,6 +51,7 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
     public class SearchDiveSpotListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected TextView diveSpotName;
+        protected TextView countryName;
         private Context context;
 
         public SearchDiveSpotListViewHolder(View v) {
@@ -58,6 +59,7 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
             context = v.getContext();
             v.setOnClickListener(this);
             diveSpotName = (TextView) v.findViewById(R.id.diveSpotName);
+            countryName = (TextView) v.findViewById(R.id.country);
         }
 
         @Override

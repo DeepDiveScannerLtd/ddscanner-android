@@ -28,6 +28,15 @@ public class DiveSpotShort implements Serializable, ClusterItem {
     private int object;
     @SerializedName("is_new")
     private boolean isNew;
+    private CountryEntity country;
+
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
 
     public boolean getIsNew() {
         return isNew;
