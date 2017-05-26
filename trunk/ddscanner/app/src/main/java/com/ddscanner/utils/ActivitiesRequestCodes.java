@@ -223,4 +223,7 @@ public class ActivitiesRequestCodes {
     //SearchSpotActivity
     public static final int REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT = 6101;
 
+    //SealiefDetails
+    public static final int REQUEST_CODE_LOGINFOR_EDIT_SEALIFE = 6201;
+
 }

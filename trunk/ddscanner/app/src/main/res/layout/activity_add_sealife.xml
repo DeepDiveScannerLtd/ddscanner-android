@@ -113,7 +113,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -148,7 +148,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -182,7 +182,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -216,7 +216,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -240,7 +240,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -264,7 +264,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -288,7 +288,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -312,7 +312,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -336,7 +336,7 @@
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
-                        app:et_labelTextSize="8sp" />
+                        app:et_labelTextSize="14sp" />
 
                 </LinearLayout>
 

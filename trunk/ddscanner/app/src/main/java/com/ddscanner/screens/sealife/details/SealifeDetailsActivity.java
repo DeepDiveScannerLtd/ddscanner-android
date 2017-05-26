@@ -19,6 +19,7 @@ import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.sealife.add.AddSealifeActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -105,7 +106,11 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.edit_sealife:
-                AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                    AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
+                    return true;
+                }
+                LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LOGINFOR_EDIT_SEALIFE);
                 return true;
             case android.R.id.home:
                 finish();
@@ -124,6 +129,11 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
                     binding.progressView.setVisibility(View.VISIBLE);
                     binding.mainLayout.setVisibility(View.GONE);
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).getSealifeDetails(id, resultListener);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_LOGINFOR_EDIT_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
                 }
                 break;
         }

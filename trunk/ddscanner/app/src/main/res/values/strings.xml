@@ -523,4 +523,6 @@
     <string name="dc_cant_leave_review">Dive centers are not allowed to write reviews</string>
     <string name="no_results_found">No results found.</string>
     <string name="add_new_spots"> Add new?</string>
+    <string name="user_email_not_found">User with specified email not found</string>
+    <string name="email_incorrect">Email is incorrect</string>
 </resources>

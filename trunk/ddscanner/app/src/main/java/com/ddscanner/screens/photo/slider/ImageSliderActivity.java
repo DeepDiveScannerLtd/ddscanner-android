@@ -257,19 +257,9 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
         Picasso.with(this).load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this))).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).transform(new CropCircleTransformation()).into(avatar);
         if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showReportMenu(options, position);
-                }
-            });
+            options.setOnClickListener(view -> showReportMenu(options, position));
         } else {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDeleteMenu(options);
-                }
-            });
+            options.setOnClickListener(view -> showDeleteMenu(options));
         }
     }
 
@@ -318,6 +308,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 title.setText(R.string.slider_title_maps);
                 break;
         }
+        photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
         options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
         if (photoOpenedSource.equals(PhotoOpenedSource.MAPS)) {
