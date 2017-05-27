@@ -174,7 +174,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         } else {
             insructorRadio = button;
         }
-        
+
         button.setPadding(Math.round(Helpers.convertDpToPixel(16, this)), Math.round(Helpers.convertDpToPixel(10, this)), Math.round(Helpers.convertDpToPixel(22, this)), Math.round(Helpers.convertDpToPixel(10, this)));
         binding.radiogroup.addView(button);
         if (isActive) {

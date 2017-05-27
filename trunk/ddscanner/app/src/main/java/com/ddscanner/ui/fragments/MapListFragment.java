@@ -114,9 +114,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Map<String, Drawable> infoWindowBackgroundImages = new HashMap<>();
 
     // List mode member fields
-    private RecyclerView rc;
+    private RecyclerView recyclerView;
     private RelativeLayout please;
-    private DiveSpotsListAdapter productListAdapter;
+    private DiveSpotsListAdapter diveSpotsListAdapter;
     private int diveSpotInfoHeight;
 
     @Override
@@ -177,6 +177,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maplist, container, false);
         diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
+        diveSpotsListAdapter = new DiveSpotsListAdapter(getActivity());
         findViews();
         setMapView(savedInstanceState);
         Log.i(TAG, "MapListFragment getLocation 1");
@@ -207,16 +208,17 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         progressBarMyLocation = (ProgressView) view.findViewById(R.id.progressBar);
 
         // List mode
-        rc = (RecyclerView) view.findViewById(R.id.cv);
+        recyclerView = (RecyclerView) view.findViewById(R.id.cv);
+        recyclerView.setAdapter(diveSpotsListAdapter);
         please = (RelativeLayout) view.findViewById(R.id.please);
         mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
         addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
-        rc.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        rc.setLayoutManager(linearLayoutManager);
-        rc.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         continueShowMap = (android.widget.Button) view.findViewById(R.id.showMapContinue);
         continueShowMap.setOnClickListener(this);
         diveSpotInfo.animate().translationY(diveSpotInfoHeight);
@@ -240,42 +242,32 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mMapView = (MapView) view.findViewById(R.id.mapView);
         Log.i(TAG, "mMapView inited");
         mMapView.onCreate(new Bundle());
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.i(TAG, "onMapReady, googleMap = " + googleMap);
-                mGoogleMap = googleMap;
-                mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        Log.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
-                        diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
-                        mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
-                        mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
-                        DDScannerApplication.bus.post(new MapViewInitializedEvent());
-                        if (userLocationOnFragmentStart == null) {
-                            // this means location has not yet been received. do nothing
-                        } else {
-                            // this means location has already been received
-                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
-                                    new LatLng(userLocationOnFragmentStart.getLatitude() - 1, userLocationOnFragmentStart.getLongitude() - 1),
-                                    new LatLng(userLocationOnFragmentStart.getLatitude() + 1, userLocationOnFragmentStart.getLongitude() + 1)
-                            ), 0));
-                        }
-                    }
-                });
+        mMapView.getMapAsync(googleMap -> {
+            Log.i(TAG, "onMapReady, googleMap = " + googleMap);
+            mGoogleMap = googleMap;
+            mGoogleMap.setOnMapLoadedCallback(() -> {
+                Log.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
+                diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
+                mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
+                mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                DDScannerApplication.bus.post(new MapViewInitializedEvent());
+                if (userLocationOnFragmentStart == null) {
+                    // this means location has not yet been received. do nothing
+                } else {
+                    // this means location has already been received
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+                            new LatLng(userLocationOnFragmentStart.getLatitude() - 1, userLocationOnFragmentStart.getLongitude() - 1),
+                            new LatLng(userLocationOnFragmentStart.getLatitude() + 1, userLocationOnFragmentStart.getLongitude() + 1)
+                    ), 0));
+                }
+            });
 
-            }
         });
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
         diveSpotInfo.setOnClickListener(this);
         mapControlLayout = (RelativeLayout) view.findViewById(R.id.map_control_layout);
-    }
-
-    private void setListView() {
-
     }
 
     @Override
@@ -295,6 +287,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.map_list_fab:
                 if (isMapShown) {
+                    fillDiveSpots();
                     if (diveSpotInfo.getVisibility() == View.VISIBLE) {
                         mapListFAB.setY(mapListFAB.getY() + diveSpotInfo.getHeight());
                         addDsFab.setY(addDsFab.getY() + diveSpotInfo.getHeight());
@@ -313,6 +306,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
+                    diveSpotsListAdapter.setData(new ArrayList<>());
                     if (isToastMessageVisible) {
                         toast.setVisibility(View.VISIBLE);
                         isToastMessageVisible = false;
@@ -463,21 +457,23 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    public void fillDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
-        if (productListAdapter == null) {
-            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
-            rc.setAdapter(productListAdapter);
-        } else {
-            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
-            rc.setAdapter(productListAdapter);
-        }
-
-        if (diveSpotShorts == null || diveSpotShorts.isEmpty() || diveSpotShorts.size() == 0) {
-            rc.setVisibility(View.GONE);
+    public void fillDiveSpots() {
+        ArrayList<DiveSpotShort> visibleSpots;
+        visibleSpots = diveSpotsClusterManager.getVisibleMarkersList();
+        if (visibleSpots == null || visibleSpots.isEmpty() || visibleSpots.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
+            return;
         } else {
-            rc.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
             please.setVisibility(View.GONE);
+        }
+        if (diveSpotsListAdapter == null) {
+            diveSpotsListAdapter = new DiveSpotsListAdapter(getActivity());
+            diveSpotsListAdapter.setData(visibleSpots);
+
+        } else {
+            diveSpotsListAdapter.setData(visibleSpots);
         }
 
     }

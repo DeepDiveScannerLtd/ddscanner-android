@@ -1,6 +1,7 @@
 package com.ddscanner.screens.divespots.list;
 
 import android.app.Activity;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,21 @@ public class DiveSpotsListAdapter
         this.divespots = divespots;
         this.context = context;
         this.spotViewSource = spotViewSource;
+    }
+
+    public DiveSpotsListAdapter(Activity context) {
+        this.context = context;
+        this.spotViewSource = EventsTracker.SpotViewSource.FROM_LIST;
+    }
+
+    public void setData(ArrayList<DiveSpotShort> divespots) {
+        this.divespots = divespots;
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        this.divespots = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @Override
