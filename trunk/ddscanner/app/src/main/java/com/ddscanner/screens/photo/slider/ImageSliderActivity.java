@@ -563,16 +563,13 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         new MaterialDialog.Builder(this)
                 .title("Report")
                 .items(objects)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-                        reportType = Helpers.getReportTypes().indexOf(text) + 1;
-                        if (text.equals("Other")) {
-                            showOtherReportDialog();
-                            dialog.dismiss();
-                        } else {
-                            reportImage(reportName, reportType, null);
-                        }
+                .itemsCallback((dialog, view, which, text) -> {
+                    reportType = Helpers.getReportTypes().indexOf(text) + 1;
+                    if (text.equals("Other")) {
+                        showOtherReportDialog();
+                        dialog.dismiss();
+                    } else {
+                        reportImage(reportName, reportType, null);
                     }
                 })
                 .show();
@@ -583,15 +580,12 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 .title("Other")
                 .positiveColor(ContextCompat.getColor(this, R.color.black_text))
                 .widgetColor(ContextCompat.getColor(this, R.color.accent))
-                .input("Write reason", "", new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (input.toString().trim().length() > 1) {
-                            reportImage(reportName, 7, input.toString());
-                            reportDescription = input.toString();
-                        } else {
-                            Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
-                        }
+                .input("Write reason", "", (dialog, input) -> {
+                    if (input.toString().trim().length() > 1) {
+                        reportImage(reportName, 7, input.toString());
+                        reportDescription = input.toString();
+                    } else {
+                        Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }

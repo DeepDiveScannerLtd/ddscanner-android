@@ -43,6 +43,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private Menu menu;
     private MaterialDialog materialDialog;
     private String diveCenterId;
+    private String diveCenterName;
     private boolean isAfterSignUp = false;
     private FloatingActionButton checkedFab;
     private MenuItem searchItem;
@@ -142,6 +143,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
                 }
                 Intent intent = new Intent();
                 intent.putExtra("id", diveCenterId);
+                intent.putExtra("name", diveCenterName);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
@@ -215,6 +217,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
                 checkedFab.show();
             }
             diveCenterId = event.getBaseIdNamePhotoEntity().getId();
+            diveCenterName = event.getBaseIdNamePhotoEntity().getName();
 //            if (isAfterSignUp) {
 //                materialDialog.show();
 //                DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);

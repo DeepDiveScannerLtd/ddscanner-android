@@ -130,7 +130,7 @@
                                     style="@style/AddDsCharTitleStyle"
                                     android:layout_height="wrap_content"
                                     android:text="@string/full_name"
-                                    android:textColor="#B2B2B2" />
+                                    android:textColor="@color/black_text" />
 
                                 <TextView
                                     android:id="@+id/name_count"
@@ -148,6 +148,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="15dp"
                                 android:background="@android:color/transparent"
+                                android:textColor="#8b8b8b"
                                 android:hint="Full name"
                                 android:maxLength="32"
                                 android:lines="1"
@@ -193,7 +194,7 @@
                                     style="@style/AddDsCharTitleStyle"
                                     android:layout_height="wrap_content"
                                     android:text="@string/about"
-                                    android:textColor="#B2B2B2" />
+                                    android:textColor="@color/black_text" />
 
                                 <TextView
                                     android:id="@+id/about_count"
@@ -211,6 +212,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="15dp"
                                 android:background="@android:color/transparent"
+                                android:textColor="#8b8b8b"
                                 android:hint="About"
                                 android:maxLength="255"
                                 android:text="@{profileViewModel.user.about == null ? null : profileViewModel.user.about}"
@@ -239,7 +241,6 @@
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
                             android:src="@drawable/ic_profile_level" />
 
                         <android.support.v7.widget.AppCompatSpinner
@@ -297,7 +298,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="5dp"
-                        android:paddingLeft="15dp"
+                        android:paddingLeft="19dp"
                         android:paddingTop="5dp">
                     </RadioGroup>
 
@@ -310,13 +311,14 @@
                         android:layout_height="50dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingLeft="15dp"
+                        android:paddingLeft="20dp"
                         android:onClick="@{handlers::chooseDiveCenter}">
 
                         <TextView
+                            android:id="@+id/dive_center_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/choose_dive_center"
+                            android:text="@{profileViewModel.user.diveCenter != null ? profileViewModel.user.diveCenter.name : @string/choose_dive_center}"
                             android:textColor="@color/black_text" />
 
                         <ImageView
