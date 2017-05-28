@@ -455,7 +455,7 @@
     <string name="name_is_required">Name is required</string>
     <string name="enter_a_valid_phone_number">Enter a valid phone number</string>
     <string name="enter_a_valid_email_address">Enter a valid email address</string>
-    <string name="user_liked_your_photo">%1$s liked yout photo %2$s</string>
+    <string name="user_liked_your_photo">%1$s liked you photo %2$s</string>
     <string name="company">Company</string>
     <string name="reseller">Reseller</string>
     <string name="cover">COVER</string>
