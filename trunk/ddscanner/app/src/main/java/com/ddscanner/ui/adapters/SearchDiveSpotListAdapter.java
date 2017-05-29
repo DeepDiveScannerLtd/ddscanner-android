@@ -1,6 +1,5 @@
 package com.ddscanner.ui.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +16,9 @@ import java.util.ArrayList;
 public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSpotListAdapter.SearchDiveSpotListViewHolder> {
 
     private ArrayList<DiveSpotShort> diveSpotShorts;
-    private Context context;
 
-    public SearchDiveSpotListAdapter(ArrayList<DiveSpotShort> diveSpotShorts, Context context) {
+    public SearchDiveSpotListAdapter(ArrayList<DiveSpotShort> diveSpotShorts) {
         this.diveSpotShorts = diveSpotShorts;
-        this.context = context;
     }
 
     @Override
@@ -47,13 +44,11 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
 
     public class SearchDiveSpotListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        protected TextView diveSpotName;
-        protected TextView countryName;
-        private Context context;
+        TextView diveSpotName;
+        TextView countryName;
 
-        public SearchDiveSpotListViewHolder(View v) {
+        SearchDiveSpotListViewHolder(View v) {
             super(v);
-            context = v.getContext();
             v.setOnClickListener(this);
             diveSpotName = (TextView) v.findViewById(R.id.diveSpotName);
             countryName = (TextView) v.findViewById(R.id.country);

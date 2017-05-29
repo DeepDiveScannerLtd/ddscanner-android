@@ -62,7 +62,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);
-            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpotShorts, getContext()));
+            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpotShorts));
         }
     }
 

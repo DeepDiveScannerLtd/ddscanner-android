@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String TAG = ActivityNotificationsFragment.class.getName();
     private static final int PAGE_SIZE = 20;
 
     private ArrayList<NotificationEntity> activities;
@@ -105,13 +104,6 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(simpleResultListener, null);
     }
 
-    public boolean isNotificationsLoaded() {
-        if (notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE) {
-            return true;
-        }
-        return false;
-    }
-
     @TargetApi(23)
     private void initializeListenerForHighVersions() {
         RecyclerView.OnScrollChangeListener listener = (view, i, i1, i2, i3) -> tryingToReloadData();
@@ -154,7 +146,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
 
         private boolean isFromPagination;
 
-        public NotificationResultListener(boolean isFromPagination) {
+        NotificationResultListener(boolean isFromPagination) {
             this.isFromPagination = isFromPagination;
         }
 
