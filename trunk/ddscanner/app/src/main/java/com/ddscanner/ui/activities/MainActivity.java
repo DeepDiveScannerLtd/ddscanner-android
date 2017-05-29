@@ -891,6 +891,9 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
             DDScannerApplication.bus.post(new LoggedInEvent());
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
             }
@@ -934,6 +937,9 @@ public class MainActivity extends BaseAppCompatActivity
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             mainViewPager.destroyDrawingCache();
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
             setupTabLayout();
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         } else {

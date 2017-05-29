@@ -84,6 +84,13 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
 
     private FragmentPersonalNotificationsBinding binding;
 
+    public boolean isNotificationsLoaded() {
+        if (notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

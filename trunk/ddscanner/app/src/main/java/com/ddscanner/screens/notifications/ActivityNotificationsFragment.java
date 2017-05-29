@@ -105,6 +105,13 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getActivityNotifications(simpleResultListener, null);
     }
 
+    public boolean isNotificationsLoaded() {
+        if (notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
     @TargetApi(23)
     private void initializeListenerForHighVersions() {
         RecyclerView.OnScrollChangeListener listener = (view, i, i1, i2, i3) -> tryingToReloadData();

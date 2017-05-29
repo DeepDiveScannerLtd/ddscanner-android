@@ -110,6 +110,10 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         return profileFragment;
     }
 
+    public DiverNotificationsFragment getDiverNotificationsFragment() {
+        return diverNotificationsFragment;
+    }
+
     public DiveCenterProfileFragment getDiveCenterProfileFragment() {
         return diveCenterProfileFragment;
     }

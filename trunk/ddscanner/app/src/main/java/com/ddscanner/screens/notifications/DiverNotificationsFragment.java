@@ -163,11 +163,13 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
 
     }
 
-    private void getUserNotifications() {
+    public void getUserNotifications(boolean isAfterLogin) {
         if (notificationsViewPager != null) {
-//            onPageSelected(notificationsViewPager.getCurrentItem());
-            activityNotificationsFragment.loadNotifications();
-            personalNotificationsFragment.loadNotifications();
+            if (!isAfterLogin) {
+                activityNotificationsFragment.loadNotifications();
+                personalNotificationsFragment.loadNotifications();
+
+            }
         }
     }
 
@@ -209,7 +211,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
             loginView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.VISIBLE);
-            getUserNotifications();
+            getUserNotifications(true);
         }
     }
 
@@ -233,7 +235,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Subscribe
     public void getNotifications(GetNotificationsEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            getUserNotifications();
+            getUserNotifications(false);
             return;
         }
         onLoggedOut();
