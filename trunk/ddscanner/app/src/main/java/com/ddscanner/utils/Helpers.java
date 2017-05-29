@@ -281,7 +281,7 @@ public class Helpers {
                 return String.valueOf(differenceOfTime / hourSeconds) + "h";
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
-                return String.valueOf(differenceOfTime / minuteSeconds) + "m";
+                return String.valueOf(differenceOfTime / minuteSeconds) + "min";
             }
             if (differenceOfTime > 0 && differenceOfTime < 60) {
                 return String.valueOf(differenceOfTime) + "s";
