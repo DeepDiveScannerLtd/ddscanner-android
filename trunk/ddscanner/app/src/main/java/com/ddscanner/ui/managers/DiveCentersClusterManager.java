@@ -123,7 +123,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         protected void onClusterItemRendered(DiveCenter diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
             try {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
 //                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {

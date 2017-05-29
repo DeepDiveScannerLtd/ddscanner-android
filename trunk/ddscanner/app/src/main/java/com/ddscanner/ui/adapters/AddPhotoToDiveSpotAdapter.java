@@ -63,7 +63,6 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            //TODO change according new slider
         }
     }
 

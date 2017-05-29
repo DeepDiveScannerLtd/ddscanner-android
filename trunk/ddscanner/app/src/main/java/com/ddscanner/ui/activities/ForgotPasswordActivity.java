@@ -30,7 +30,6 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            //TODO change text
             materialDialog.dismiss();
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.message_sent, R.string.forgot_password_messagesent, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
         }
@@ -107,7 +106,6 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
                     materialDialog.show();
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).postForgotPassword(email.getText().toString(), resultListener);
                 } else {
-                    //TODO change text
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.email_incorrect, false);
                 }
                 break;

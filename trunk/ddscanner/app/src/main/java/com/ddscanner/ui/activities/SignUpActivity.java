@@ -356,7 +356,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -395,12 +394,10 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onCancel() {
-                        // TODO Implement
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        // TODO Implement
                     }
                 });
     }

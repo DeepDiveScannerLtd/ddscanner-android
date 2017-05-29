@@ -377,7 +377,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
 
     private void workWithMap(GoogleMap googleMap) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
 //                .position(diveSpotCoordinates));
         googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_ds)))

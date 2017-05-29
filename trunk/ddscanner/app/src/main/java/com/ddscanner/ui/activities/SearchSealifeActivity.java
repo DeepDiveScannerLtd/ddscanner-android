@@ -130,7 +130,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         sealifes.addAll(sealifeListResponseEntity.getAll());
         searchSealifeListAdapter = new SealifeSearchAdapter(this, sealifes);
         if (isHasLocation && sealifeListResponseEntity.getNearby() != null) {
-            //TODO implement sectioned search
             searchSealifeListAdapterWithSections = new SealifeSearchAdapter(this, sealifes);
             isSectioned = true;
             List<SealifeSectionedRecyclerViewAdapter.Section> sections = new ArrayList<SealifeSectionedRecyclerViewAdapter.Section>();

@@ -52,7 +52,6 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         @Override
         public void onSuccess(Void result) {
             materialDialog.dismiss();
-            //TODO show kakoi nibud' dialog
             setResult(RESULT_OK);
             finish();
         }

@@ -210,7 +210,6 @@ public class LocationHelper implements LocationListener {
             DDScannerApplication.bus.post(new LocationReadyEvent(location, requestCodes));
             requestCodes.clear();
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO Why the fuck do we need to request permission when removing location updates listener!?
                 return;
             }
             locationManager.removeUpdates(this);

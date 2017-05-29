@@ -246,7 +246,6 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
 
             }
             if (photoFile != null) {
-                //TODO when release version create change to com.ddscanner and in paths.xml
                 Uri photoURI = FileProvider.getUriForFile(this, getString(R.string.application_id), photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA);

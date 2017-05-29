@@ -381,7 +381,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     if (diveSpotsListForEditDcAdapter.getObjects().size() > 0) {
                         for (DiveSpotShort spot : diveSpotsListForEditDcAdapter.getObjects()) {
                             if (spot.getId() == diveSpotShort.getId()) {
-                                //TODO show error
                                 return;
                             }
                         }
@@ -428,7 +427,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     if (languagesListAdapter.getObjects().size() > 0) {
                         for (Language current : languagesListAdapter.getObjects()) {
                             if (current.getCode().equals(language.getCode())) {
-                                //TODO show error
                                 return;
                             }
                         }

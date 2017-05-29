@@ -44,7 +44,6 @@ public class PendingAchievementItemViewModel {
 
                 }
             };
-            //TODO change to image address
             view.setFlagBitmap(Helpers.getResId(viewModel.getPendingAchievement().getCountry().getCode().toLowerCase(), R.drawable.class));
         }
     }

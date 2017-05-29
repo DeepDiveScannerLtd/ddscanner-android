@@ -260,7 +260,6 @@ public class MainActivity extends BaseAppCompatActivity
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -458,7 +457,6 @@ public class MainActivity extends BaseAppCompatActivity
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
                 if (resultCode == RESULT_OK) {
-                    //TODO change icon
                     btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
                 }
                 if (resultCode == RESULT_CODE_FILTERS_RESETED) {
@@ -651,7 +649,6 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        // TODO Debug: switch calls after tests
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
@@ -687,7 +684,6 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLoginViaEmail(LoginSignUpViaEmailEvent event) {
-        //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
             DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
