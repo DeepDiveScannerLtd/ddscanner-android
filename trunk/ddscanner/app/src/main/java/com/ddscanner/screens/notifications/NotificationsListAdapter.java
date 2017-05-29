@@ -320,10 +320,10 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                             ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                             break;
                     }
-                    if (notifications.get(getAdapterPosition()).getPhotos() != null) {
-                        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
-                        ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
-                    }
+//                    if (notifications.get(getAdapterPosition()).getPhotos() != null) {
+//                        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
+//                        ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+//                    }
                     break;
                 default:
                     switch (notifications.get(getAdapterPosition()).getActivityType()) {
