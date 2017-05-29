@@ -273,7 +273,7 @@
                             style="@style/CharacteristicsDiveSpotListTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
                             android:text="@string/change_password_edit" />
                         <ImageView
