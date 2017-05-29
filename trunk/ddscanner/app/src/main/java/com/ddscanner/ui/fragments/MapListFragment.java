@@ -118,6 +118,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout please;
     private DiveSpotsListAdapter diveSpotsListAdapter;
     private int diveSpotInfoHeight;
+    private boolean isDIveSpotsFilled = false;
 
     @Override
     public void onAttach(Context context) {
@@ -306,7 +307,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
-                    diveSpotsListAdapter.setData(new ArrayList<>());
+                    diveSpotsListAdapter.clearData();
                     if (isToastMessageVisible) {
                         toast.setVisibility(View.VISIBLE);
                         isToastMessageVisible = false;
@@ -458,7 +459,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     }
 
     public void fillDiveSpots() {
-        ArrayList<DiveSpotShort> visibleSpots;
+        ArrayList<DiveSpotShort> visibleSpots = new ArrayList<>();
         visibleSpots = diveSpotsClusterManager.getVisibleMarkersList();
         if (visibleSpots == null || visibleSpots.isEmpty() || visibleSpots.size() == 0) {
             recyclerView.setVisibility(View.GONE);
@@ -471,10 +472,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpotsListAdapter == null) {
             diveSpotsListAdapter = new DiveSpotsListAdapter(getActivity());
             diveSpotsListAdapter.setData(visibleSpots);
-
         } else {
             diveSpotsListAdapter.setData(visibleSpots);
         }
+        diveSpotsListAdapter.notifyDataSetChanged();
 
     }
 

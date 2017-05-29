@@ -42,11 +42,15 @@ public class DiveSpotsListAdapter
 
     public void setData(ArrayList<DiveSpotShort> divespots) {
         this.divespots = divespots;
-        notifyDataSetChanged();
+//        for (int i = 0; i < divespots.size(); i++) {
+//            notifyItemInserted(i);
+//        }
+//        notifyDataSetChanged();
     }
 
     public void clearData() {
-        this.divespots = new ArrayList<>();
+        this.divespots.clear();
+//        this.divespots = new ArrayList<>();
         notifyDataSetChanged();
     }
 
