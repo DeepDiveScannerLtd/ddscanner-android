@@ -1,6 +1,7 @@
 package com.ddscanner.screens.divespot.details;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -460,15 +461,14 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void checkInUi() {
-        binding.fabCheckin.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
+        binding.fabCheckin.setImageDrawable(ContextCompat.getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
         binding.fabCheckin.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         isCheckedIn = true;
         isClickedCkeckin = false;
     }
 
     private void checkOutUi() {
-        binding.fabCheckin.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
+        binding.fabCheckin.setImageDrawable(ContextCompat.getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
         binding.fabCheckin.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orange)));
         isCheckedIn = false;
     }
@@ -914,6 +914,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void trueApproveDiveSpot(View view) {
+        EventsTracker.trackDiveSpotValid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
     }
 
@@ -927,6 +928,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     @Override
     public void onPositiveDialogClicked() {
+        EventsTracker.trackDiveSpotInvalid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
     }
 
@@ -1190,9 +1192,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
             materialDialog.dismiss();
             if (isValid) {
-                EventsTracker.trackDiveSpotValid();
+//                EventsTracker.trackDiveSpotValid();
             } else {
-                EventsTracker.trackDiveSpotInvalid();
+//                EventsTracker.trackDiveSpotInvalid();
             }
             if (isValid) {
                 binding.approveLayout.setVisibility(View.GONE);
