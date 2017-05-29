@@ -316,6 +316,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                             ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                             break;
                         case DIVE_SPOT_PHOTOS_ADDED:
+                        case DIVE_SPOT_PHOTO_LIKE:
                             DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
                             ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                             break;
