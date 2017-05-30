@@ -32,143 +32,6 @@ import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
 
-    @GET("/diving/filters")
-    Call<ResponseBody> getFilters();
-
-    @GET("/diving/divecenters")
-    Call<ResponseBody> getDiveCenters(@QueryMap Map<String, String> map);
-
-    @POST("/diving/login")
-    Call<ResponseBody> login(@Body RegisterRequest registerRequest);
-
-    @POST("/diving/divespot/{id}/validation")
-    Call<ResponseBody> divespotValidation(
-            @Path("id") String id,
-            @Body ValidationRequest validationReguest
-            );
-
-    @POST("/diving/sealife")
-    @Multipart
-    Call<ResponseBody> addSealife(
-            @Part MultipartBody.Part image,
-            @Part("name") RequestBody name,
-            @Part("distribution") RequestBody distribution,
-            @Part("habitat") RequestBody habitat,
-            @Part("scName") RequestBody scName,
-            @Part("length") RequestBody length,
-            @Part("weight") RequestBody weight,
-            @Part("depth") RequestBody depth,
-            @Part("order") RequestBody order,
-            @Part("scClass") RequestBody sealifeClass,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn);
-
-    @POST("diving/divespot")
-    @Multipart
-    Call<ResponseBody> addDiveSpot(
-            @Part("name") RequestBody name,
-            @Part("lat") RequestBody lat,
-            @Part("lng") RequestBody lng,
-            @Part("depth") RequestBody depth,
-            @Part("visibilityMin") RequestBody visibilityMin,
-            @Part("visibilityMax") RequestBody visibilityMax,
-            @Part("currents") RequestBody currents,
-            @Part("level") RequestBody level,
-            @Part("object") RequestBody object,
-            @Part("description") RequestBody description,
-            @Part List<MultipartBody.Part> sealife,
-            @Part List<MultipartBody.Part> image,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
-            );
-
-    @POST("diving/divespot/{id}")
-    @Multipart
-    Call<ResponseBody> updateDiveSpot(
-            @Path("id") String id,
-            @Part("_method") RequestBody _method,
-            @Part("name") RequestBody name,
-            @Part("lat") RequestBody lat,
-            @Part("lng") RequestBody lng,
-            @Part("depth") RequestBody depth,
-            @Part("visibilityMin") RequestBody visibilityMin,
-            @Part("visibilityMax") RequestBody visibilityMax,
-            @Part("currents") RequestBody currents,
-            @Part("level") RequestBody level,
-            @Part("object") RequestBody object,
-            @Part("description") RequestBody description,
-            @Part List<MultipartBody.Part> sealife,
-            @Part List<MultipartBody.Part> image_new,
-            @Part List<MultipartBody.Part> image_del,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
-    );
-
-    @GET("diving/divespot/{id}/edit")
-    Call<ResponseBody> getDiveSpotForEdit(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/divespot/comment/{id}/dislike")
-    Call<ResponseBody> dislikeComment(
-      @Path("id") String id,
-      @Body RegisterRequest registerRequest
-    );
-
-    @POST("diving/divespot/comment/{id}/like")
-    Call<ResponseBody> likeComment(
-      @Path("id") String id,
-      @Body RegisterRequest registerRequest
-    );
-
-    @GET("diving/divespot/{id}/checkins")
-    Call<ResponseBody> getCheckins(@Path("id") String id);
-
-    @GET("diving/divespot/{id}/comments")
-    Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("/diving/divespot/{id}/editors")
-    Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/divespot/search")
-    @Multipart
-    Call<ResponseBody> getDivespotsByParameters(
-            @Part("search") RequestBody search,
-            @Part List<MultipartBody.Part> like,
-            @Part("order") RequestBody order,
-            @Part("sort") RequestBody sort,
-            @Part("limit") RequestBody limit,
-            @Part List<MultipartBody.Part> select
-    );
-
-    @GET("diving/user/{id}/comment/likes")
-    Call<ResponseBody> getForeignUserLikes(@Path("id") String userId, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/comment/dislikes")
-    Call<ResponseBody> getForeignUserDislikes(@Path("id") String userId, @QueryMap Map<String, String> map);
-
-    @DELETE("diving/divespot/comment/{id}")
-    Call<ResponseBody> deleteComment( @Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/divespot/comment/{id}")
-    @Multipart
-    Call<ResponseBody> updateComment(
-            @Path("id") String id,
-            @Part("_method") RequestBody _method,
-            @Part("comment") RequestBody comment,
-            @Part("rating") RequestBody rating,
-            @Part List<MultipartBody.Part> images_new,
-            @Part List<MultipartBody.Part> images_del,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
-    @POST("diving/divespot/comment/{id}/report")
-    Call<ResponseBody> reportComment(@Path("id") String id, @Body ReportRequest reportRequest);
-
-    @POST("diving/image/report")
-    Call<ResponseBody> reportImage(@Body ReportRequest reportRequest);
-
     @POST("user.login")
     Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
 
@@ -245,9 +108,6 @@ public interface DDScannerRestService {
 
     @POST("user.favorites.remove")
     Call<ResponseBody> postRemoveFromFavorites(@Query("id") String divespotId);
-
-    @GET("sealifes.get")
-    Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
 
     @GET("sealifes.get")
     Call<ResponseBody> getAllSealifes();
@@ -482,6 +342,7 @@ public interface DDScannerRestService {
     @GET("divecenter.divespots.to_approve.get")
     Call<ResponseBody> getDiveSpotsToApprove();
 
+    //TODO change after server side will be ready
     @GET("user.notifications.new.count.get")
     Call<ResponseBody> getNewNotificationsCount();
 
