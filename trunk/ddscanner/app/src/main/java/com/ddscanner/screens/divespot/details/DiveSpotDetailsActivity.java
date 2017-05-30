@@ -214,7 +214,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onCreate(savedInstanceState);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
-        themeNavAndStatusBar(this);
+        themeNavAndStatusBar();
         binding.setHandlers(this);
         findViews();
         toolbarSettings();
@@ -513,32 +513,15 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         return super.onOptionsItemSelected(item);
     }
 
-//    private void validateDiveSpot(final boolean isValid) {
-//        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//            LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
-//            return;
-//        }
-//        materialDialog.show();
-//        diveSpotValidationResultListener.setValid(isValid);
-//        DDScannerApplication.getInstance().getDdScannerRestClient(this).postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
-//    }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void themeNavAndStatusBar(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            return;
-
-        Window w = activity.getWindow();
+    public void themeNavAndStatusBar() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        Window w = getWindow();
         w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        w.setFlags(
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        w.setFlags(
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        w.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
-
-        w.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
+        w.setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
     private void addDiveSpotToFavorites() {
@@ -749,7 +732,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                         } else {
                             menu.findItem(R.id.edit_dive_spot).setVisible(false);
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                     break;
