@@ -298,7 +298,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signInResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), null, null, null, null, signInResultListener);
                 break;
         }
     }
