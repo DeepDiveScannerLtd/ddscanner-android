@@ -518,9 +518,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         Window w = getWindow();
         w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
+//        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
         w.setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
