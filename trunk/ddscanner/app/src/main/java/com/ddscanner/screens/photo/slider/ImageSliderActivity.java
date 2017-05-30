@@ -249,6 +249,11 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
 
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
+        if (images == null) {
+            setResult(RESULT_OK);
+            finish();
+            return;
+        }
         likesCount.setText(images.get(position).getLikesCount());
         photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
         if (images.get(position).isLiked()) {
