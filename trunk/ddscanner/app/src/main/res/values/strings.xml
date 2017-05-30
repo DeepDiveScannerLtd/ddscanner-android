@@ -525,4 +525,5 @@
     <string name="add_new_spots"> Add new?</string>
     <string name="user_email_not_found">User with specified email not found</string>
     <string name="email_incorrect">Email is incorrect</string>
+    <string name="cant_delete_all_photos">You can not delete all photos of the dive spot</string>
 </resources>
