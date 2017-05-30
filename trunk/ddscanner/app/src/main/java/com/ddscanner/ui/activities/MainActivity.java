@@ -70,6 +70,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -929,6 +930,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void logoutUser(LogoutEvent event) {
+        SharedPreferenceHelper.UserType currentUserType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
         DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
@@ -940,6 +942,11 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         } else {
             mainViewPagerAdapter.onLoggedOut();
+            if (currentUserType == SharedPreferenceHelper.UserType.DIVECENTER) {
+                mainViewPagerAdapter.notifyDataSetChanged();
+                mainViewPager.destroyDrawingCache();
+                setupTabLayout();
+            }
             changeVisibilityChangeAccountLayout(View.GONE);
         }
     }
