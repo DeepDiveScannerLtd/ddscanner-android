@@ -339,6 +339,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             }
         });
 
+        binding.photosRc.setNestedScrollingEnabled(false);
+        binding.mapsRc.setNestedScrollingEnabled(false);
         binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
 
