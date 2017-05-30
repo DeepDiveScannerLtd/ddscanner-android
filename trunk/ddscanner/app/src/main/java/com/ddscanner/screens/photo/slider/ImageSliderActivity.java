@@ -208,6 +208,9 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;
+                case DATA_ALREADY_EXIST_409:
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.cant_delete_all_photos, false);
+                    break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
