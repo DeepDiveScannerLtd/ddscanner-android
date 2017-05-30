@@ -2,6 +2,7 @@ package com.ddscanner.screens.divespot.details;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -211,6 +214,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onCreate(savedInstanceState);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
+        themeNavAndStatusBar(this);
         binding.setHandlers(this);
         findViews();
         toolbarSettings();
@@ -509,14 +513,32 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         return super.onOptionsItemSelected(item);
     }
 
-    private void validateDiveSpot(final boolean isValid) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+//    private void validateDiveSpot(final boolean isValid) {
+//        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+//            LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+//            return;
+//        }
+//        materialDialog.show();
+//        diveSpotValidationResultListener.setValid(isValid);
+//        DDScannerApplication.getInstance().getDdScannerRestClient(this).postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
+//    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void themeNavAndStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
             return;
-        }
-        materialDialog.show();
-        diveSpotValidationResultListener.setValid(isValid);
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
+
+        Window w = activity.getWindow();
+        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        w.setFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        w.setFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        w.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
+
+        w.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
     }
 
     private void addDiveSpotToFavorites() {
