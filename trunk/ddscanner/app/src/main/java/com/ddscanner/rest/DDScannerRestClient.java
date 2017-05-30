@@ -183,17 +183,6 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
-        ValidationRequest validationRequest = new ValidationRequest();
-        validationRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-        validationRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-        validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-        validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
-        validationRequest.setValid(isValid);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
-    }
-
     public void postLikeReview(String commentId, @NonNull final ResultListener<Void> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

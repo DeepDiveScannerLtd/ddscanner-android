@@ -591,7 +591,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
-                    validateDiveSpot(true);
+//                    validateDiveSpot(true);
                 } else {
 //                    isInfoValidLayout.setVisibility(View.VISIBLE);
 //                    thanksLayout.setVisibility(View.GONE);
@@ -599,7 +599,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
-                    validateDiveSpot(false);
+//                    validateDiveSpot(false);
                 } else {
 //                    isInfoValidLayout.setVisibility(View.VISIBLE);
 //                    thanksLayout.setVisibility(View.GONE);
