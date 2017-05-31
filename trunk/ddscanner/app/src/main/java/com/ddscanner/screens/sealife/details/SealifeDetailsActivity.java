@@ -1,14 +1,19 @@
 package com.ddscanner.screens.sealife.details;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -69,12 +74,14 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sealife_full);
+        themeNavAndStatusBar();
         DisplayMetrics outMetrics = new DisplayMetrics();
         id = getIntent().getStringExtra(EXTRA_SEALIFE);
         Display display = getWindowManager().getDefaultDisplay();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         dpWidth = outMetrics.widthPixels / density;
+        binding.collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -149,6 +156,17 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void themeNavAndStatusBar() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        Window w = getWindow();
+        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
+        w.setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
     @Override
