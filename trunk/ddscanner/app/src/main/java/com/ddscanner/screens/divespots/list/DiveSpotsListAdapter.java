@@ -49,7 +49,9 @@ public class DiveSpotsListAdapter
     }
 
     public void clearData() {
-        this.divespots.clear();
+        if (divespots != null) {
+            this.divespots.clear();
+        }
 //        this.divespots = new ArrayList<>();
         notifyDataSetChanged();
     }
