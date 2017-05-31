@@ -189,7 +189,9 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
             if (isFromPagination) {
                 notificationsListAdapter.dataLoaded();
             }
-            binding.swipeRefreshLayout.setRefreshing(false);
+            if (binding != null) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
         }
 
         @Override
