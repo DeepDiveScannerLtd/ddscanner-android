@@ -20,9 +20,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 15.6.16.
- */
 public class SearchLocationFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView locationRecyclerView;

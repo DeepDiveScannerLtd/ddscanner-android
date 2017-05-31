@@ -23,9 +23,6 @@ import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 28.4.16.
- */
 public class CheckInPeoplesActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView usersRecyclerView;

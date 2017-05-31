@@ -25,9 +25,6 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 15.6.16.
- */
 public class SearchDiveSpotsFragment extends Fragment implements View.OnClickListener{
 
     private RecyclerView diveSpotsListRc;

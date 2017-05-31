@@ -10,9 +10,6 @@ import android.view.WindowManager;
 
 import com.ddscanner.R;
 
-/**
- * Created by lashket on 19.5.16.
- */
 public class APIUpdatedActivity extends AppCompatActivity {
 
     private static final String TAG = APIUpdatedActivity.class.getName();

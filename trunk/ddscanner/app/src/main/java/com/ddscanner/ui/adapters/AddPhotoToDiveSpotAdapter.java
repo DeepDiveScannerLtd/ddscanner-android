@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDiveSpotAdapter.AddPhotoToDiveSpotViewHolder> {
 
     private String path;

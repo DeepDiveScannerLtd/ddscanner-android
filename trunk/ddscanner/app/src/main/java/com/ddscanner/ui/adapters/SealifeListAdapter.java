@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by lashket on 17.2.16.
- */
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
     public ArrayList<SealifeShort> sealifes;

@@ -15,9 +15,6 @@ import com.ddscanner.events.SocialLinkOpenEvent;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 6.8.16.
- */
 public class SocialListAdapter extends RecyclerView.Adapter<SocialListAdapter.SocialListViewHolder> {
 
     private ArrayList<ContactUsEntity> contactUsEntities;

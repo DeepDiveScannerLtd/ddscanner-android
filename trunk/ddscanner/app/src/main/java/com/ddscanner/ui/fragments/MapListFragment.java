@@ -69,9 +69,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by lashket on 20.4.16.
- */
 public class MapListFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = MapListFragment.class.getName();

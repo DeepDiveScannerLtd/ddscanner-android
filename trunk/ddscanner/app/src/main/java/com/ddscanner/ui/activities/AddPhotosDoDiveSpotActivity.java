@@ -29,9 +29,6 @@ import com.ddscanner.utils.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lashket on 26.5.16.
- */
 public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private RecyclerView recyclerView;

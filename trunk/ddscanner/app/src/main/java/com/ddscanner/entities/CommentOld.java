@@ -3,9 +3,6 @@ package com.ddscanner.entities;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by lashket on 12.3.16.
- */
 public class CommentOld implements Serializable{
     private String comment;
     private String rating;

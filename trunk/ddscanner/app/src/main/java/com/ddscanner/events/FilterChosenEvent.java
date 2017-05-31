@@ -1,8 +1,5 @@
 package com.ddscanner.events;
 
-/**
- * Created by lashket on 1.6.16.
- */
 public class FilterChosenEvent {
 
     private String object;

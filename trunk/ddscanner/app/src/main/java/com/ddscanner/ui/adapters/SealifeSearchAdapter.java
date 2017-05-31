@@ -21,9 +21,6 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by lashket on 7.4.16.
- */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
 
     private final LayoutInflater layoutInflater;

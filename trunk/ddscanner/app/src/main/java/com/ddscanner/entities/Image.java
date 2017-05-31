@@ -4,9 +4,6 @@ package com.ddscanner.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by lashket on 22.7.16.
- */
 public class Image implements Parcelable {
 
     private String name;

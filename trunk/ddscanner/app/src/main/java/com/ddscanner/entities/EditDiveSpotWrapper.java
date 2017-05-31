@@ -2,9 +2,6 @@ package com.ddscanner.entities;
 
 import java.util.List;
 
-/**
- * Created by lashket on 29.7.16.
- */
 public class EditDiveSpotWrapper {
 
     private EditDiveSpotEntity divespot;

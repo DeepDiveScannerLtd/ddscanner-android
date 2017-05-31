@@ -2,9 +2,6 @@ package com.ddscanner.entities;
 
 import java.io.Serializable;
 
-/**
- * Created by lashket on 23.3.16.
- */
 public class RegisterResponse implements Serializable {
     private String message;
     private UserOld userOld;

@@ -18,9 +18,6 @@ import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 20.6.16.
- */
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.PlacesListViewHolder>{
 
     private ArrayList<String> places;

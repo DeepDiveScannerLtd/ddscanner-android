@@ -30,9 +30,6 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 25.5.16.
- */
 public class PersonalNotificationsFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = PersonalNotificationsFragment.class.getName();

@@ -1,8 +1,5 @@
 package com.ddscanner.entities.request;
 
-/**
- * Created by lashket on 8.2.16.
- */
 public class SubscribeRequest {
     private String firstName;
     private String lastName;

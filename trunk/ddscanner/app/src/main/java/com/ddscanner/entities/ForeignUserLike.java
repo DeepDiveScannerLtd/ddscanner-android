@@ -1,8 +1,5 @@
 package com.ddscanner.entities;
 
-/**
- * Created by lashket on 19.7.16.
- */
 public class ForeignUserLike {
 
     private int diveSpotId;

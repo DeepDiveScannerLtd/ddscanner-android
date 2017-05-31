@@ -15,9 +15,6 @@ import com.ddscanner.entities.PhotoOpenedSource;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotReviewsPhotoFragment extends Fragment {
 
     private ArrayList<DiveSpotPhoto> images;

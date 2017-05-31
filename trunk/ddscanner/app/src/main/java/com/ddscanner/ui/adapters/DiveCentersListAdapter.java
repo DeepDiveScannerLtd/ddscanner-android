@@ -19,9 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 29.1.16.
- */
 public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersListAdapter.DiveCentersListViewHolder> {
 
     private static final String TAG = DiveCentersListAdapter.class.getName();

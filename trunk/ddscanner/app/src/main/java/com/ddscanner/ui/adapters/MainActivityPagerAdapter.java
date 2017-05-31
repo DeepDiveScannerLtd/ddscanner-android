@@ -15,9 +15,6 @@ import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.views.LoginView;
 
-/**
- * Created by lashket on 20.4.16.
- */
 public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implements LoginView.LoginStateChangeListener {
 
     private static final String TAG = MainActivityPagerAdapter.class.getName();

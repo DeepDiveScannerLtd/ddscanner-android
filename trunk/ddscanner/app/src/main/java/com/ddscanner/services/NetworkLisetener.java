@@ -8,9 +8,6 @@ import android.util.Log;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.utils.Helpers;
 
-/**
- * Created by lashket on 19.5.16.
- */
 public class NetworkLisetener extends BroadcastReceiver {
 
     private static final String TAG = NetworkLisetener.class.getName();

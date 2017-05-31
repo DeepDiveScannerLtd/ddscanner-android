@@ -1,8 +1,5 @@
 package com.ddscanner.events;
 
-/**
- * Created by lashket on 9.8.16.
- */
 public class DeleteCommentEvent {
 
     private int commentId;

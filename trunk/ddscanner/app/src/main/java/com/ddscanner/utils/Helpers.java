@@ -51,9 +51,6 @@ import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-/**
- * Created by lashket on 9.4.16.
- */
 public class Helpers {
 
     private static final String TAG = Helpers.class.getName();

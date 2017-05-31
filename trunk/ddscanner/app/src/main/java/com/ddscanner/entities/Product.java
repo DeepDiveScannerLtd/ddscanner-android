@@ -4,9 +4,6 @@ import android.os.Parcelable;
 
 import org.parceler.Parcel;
 
-/**
- * Created by Vitaly on 28.11.2015.
- */
 @Parcel
 public class Product implements Parcelable {
     //    "license": "OWD",

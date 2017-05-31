@@ -41,9 +41,6 @@ import java.util.ArrayList;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by lashket on 12.3.16.
- */
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();

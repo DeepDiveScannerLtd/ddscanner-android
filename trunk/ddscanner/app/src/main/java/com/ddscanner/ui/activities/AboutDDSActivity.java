@@ -9,18 +9,13 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class AboutDDSActivity extends AppCompatActivity {
-
-    private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_about_app);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);

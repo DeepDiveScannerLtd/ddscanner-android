@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-/**
- * Created by lashket on 2.7.16.
- */
 public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersListAdapter.EditorsUsersListViewHolder> {
 
     private Context context;

@@ -2,9 +2,6 @@ package com.ddscanner.entities.request;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by lashket on 10.8.16.
- */
 public class ReportRequest {
 
     @SerializedName("report_type")
