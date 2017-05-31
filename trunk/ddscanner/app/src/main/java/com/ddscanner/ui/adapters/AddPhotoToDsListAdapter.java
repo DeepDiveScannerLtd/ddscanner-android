@@ -19,9 +19,6 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by SuzukPc on 06.04.2016.
- */
 public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_ADD_PHOTO = 1;

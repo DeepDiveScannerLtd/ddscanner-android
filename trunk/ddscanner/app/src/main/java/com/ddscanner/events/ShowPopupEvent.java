@@ -1,7 +1,5 @@
 package com.ddscanner.events;
 
-import com.ddscanner.entities.Popup;
-
 public class ShowPopupEvent {
 
     private String popup;

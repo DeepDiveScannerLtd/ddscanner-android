@@ -313,7 +313,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
             }
         }
         lastClickedMarker = marker;
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc_selected));
         if (diveCentersMap.get(marker.getPosition()) != null) {
@@ -481,7 +480,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                     goToMyLocation.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     if (circle == null) {
-                        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = googleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
 //                        .anchor(0.5f, 0.5f)

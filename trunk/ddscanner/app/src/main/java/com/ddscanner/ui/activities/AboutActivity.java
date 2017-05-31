@@ -16,13 +16,9 @@ import com.ddscanner.ui.adapters.AboutListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class AboutActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private List<AboutScreenItem> aboutScreenItems = new ArrayList<>();
 
     @Override
@@ -34,7 +30,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private void findViews() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

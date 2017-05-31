@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,6 +144,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     public String getFacebookPageURL() {
+        EventsTracker.trackReviewrFacebookOpened();
         FACEBOOK_PAGE_ID = binding.getUserProfileViewModel().getUser().getFacebookLink();
         PackageManager packageManager = getActivity().getPackageManager();
         try {

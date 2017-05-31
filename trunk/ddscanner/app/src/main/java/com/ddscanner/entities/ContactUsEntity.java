@@ -1,8 +1,5 @@
 package com.ddscanner.entities;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class ContactUsEntity {
 
     private String title;

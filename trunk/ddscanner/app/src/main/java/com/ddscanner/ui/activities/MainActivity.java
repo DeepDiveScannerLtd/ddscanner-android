@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -37,7 +36,6 @@ import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
@@ -70,12 +68,12 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -88,8 +86,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -260,7 +256,6 @@ public class MainActivity extends BaseAppCompatActivity
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -458,7 +453,6 @@ public class MainActivity extends BaseAppCompatActivity
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
                 if (resultCode == RESULT_OK) {
-                    //TODO change icon
                     btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
                 }
                 if (resultCode == RESULT_CODE_FILTERS_RESETED) {
@@ -651,7 +645,6 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        // TODO Debug: switch calls after tests
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
@@ -687,7 +680,6 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLoginViaEmail(LoginSignUpViaEmailEvent event) {
-        //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
             DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
@@ -891,6 +883,9 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
             DDScannerApplication.bus.post(new LoggedInEvent());
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
             }
@@ -930,14 +925,23 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void logoutUser(LogoutEvent event) {
+        SharedPreferenceHelper.UserType currentUserType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
         DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             mainViewPager.destroyDrawingCache();
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
             setupTabLayout();
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         } else {
             mainViewPagerAdapter.onLoggedOut();
+            if (currentUserType == SharedPreferenceHelper.UserType.DIVECENTER) {
+                mainViewPagerAdapter.notifyDataSetChanged();
+                mainViewPager.destroyDrawingCache();
+                setupTabLayout();
+            }
             changeVisibilityChangeAccountLayout(View.GONE);
         }
     }

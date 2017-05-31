@@ -18,9 +18,6 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotPhotosFragment extends Fragment {
 
     private static final String TAG = DiveSpotPhotosFragment.class.getSimpleName();

@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDiveSpotAdapter.AddPhotoToDiveSpotViewHolder> {
 
     private String path;
@@ -63,7 +60,6 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            //TODO change according new slider
         }
     }
 

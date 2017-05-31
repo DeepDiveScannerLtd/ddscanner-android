@@ -61,6 +61,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
         binding.yesButton.setText(args.getString(ARG_POSITIVE));
         binding.message.setText(args.getString(ARG_MESSAGE));
         builder.setView(binding.getRoot());
+        builder.setCancelable(false);
         builder.setTitle(null);
         if (!args.getString(ARG_TITLE).isEmpty()) {
             binding.title.setVisibility(View.VISIBLE);

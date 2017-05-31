@@ -2,12 +2,12 @@ package com.ddscanner.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,9 +41,6 @@ import java.util.ArrayList;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by lashket on 12.3.16.
- */
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
@@ -103,20 +100,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.dislikeView.setOnClickListener(null);
         if (!commentEntity.isRequestSent()) {
             if (!comments.get(i).getComment().isLike() && !userId.equals(userServerId)) {
-                reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
-                    }
-                });
+                reviewsListViewHolder.likeView.setOnClickListener(v -> DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition())));
             }
             if (!comments.get(i).getComment().isDislike() && !userId.equals(userServerId)) {
-                reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
-                    }
-                });
+                reviewsListViewHolder.dislikeView.setOnClickListener(v -> DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition())));
             }
         }
         switch (userType) {
@@ -128,19 +115,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 break;
         }
         if (userId.equals(userServerId)) {
-            reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
-                }
-            });
+            reviewsListViewHolder.menu.setOnClickListener(view -> showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition())));
         } else {
-            reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
-                }
-            });
+            reviewsListViewHolder.menu.setOnClickListener(view -> showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition())));
         }
         reviewsListViewHolder.user_review.setText(commentEntity.getComment().getReview());
         isAdapterSet = true;

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String TAG = ActivityNotificationsFragment.class.getName();
     private static final int PAGE_SIZE = 20;
 
     private ArrayList<NotificationEntity> activities;
@@ -147,7 +146,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
 
         private boolean isFromPagination;
 
-        public NotificationResultListener(boolean isFromPagination) {
+        NotificationResultListener(boolean isFromPagination) {
             this.isFromPagination = isFromPagination;
         }
 
@@ -190,7 +189,9 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
             if (isFromPagination) {
                 notificationsListAdapter.dataLoaded();
             }
-            binding.swipeRefreshLayout.setRefreshing(false);
+            if (binding != null) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
         }
 
         @Override

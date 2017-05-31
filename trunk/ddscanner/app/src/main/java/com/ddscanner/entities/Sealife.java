@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by lashket on 22.1.16.
- */
 public class Sealife extends SealifeShort implements Serializable {
     private String length;
     private String weight;

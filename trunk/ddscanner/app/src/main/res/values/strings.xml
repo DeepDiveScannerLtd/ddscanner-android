@@ -455,7 +455,7 @@
     <string name="name_is_required">Name is required</string>
     <string name="enter_a_valid_phone_number">Enter a valid phone number</string>
     <string name="enter_a_valid_email_address">Enter a valid email address</string>
-    <string name="user_liked_your_photo">%1$s liked yout photo %2$s</string>
+    <string name="user_liked_your_photo">%1$s liked you photo %2$s</string>
     <string name="company">Company</string>
     <string name="reseller">Reseller</string>
     <string name="cover">COVER</string>
@@ -521,4 +521,9 @@
     <string name="points">points</string>
     <string name="rate_ds_error">Please, rate the dive spot</string>
     <string name="dc_cant_leave_review">Dive centers are not allowed to write reviews</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="add_new_spots"> Add new?</string>
+    <string name="user_email_not_found">User with specified email not found</string>
+    <string name="email_incorrect">Email is incorrect</string>
+    <string name="cant_delete_all_photos">You can not delete all photos of the dive spot</string>
 </resources>

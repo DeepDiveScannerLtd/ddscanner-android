@@ -1,8 +1,5 @@
 package com.ddscanner.entities.request;
 
-/**
- * Created by lashket on 29.4.16.
- */
 public class CreateSealifeRequest {
 
     private String name;

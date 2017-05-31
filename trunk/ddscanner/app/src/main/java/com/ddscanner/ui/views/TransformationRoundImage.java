@@ -7,9 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 
-/**
- * Created by lashket on 23.3.16.
- */
 public class TransformationRoundImage implements com.squareup.picasso.Transformation {
     private final int radius;
     private final int margin;

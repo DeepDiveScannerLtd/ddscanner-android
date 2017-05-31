@@ -38,8 +38,6 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO remove after creating working login mechanism
-       // DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsFirstLaunch()) {
             DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);

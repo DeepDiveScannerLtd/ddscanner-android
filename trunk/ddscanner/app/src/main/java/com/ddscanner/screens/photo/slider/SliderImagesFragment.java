@@ -15,9 +15,6 @@ import com.ddscanner.ui.views.ScallingImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by lashket on 4.3.16.
- */
 public class SliderImagesFragment extends Fragment {
 
     private static final String TAG = SliderImagesFragment.class.getName();

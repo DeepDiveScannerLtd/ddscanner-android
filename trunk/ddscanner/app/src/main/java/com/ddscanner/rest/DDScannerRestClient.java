@@ -5,17 +5,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 
 import com.ddscanner.DDScannerApplication;
-import com.ddscanner.R;
 import com.ddscanner.entities.AchievementTitle;
-import com.ddscanner.entities.AchievmentsResponseEntity;
+import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.ActivityTypes;
-import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
-import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -23,9 +19,6 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FlagsEntity;
-import com.ddscanner.entities.ForeignUserDislikesWrapper;
-import com.ddscanner.entities.ForeignUserLikeWrapper;
-import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
@@ -51,7 +44,6 @@ import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
-import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
@@ -180,17 +172,6 @@ public class DDScannerRestClient {
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateSealife(image, translations, id);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
-    }
-
-    public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
-        ValidationRequest validationRequest = new ValidationRequest();
-        validationRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-        validationRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-        validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-        validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
-        validationRequest.setValid(isValid);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 

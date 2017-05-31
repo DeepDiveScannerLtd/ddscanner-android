@@ -25,7 +25,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.MarkerClickedEvent;

@@ -1,8 +1,5 @@
 package com.ddscanner.events;
 
-/**
- * Created by lashket on 6.8.16.
- */
 public class SocialLinkOpenEvent {
 
     private String type;

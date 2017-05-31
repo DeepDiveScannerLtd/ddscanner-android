@@ -46,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:hint="@string/email_input"
+                android:maxLength="254"
                 android:inputType="textEmailAddress"
                 style="@style/SigningInputStyle" />
 
@@ -57,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:hint="@string/password"
+                android:maxLength="32"
                 android:fontFamily="sans-serif"
                 android:inputType="textPassword"
                 style="@style/SigningInputStyle"/>

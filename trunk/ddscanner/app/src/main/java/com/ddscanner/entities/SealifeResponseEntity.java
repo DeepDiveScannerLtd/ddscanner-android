@@ -2,9 +2,6 @@ package com.ddscanner.entities;
 
 import java.util.List;
 
-/**
- * Created by lashket on 5.5.16.
- */
 public class SealifeResponseEntity {
 
     private List<Sealife> sealife;

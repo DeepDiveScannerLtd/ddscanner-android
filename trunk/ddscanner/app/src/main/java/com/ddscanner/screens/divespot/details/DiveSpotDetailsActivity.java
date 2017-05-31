@@ -1,6 +1,7 @@
 package com.ddscanner.screens.divespot.details;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +16,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -210,6 +212,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onCreate(savedInstanceState);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
+        themeNavAndStatusBar();
         binding.setHandlers(this);
         findViews();
         toolbarSettings();
@@ -334,6 +337,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             }
         });
 
+        binding.photosRc.setNestedScrollingEnabled(false);
+        binding.mapsRc.setNestedScrollingEnabled(false);
         binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
 
@@ -376,7 +381,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
 
     private void workWithMap(GoogleMap googleMap) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
 //                .position(diveSpotCoordinates));
         googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_ds)))
@@ -460,15 +464,14 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void checkInUi() {
-        binding.fabCheckin.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
+        binding.fabCheckin.setImageDrawable(ContextCompat.getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
         binding.fabCheckin.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         isCheckedIn = true;
         isClickedCkeckin = false;
     }
 
     private void checkOutUi() {
-        binding.fabCheckin.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
+        binding.fabCheckin.setImageDrawable(ContextCompat.getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
         binding.fabCheckin.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orange)));
         isCheckedIn = false;
     }
@@ -488,7 +491,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         lastChosedRating = Math.round(rating);
         tryingToShowLeaveReviewActivity(lastChosedRating, true);
-        EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_RATING_BAR);
     }
 
     @Override
@@ -511,14 +513,15 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         return super.onOptionsItemSelected(item);
     }
 
-    private void validateDiveSpot(final boolean isValid) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
-            return;
-        }
-        materialDialog.show();
-        diveSpotValidationResultListener.setValid(isValid);
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void themeNavAndStatusBar() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        Window w = getWindow();
+        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
+        w.setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
     private void addDiveSpotToFavorites() {
@@ -593,7 +596,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
-                    validateDiveSpot(true);
+//                    validateDiveSpot(true);
                 } else {
 //                    isInfoValidLayout.setVisibility(View.VISIBLE);
 //                    thanksLayout.setVisibility(View.GONE);
@@ -601,7 +604,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
-                    validateDiveSpot(false);
+//                    validateDiveSpot(false);
                 } else {
 //                    isInfoValidLayout.setVisibility(View.VISIBLE);
 //                    thanksLayout.setVisibility(View.GONE);
@@ -729,7 +732,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                         } else {
                             menu.findItem(R.id.edit_dive_spot).setVisible(false);
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                     break;
@@ -915,6 +918,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void trueApproveDiveSpot(View view) {
+        EventsTracker.trackDiveSpotValid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
     }
 
@@ -928,6 +932,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     @Override
     public void onPositiveDialogClicked() {
+        EventsTracker.trackDiveSpotInvalid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
     }
 
@@ -937,7 +942,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void writeReviewClicked(View view) {
-        EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST);
         tryingToShowLeaveReviewActivity(1, false);
     }
 
@@ -1192,9 +1196,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
             materialDialog.dismiss();
             if (isValid) {
-                EventsTracker.trackDiveSpotValid();
+//                EventsTracker.trackDiveSpotValid();
             } else {
-                EventsTracker.trackDiveSpotInvalid();
+//                EventsTracker.trackDiveSpotInvalid();
             }
             if (isValid) {
                 binding.approveLayout.setVisibility(View.GONE);

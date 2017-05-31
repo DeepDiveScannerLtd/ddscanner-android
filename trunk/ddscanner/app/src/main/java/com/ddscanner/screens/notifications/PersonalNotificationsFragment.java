@@ -21,7 +21,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
-import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
@@ -30,9 +30,6 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 25.5.16.
- */
 public class PersonalNotificationsFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = PersonalNotificationsFragment.class.getName();
@@ -83,6 +80,13 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
     };
 
     private FragmentPersonalNotificationsBinding binding;
+
+    public boolean isNotificationsLoaded() {
+        if (notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

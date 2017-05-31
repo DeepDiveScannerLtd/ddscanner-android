@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -48,6 +47,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     private static final String ARG_ISLOGOUT = "IS_LOGOUT";
     private static final String ARG_USER = "USER";
+    private static final String ARG_DC_ID = "id";
+    private static final String ARG_DC_NAME = "name";
 
     private ActivityEditProfileBinding binding;
     private User user;
@@ -150,16 +151,13 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         } else {
             binding.levelSpinner.setSelection(1);
         }
-        binding.radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (diverRadio.isChecked()) {
-                    binding.chooseDiveCenterBtn.setVisibility(View.GONE);
-                    binding.levelLayout.setVisibility(View.VISIBLE);
-                } else {
-                    binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
-                    binding.levelLayout.setVisibility(View.GONE);
-                }
+        binding.radiogroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (diverRadio.isChecked()) {
+                binding.chooseDiveCenterBtn.setVisibility(View.GONE);
+                binding.levelLayout.setVisibility(View.VISIBLE);
+            } else {
+                binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
+                binding.levelLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -175,7 +173,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         } else {
             insructorRadio = button;
         }
-        button.setPadding(Math.round(Helpers.convertDpToPixel(15, this)), Math.round(Helpers.convertDpToPixel(10, this)), Math.round(Helpers.convertDpToPixel(20, this)), Math.round(Helpers.convertDpToPixel(10, this)));
+
+        button.setPadding(Math.round(Helpers.convertDpToPixel(16, this)), Math.round(Helpers.convertDpToPixel(10, this)), Math.round(Helpers.convertDpToPixel(22, this)), Math.round(Helpers.convertDpToPixel(10, this)));
         binding.radiogroup.addView(button);
         if (isActive) {
             binding.radiogroup.check(button.getId());
@@ -212,7 +211,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         if (diverRadio.isChecked()) {
             diveCenterId = null;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
     }
 
     private void hideErrorsMap() {
@@ -223,7 +222,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     private boolean isDataValid() {
         boolean isDataValid = true;
-        if (binding.fullName.getText().toString().length() < 1) {
+        binding.errorName.setVisibility(View.GONE);
+        if (binding.fullName.getText().toString().trim().length() < 1) {
             isDataValid = false;
             binding.errorName.setVisibility(View.VISIBLE);
         }
@@ -291,7 +291,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER:
                 if (resultCode == RESULT_OK) {
-                    dcId = data.getStringExtra("id");
+                    dcId = data.getStringExtra(ARG_DC_ID);
+                    binding.diveCenterName.setText(data.getStringExtra(ARG_DC_NAME));
                 }
                 break;
         }

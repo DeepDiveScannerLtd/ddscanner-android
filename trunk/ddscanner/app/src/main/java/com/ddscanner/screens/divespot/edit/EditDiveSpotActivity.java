@@ -11,14 +11,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -67,7 +65,6 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
@@ -749,7 +746,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = addTranslationButton.getBottom();
         }
 
-        if (photosListAdapter.getItemCount() < 1) {
+        if (photosListAdapter.getItemCount() < 2) {
             isSomethingWrong = true;
             errorImages.setVisibility(View.VISIBLE);
             downestCoordinate = errorImages.getBottom();

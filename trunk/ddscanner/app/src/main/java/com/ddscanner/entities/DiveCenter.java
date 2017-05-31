@@ -7,9 +7,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
-/**
- * Created by lashket on 5.2.16.
- */
 public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCenter> {
 
     private String id;

@@ -74,6 +74,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackReviewSent();
             if (!isPopupShown) {
                 Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
             }
@@ -116,6 +117,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
+        EventsTracker.trackSendReview();
         Bundle bundle = getIntent().getExtras();
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         rating = getIntent().getExtras().getFloat(RATING);

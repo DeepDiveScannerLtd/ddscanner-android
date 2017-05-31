@@ -12,9 +12,6 @@ import com.ddscanner.entities.ReloadSliderImagesEvent;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 4.3.16.
- */
 public class SliderImagesAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<DiveSpotPhoto> photos;

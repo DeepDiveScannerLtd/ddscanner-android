@@ -16,9 +16,6 @@ import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 23.12.15.
- */
 public class DiveSpotsListAdapter
         extends RecyclerView.Adapter<DiveSpotsListAdapter.ProductListViewHolder> {
 
@@ -32,6 +29,27 @@ public class DiveSpotsListAdapter
         this.divespots = divespots;
         this.context = context;
         this.spotViewSource = spotViewSource;
+    }
+
+    public DiveSpotsListAdapter(Activity context) {
+        this.context = context;
+        this.spotViewSource = EventsTracker.SpotViewSource.FROM_LIST;
+    }
+
+    public void setData(ArrayList<DiveSpotShort> divespots) {
+        this.divespots = divespots;
+//        for (int i = 0; i < divespots.size(); i++) {
+//            notifyItemInserted(i);
+//        }
+//        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        if (divespots != null) {
+            this.divespots.clear();
+        }
+//        this.divespots = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @Override

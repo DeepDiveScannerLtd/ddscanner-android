@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -208,6 +207,9 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;
+                case DATA_ALREADY_EXIST_409:
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.cant_delete_all_photos, false);
+                    break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
@@ -246,6 +248,11 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
 
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
+        if (images == null) {
+            setResult(RESULT_OK);
+            finish();
+            return;
+        }
         likesCount.setText(images.get(position).getLikesCount());
         photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
         if (images.get(position).isLiked()) {
@@ -257,19 +264,9 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
         Picasso.with(this).load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this))).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).transform(new CropCircleTransformation()).into(avatar);
         if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showReportMenu(options, position);
-                }
-            });
+            options.setOnClickListener(view -> showReportMenu(options, position));
         } else {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDeleteMenu(options);
-                }
-            });
+            options.setOnClickListener(view -> showDeleteMenu(options));
         }
     }
 
@@ -318,6 +315,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 title.setText(R.string.slider_title_maps);
                 break;
         }
+        photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
         options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
         if (photoOpenedSource.equals(PhotoOpenedSource.MAPS)) {
@@ -572,16 +570,13 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         new MaterialDialog.Builder(this)
                 .title("Report")
                 .items(objects)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-                        reportType = Helpers.getReportTypes().indexOf(text) + 1;
-                        if (text.equals("Other")) {
-                            showOtherReportDialog();
-                            dialog.dismiss();
-                        } else {
-                            reportImage(reportName, reportType, null);
-                        }
+                .itemsCallback((dialog, view, which, text) -> {
+                    reportType = Helpers.getReportTypes().indexOf(text) + 1;
+                    if (text.equals("Other")) {
+                        showOtherReportDialog();
+                        dialog.dismiss();
+                    } else {
+                        reportImage(reportName, reportType, null);
                     }
                 })
                 .show();
@@ -592,15 +587,12 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 .title("Other")
                 .positiveColor(ContextCompat.getColor(this, R.color.black_text))
                 .widgetColor(ContextCompat.getColor(this, R.color.accent))
-                .input("Write reason", "", new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (input.toString().trim().length() > 1) {
-                            reportImage(reportName, 7, input.toString());
-                            reportDescription = input.toString();
-                        } else {
-                            Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
-                        }
+                .input("Write reason", "", (dialog, input) -> {
+                    if (input.toString().trim().length() > 1) {
+                        reportImage(reportName, 7, input.toString());
+                        reportDescription = input.toString();
+                    } else {
+                        Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }

@@ -101,7 +101,6 @@ public class ActivitiesRequestCodes {
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS = 2302;
-    // TODO Get rid of this code. It is impossible to face case when it is used
     public static final int REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW = 2303;
 
     //    LeaveReviewActivity
@@ -222,5 +221,8 @@ public class ActivitiesRequestCodes {
 
     //SearchSpotActivity
     public static final int REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT = 6101;
+
+    //SealiefDetails
+    public static final int REQUEST_CODE_LOGINFOR_EDIT_SEALIFE = 6201;
 
 }

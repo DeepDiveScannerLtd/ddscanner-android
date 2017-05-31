@@ -1,7 +1,7 @@
 package com.ddscanner.screens.notifications;
 
 import android.app.Activity;
-import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -316,14 +316,18 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                             ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                             break;
                         case DIVE_SPOT_PHOTOS_ADDED:
+                        case DIVE_SPOT_PHOTO_LIKE:
+                            ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                            break;
+                    }
                             DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
                             ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                             break;
                     }
-                    if (notifications.get(getAdapterPosition()).getPhotos() != null) {
-                        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
-                        ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
-                    }
+//                    if (notifications.get(getAdapterPosition()).getPhotos() != null) {
+//                        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
+//                        ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+//                    }
                     break;
                 default:
                     switch (notifications.get(getAdapterPosition()).getActivityType()) {

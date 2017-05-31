@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-/**
- * Created by lashket on 10.3.16.
- */
 public class UserOld implements Serializable, Parcelable{
 
     private String name;

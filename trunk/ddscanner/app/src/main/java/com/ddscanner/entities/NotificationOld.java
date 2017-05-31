@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by lashket on 25.5.16.
- */
 public class NotificationOld implements Serializable {
 
     public static enum Type{

@@ -4,10 +4,6 @@ import com.ddscanner.entities.DiveSpotPhoto;
 
 import java.util.ArrayList;
 
-/**
- * Created by Andrei Lashkevich on 21.09.2016.
- */
-
 public class ShowSliderForReviewImagesEvent {
 
     private boolean isSelfReview;

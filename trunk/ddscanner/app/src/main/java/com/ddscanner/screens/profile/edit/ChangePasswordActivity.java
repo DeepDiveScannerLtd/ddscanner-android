@@ -17,12 +17,10 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityChangePasswordBinding;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.ForgotPasswordActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 
 public class ChangePasswordActivity extends BaseAppCompatActivity implements View.OnClickListener {

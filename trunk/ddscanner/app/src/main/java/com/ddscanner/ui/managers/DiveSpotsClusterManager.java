@@ -73,7 +73,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     private LatLng lastKnownNorthEast;
     private LatLng newDiveSpotLatLng;
     private boolean isNewDiveSpotMarkerClicked;
-
+    private ArrayList<DiveSpotShort> allDiveSpots = new ArrayList<>();
     private int newDiveSpotId = -1;
 
     private DDScannerRestClient.ResultListener<List<DiveSpotShort>> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
@@ -81,7 +81,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         public void onSuccess(List<DiveSpotShort> diveSpotShorts) {
             hideProgressBar();
             updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
-            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
+            allDiveSpots =(ArrayList<DiveSpotShort>) diveSpotShorts;
+//            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
         }
 
         @Override
@@ -229,7 +230,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         }
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
+//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
         if (diveSpotsRequestMap.size() == 0) {
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -413,9 +414,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         }
     }
 
-    private ArrayList<DiveSpotShort> getVisibleMarkersList(ArrayList<DiveSpotShort> oldList) {
+    public ArrayList<DiveSpotShort> getVisibleMarkersList() {
         ArrayList<DiveSpotShort> newList = new ArrayList<>();
-        for (DiveSpotShort diveSpotShort : oldList) {
+        for (DiveSpotShort diveSpotShort : allDiveSpots) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpotShort.getLat()), Float.valueOf(diveSpotShort.getLng()))) {
                 newList.add(diveSpotShort);
             }

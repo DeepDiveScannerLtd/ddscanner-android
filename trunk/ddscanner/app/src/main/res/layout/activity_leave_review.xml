@@ -67,6 +67,7 @@
                     android:background="@android:color/transparent"
                     android:cursorVisible="true"
                     android:gravity="top"
+                    android:maxLength="2048"
                     android:hint="@string/write_a_review"
                     android:minHeight="80dp"
                     android:textColorHint="#bbbbbb"

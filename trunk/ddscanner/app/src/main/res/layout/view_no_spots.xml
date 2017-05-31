@@ -6,23 +6,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <ImageView
-            android:id="@+id/icon"
+    <LinearLayout
+        android:layout_marginTop="35dp"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_marginTop="60dp"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_nospots"/>
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#a3a3a3"
+            android:gravity="center_horizontal"
+            android:text="@string/no_results_found"
+            />
+
         <TextView
             android:layout_below="@id/icon"
-            style="@style/ErrorsViewTitleStyle"
-            android:text="@string/no_results"/>
-        <Button
             android:layout_alignParentBottom="true"
             android:id="@+id/add_spot"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="70dp"
-            style="@style/OrangeButtons"
-            android:text="@string/add_new"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#526cae"
+            android:gravity="center_horizontal"
+            android:text="@string/add_new_spots"
+            />
+
+    </LinearLayout>
     </RelativeLayout>

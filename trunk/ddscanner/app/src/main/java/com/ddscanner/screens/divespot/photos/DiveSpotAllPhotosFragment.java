@@ -17,9 +17,6 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotAllPhotosFragment extends Fragment {
 
     private ArrayList<DiveSpotPhoto> images;

@@ -51,9 +51,6 @@ import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-/**
- * Created by lashket on 9.4.16.
- */
 public class Helpers {
 
     private static final String TAG = Helpers.class.getName();
@@ -281,7 +278,7 @@ public class Helpers {
                 return String.valueOf(differenceOfTime / hourSeconds) + "h";
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
-                return String.valueOf(differenceOfTime / minuteSeconds) + "m";
+                return String.valueOf(differenceOfTime / minuteSeconds) + "min";
             }
             if (differenceOfTime > 0 && differenceOfTime < 60) {
                 return String.valueOf(differenceOfTime) + "s";

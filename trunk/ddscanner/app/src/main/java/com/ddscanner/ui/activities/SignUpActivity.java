@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -298,7 +297,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signInResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), null, null, null, null, signInResultListener);
                 break;
         }
     }
@@ -356,7 +355,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -395,12 +393,10 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onCancel() {
-                        // TODO Implement
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        // TODO Implement
                     }
                 });
     }

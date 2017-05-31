@@ -2,9 +2,6 @@ package com.ddscanner.entities;
 
 import java.io.Serializable;
 
-/**
- * Created by Vitaly on 28.11.2015.
- */
 public class Offer implements Serializable {
 //    {
 //        "id": "1",

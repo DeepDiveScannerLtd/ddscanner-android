@@ -85,11 +85,11 @@ public class AddTranslationDialogFragment extends DialogFragment implements View
                 TranslationChangedListener translationChangedListener;
                 translationChangedListener = (TranslationChangedListener) getActivity();
                 Translation translation = new Translation();
-                translation.setCode(languageCode);
-                translation.setLanguage(languageNameText);
-                if (name.getText().toString().length() > 1 && description.getText().toString().length() > 31) {
-                    translation.setName(name.getText().toString());
-                    translation.setDescription(description.getText().toString());
+                translation.setCode(languageCode.trim());
+                translation.setLanguage(languageNameText.trim());
+                if (name.getText().toString().trim().length() > 1 && description.getText().toString().trim().length() > 31) {
+                    translation.setName(name.getText().toString().trim());
+                    translation.setDescription(description.getText().toString().trim());
                 } else {
                     return;
                 }
@@ -110,22 +110,22 @@ public class AddTranslationDialogFragment extends DialogFragment implements View
     private boolean validateData() {
         boolean isNameBad = false;
         boolean isDescriptionBad = false;
-        if (name.getText().toString().length() < 2) {
+        if (name.getText().toString().trim().length() < 2) {
             errorName.setText(R.string.name_error_text_small);
             errorName.setVisibility(View.VISIBLE);
             isNameBad = true;
         }
-        if (name.getText().toString().length() > 128) {
+        if (name.getText().toString().trim().length() > 128) {
             errorName.setText(R.string.name_error_text_long);
             errorName.setVisibility(View.VISIBLE);
             isNameBad = true;
         }
-        if (description.getText().length() < 32) {
+        if (description.getText().toString().trim().length() < 32) {
             errorDescription.setText(R.string.description_error_text_short);
             errorDescription.setVisibility(View.VISIBLE);
             isDescriptionBad = true;
         }
-        if (description.getText().length() > 2048) {
+        if (description.getText().toString().trim().length() > 2048) {
             errorDescription.setText(R.string.description_error_text_long);
             errorDescription.setVisibility(View.VISIBLE);
             isDescriptionBad = true;

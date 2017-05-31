@@ -14,9 +14,6 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 6.5.16.
- */
 public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<SealifeListAddingDiveSpotAdapter.SealifeListAddingDivespotViewHolder>{
 
     private Context context;

@@ -118,6 +118,8 @@
     <style name="customTabText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#a3a3a3</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="radio_button">

@@ -1,8 +1,5 @@
 package com.ddscanner.events;
 
-/**
- * Created by Andrei Lashkevich on 15.09.2016.
- */
 public class LikeCommentEvent {
 
     private int position;

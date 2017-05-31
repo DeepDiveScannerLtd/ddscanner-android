@@ -51,6 +51,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private MaterialDialog progressDialogUpload;
     private File fileToSend;
     private boolean isForEdit;
+    private boolean isImageCaptured = false;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -96,6 +97,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            progressDialogUpload.dismiss();
             EventsTracker.trackSealifeEdited();
             setResult(RESULT_OK);
             finish();
@@ -126,6 +128,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
         @Override
         public void onInternetConnectionClosed() {
+            progressDialogUpload.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
@@ -137,6 +140,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         binding.setHandlers(this);
         isForEdit = getIntent().getBooleanExtra(ARG_IS_EDIT, false);
         if (isForEdit) {
+            isImageCaptured = true;
             EventsTracker.trackEditSealife();
             binding.setSealifeViewModel(new EditSealifeActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_SEALIFE), Sealife.class)));
             if (binding.getSealifeViewModel().getSealife().getImage() != null) {
@@ -144,7 +148,12 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             }
         }
         makeErrorsMap();
-        setupToolbar(R.string.add_sealife, R.id.toolbar);
+        if (!isForEdit) {
+            isImageCaptured = false;
+            setupToolbar(R.string.add_sealife, R.id.toolbar);
+        } else {
+            setupToolbar(R.string.edit_sea_life, R.id.toolbar);
+        }
         EventsTracker.trackSealifeCreation();
         progressDialogUpload = Helpers.getMaterialDialog(this);
     }
@@ -246,7 +255,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             binding.nameError.setVisibility(View.VISIBLE);
         }
 
-        if (filePath == null && !isForEdit) {
+        if (!isImageCaptured) {
             isSomethingWrong = true;
             binding.errorImage.setVisibility(View.VISIBLE);
         }
@@ -303,6 +312,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
+        isImageCaptured = true;
         filePath = pictures.get(0);
         setBackImage(filePath, false);
     }
@@ -312,6 +322,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     }
 
     public void deletePhotoClicked(View view) {
+        isImageCaptured = false;
         filePath = null;
         binding.sealifePhoto.setImageDrawable(null);
         binding.sealifePhoto.setVisibility(View.GONE);
