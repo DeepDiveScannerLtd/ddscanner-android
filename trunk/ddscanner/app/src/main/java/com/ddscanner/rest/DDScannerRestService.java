@@ -337,9 +337,8 @@ public interface DDScannerRestService {
 
     @GET("divecenter.divespots.to_approve.get")
     Call<ResponseBody> getDiveSpotsToApprove();
-
-    //TODO change after server side will be ready
-    @GET("user.notificayytions.new.count.get")
+    
+    @GET("user.new_notifications.count.get")
     Call<ResponseBody> getNewNotificationsCount();
 
     @POST("user.notifications.read")
