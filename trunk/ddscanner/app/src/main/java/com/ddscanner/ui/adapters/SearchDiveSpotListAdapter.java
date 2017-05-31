@@ -30,8 +30,7 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
     @Override
     public void onBindViewHolder(SearchDiveSpotListViewHolder holder, int position) {
         holder.diveSpotName.setText(diveSpotShorts.get(position).getName());
-        //TODO uncomment 26.05.17
-//        holder.countryName.setText(diveSpotShorts.get(position).getCountry().getName());
+        holder.countryName.setText(diveSpotShorts.get(position).getCountry().getName());
     }
 
     @Override
