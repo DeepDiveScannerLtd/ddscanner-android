@@ -42,7 +42,7 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
     private DDScannerRestClient.ResultListener<Sealife> resultListener = new DDScannerRestClient.ResultListener<Sealife>() {
         @Override
         public void onSuccess(Sealife result) {
-            binding.setSealifeViewModel(new SealifeViewModel(result, dpWidth, binding.progressBar));
+            binding.setSealifeViewModel(new SealifeViewModel(result, binding.progressBar));
             binding.progressView.setVisibility(View.GONE);
             binding.mainLayout.setVisibility(View.VISIBLE);
         }
