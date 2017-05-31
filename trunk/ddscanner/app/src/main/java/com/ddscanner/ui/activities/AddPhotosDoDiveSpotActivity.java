@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,11 +30,8 @@ import java.util.List;
 
 public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
-    private RecyclerView recyclerView;
-    private Button button;
     private ArrayList<String> images;
     private MaterialDialog materialDialog;
-    private Toolbar toolbar;
     private String dsId;
     private List<String> imagesToShow = new ArrayList<>();
     private boolean isMap;
@@ -80,7 +76,7 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photos_to_dive_spot);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,8 +84,8 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
         isMap = getIntent().getBooleanExtra("isMap", false);
         images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
         dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
-        button = (Button) findViewById(R.id.button_share);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        Button button = (Button) findViewById(R.id.button_share);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         for (int i = 0; i <images.size(); i++) {
             imagesToShow.add("file://" + images.get(i));
@@ -120,7 +116,7 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
 
         private int spanCount;
 
-        public GridSpacingItemDecoration(int spanCount) {
+        GridSpacingItemDecoration(int spanCount) {
             this.spanCount = spanCount;
         }
 
@@ -129,7 +125,7 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
                                    RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4),
+                outRect.top = Math.round(Helpers.convertDpToPixel(4f,
                         AddPhotosDoDiveSpotActivity.this));
             }
         }

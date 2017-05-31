@@ -1,11 +1,7 @@
 package com.ddscanner.rest;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 
-import com.ddscanner.DDScannerApplication;
-import com.ddscanner.entities.Popup;
-import com.ddscanner.events.ShowPopupEvent;
 import com.ddscanner.interfaces.ShowPopupLstener;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

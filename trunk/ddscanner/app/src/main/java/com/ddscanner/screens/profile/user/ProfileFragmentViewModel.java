@@ -1,7 +1,6 @@
 package com.ddscanner.screens.profile.user;
 
 import android.databinding.BindingAdapter;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

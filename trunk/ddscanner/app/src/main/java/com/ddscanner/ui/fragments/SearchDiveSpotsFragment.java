@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -21,7 +19,6 @@ import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 

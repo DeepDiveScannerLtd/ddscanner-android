@@ -1,7 +1,6 @@
 package com.ddscanner.screens.divespots.list;
 
 import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

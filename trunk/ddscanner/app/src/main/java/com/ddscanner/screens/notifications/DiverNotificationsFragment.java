@@ -32,7 +32,6 @@ import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, DialogClosedListener {

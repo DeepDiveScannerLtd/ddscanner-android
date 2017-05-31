@@ -15,7 +15,6 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.DialogAchievementPopupBinding;
 import com.ddscanner.entities.Popup;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 public class AchievementPopupDialogFrament extends DialogFragment {
 

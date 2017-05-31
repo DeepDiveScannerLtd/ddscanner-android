@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -139,17 +140,11 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     }
 
     private boolean checkReadStoragePermission() {
-        if (android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean checkWriteStoragePermission() {
-        if (android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void pickphotoFromGallery() {
@@ -192,8 +187,6 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
                 Log.i(TAG, "onRequestPermissionsResult grantResults = " + grantResults[0] + " " + grantResults[1]);
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     getLocation(-1);
-                } else {
-                    // Do nothing. Keep showing this activity
                 }
                 break;
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE:
@@ -228,11 +221,10 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
 
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        return image;
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
     private void dispatchTakePictureIntent() {
@@ -242,7 +234,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
             try {
                 photoFile = createImageFile();
                 tempFile = photoFile;
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
 
             }
             if (photoFile != null) {

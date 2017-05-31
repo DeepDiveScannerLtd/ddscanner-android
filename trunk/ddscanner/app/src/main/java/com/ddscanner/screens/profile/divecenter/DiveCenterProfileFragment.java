@@ -25,7 +25,6 @@ import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;

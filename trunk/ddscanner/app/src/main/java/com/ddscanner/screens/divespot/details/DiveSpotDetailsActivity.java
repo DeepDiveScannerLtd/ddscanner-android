@@ -1,7 +1,6 @@
 package com.ddscanner.screens.divespot.details;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;

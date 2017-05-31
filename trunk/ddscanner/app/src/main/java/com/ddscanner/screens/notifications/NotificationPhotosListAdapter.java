@@ -14,12 +14,9 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
-import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class NotificationPhotosListAdapter extends RecyclerView.Adapter<NotificationPhotosListAdapter.NotificationPhotoViewHolder> {
 

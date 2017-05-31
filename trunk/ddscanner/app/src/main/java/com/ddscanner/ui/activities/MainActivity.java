@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -37,7 +36,6 @@ import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
@@ -76,7 +74,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -89,8 +86,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 

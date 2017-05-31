@@ -21,7 +21,6 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;

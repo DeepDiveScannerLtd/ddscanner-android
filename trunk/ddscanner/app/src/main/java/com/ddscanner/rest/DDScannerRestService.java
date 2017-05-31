@@ -5,13 +5,11 @@ import com.ddscanner.entities.request.ChangePasswordRequest;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.NotificationsReadRequest;
-import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
-import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -21,12 +19,10 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 

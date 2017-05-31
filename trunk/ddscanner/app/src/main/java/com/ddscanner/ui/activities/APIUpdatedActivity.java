@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +13,7 @@ import com.ddscanner.R;
 
 public class APIUpdatedActivity extends AppCompatActivity {
 
-    private static final String TAG = APIUpdatedActivity.class.getName();
-
+    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

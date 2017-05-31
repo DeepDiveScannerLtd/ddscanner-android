@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.ProfileAchievement;
-import com.ddscanner.ui.views.AchievementCountryFlagView;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;

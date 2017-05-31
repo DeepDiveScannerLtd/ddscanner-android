@@ -2,14 +2,12 @@ package com.ddscanner.screens.achievements;
 
 import android.databinding.BindingAdapter;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
+import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievementTitleDetails;
 import com.ddscanner.ui.views.AchievementLineProgresView;
 import com.ddscanner.utils.Helpers;
-import android.graphics.drawable.Drawable;
-import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
