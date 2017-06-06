@@ -1,5 +1,6 @@
 package com.ddscanner.screens.user.profile;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -29,6 +30,7 @@ import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -140,7 +142,11 @@ public class UserProfileFragment extends Fragment {
         Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
         String facebookUrl = getFacebookPageURL();
         facebookIntent.setData(Uri.parse(facebookUrl));
-        startActivity(facebookIntent);
+        try {
+            startActivity(facebookIntent);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL + binding.getUserProfileViewModel().getUser().getFacebookLink())));
+        }
     }
 
     public String getFacebookPageURL() {
