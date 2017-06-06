@@ -76,15 +76,21 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photos_to_dive_spot);
+        Button button = (Button) findViewById(R.id.button_share);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         materialDialog = Helpers.getMaterialDialog(this);
         isMap = getIntent().getBooleanExtra("isMap", false);
+        if (isMap) {
+            getSupportActionBar().setTitle(R.string.add_maps);
+            button.setText(R.string.add_maps);
+        } else {
+            getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
+            button.setText(R.string.add_photos_toolbar_title);
+        }
         images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
         dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
-        Button button = (Button) findViewById(R.id.button_share);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         for (int i = 0; i <images.size(); i++) {
