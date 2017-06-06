@@ -20,8 +20,11 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmnetActivityNotificationsBinding;
 import com.ddscanner.entities.NotificationEntity;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 
 import java.util.ArrayList;
 
@@ -191,6 +194,15 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
             }
             if (binding != null) {
                 binding.swipeRefreshLayout.setRefreshing(false);
+            }
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.bus.post(new LogoutEvent());
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+                    break;
             }
         }
 
