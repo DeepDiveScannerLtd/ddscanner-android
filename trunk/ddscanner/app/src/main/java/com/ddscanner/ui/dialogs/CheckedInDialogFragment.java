@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.ddscanner.R;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 
 public class CheckedInDialogFragment extends DialogFragment implements View.OnClickListener {
 
@@ -69,7 +70,7 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
                 break;
             case R.id.button_close:
                 this.dismiss();
-                LeaveReviewActivity.show(getContext(), diveSpotId, 1);
+                LeaveReviewActivity.showForResult(getActivity(), diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
                 break;
         }
     }

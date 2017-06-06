@@ -24,7 +24,7 @@ public class SharedPreferenceHelper {
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
     private static final String TOKEN = "TOKEN";
     private static final String IS_USER_SIGNED_IN = "ISLOGINED";
-    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH_VERSION_2_0";
+    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH_VERSION_3_0_5";
     private static final String SIGN_IN_TYPE = "SIGN_IN_TYPE";
     private static final String SN = "SOCIALNETWORK";
     private static final String SECRET = "SECRET";
