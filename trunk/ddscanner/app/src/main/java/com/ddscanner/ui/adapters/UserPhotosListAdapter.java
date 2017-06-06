@@ -61,7 +61,7 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0, RoundedCornersTransformation.CornerType.ALL))
                     .placeholder(R.drawable.placeholder_photo_wit_round_corners)
-                    .error(R.drawable.ds_list_photo_default)
+                    .error(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
         }
     }

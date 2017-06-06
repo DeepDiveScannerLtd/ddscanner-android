@@ -176,7 +176,7 @@
     <string name="open_on_twitter">Open on twitter</string>
     <string name="open_on_google_plus">Open on Google+</string>
     <string name="locatio_dialog_title">To work with ddscanner you must enable location service. Do you want to do this?</string>
-    <string name="add_photos_toolbar_title">Add photos</string>
+    <string name="add_photos_toolbar_title">Add photo</string>
     <string name="no_notifications">No notifications</string>
     <string name="here_will_be_displayed_last_notifications">Last notifications will be displayed here</string>
     <string name="profile">Profile</string>
@@ -526,4 +526,5 @@
     <string name="user_email_not_found">User with specified email not found</string>
     <string name="email_incorrect">Email is incorrect</string>
     <string name="cant_delete_all_photos">You can not delete all photos of the dive spot</string>
+    <string name="add_maps">Add map</string>
 </resources>
