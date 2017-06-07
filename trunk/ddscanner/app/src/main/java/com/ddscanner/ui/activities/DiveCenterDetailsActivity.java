@@ -139,7 +139,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
 
     public static void show(Context context, DiveCenter diveCenter, String path, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveCenterView(diveCenter.getId(), spotViewSource);
+//            EventsTracker.trackDiveCenterView(diveCenter.getId(), spotViewSource);
         }
         Intent intent = new Intent(context, DiveCenterDetailsActivity.class);
         intent.putExtra("DC", diveCenter);

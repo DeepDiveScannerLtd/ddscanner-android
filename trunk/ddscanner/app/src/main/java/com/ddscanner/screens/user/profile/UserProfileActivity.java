@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.PhotoAuthor;
@@ -127,6 +128,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
             switch (userType) {
                 case 0:
                     DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
+                    EventsTracker.trackDiveCenterView(String.valueOf(diveCenterProfile.getId()));
                     photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
                     if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                         DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);

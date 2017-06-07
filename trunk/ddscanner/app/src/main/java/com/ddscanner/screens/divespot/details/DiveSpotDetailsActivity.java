@@ -198,7 +198,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id, spotViewSource);
+            EventsTracker.trackDiveSpotView(id);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -207,7 +207,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void showForResult(Activity context, String id, EventsTracker.SpotViewSource spotViewSource, int requestCode) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id, spotViewSource);
+            EventsTracker.trackDiveSpotView(id);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
