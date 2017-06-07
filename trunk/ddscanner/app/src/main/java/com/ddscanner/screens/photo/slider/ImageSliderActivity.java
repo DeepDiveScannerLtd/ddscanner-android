@@ -293,6 +293,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             case ALL:
                 title.setText(R.string.slider_title_all);
                 break;
+            case NOTIFICATION:
             case DIVESPOT:
                 title.setText(R.string.slider_title_dive_spot);
                 break;
@@ -304,9 +305,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 break;
             case REVIEWS:
                 title.setText(R.string.slider_title_review);
-                break;
-            case NOTIFICATION:
-                title.setText(R.string.slider_title_notification);
                 break;
             case PROFILE:
                 title.setText(R.string.slider_title_profile);
