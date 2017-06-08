@@ -90,6 +90,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
         @Override
         public void onInternetConnectionClosed() {
+            progressDialogUpload.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };

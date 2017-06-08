@@ -108,6 +108,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
