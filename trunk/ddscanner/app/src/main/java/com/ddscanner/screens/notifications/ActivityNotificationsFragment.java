@@ -21,6 +21,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmnetActivityNotificationsBinding;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.events.LogoutEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -28,7 +29,7 @@ import com.ddscanner.utils.DialogsRequestCodes;
 
 import java.util.ArrayList;
 
-public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DialogClosedListener {
 
     private static final int PAGE_SIZE = 20;
 
@@ -233,4 +234,8 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         simpleResultListener.setCancelled(true);
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+
+    }
 }
