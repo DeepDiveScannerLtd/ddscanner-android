@@ -440,7 +440,7 @@
     <string name="error_visivibility_append">Maximum value should exceed minimum value</string>
     <string name="select_country_error">Select the country where dive spot is located</string>
     <string name="depth_required">Depth is required</string>
-    <string name="depth_vlue">Depth should be between 5 to 1092 meters</string>
+    <string name="depth_vlue">Depth should be less than 1092 meters</string>
     <string name="one_sealife">At least one sea life should be added</string>
     <string name="rate_spot">Rate this spot</string>
     <string name="share_a_few_words">Share a few words about your dive</string>
