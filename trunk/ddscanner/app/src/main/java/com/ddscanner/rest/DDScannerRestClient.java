@@ -499,12 +499,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void getDiveCentersList(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener) {
+    public void getDiveCentersList(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String query) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersList("%", "10000");
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersList(query, "10");
         call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {

@@ -3,6 +3,7 @@ package com.ddscanner.screens.profile.edit.divecenter.search;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -47,6 +48,8 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private boolean isAfterSignUp = false;
     private FloatingActionButton checkedFab;
     private MenuItem searchItem;
+    private Handler handler = new Handler();
+    private Runnable sendingSearchRequestRunnable;
 
     private DDScannerRestClient.ResultListener<Void> addInstructorResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -118,7 +121,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         setupToolbar(R.string.choose_dc, R.id.toolbar);
         isAfterSignUp = getIntent().getBooleanExtra(ARG_IS_AFTER_SIGN_UP, false);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCentersList(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCentersList(resultListener, "%");
     }
 
     private void findViews() {
@@ -129,6 +132,21 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         checkedFab = (FloatingActionButton) findViewById(R.id.checked_fab);
         checkedFab.setOnClickListener(this);
         checkedFab.hide();
+    }
+
+    private void tryToReloadData(String query) {
+        handler.removeCallbacks(sendingSearchRequestRunnable);
+        sendingSearchRequestRunnable = () -> {
+            checkedFab.hide();
+            recyclerView.setVisibility(View.GONE);
+            progressView.setVisibility(View.VISIBLE);
+            if (!query.isEmpty()) {
+                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersList(resultListener, query);
+            } else {
+                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersList(resultListener, "%");
+            }
+        };
+        handler.postDelayed(sendingSearchRequestRunnable, 630);
     }
 
     @Override
@@ -187,9 +205,10 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<BaseIdNamePhotoEntity> filteredModelList = filter(objects, query);
-        diveCentersListAdapter.animateTo(filteredModelList);
-        recyclerView.scrollToPosition(0);
+        tryToReloadData(query);
+//        final List<BaseIdNamePhotoEntity> filteredModelList = filter(objects, query);
+//        diveCentersListAdapter.animateTo(filteredModelList);
+//        recyclerView.scrollToPosition(0);
         return true;
     }
 
