@@ -619,7 +619,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = depth.getBottom();
         } else {
             downestCoordinate = depth.getBottom();
-            if (Float.parseFloat(depth.getText().toString()) < 5 || Float.parseFloat(depth.getText().toString()) > 1092) {
+            if (Float.parseFloat(depth.getText().toString()) > 1092) {
                 isSomethingWrong = true;
                 errorDepth.setText(R.string.depth_vlue);
                 errorDepth.setVisibility(View.VISIBLE);
