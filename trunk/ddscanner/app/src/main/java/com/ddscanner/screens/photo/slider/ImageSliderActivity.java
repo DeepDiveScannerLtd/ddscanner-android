@@ -332,7 +332,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 onBackPressed();
                 break;
             case R.id.likes_layout:
-                if (!isLikeRequestStarted) {
+                likesLayout.setOnClickListener(null);
                     if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                         if (!images.get(position).isLiked()) {
                             likeUi();
@@ -342,7 +342,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                         dislikeUi();
                         DDScannerApplication.getInstance().getDdScannerRestClient(this).postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                     }
-                }
                 break;
             case R.id.user_data:
                 if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
@@ -707,6 +706,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         @Override
         public void onSuccess(Void result) {
             isLikeRequestStarted = false;
+            likesLayout.setOnClickListener(ImageSliderActivity.this::onClick);
         }
 
         @Override
@@ -718,6 +718,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 return;
             }
             likeUi();
+            likesLayout.setOnClickListener(ImageSliderActivity.this::onClick);
         }
 
         @Override
@@ -736,10 +737,12 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
+            likesLayout.setOnClickListener(ImageSliderActivity.this::onClick);
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            likesLayout.setOnClickListener(ImageSliderActivity.this::onClick);
             isLikeRequestStarted = false;
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
