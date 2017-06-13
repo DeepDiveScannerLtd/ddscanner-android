@@ -159,6 +159,9 @@ public class MainActivity extends BaseAppCompatActivity
             if (result.getYou() > 0) {
                 toolbarTabLayout.getTabAt(1).setCustomView(null);
                 toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item_new);
+                if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                    mainViewPagerAdapter.getDiverNotificationsFragment().showPersonalNotificationsFragment();
+                }
             } else {
                 toolbarTabLayout.getTabAt(1).setCustomView(null);
                 toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
