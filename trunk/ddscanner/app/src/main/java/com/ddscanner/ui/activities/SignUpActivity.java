@@ -495,13 +495,14 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     }

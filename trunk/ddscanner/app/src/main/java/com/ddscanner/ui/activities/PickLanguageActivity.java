@@ -45,6 +45,7 @@ public class PickLanguageActivity extends BaseAppCompatActivity implements Searc
     private DDScannerRestClient.ResultListener<ArrayList<Language>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
         @Override
         public void onSuccess(ArrayList<Language> result) {
+            languagesList = result;
             languageSearchAdapter = new LanguageSearchAdapter(PickLanguageActivity.this, result);
             recyclerView.setAdapter(languageSearchAdapter);
             progressView.setVisibility(View.GONE);

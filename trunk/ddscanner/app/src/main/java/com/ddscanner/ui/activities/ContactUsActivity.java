@@ -64,7 +64,11 @@ public class ContactUsActivity extends BaseAppCompatActivity {
         Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
         String facebookUrl = getFacebookPageURL(this);
         facebookIntent.setData(Uri.parse(facebookUrl));
-        startActivity(facebookIntent);
+        try {
+            startActivity(facebookIntent);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PROFILE_DIALOG_FACEBOOK_URL + "DDScanner")));
+        }
     }
 
     private void openTwitterApp() {

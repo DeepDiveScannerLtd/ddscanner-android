@@ -170,8 +170,15 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LOAD_DATA);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+            }
 
         }
 
@@ -191,7 +198,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id, spotViewSource);
+            EventsTracker.trackDiveSpotView(id);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -200,7 +207,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void showForResult(Activity context, String id, EventsTracker.SpotViewSource spotViewSource, int requestCode) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id, spotViewSource);
+            EventsTracker.trackDiveSpotView(id);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -326,14 +333,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         } else {
             updateMenuItems(menu);
         }
-        binding.divePlaceDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                if (binding.divePlaceDescription.getLineCount() > 3) {
-                    binding.divePlaceDescription.setMaxLines(3);
-                    binding.divePlaceDescription.setEllipsize(TextUtils.TruncateAt.END);
-                    binding.showmore.setVisibility(View.VISIBLE);
-                }
+        binding.divePlaceDescription.post(() -> {
+            if (binding.divePlaceDescription.getLineCount() > 3) {
+                binding.divePlaceDescription.setMaxLines(3);
+                binding.divePlaceDescription.setEllipsize(TextUtils.TruncateAt.END);
+                binding.showmore.setVisibility(View.VISIBLE);
             }
         });
 
@@ -362,12 +366,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.sealifeRc.setHasFixedSize(false);
         binding.sealifeRc.setLayoutManager(layoutManager);
         binding.sealifeRc.setAdapter(new SealifeListAdapter((ArrayList<SealifeShort>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getSealifes(), this));
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                workWithMap(googleMap);
-            }
-        });
+        mapFragment.getMapAsync(googleMap -> workWithMap(googleMap));
 
         if (isCheckedIn) {
             checkInUi();
@@ -388,22 +387,16 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), 7.0f));
         googleMap.getUiSettings().setAllGesturesEnabled(false);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-                intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
-                startActivity(intent);
-            }
+        googleMap.setOnMapClickListener(latLng -> {
+            Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+            startActivity(intent);
         });
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-                intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
-                startActivity(intent);
-                return false;
-            }
+        googleMap.setOnMarkerClickListener(marker -> {
+            Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+            startActivity(intent);
+            return false;
         });
     }
 
@@ -550,6 +543,13 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() + 1);
                     DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
                 }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LOAD_DATA:
+                if (resultCode == RESULT_OK) {
+                    refreshActivity();
+                    break;
+                }
+                finish();
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
@@ -1241,6 +1241,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 

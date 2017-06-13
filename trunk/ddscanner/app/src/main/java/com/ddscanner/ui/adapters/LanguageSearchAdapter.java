@@ -24,7 +24,7 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
     public LanguageSearchAdapter(Context context, ArrayList<Language> languages) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
-        this.languages = languages;
+        this.languages = new ArrayList<>(languages);
     }
 
     @Override

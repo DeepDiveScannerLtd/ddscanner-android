@@ -97,6 +97,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS = 2217;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG = 2218;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW = 2219;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LOAD_DATA = 2220;
 
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;

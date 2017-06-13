@@ -122,7 +122,7 @@ public class EventsTracker {
 
     }
 
-    public static void trackDiveSpotView(String diveSpotId, SpotViewSource spotViewSource) {
+    public static void trackDiveSpotView(String diveSpotId) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
@@ -137,26 +137,23 @@ public class EventsTracker {
         Bundle params = new Bundle();
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
         params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
-        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
 
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VIEW, appsflyerParams);
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
     }
 
-    public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
+    public static void trackDiveCenterView(String diveCenterId) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
@@ -164,19 +161,16 @@ public class EventsTracker {
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
 
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
 
         //Facebook

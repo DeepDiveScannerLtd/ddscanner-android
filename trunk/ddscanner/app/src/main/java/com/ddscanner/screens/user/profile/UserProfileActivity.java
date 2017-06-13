@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.PhotoAuthor;
@@ -123,28 +124,33 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     }
 
     private void setupFragment(int userType, Object object) {
-        switch (userType) {
-            case 0:
-                DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
-                photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
-                if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                    DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
-                    setActiveFragment(diveCenterProfileFragment);
+        try {
+            switch (userType) {
+                case 0:
+                    DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
+                    EventsTracker.trackDiveCenterView(String.valueOf(diveCenterProfile.getId()));
+                    photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
+                    if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
+                        setActiveFragment(diveCenterProfileFragment);
+                        break;
+                    }
+                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile));
                     break;
-                }
-                setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile));
-                break;
-            case 1:
-            case 2:
-                User user = (User) object;
-                photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
-                if (user.getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                    profileFragment = ProfileFragment.newInstance(user);
-                    setActiveFragment(profileFragment);
+                case 1:
+                case 2:
+                    User user = (User) object;
+                    photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
+                    if (user.getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        profileFragment = ProfileFragment.newInstance(user);
+                        setActiveFragment(profileFragment);
+                        break;
+                    }
+                    setActiveFragment(UserProfileFragment.newInstance(user));
                     break;
-                }
-                setActiveFragment(UserProfileFragment.newInstance(user));
-                break;
+            }
+        } catch (IllegalStateException e) {
+            finish();
         }
     }
 

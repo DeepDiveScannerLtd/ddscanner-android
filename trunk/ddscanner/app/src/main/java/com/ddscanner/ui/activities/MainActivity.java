@@ -339,7 +339,12 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void getIsHasNewotifications() {
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).getNewNotificationsCount(newotificationsCountEntity);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getNewNotificationsCount(newotificationsCountEntity);
+            return;
+        }
+        toolbarTabLayout.getTabAt(1).setCustomView(null);
+        toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
     }
 
     public static void show(Context context, boolean isHasInternet) {
@@ -941,6 +946,8 @@ public class MainActivity extends BaseAppCompatActivity
                 mainViewPagerAdapter.notifyDataSetChanged();
                 mainViewPager.destroyDrawingCache();
                 setupTabLayout();
+            } else {
+                getIsHasNewotifications();
             }
             changeVisibilityChangeAccountLayout(View.GONE);
         }

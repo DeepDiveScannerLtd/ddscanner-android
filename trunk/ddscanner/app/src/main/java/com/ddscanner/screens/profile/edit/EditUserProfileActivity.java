@@ -99,6 +99,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
