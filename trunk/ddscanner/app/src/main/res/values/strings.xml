@@ -353,7 +353,7 @@
     <string name="country_characteristic">Country</string>
     <string name="acievements_block_title">Achievements</string>
     <string name="photos_block_title">Photos</string>
-    <string name="no_photos_yet">The user has not uploaded the photos yet</string>
+    <string name="no_photos_yet">You haven’t uploaded any photos yet</string>
     <string name="pass_incorrect">The email or password you entered is incorrect. Please, try again</string>
     <string name="title_pass_incorrect">We couldn’t sign you in</string>
     <string name="title_email_exist">We couldn’t sign you up</string>
