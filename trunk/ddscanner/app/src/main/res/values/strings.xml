@@ -527,4 +527,5 @@
     <string name="email_incorrect">Email is incorrect</string>
     <string name="cant_delete_all_photos">You can not delete all photos of the dive spot</string>
     <string name="add_maps">Add map</string>
+    <string name="checkins_reiew_count_smaller_of_two">%1$s review</string>
 </resources>
