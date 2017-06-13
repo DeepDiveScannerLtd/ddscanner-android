@@ -35,6 +35,7 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private static final String RATING = "RATING";
     private static final String SOURCE = "SOURCE";
     private static final int COMMENT_MAX_LENGTH = 250;
+    private static final String ARG_DIVE_SPOT_LOCATION = "location";
 
     private String diveSpotId;
     private EditText text;
@@ -70,6 +72,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private RequestBody requestId = null, requestComment = null, requestRating = null;
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
+    private LatLng diveSpotLocation;
 
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -121,6 +124,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         EventsTracker.trackSendReview();
         Bundle bundle = getIntent().getExtras();
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
+        diveSpotLocation = bundle.getParcelable(ARG_DIVE_SPOT_LOCATION);
         rating = getIntent().getExtras().getFloat(RATING);
         findViews();
         setupToolbar(R.string.new_review, R.id.toolbar, R.menu.menu_add_review);
@@ -164,18 +168,15 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         materialDialog = Helpers.getMaterialDialog(this);
     }
 
-    public static void show(Context context, String id, float rating) {
-        context.startActivity(getShowIntent(context, id, rating));
+    public static void showForResult(Activity context, String id, float rating, int requestCode, LatLng diveSpotLocation) {
+        context.startActivityForResult(getShowIntent(context, id, rating, diveSpotLocation), requestCode);
     }
 
-    public static void showForResult(Activity context, String id, float rating, int requestCode) {
-        context.startActivityForResult(getShowIntent(context, id, rating), requestCode);
-    }
-
-    private static Intent getShowIntent(Context context, String id, float rating) {
+    private static Intent getShowIntent(Context context, String id, float rating, LatLng diveSpotLocation) {
         Intent intent = new Intent(context, LeaveReviewActivity.class);
         intent.putExtra(Constants.DIVESPOTID, id);
         intent.putExtra(RATING, rating);
+        intent.putExtra(ARG_DIVE_SPOT_LOCATION, diveSpotLocation);
         return intent;
     }
 
@@ -234,6 +235,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
                 onBackPressed();
                 return true;
             case R.id.send_review:
+                Helpers.hideKeyboard(this);
                 sendReview();
                 return true;
             default:
@@ -255,7 +257,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         switch (view.getId()) {
             case R.id.btn_add_sealife:
                 EventsTracker.trackSearchSeaLife();
-                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE, null);
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
                 break;
         }
     }

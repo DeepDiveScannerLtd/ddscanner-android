@@ -43,6 +43,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -52,6 +53,7 @@ import java.util.List;
 public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private static final String ARG_OPENED_SOURCE = "isuser";
+    private static final String ARG_LOCATION = "location";
 
     private ArrayList<CommentEntity> comments;
     private RecyclerView commentsRecyclerView;
@@ -77,6 +79,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     private MaterialDialog materialDialog;
     private int reportReviewPosition;
     private ReviewsOpenedSource openedSource;
+    private LatLng diveSpotLocation;
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -274,6 +277,14 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         context.startActivityForResult(intent, requestCode);
     }
 
+    public static void showForDiveSpot(Activity context, String diveSpotId, int requestCode, ReviewsOpenedSource isUserReviews, LatLng latLng) {
+        Intent intent = new Intent(context, ReviewsActivity.class);
+        intent.putExtra(Constants.DIVESPOTID, diveSpotId);
+        intent.putExtra(ARG_OPENED_SOURCE, isUserReviews);
+        intent.putExtra(ARG_LOCATION, latLng);
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,6 +298,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
                 break;
             case DIVESPOT:
                 EventsTracker.trackDeviSpotReviewsView();
+                diveSpotLocation = getIntent().getParcelableExtra(ARG_LOCATION);
                 break;
         }
         findViews();
@@ -407,7 +419,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         leaveReview.setVisibility(View.GONE);
                     } else {
-                        LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                        LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation);
                     }
                 }
                 break;
@@ -436,7 +448,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.fab_write_review:
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                    LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                    LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation);
                 } else {
                     LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
                 }
