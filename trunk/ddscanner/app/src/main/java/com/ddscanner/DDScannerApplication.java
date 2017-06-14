@@ -27,6 +27,7 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
+    private static String activeUserType;
 
     // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
     private DDScannerRestClient ddScannerRestClient;
@@ -51,9 +52,9 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         AnalyticsSystemsManager.initAnalyticsSystems(this);
-
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
+        activeUserType = SharedPreferenceHelper.getActiveUserType().getName();
         dialogHelpers = new DialogHelpers();
     }
 
@@ -108,6 +109,14 @@ public class DDScannerApplication extends Application {
 
     public void clearNotificationsContainer() {
         this.notificationsContainer.clear();
+    }
+
+    public void setActiveUserType(String userType) {
+        activeUserType = userType;
+    }
+
+    public String getActiveUserType() {
+        return activeUserType;
     }
 
 }
