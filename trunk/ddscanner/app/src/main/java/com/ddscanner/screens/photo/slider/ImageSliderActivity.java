@@ -257,6 +257,11 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         }
         likesCount.setText(images.get(position).getLikesCount());
         photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(images.get(position).getAuthor().getId())) {
+            likesLayout.setOnClickListener(null);
+        } else {
+            likesLayout.setOnClickListener(this);
+        }
         if (images.get(position).isLiked()) {
             likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
         } else {
