@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -33,11 +35,13 @@ import com.ddscanner.entities.ReloadSliderImagesEvent;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.events.HidePhotoInfoEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.ReportReasonIsWritenListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.ui.dialogs.WriteReportReasonDialog;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.ui.views.SliderViewPager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -50,7 +54,7 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogClosedListener {
+public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogClosedListener, ReportReasonIsWritenListener {
 
     private SliderImagesAdapter sliderImagesAdapter;
     private FrameLayout baseLayout;
@@ -338,15 +342,15 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                 break;
             case R.id.likes_layout:
                 likesLayout.setOnClickListener(null);
-                    if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                        if (!images.get(position).isLiked()) {
-                            likeUi();
-                            DDScannerApplication.getInstance().getDdScannerRestClient(this).postLikePhoto(images.get(position).getId(), likeResultListener);
-                            break;
-                        }
-                        dislikeUi();
-                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDislikePhoto(images.get(position).getId(), dislikeResultListener);
+                if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                    if (!images.get(position).isLiked()) {
+                        likeUi();
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postLikePhoto(images.get(position).getId(), likeResultListener);
+                        break;
                     }
+                    dislikeUi();
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postDislikePhoto(images.get(position).getId(), dislikeResultListener);
+                }
                 break;
             case R.id.user_data:
                 if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
@@ -587,20 +591,31 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     private void showOtherReportDialog() {
-        new MaterialDialog.Builder(this)
-                .title("Other")
-                .positiveColor(ContextCompat.getColor(this, R.color.black_text))
-                .widgetColor(ContextCompat.getColor(this, R.color.accent))
-                .input("Write reason", "", (dialog, input) -> {
-                    if (input.toString().trim().length() > 1) {
-                        reportImage(reportName, 7, input.toString());
-                        reportDescription = input.toString();
-                    } else {
-                        Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
+        WriteReportReasonDialog writeReportReasonDialog = new WriteReportReasonDialog();
+        writeReportReasonDialog.show(getSupportFragmentManager(), "");
+//        new MaterialDialog.Builder(this)
+//                .title("Other")
+//                .inputRange(1, Integer.MAX_VALUE)
+//                .positiveColor(ContextCompat.getColor(this, R.color.black_text))
+//                .widgetColor(ContextCompat.getColor(this, R.color.accent))
+//                .input("Write reason", "", (dialog, input) -> {
+////                    if (input.toString().trim().length() > 1) {
+//                        reportImage(reportName, 7, input.toString());
+//                        reportDescription = input.toString();
+////                    } else {
+////                        Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
+////                    }
+//                })
+//                .onPositive((materialDialog, dialogAction) -> {
+//
+//                }).show();
     }
 
+    @Override
+    public void onReasonWriten(String reason) {
+        reportImage(reportName, 7, reason);
+        reportDescription = reason;
+    }
 
     @Override
     public void onDialogClosed(int requestCode) {

@@ -149,6 +149,7 @@ dependencies {
         exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 }
 
 apply plugin: 'com.google.gms.google-services'

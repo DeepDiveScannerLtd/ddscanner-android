@@ -30,6 +30,7 @@ import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.ReportReasonIsWritenListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
@@ -38,6 +39,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.ui.dialogs.WriteReportReasonDialog;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -50,7 +52,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, ReportReasonIsWritenListener {
 
     private static final String ARG_OPENED_SOURCE = "isuser";
     private static final String ARG_LOCATION = "location";
@@ -535,36 +537,41 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         new MaterialDialog.Builder(this)
                 .title("Report")
                 .items(objects)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-                        reportType = String.valueOf(Helpers.getReportTypes().indexOf(text) + 1);
-                        if (text.equals("Other")) {
-                            showOtherReportDialog();
-                            dialog.dismiss();
-                        } else {
-                            sendReportRequest(reportType, null);
-                        }
+                .itemsCallback((dialog, view, which, text) -> {
+                    reportType = String.valueOf(Helpers.getReportTypes().indexOf(text) + 1);
+                    if (text.equals("Other")) {
+                        showOtherReportDialog();
+                        dialog.dismiss();
+                    } else {
+                        sendReportRequest(reportType, null);
                     }
                 })
                 .show();
     }
 
     private void showOtherReportDialog() {
-        new MaterialDialog.Builder(this)
-                .title("Other")
-                .widgetColor(ContextCompat.getColor(this, R.color.primary))
-                .input("Write reason", "", new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (input.toString().trim().length() > 1) {
-                            sendReportRequest(reportType, input.toString());
-                            reportDescription = input.toString();
-                        } else {
-                            Toast.makeText(ReviewsActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).show();
+        WriteReportReasonDialog writeReportReasonDialog = new WriteReportReasonDialog();
+        writeReportReasonDialog.show(getSupportFragmentManager(), null);
+//        new MaterialDialog.Builder(this)
+//                .title("Other")
+//                .widgetColor(ContextCompat.getColor(this, R.color.primary))
+//                .input("Write reason", "", new MaterialDialog.InputCallback() {
+//                    @Override
+//                    public void onInput(MaterialDialog dialog, CharSequence input) {
+//                        if (input.toString().trim().length() > 1) {
+//                            sendReportRequest(reportType, input.toString());
+//                            reportDescription = input.toString();
+//                        } else {
+//                            Toast.makeText(ReviewsActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }).show();
+    }
+
+    @Override
+    public void onReasonWriten(String reason) {
+        sendReportRequest(reportType, reason);
+        reportDescription = reason;
     }
 
     private void sendReportRequest(String type, String description) {
