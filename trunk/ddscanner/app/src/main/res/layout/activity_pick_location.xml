@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
                     android:lines="1"
+                    android:maxLines="1"
                     android:background="@android:color/transparent"
                     android:hint="@string/latitude"
                     android:inputType="numberDecimal"/>
@@ -71,6 +72,7 @@
                     android:textColor="@color/black_text"
                     android:maxLength="10"
                     android:lines="1"
+                    android:maxLines="1"
                     android:background="@android:color/transparent"
                     android:hint="@string/longitude"
                     android:inputType="numberDecimal"

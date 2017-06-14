@@ -108,6 +108,8 @@
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
                         android:maxLength="128"
+                        android:inputType="text"
+                        android:maxLines="1"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -208,6 +210,8 @@
                         android:hint="@string/length"
                         android:text="@{sealifeViewModel.sealife.length}"
                         android:padding="10dp"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:textColorHint="#b2b2b2"
                         android:textSize="16sp"
                         android:maxLength="128"
@@ -235,6 +239,8 @@
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
                         android:maxLength="128"
+                        android:inputType="text"
+                        android:maxLines="1"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -263,6 +269,8 @@
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
                         app:et_labelEnable="true"
+                        android:inputType="text"
+                        android:maxLines="1"
                         app:et_labelTextColor="#b2b2b2"
                         app:et_labelTextSize="14sp" />
 
@@ -286,6 +294,8 @@
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
+                        android:inputType="text"
+                        android:maxLines="1"
                         app:et_labelEnable="true"
                         app:et_labelTextColor="#b2b2b2"
                         app:et_labelTextSize="14sp" />
@@ -322,6 +332,8 @@
                         android:src="@drawable/divider" />
 
                     <com.rey.material.widget.EditText
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:id="@+id/scClass"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

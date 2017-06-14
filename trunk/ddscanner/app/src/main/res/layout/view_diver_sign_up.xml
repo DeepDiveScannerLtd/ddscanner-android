@@ -37,6 +37,8 @@
                 android:layout_height="55dp"
                 android:hint="@string/name_register"
                 android:maxLength="32"
+                android:inputType="text"
+                android:maxLines="1"
                 style="@style/SigningInputStyle"/>
 
             <ImageView style="@style/DividerStyleFull" />
@@ -48,6 +50,7 @@
                 android:hint="@string/email_input"
                 android:maxLength="254"
                 android:inputType="textEmailAddress"
+                android:maxLines="1"
                 style="@style/SigningInputStyle" />
 
 
@@ -61,6 +64,7 @@
                 android:maxLength="32"
                 android:fontFamily="sans-serif"
                 android:inputType="textPassword"
+                android:maxLines="1"
                 style="@style/SigningInputStyle"/>
         </LinearLayout>
 
