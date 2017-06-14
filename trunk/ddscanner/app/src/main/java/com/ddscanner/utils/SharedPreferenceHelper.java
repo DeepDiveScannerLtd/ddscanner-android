@@ -296,10 +296,21 @@ public class SharedPreferenceHelper {
     /*Multi accounts mechanism*/
 
     public enum UserType {
-        DIVECENTER, DIVER, INSTRUCTOR, NONE
+        DIVECENTER("dc"), DIVER("diver"), INSTRUCTOR("instructor"), NONE("not_logged_in");
+
+        private String name;
+
+        UserType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
     }
 
-    public UserType getActiveUserType() {
+    public static UserType getActiveUserType() {
         if (getIsUserSignedIn()) {
             switch (getActiveUser().getType()) {
                 case 0:
@@ -329,9 +340,10 @@ public class SharedPreferenceHelper {
         Editor editor = prefs.edit();
         editor.putString(USERS_LiST, new Gson().toJson(users));
         editor.commit();
+        updateUserTypeInApplication();
     }
 
-    public boolean getIsUserSignedIn() {
+    public static boolean getIsUserSignedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         if (prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0) {
             return false;
@@ -368,6 +380,7 @@ public class SharedPreferenceHelper {
     public void logoutFromAllAccounts() {
         setIsUserSignedIn(false, null);
         setUsersList(new ArrayList<BaseUser>());
+        updateUserTypeInApplication();
     }
 
     public static void removeUserFromList(String id) {
@@ -408,6 +421,10 @@ public class SharedPreferenceHelper {
             }
         }
         setUsersList(users);
+    }
+
+    private static void updateUserTypeInApplication() {
+        DDScannerApplication.getInstance().setActiveUserType(getActiveUserType().getName());
     }
 
 }

@@ -48,7 +48,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
-        holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count, String.valueOf(users.get(position).getCounters().getCommentsCount())));
+        int reviewsCount = users.get(position).getCounters().getCommentsCount();
+        if (reviewsCount < 2) {
+            holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count_smaller_of_two, String.valueOf(reviewsCount)));
+        } else {
+            holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count, String.valueOf(reviewsCount)));
+        }
     }
 
     @Override

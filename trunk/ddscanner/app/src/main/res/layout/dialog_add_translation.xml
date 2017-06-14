@@ -38,6 +38,8 @@
         android:fontFamily="sans-serif"
         android:hint="@string/name"
         android:textSize="15sp"
+        android:inputType="text"
+        android:maxLines="1"
         android:lines="1"/>
     <ImageView
         android:layout_marginLeft="17dp"

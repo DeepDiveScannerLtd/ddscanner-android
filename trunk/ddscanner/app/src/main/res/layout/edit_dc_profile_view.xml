@@ -86,6 +86,8 @@
                                 android:hint="@string/name"
 
                                 android:maxLength="31"
+                                android:inputType="text"
+                                android:maxLines="1"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
 
                             <TextView

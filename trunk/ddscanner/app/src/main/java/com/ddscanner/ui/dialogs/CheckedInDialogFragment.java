@@ -15,23 +15,28 @@ import com.ddscanner.R;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.google.android.gms.maps.model.LatLng;
 
 public class CheckedInDialogFragment extends DialogFragment implements View.OnClickListener {
+
+    private static final String ARG_LOCATION = "location";
 
     private CheckedInDialogPhotosAdapter checkedInDialogPhotosAdapter;
     private RecyclerView recyclerView;
     private ImageView closeImage;
     private Button closeButton;
     private String diveSpotId;
+    private LatLng diveSpotLocation;
 
     public CheckedInDialogFragment() {
 
     }
 
-    public static CheckedInDialogFragment getCheckedInDialog(String diveSpotId, FragmentActivity activity) {
+    public static CheckedInDialogFragment getCheckedInDialog(String diveSpotId, LatLng diveSpotLocation, FragmentActivity activity) {
         CheckedInDialogFragment checkedInDialogFragment = new CheckedInDialogFragment();
         Bundle args = new Bundle();
         args.putString("divespotid", diveSpotId);
+        args.putParcelable(ARG_LOCATION, diveSpotLocation);
         checkedInDialogFragment.setArguments(args);
         return checkedInDialogFragment;
     }
@@ -43,6 +48,7 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_checked_in, null);
         builder.setView(view);
         builder.setTitle(null);
+        diveSpotLocation = getArguments().getParcelable(ARG_LOCATION);
         diveSpotId = getArguments().getString("divespotid");
         checkedInDialogPhotosAdapter = new CheckedInDialogPhotosAdapter(getContext());
         findViews(view);
@@ -70,7 +76,7 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
                 break;
             case R.id.button_close:
                 this.dismiss();
-                LeaveReviewActivity.showForResult(getActivity(), diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+                LeaveReviewActivity.showForResult(getActivity(), diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, diveSpotLocation);
                 break;
         }
     }

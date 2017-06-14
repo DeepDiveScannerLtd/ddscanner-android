@@ -70,6 +70,15 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         return view;
     }
 
+    public void showPersonalNotificationsFragment() {
+        if (notificationsViewPager == null) {
+            return;
+        }
+        if (notificationsViewPager.getCurrentItem() != 0) {
+            notificationsViewPager.setCurrentItem(0);
+        }
+    }
+
     @TargetApi(23)
     @Override
     public void onAttach(Context context) {

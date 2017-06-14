@@ -36,6 +36,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -51,6 +52,7 @@ import okhttp3.RequestBody;
 
 public class EditCommentActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
+    private static final String ARG_DIVE_SPOT_LOCATION = "location";
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
@@ -234,6 +236,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
 //                onBackPressed();
                 return true;
             case R.id.send_review:
+                Helpers.hideKeyboard(this);
                 updateReview();
                 return true;
             default:
