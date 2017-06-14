@@ -45,7 +45,7 @@ android {
             resValue "string", "application_id", "com.ddscanner.debug"
             resValue "string", "external_path", "Android/data/com.ddscanner.debug/files/Pictures"
             resValue "string", "base_photo_url", "http://dev.ddscanner.xyz/v2_0/image/%1\$s?size=%2\$s"
-            resValue "string", "dds_server_id", "163"
+            resValue "string", "dds_server_id", "416"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
