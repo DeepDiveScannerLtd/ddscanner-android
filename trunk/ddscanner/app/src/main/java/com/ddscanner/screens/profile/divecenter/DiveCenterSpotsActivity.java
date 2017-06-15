@@ -28,6 +28,7 @@ import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.MarkerClickedEvent;
+import com.ddscanner.events.ShowDIveSpotDetailsActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
@@ -340,34 +341,20 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         mapListFAB.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(new Bundle());
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                DiveCenterSpotsActivity.this.googleMap = googleMap;
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-//                        Log.i(TAG, "onMapLoaded");
-//                        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                                .target(diveSpotLatLng)
-//                                .zoom(8)
-//                                .build();
-                     //   googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-                     //   googleMap.moveCamera(CameraUpdateFactory.newLatLng(diveCenterLatLng));
-                        diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
-                        googleMap.setOnMarkerClickListener(diveCenterSpotsClusterManager);
-                        googleMap.setOnCameraChangeListener(diveCenterSpotsClusterManager);
-                        googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
-                        googleMap.getUiSettings().setRotateGesturesEnabled(false);
-                        googleMap.getUiSettings().setTiltGesturesEnabled(false);
-                        if (diveCenterLatLng != null) {
-                            diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
-                        }
-                        DDScannerApplication.getInstance().getDdScannerRestClient(DiveCenterSpotsActivity.this).getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
-                        //     diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
-                    }
-                });
-            }
+        mapView.getMapAsync(googleMap -> {
+            DiveCenterSpotsActivity.this.googleMap = googleMap;
+            googleMap.setOnMapLoadedCallback(() -> {
+                diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
+                googleMap.setOnMarkerClickListener(diveCenterSpotsClusterManager);
+                googleMap.setOnCameraChangeListener(diveCenterSpotsClusterManager);
+                googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
+                if (diveCenterLatLng != null) {
+                    diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
+                }
+                DDScannerApplication.getInstance().getDdScannerRestClient(DiveCenterSpotsActivity.this).getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
+            });
         });
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);
@@ -483,5 +470,10 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Subscribe
+    public void showDiveSpotDetailsActivity(ShowDIveSpotDetailsActivityEvent event) {
+        DiveSpotDetailsActivity.show(this, event.getId(), EventsTracker.SpotViewSource.UNKNOWN);
     }
 }
