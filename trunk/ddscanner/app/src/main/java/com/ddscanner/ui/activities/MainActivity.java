@@ -58,7 +58,7 @@ import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
-import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
@@ -862,7 +862,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPositiveDialogClicked() {
-        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
+        SearchDiveCenterActivityOld.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
     }
 
     @Subscribe
@@ -897,6 +897,7 @@ public class MainActivity extends BaseAppCompatActivity
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
             }
+            EventsTracker.trackRegistration(result.getType());
         }
 
         @Override

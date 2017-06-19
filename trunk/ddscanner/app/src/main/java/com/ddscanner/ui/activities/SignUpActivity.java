@@ -34,7 +34,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -469,6 +469,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
             baseUser.setToken(result.getToken());
             baseUser.setId(result.getId());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
+            EventsTracker.trackRegistration(result.getType());
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
                 return;
@@ -515,6 +516,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
     @Override
     public void onPositiveDialogClicked() {
-        SearchDiveCenterActivity.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, true);
+        SearchDiveCenterActivityOld.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, true);
     }
 }

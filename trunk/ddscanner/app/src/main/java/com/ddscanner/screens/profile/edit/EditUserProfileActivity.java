@@ -23,6 +23,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -248,7 +249,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     public void chooseDiveCenter(View view) {
-        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER, false);
+        SearchDiveCenterActivity.showForResult(this, 0);
+//        SearchDiveCenterActivityOld.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER, false);
     }
 
     @Override

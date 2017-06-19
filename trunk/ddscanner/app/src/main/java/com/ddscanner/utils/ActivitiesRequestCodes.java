@@ -226,4 +226,7 @@ public class ActivitiesRequestCodes {
     //SealiefDetails
     public static final int REQUEST_CODE_LOGINFOR_EDIT_SEALIFE = 6201;
 
+    //SearchDveCenterActivity
+    public static final int REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER = 6301;
+
 }

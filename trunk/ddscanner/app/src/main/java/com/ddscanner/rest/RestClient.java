@@ -30,7 +30,7 @@ public abstract class RestClient {
                     request = request.newBuilder()
                            // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                             //   .addHeader("Content-Type", "application/json;charset=utf-8")
-                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+//                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
                             .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserToken())
                             .build();
                     Response response = chain.proceed(request);
@@ -40,7 +40,7 @@ public abstract class RestClient {
                 request = request.newBuilder()
 //                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                         //   .addHeader("Content-Type", "application/json;charset=utf-8")
-                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+//                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
                         .build();
                 Response response = chain.proceed(request);
                 return response;
