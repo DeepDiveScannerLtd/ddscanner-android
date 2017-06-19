@@ -116,8 +116,63 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_USER_TYPE = "user_type";
 
     // ----------------------------------------------------
+    // Sales
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_REGISTRATION_DIVE_CENTER = "registration_dc";
+    private static final String EVENT_NAME_REGISTRATION_DIVER = "registration_diver";
+    private static final String EVENT_NAME_YES_IM_INSTRUCTOR = "yes_im_instructor";
+    private static final String EVENT_NAME_INSTR_REG_DC_USER_CHOSEN = "instr_reg_dc_user_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN = "instr_reg_dc_legacy_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED = "instr_reg_dc_legacy_invited";
+    private static final String EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN = "instr_reg_add_new_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_NEW_INVITED = "instr_reg_dc_new_invited";
+
     // ----------------------------------------------------
     // ----------------------------------------------------
+    // ----------------------------------------------------
+
+    public static void trackYesInstructorClicked() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_YES_IM_INSTRUCTOR);
+    }
+
+    public static void trackInstructorRegistrationDcUserChosen() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_USER_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcLegacyChosen() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcLegacyInvited() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED);
+    }
+
+    public static void trackInstructorRegistrationAddNewChosen() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcNewInvited() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_NEW_INVITED);
+    }
 
     private EventsTracker() {
 
@@ -256,6 +311,17 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, params);
+    }
+
+    public static void trackRegistration(int userType) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        if (userType == 0) {
+            trackEventWithoutParameters(EVENT_NAME_REGISTRATION_DIVE_CENTER);
+        } else {
+            trackEventWithoutParameters(EVENT_NAME_REGISTRATION_DIVER);
+        }
     }
 
     public static void trackDiveSpotValid() {
