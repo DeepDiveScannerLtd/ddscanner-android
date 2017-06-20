@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.ui.views.DDProgressBarView;
@@ -149,6 +150,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.skip:
+                EventsTracker.trackSkipRegistration();
                 MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
                 SplashActivity.this.finish();
                 break;

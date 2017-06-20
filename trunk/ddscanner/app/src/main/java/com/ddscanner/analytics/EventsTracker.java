@@ -53,6 +53,7 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_ID = "dive_spot_id";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
     private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
+    private static final String EVENT_NAME_SKIP_REGISTRATION = "skip_registration";
 
     // ----------------------------------------------------
     // Content management
@@ -131,6 +132,13 @@ public class EventsTracker {
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    public static void trackSkipRegistration() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_SKIP_REGISTRATION);
+    }
 
     public static void trackYesInstructorClicked() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
