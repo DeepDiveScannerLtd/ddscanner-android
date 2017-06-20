@@ -516,6 +516,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
     @Override
     public void onPositiveDialogClicked() {
+        EventsTracker.trackYesInstructorClicked();
         SearchDiveCenterActivityOld.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, true);
     }
 }

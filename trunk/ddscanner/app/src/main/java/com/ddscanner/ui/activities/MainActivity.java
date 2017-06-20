@@ -859,6 +859,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPositiveDialogClicked() {
+        EventsTracker.trackYesInstructorClicked();
         SearchDiveCenterActivityOld.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
     }
 
