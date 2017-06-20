@@ -79,12 +79,9 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
-        showMainActivityRunnable = new Runnable() {
-            @Override
-            public void run() {
-                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
-                SplashActivity.this.finish();
-            }
+        showMainActivityRunnable = () -> {
+            MainActivity.show(SplashActivity.this);
+            SplashActivity.this.finish();
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {
             handler.postDelayed(showMainActivityRunnable, DDProgressBarView.ANIMATION_DURATION - (System.currentTimeMillis() - activityShowTimestamp));
@@ -105,23 +102,16 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         super.onResume();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-     //   handler.removeCallbacks(showMainActivityRunnable);
-//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-//        DDScannerApplication.bus.register(this);
     }
 
     @Subscribe
@@ -151,7 +141,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         switch (view.getId()) {
             case R.id.skip:
                 EventsTracker.trackSkipRegistration();
-                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
+                MainActivity.show(SplashActivity.this);
                 SplashActivity.this.finish();
                 break;
             case R.id.login:

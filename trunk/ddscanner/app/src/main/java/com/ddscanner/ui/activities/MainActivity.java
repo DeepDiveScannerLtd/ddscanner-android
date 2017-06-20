@@ -110,7 +110,6 @@ public class MainActivity extends BaseAppCompatActivity
     private PersonalNotificationsFragment allNotificationsFragment;
     private DiveCenterProfileFragment diveCenterProfileFragment;
     private ImageView imageView;
-    private boolean isHasInternetConnection;
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
@@ -211,7 +210,6 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         startActivity();
 //        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
@@ -350,9 +348,8 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
     }
 
-    public static void show(Context context, boolean isHasInternet) {
+    public static void show(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(Constants.IS_HAS_INTERNET, isHasInternet);
         context.startActivity(intent);
     }
 
