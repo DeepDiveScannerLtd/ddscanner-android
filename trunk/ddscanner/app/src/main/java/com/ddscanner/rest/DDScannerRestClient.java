@@ -12,6 +12,7 @@ import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.DiveCenterSearchItem;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
@@ -84,6 +85,22 @@ public class DDScannerRestClient {
             void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> resultListener, String responseString) {
                 DiveSpotDetailsEntity diveSpotResponseEntity = gson.fromJson(responseString, DiveSpotDetailsEntity.class);
                 resultListener.onSuccess(diveSpotResponseEntity);
+            }
+        });
+    }
+
+    public void getDiveCentersByQuery(String query, int page, ResultListener<ArrayList<DiveCenterSearchItem>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().searchDivecenters(query, 15, page);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveCenterSearchItem>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveCenterSearchItem>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveCenterSearchItem>>(){}.getType();
+                ArrayList<DiveCenterSearchItem> diveCenterSearchItems = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveCenterSearchItems);
             }
         });
     }

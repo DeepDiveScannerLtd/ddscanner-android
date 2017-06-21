@@ -1,7 +1,9 @@
 package com.ddscanner.screens.profile.edit.divecenter.search;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -19,6 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.entities.DiveCenterSearchItem;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
@@ -27,17 +31,19 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
+
 import java.util.ArrayList;
 
-public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener{
+public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
     public static void showForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, SearchDiveCenterActivity.class);
         activity.startActivityForResult(intent, requestCode);
     }
 
+    private static final int PAGE_SIZE = 15;
+
     private RecyclerView recyclerView;
-    private BaseSearchAdapter diveCentersListAdapter;
     private Menu menu;
     private MenuItem searchItem;
     private MaterialDialog materialDialog;
@@ -45,67 +51,13 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private Handler handler = new Handler();
     private Runnable sendingSearchRequestRunnable;
     private RelativeLayout noResultsView;
-
-    private DDScannerRestClient.ResultListener<Void> addInstructorResultListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-            materialDialog.dismiss();
-            setResult(RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
-            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-        }
-
-        @Override
-        public void onInternetConnectionClosed() {
-            materialDialog.dismiss();
-            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
-        }
-    };
-
-    private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
-        @Override
-        public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
-            noResultsView.setVisibility(View.GONE);
-            diveCentersListAdapter = new BaseSearchAdapter(result, true);
-            recyclerView.setAdapter(diveCentersListAdapter);
-            progressView.setVisibility(View.GONE);
-            if (result.size() > 0) {
-                recyclerView.setVisibility(View.VISIBLE);
-            } else {
-                noResultsView.setVisibility(View.VISIBLE);
-            }
-            searchItem.setVisible(true);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
-            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-        }
-
-        @Override
-        public void onInternetConnectionClosed() {
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
-        }
-
-    };
+    private SearchDiveCenterListAdapter searchDiveCenterListAdapter = new SearchDiveCenterListAdapter();
+    private int currentPage = 0;
+    private LinearLayoutManager linearLayoutManager;
+    private boolean isLoading = false;
+    private DiveCentersListResultListener paginationResultListener = new DiveCentersListResultListener(true);
+    private DiveCentersListResultListener loadResultListener = new DiveCentersListResultListener(false);
+    private String query;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,13 +65,43 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         setContentView(R.layout.activity_search_dive_center);
         setupToolbar(R.string.choose_dc, R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.dive_centers_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(searchDiveCenterListAdapter);
         progressView = (ProgressView) findViewById(R.id.progress_bar);
         noResultsView = (RelativeLayout) findViewById(R.id.no_results);
         materialDialog = Helpers.getMaterialDialog(this);
         TextView addDiveCenter = (TextView) findViewById(R.id.add_spot);
         addDiveCenter.setOnClickListener(view -> CreateDiveCenterActivity.showForCreateDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER));
         tryToReloadData("%");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            initializeListenerForHighVersions();
+        } else {
+            initilizeListenerForLowVersions();
+        }
+    }
+
+    @TargetApi(23)
+    private void initializeListenerForHighVersions() {
+        RecyclerView.OnScrollChangeListener listener = (view, i, i1, i2, i3) -> loadMoreDiveCenters();
+        recyclerView.setOnScrollChangeListener(listener);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void initilizeListenerForLowVersions() {
+        RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                loadMoreDiveCenters();
+            }
+        };
+        recyclerView.setOnScrollListener(scrollListener);
     }
 
     @Override
@@ -134,15 +116,30 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         return true;
     }
 
+    private void loadMoreDiveCenters() {
+        int visibleItemsCount = linearLayoutManager.getChildCount();
+        int totalItemCount = linearLayoutManager.getItemCount();
+        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (!isLoading) {
+            if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCentersByQuery(query, currentPage + 1, paginationResultListener);
+                    searchDiveCenterListAdapter.startLoading();
+                    isLoading = true;
+            }
+        }
+    }
+
     private void tryToReloadData(String query) {
+        this.query = query;
+        currentPage = 0;
         handler.removeCallbacks(sendingSearchRequestRunnable);
         sendingSearchRequestRunnable = () -> {
             recyclerView.setVisibility(View.GONE);
             progressView.setVisibility(View.VISIBLE);
             if (!query.isEmpty()) {
-                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersList(resultListener, query);
+                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersByQuery(query, currentPage, loadResultListener);
             } else {
-                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersList(resultListener, "%");
+                DDScannerApplication.getInstance().getDdScannerRestClient(SearchDiveCenterActivity.this).getDiveCentersByQuery("%", currentPage, loadResultListener);
             }
         };
         handler.postDelayed(sendingSearchRequestRunnable, 630);
@@ -169,4 +166,72 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
                 return true;
         }
     }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
+
+    class DiveCentersListResultListener extends DDScannerRestClient.ResultListener<ArrayList<DiveCenterSearchItem>> {
+
+        private boolean isFromPagination;
+
+        public DiveCentersListResultListener(boolean isFromPagination) {
+            this.isFromPagination = isFromPagination;
+        }
+
+        @Override
+        public void onSuccess(ArrayList<DiveCenterSearchItem> result) {
+            if (!isFromPagination) {
+                noResultsView.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
+                searchDiveCenterListAdapter.setData(result);
+                if (result.size() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    noResultsView.setVisibility(View.VISIBLE);
+                }
+                searchItem.setVisible(true);
+                return;
+            }
+            if (!(result.size() < PAGE_SIZE)) {
+                isLoading = false;
+            }
+            currentPage++;
+            searchDiveCenterListAdapter.dataLoaded();
+            searchDiveCenterListAdapter.addData(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            if (!isFromPagination) {
+                UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+                return;
+            }
+            isLoading = false;
+            searchDiveCenterListAdapter.dataLoaded();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (!isFromPagination) {
+                UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+                Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                return;
+            }
+            isLoading = false;
+            searchDiveCenterListAdapter.dataLoaded();
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            if (!isFromPagination) {
+                UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+                return;
+            }
+            isLoading = false;
+            searchDiveCenterListAdapter.dataLoaded();
+        }
+    }
+
 }

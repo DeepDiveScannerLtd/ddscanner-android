@@ -350,7 +350,7 @@ public interface DDScannerRestService {
     @POST("v2_0_debug/user.password.change")
     Call<ResponseBody> postChangeUserPassword(@Body ChangePasswordRequest changePasswordRequest);
 
-    @POST("v2_1_debug/instructor.divecenter.add")
+    @POST("v2_1/instructor.divecenter.add")
     Call<ResponseBody> postAddInstructorToDiveCenter(@Query("id") int id, @Query("dive_center_type") int type);
 
     @POST("v2_1/user.legacy_divecenter.invite")
@@ -359,6 +359,7 @@ public interface DDScannerRestService {
     @GET("v2_1/user.legacy_divecenter.profile.get")
     Call<ResponseBody> postLegacyDiveCenterInfoGet(@Query("id") int id);
 
-
+    @GET("v2_1/divecenters.search")
+    Call<ResponseBody> searchDivecenters(@Query("query") String query, @Query("limit") int limit, @Query("page") int page);
 
 }
