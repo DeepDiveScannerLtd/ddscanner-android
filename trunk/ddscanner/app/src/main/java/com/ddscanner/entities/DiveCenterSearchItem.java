@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class DiveCenterSearchItem {
 
-    enum DiveCenterType {
+    public enum DiveCenterType {
 
         USER(1), LEGACY(2), NEW(3);
 

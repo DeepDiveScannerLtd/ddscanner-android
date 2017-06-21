@@ -23,26 +23,30 @@ import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.DiveCenterSearchItem;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.DiveCenterItemClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
 public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
-    public static void showForResult(Activity activity, int requestCode) {
+    public static void showForResult(Activity activity, int requestCode, boolean isForEditProfile) {
         Intent intent = new Intent(activity, SearchDiveCenterActivity.class);
+        intent.putExtra(ARG_ID_FOR_EDIT, isForEditProfile);
         activity.startActivityForResult(intent, requestCode);
     }
 
     private static final int PAGE_SIZE = 15;
-
+    private static final String ARG_ID_FOR_EDIT = "is_for_edit";
     private RecyclerView recyclerView;
     private Menu menu;
     private MenuItem searchItem;
@@ -51,19 +55,24 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private Handler handler = new Handler();
     private Runnable sendingSearchRequestRunnable;
     private RelativeLayout noResultsView;
-    private SearchDiveCenterListAdapter searchDiveCenterListAdapter = new SearchDiveCenterListAdapter();
+    private SearchDiveCenterListAdapter searchDiveCenterListAdapter;
     private int currentPage = 0;
     private LinearLayoutManager linearLayoutManager;
     private boolean isLoading = false;
     private DiveCentersListResultListener paginationResultListener = new DiveCentersListResultListener(true);
     private DiveCentersListResultListener loadResultListener = new DiveCentersListResultListener(false);
     private String query;
+    private DiveCenterItemClickListener diveCenterItemClickListener;
+    private boolean isForEditProfile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_dive_center);
+        createClickListener();
         setupToolbar(R.string.choose_dc, R.id.toolbar);
+        searchDiveCenterListAdapter = new SearchDiveCenterListAdapter(diveCenterItemClickListener);
+        isForEditProfile = getIntent().getBooleanExtra(ARG_ID_FOR_EDIT, false);
         recyclerView = (RecyclerView) findViewById(R.id.dive_centers_list);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -79,6 +88,25 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         } else {
             initilizeListenerForLowVersions();
         }
+    }
+
+    private void createClickListener() {
+        diveCenterItemClickListener = item -> {
+            switch (item.getDivCenterType()) {
+                case LEGACY:
+                    CreateDiveCenterActivity.showForEditCurrentDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT, new Gson().toJson(item));
+                    break;
+                case USER:
+                case NEW:
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.ARG_DC_NAME, item.getName());
+                    intent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
+                    intent.putExtra(Constants.ARG_ID, item.getId());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+            }
+        };
     }
 
     @TargetApi(23)
@@ -170,6 +198,21 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT:
+            case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER:
+                if (isForEditProfile) {
+                    setResult(RESULT_OK, data);
+                    finish();
+                    break;
+                }
+                finish();
+                break;
+        }
     }
 
     class DiveCentersListResultListener extends DDScannerRestClient.ResultListener<ArrayList<DiveCenterSearchItem>> {

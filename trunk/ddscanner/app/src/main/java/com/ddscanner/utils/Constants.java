@@ -2,6 +2,11 @@ package com.ddscanner.utils;
 
 public class Constants {
 
+    //CreateDiveCenterArguments
+    public static final String ARG_ID = "id";
+    public static final String ARG_DC_TYPE = "type";
+    public static final String ARG_DC_NAME = "dc_name";
+
     public static final String images = "https:";
     public static final String DIVESPOTID = "ID";
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";

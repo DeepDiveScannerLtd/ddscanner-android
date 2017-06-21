@@ -76,7 +76,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         @Override
         public void onSuccess(DiveCenterProfile result) {
             progressView.setVisibility(View.GONE);
-            setupFragment(result.getType(), result);
+            setupFragment(0, result);
         }
 
         @Override
@@ -129,7 +129,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                 case 0:
                     DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
                     EventsTracker.trackDiveCenterView(String.valueOf(diveCenterProfile.getId()));
-                    photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
+                    photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), 0);
                     if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                         DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
                         setActiveFragment(diveCenterProfileFragment);

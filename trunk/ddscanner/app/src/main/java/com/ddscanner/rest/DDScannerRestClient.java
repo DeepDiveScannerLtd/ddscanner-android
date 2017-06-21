@@ -89,6 +89,30 @@ public class DDScannerRestClient {
         });
     }
 
+    public void inviteLegacyDiveCenter(ResultListener<Void> resultListener, String name, String email, int id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLegacyDiveCenterInvite(id, email, name);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
+    }
+
+    public void inviteNewDiveCenter(ResultListener<Integer> resultListener, String name, String email) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postNewDiveCenterInvite(email, name);
+        call.enqueue(new ResponseEntityCallback<Integer>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<Integer> resultListener, String responseString) throws JSONException {
+                int result = gson.fromJson(responseString, Integer.class);
+                resultListener.onSuccess(result);
+            }
+        });
+    }
+
     public void getDiveCentersByQuery(String query, int page, ResultListener<ArrayList<DiveCenterSearchItem>> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
@@ -231,12 +255,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void potUpdateUserProfile(ResultListener<Void> resultListener, MultipartBody.Part image, RequestBody userName, RequestBody userAbout, RequestBody skill, RequestBody diveCenterId) {
+    public void potUpdateUserProfile(ResultListener<Void> resultListener, MultipartBody.Part image, RequestBody userName, RequestBody userAbout, RequestBody skill, RequestBody diveCenterId, RequestBody diveCenterType) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserProfile(image, userName, userAbout, diveCenterId, skill);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserProfile(image, userName, userAbout, diveCenterId, diveCenterType, skill);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 

@@ -228,5 +228,6 @@ public class ActivitiesRequestCodes {
 
     //SearchDveCenterActivity
     public static final int REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER = 6301;
+    public static final int REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT = 6302;
 
 }

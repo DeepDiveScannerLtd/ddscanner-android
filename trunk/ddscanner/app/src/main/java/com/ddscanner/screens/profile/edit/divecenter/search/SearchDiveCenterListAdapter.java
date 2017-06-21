@@ -2,6 +2,7 @@ package com.ddscanner.screens.profile.edit.divecenter.search;
 
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenterSearchItem;
+import com.ddscanner.interfaces.DiveCenterItemClickListener;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +27,11 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int VIEW_TYPE_PAGINATION = 2;
     private Context context;
     private ArrayList<DiveCenterSearchItem> diveCentersList = new ArrayList<>();
+    private DiveCenterItemClickListener listener;
+
+    public SearchDiveCenterListAdapter(DiveCenterItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setData(ArrayList<DiveCenterSearchItem> data) {
         this.diveCentersList = data;
@@ -56,7 +63,11 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
         SearchDiveCenterItemViewHolder searchDiveCenterItemViewHolder = (SearchDiveCenterItemViewHolder) viewHolder;
         searchDiveCenterItemViewHolder.address.setText(diveCentersList.get(i).getAddress());
         searchDiveCenterItemViewHolder.name.setText(diveCentersList.get(i).getName());
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCentersList.get(i).getPhoto(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.avatar_dc_profile_def).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0, RoundedCornersTransformation.CornerType.ALL)).into(searchDiveCenterItemViewHolder.photo);
+        if (diveCentersList.get(i).getPhoto() == null) {
+            searchDiveCenterItemViewHolder.photo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_profile_def));
+        } else {
+            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCentersList.get(i).getPhoto(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.avatar_dc_profile_def).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(searchDiveCenterItemViewHolder.photo);
+        }
     }
 
     @Override
@@ -82,7 +93,7 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyItemRemoved(diveCentersList.size() - 1);
     }
 
-    class SearchDiveCenterItemViewHolder extends RecyclerView.ViewHolder {
+    class SearchDiveCenterItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView name;
         private TextView address;
@@ -90,10 +101,16 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
 
         SearchDiveCenterItemViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             context = view.getContext();
             name = (TextView) view.findViewById(R.id.dive_center_name);
             address = (TextView) view.findViewById(R.id.dive_center_address);
             photo = (ImageView) view.findViewById(R.id.dive_center_photo);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onDiveCenterClicked(diveCentersList.get(getAdapterPosition()));
         }
     }
 

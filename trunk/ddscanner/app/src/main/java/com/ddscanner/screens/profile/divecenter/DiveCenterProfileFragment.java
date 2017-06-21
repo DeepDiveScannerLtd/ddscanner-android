@@ -56,11 +56,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
         public void onSuccess(DiveCenterProfile result) {
-            switch (result.getType()) {
-                case 2:
-                case 1:
-                    break;
-                case 0:
                     diveCenterProfile = result;
                     BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
                     baseUser.setName(diveCenterProfile.getName());
@@ -71,8 +66,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                     if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
                         diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
                     }
-                    break;
-            }
+
         }
 
         @Override
@@ -258,7 +252,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), binding.getDiveCenterViewModel().getDiveCenterProfile().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), 0)), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
     public void showLanguages(View view) {

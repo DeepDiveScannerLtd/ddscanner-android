@@ -28,6 +28,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
@@ -68,8 +69,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private AppCompatRadioButton diverRadio;
     private AppCompatRadioButton insructorRadio;
     private RequestBody diveCenterId = null;
+    private RequestBody diveCenterTypeRequestBody = null;
     private String dcId;
     private File cameraPhotoToUpload = null;
+    private int diveCenterType;
 
 
     private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -137,6 +140,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     private void setupUi() {
+        if (user.getType() == 2) {
+            dcId = String.valueOf(user.getDiveCenter().getId());
+            diveCenterType = user.getDiveCenter().getType();
+        }
         materialDialog = Helpers.getMaterialDialog(this);
         if (user.getUserTypeString().equals("Diver")) {
             setupRadioButtons("Diver", true, false);
@@ -198,6 +205,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         materialDialog.show();
         if (dcId != null) {
             diveCenterId = Helpers.createRequestBodyForString(dcId);
+            diveCenterTypeRequestBody = Helpers.createRequestBodyForString(String.valueOf(diveCenterType));
         }
         if (pathToUploadedPhoto != null) {
             File file = new File(pathToUploadedPhoto);
@@ -212,8 +220,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         }
         if (diverRadio.isChecked()) {
             diveCenterId = null;
+            diveCenterTypeRequestBody = null;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId, diveCenterTypeRequestBody);
     }
 
     private void hideErrorsMap() {
@@ -249,7 +258,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     public void chooseDiveCenter(View view) {
-        SearchDiveCenterActivity.showForResult(this, 0);
+        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER, true);
 //        SearchDiveCenterActivityOld.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER, false);
     }
 
@@ -294,8 +303,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER:
                 if (resultCode == RESULT_OK) {
-                    dcId = data.getStringExtra(ARG_DC_ID);
-                    binding.diveCenterName.setText(data.getStringExtra(ARG_DC_NAME));
+                    dcId = String.valueOf(data.getIntExtra(Constants.ARG_ID, 0));
+                    binding.diveCenterName.setText(data.getStringExtra(Constants.ARG_DC_NAME));
+                    diveCenterType = data.getIntExtra(Constants.ARG_DC_TYPE, 0);
                 }
                 break;
         }

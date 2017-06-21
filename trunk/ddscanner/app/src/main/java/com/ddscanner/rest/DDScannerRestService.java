@@ -37,7 +37,7 @@ public interface DDScannerRestService {
     @POST("v2_0_debug/user.sign_up")
     Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 
-    @GET("v2_0_debug/user.profile.get")
+    @GET("v2_1/user.profile.get")
     Call<ResponseBody> getSelfProfileInformation(@Query("include_photo_details") int value);
 
     @GET("v2_0_debug/user.divecenter.profile.get")
@@ -178,16 +178,6 @@ public interface DDScannerRestService {
 
     @POST("v2_0_debug/user.password.forgot")
     Call<ResponseBody> postForgotPassword(@Query("email") String email);
-
-    @Multipart
-    @POST("v2_0_debug/user.profile.update")
-    Call<ResponseBody> postUpdateUserProfile(
-            @Part MultipartBody.Part image,
-            @Part("name") RequestBody name,
-            @Part("about") RequestBody about,
-            @Part("dive_center_id") RequestBody diveCenterId,
-            @Part("diving_skill") RequestBody skill
-    );
 
     @Multipart
     @POST("v2_0_debug/user.divecenter.profile.update")
@@ -356,10 +346,24 @@ public interface DDScannerRestService {
     @POST("v2_1/user.legacy_divecenter.invite")
     Call<ResponseBody> postLegacyDiveCenterInvite(@Query("id") int id, @Query("email") String email, @Query("name") String name);
 
+    @POST("v2_1/user.divecenter.invite")
+    Call<ResponseBody> postNewDiveCenterInvite(@Query("email") String email, @Query("name") String name);
+
     @GET("v2_1/user.legacy_divecenter.profile.get")
     Call<ResponseBody> postLegacyDiveCenterInfoGet(@Query("id") int id);
 
     @GET("v2_1/divecenters.search")
     Call<ResponseBody> searchDivecenters(@Query("query") String query, @Query("limit") int limit, @Query("page") int page);
+
+    @Multipart
+    @POST("v2_1/user.profile.update")
+    Call<ResponseBody> postUpdateUserProfile(
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("about") RequestBody about,
+            @Part("dive_center_id") RequestBody diveCenterId,
+            @Part("dive_center_type") RequestBody diveCenterType,
+            @Part("diving_skill") RequestBody skill
+    );
 
 }

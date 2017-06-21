@@ -12,6 +12,7 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
+import com.facebook.applinks.AppLinkData;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         AnalyticsSystemsManager.initAnalyticsSystems(this);
+        AppLinkData.fetchDeferredAppLinkData(this, appLinkData -> {});
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
         activeUserType = SharedPreferenceHelper.getActiveUserType().getName();

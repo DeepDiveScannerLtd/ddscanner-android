@@ -31,6 +31,16 @@ public class User implements Serializable {
     @SerializedName("provider_type")
     private Integer providerType;
     private String link;
+    @SerializedName("dc_type")
+    private int diveCenterType;
+
+    public int getDiveCenterType() {
+        return diveCenterType;
+    }
+
+    public void setDiveCenterType(int diveCenterType) {
+        this.diveCenterType = diveCenterType;
+    }
 
     public String getFacebookLink() {
         return facebookLink;
