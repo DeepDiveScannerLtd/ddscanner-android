@@ -34,6 +34,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -517,6 +518,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
     @Override
     public void onPositiveDialogClicked() {
         EventsTracker.trackYesInstructorClicked();
-        SearchDiveCenterActivityOld.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, true);
+        SearchDiveCenterActivity.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, false);
     }
 }
