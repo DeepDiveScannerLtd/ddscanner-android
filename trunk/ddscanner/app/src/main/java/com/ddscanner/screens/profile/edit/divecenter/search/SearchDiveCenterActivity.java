@@ -222,12 +222,14 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT:
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER:
-                if (isForEditProfile) {
-                    setResult(RESULT_OK, data);
+                if (resultCode == RESULT_OK) {
+                    if (isForEditProfile) {
+                        setResult(RESULT_OK, data);
+                        finish();
+                        break;
+                    }
                     finish();
-                    break;
                 }
-                finish();
                 break;
         }
     }
