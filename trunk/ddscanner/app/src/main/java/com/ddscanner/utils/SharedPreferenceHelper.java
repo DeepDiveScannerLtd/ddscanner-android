@@ -51,8 +51,35 @@ public class SharedPreferenceHelper {
     private static final String SEALIFES_LIST = "sealifes";
     private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
     private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
+    private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
 
     private static SharedPreferences prefs;
+
+    public enum SearchSourceType {
+        REGISTRATION("registration"), PROFILE("profile");
+
+        private String source;
+
+        SearchSourceType(String source) {
+            this.source = source;
+        }
+
+        public String getSource() {
+            return source;
+        }
+    }
+
+    public void setDivecenterSearchSource(SearchSourceType type) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(DIVECENTER_SEARCH_SOURCE, type.getSource());
+        editor.commit();
+    }
+
+    public String getDivecenterSearchSource() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(DIVECENTER_SEARCH_SOURCE, "");
+    }
 
     public void setUserLocation(LatLng latLng) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());

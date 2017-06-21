@@ -13,6 +13,7 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityNewDiveCenterBinding;
 import com.ddscanner.entities.DiveCenterSearchItem;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -39,6 +40,7 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackInstructorRegistrationDcLegacyInvited();
             materialDialog.dismiss();
             Intent intent = new Intent();
             intent.putExtra(Constants.ARG_DC_TYPE, diveCenterType);
@@ -71,6 +73,7 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
     private DDScannerRestClient.ResultListener<Integer> createNewResultListener = new DDScannerRestClient.ResultListener<Integer>() {
         @Override
         public void onSuccess(Integer result) {
+            EventsTracker.trackInstructorRegistrationDcNewInvited();
             materialDialog.dismiss();
             Intent intent = new Intent();
             intent.putExtra(Constants.ARG_DC_TYPE, diveCenterType);

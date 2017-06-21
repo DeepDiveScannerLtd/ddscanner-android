@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.DiveCenterSearchItem;
 import com.ddscanner.interfaces.DialogClosedListener;
@@ -32,6 +33,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
@@ -41,6 +43,11 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
 
     public static void showForResult(Activity activity, int requestCode, boolean isForEditProfile) {
         Intent intent = new Intent(activity, SearchDiveCenterActivity.class);
+        if (isForEditProfile) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setDivecenterSearchSource(SharedPreferenceHelper.SearchSourceType.PROFILE);
+        } else {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setDivecenterSearchSource(SharedPreferenceHelper.SearchSourceType.REGISTRATION);
+        }
         intent.putExtra(ARG_ID_FOR_EDIT, isForEditProfile);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -94,15 +101,25 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         diveCenterItemClickListener = item -> {
             switch (item.getDivCenterType()) {
                 case LEGACY:
+                    EventsTracker.trackInstructorRegistrationDcLegacyChosen();
                     CreateDiveCenterActivity.showForEditCurrentDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT, new Gson().toJson(item));
                     break;
                 case USER:
-                case NEW:
+                    EventsTracker.trackInstructorRegistrationDcUserChosen();
                     Intent intent = new Intent();
                     intent.putExtra(Constants.ARG_DC_NAME, item.getName());
                     intent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
                     intent.putExtra(Constants.ARG_ID, item.getId());
                     setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                case NEW:
+                    EventsTracker.trackInstructorRegistrationAddNewChosen();
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra(Constants.ARG_DC_NAME, item.getName());
+                    returnIntent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
+                    returnIntent.putExtra(Constants.ARG_ID, item.getId());
+                    setResult(RESULT_OK, returnIntent);
                     finish();
                     break;
             }

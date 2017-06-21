@@ -91,7 +91,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_CHECK_OUT = "check_out";
 
     private static final String EVENT_NAME_SEND_REVIEW = "send_review";
-    private static final String EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE = "source";
+    private static final String EVENT_PARAMETER_NAME_SOURCE = "source";
 
     private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
     private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
@@ -147,39 +147,60 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_YES_IM_INSTRUCTOR);
     }
 
+    private static void trackInstructorChosingDcEvenets(String eventName) {
+        // Google Firebase
+        Bundle params = new Bundle();
+
+        params.putString(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        FlurryAgent.logEvent(eventName, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
     public static void trackInstructorRegistrationDcUserChosen() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_USER_CHOSEN);
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_USER_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcLegacyChosen() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN);
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcLegacyInvited() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED);
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED);
     }
 
     public static void trackInstructorRegistrationAddNewChosen() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN);
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcNewInvited() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_INSTR_REG_DC_NEW_INVITED);
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_NEW_INVITED);
     }
 
     private EventsTracker() {
