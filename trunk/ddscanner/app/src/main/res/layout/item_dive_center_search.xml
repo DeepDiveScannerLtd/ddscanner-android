@@ -3,24 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="85dp"
-    android:background="?attr/selectableItemBackground">
-    <ImageView
-        android:id="@+id/dive_center_photo"
-        android:layout_marginTop="18dp"
-        android:layout_marginLeft="14dp"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/avatar_dc_profile_def"/>
-
+    android:layout_height="62dp"
+    android:paddingLeft="20dp"
+    android:background="?attr/selectableItemBackground"
+    tools:ignore="RtlSymmetry">
     <LinearLayout
-        android:layout_toRightOf="@+id/dive_center_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginLeft="20dp"
-        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
             android:lines="1"
@@ -37,7 +27,7 @@
         <TextView
             android:lines="1"
             android:ellipsize="end"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"

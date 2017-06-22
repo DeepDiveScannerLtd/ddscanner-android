@@ -1,6 +1,8 @@
 package com.ddscanner.entities;
 
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.R;
 import com.google.gson.annotations.SerializedName;
 
 public class DiveCenterSearchItem {
@@ -62,6 +64,9 @@ public class DiveCenterSearchItem {
     }
 
     public String getAddress() {
+        if (address == null) {
+            return DDScannerApplication.getInstance().getString(R.string.no_address_provided);
+        }
         return address;
     }
 

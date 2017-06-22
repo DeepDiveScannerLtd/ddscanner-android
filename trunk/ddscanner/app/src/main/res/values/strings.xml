@@ -537,4 +537,5 @@
     <string name="please_check_the_email_before_inviting_the_dive_center">Please, check the email before inviting the dive center</string>
     <string name="invite_a_dive_center">INVITE A DIVE CENTER</string>
     <string name="new_dive_center">New dive center</string>
+    <string name="no_address_provided">No address provided</string>
 </resources>
