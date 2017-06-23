@@ -43,7 +43,7 @@ public interface DDScannerRestService {
     @GET("v2_0_debug/user.divecenter.profile.get")
     Call<ResponseBody> getSelfDiveCenterInformation(@Query("include_photo_details") int value);
 
-    @GET("v2_0_debug/user.profile.get")
+    @GET("v2_1/user.profile.get")
     Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
     @GET("v2_0_debug/user.divecenter.profile.get")
@@ -344,10 +344,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> postAddInstructorToDiveCenter(@Query("id") int id, @Query("dive_center_type") int type);
 
     @POST("v2_1/user.legacy_divecenter.invite")
-    Call<ResponseBody> postLegacyDiveCenterInvite(@Query("id") int id, @Query("email") String email, @Query("name") String name);
+    Call<ResponseBody> postLegacyDiveCenterInvite(@Query("id") int id, @Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code);
 
     @POST("v2_1/user.divecenter.invite")
-    Call<ResponseBody> postNewDiveCenterInvite(@Query("email") String email, @Query("name") String name);
+    Call<ResponseBody> postNewDiveCenterInvite(@Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code);
 
     @GET("v2_1/user.legacy_divecenter.profile.get")
     Call<ResponseBody> postLegacyDiveCenterInfoGet(@Query("id") int id);

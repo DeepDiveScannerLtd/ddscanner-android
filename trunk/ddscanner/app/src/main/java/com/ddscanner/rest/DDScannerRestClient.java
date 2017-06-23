@@ -89,21 +89,21 @@ public class DDScannerRestClient {
         });
     }
 
-    public void inviteLegacyDiveCenter(ResultListener<Void> resultListener, String name, String email, int id) {
+    public void inviteLegacyDiveCenter(ResultListener<Void> resultListener, String name, String email, int id, String address, String countryCode) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLegacyDiveCenterInvite(id, email, name);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLegacyDiveCenterInvite(id, email, name, address, countryCode);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
-    public void inviteNewDiveCenter(ResultListener<Integer> resultListener, String name, String email) {
+    public void inviteNewDiveCenter(ResultListener<Integer> resultListener, String name, String email, String address, String countryCode) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postNewDiveCenterInvite(email, name);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postNewDiveCenterInvite(email, name, address, countryCode);
         call.enqueue(new ResponseEntityCallback<Integer>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<Integer> resultListener, String responseString) throws JSONException {
@@ -973,6 +973,21 @@ public class DDScannerRestClient {
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterInformation(id, 1);
+        call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<DiveCenterProfile> resultListener, String responseString) throws JSONException {
+                DiveCenterProfile user = new Gson().fromJson(responseString, DiveCenterProfile.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
+    public void getLegacyDiveCenterInformation(String id, final ResultListener<DiveCenterProfile> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLegacyDiveCenterInfoGet(Integer.parseInt(id));
         call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<DiveCenterProfile> resultListener, String responseString) throws JSONException {

@@ -5,6 +5,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class DiveCenterSearchItem {
 
     public enum DiveCenterType {
@@ -28,8 +30,17 @@ public class DiveCenterSearchItem {
     private int integerType;
     private String name;
     private String photo;
-    private String address;
+    private ArrayList<Address> addresses;
     private String email;
+    private CountryEntity country;
+
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
 
     public int getId() {
         return id;
@@ -43,7 +54,7 @@ public class DiveCenterSearchItem {
         return integerType;
     }
 
-    public void setItegerType(int integerType) {
+    public void setIntegerType(int integerType) {
         this.integerType = integerType;
     }
 
@@ -64,14 +75,18 @@ public class DiveCenterSearchItem {
     }
 
     public String getAddress() {
-        if (address == null) {
+        if (addresses == null) {
             return DDScannerApplication.getInstance().getString(R.string.no_address_provided);
         }
-        return address;
+        return addresses.get(0).getName();
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public ArrayList<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(ArrayList<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public String getEmail() {

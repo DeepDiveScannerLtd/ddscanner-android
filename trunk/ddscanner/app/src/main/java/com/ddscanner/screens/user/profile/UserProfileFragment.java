@@ -135,7 +135,11 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void showDiveCenter(View view) {
-        UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), 0);
+        if (binding.getUserProfileViewModel().getUser().getDiveCenter().getType() == 1) {
+            UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), 0);
+        } else {
+            UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), -1);
+        }
     }
 
     public void openFacebook(View view) {

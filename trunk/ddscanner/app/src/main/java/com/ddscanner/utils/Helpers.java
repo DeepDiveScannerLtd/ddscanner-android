@@ -99,6 +99,10 @@ public class Helpers {
         return px;
     }
 
+    public static int convertDpToIntPixels(float dp, Context context) {
+        return Math.round(convertDpToPixel(dp, context));
+    }
+
     /**
      * Add path to name of image
      *

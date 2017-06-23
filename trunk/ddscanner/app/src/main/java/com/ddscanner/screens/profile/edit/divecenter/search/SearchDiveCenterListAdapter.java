@@ -63,6 +63,11 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
         SearchDiveCenterItemViewHolder searchDiveCenterItemViewHolder = (SearchDiveCenterItemViewHolder) viewHolder;
         searchDiveCenterItemViewHolder.address.setText(diveCentersList.get(i).getAddress());
         searchDiveCenterItemViewHolder.name.setText(diveCentersList.get(i).getName());
+        if (diveCentersList.get(i).getPhoto() != null) {
+            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCentersList.get(i).getPhoto(), "1")).resize(Helpers.convertDpToIntPixels(42, context), Helpers.convertDpToIntPixels(42, context)).centerCrop().placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Helpers.convertDpToIntPixels(2, context), 0, RoundedCornersTransformation.CornerType.ALL)).into(searchDiveCenterItemViewHolder.photo);
+        } else {
+            searchDiveCenterItemViewHolder.photo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_profile_def));
+        }
     }
 
     @Override
@@ -92,6 +97,7 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
 
         private TextView name;
         private TextView address;
+        private ImageView photo;
 
         SearchDiveCenterItemViewHolder(View view) {
             super(view);
@@ -99,6 +105,7 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
             context = view.getContext();
             name = (TextView) view.findViewById(R.id.dive_center_name);
             address = (TextView) view.findViewById(R.id.dive_center_address);
+            photo = (ImageView) view.findViewById(R.id.dive_center_photo);
         }
 
         @Override

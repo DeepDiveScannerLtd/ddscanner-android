@@ -37,10 +37,10 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
 
     public static void showForResult(Activity context, int requestCode, String country, String address) {
         Intent intent = new Intent(context, ChangeAddressActivity.class);
-        if (country !=null) {
+        if (address != null) {
             intent.putExtra(ARG_ADDRESS, address);
         }
-        if (address != null) {
+        if (country != null) {
             intent.putExtra(ARG_COUNTRY, country);
         }
         context.startActivityForResult(intent, requestCode);
@@ -56,7 +56,9 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
         }
         if (getIntent().getStringExtra(ARG_ADDRESS) != null) {
             address = new Gson().fromJson(getIntent().getStringExtra(ARG_ADDRESS), Address.class);
-            location = address.getPosition();
+            if (address.getLat() != null && address.getLng() != null) {
+                location = address.getPosition();
+            }
         }
         setupToolbar(R.string.location_address_edit, R.id.toolbar, R.menu.menu_change_address);
         setUi();
@@ -69,9 +71,11 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
             binding.countryTextView.setText(country.getName());
         }
         if (address != null) {
-            isLocationChosed = true;
             binding.addressInput.setText(address.getName());
-            binding.location.setText(DDScannerApplication.getInstance().getString(R.string.pattern_location_string, address.getLat().toString(), address.getLng().toString()));
+            if (address.getLat() != null) {
+                isLocationChosed = true;
+                binding.location.setText(DDScannerApplication.getInstance().getString(R.string.pattern_location_string, address.getLat().toString(), address.getLng().toString()));
+            }
         }
     }
 

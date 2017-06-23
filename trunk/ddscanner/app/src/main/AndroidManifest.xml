@@ -238,7 +238,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.profile.edit.EditUserProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".screens.profile.edit.EditDiveCenterProfileActivity"
             android:screenOrientation="portrait" />

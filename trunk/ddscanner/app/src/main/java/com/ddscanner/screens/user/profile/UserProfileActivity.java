@@ -104,10 +104,17 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         setContentView(R.layout.activity_user_profile);
         progressView = (ProgressView) findViewById(R.id.progress_view);
         setupToolbar(R.string.profile, R.id.toolbar);
-        if (userType != 0) {
-            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserProfileInformation(userId, resultListener);
-        } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterInformation(userId, diveCenterProfileResultListener);
+        switch (userType) {
+            case 0:
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterInformation(userId, diveCenterProfileResultListener);
+                break;
+            case 1:
+            case 2:
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserProfileInformation(userId, resultListener);
+                break;
+            default:
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getLegacyDiveCenterInformation(userId, diveCenterProfileResultListener);
+                break;
         }
     }
 

@@ -17,6 +17,7 @@
             android:orientation="vertical"
             android:background="@color/white">
         <RelativeLayout
+            android:id="@+id/country_layout"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:onClick="@{handlers::pickCountryClicked}">
@@ -31,6 +32,7 @@
             <TextView
                 android:id="@+id/country_text_view"
                 style="@style/AddDsCharTitleStyle"
+                android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/icon_language"
@@ -60,6 +62,7 @@
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
                 android:paddingRight="20dp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/icon_address"
                 android:background="@null"
                 android:layout_width="match_parent"
