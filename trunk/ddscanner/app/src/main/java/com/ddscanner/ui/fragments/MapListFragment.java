@@ -455,6 +455,11 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     }
 
     public void fillDiveSpots() {
+        if (diveSpotsClusterManager == null) {
+            recyclerView.setVisibility(View.GONE);
+            please.setVisibility(View.VISIBLE);
+            return;
+        }
         ArrayList<DiveSpotShort> visibleSpots = new ArrayList<>();
         visibleSpots = diveSpotsClusterManager.getVisibleMarkersList();
         if (visibleSpots == null || visibleSpots.isEmpty() || visibleSpots.size() == 0) {
