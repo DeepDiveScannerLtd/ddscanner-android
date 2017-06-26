@@ -205,7 +205,6 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         resultListener.setCancelled(false);
         simpleResultListener.setCancelled(false);
         paginationResultListener.setCancelled(false);
-        EventsTracker.trackNotificationsView();
     }
 
     @Override

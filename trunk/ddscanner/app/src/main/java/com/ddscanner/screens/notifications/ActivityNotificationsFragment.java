@@ -224,7 +224,6 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         super.onResume();
         simpleResultListener.setCancelled(false);
         paginationResultListener.setCancelled(false);
-        EventsTracker.trackActivityView();
     }
 
     @Override

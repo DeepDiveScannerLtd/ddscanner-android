@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.entities.Notifications;
@@ -184,9 +185,11 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void onPageSelected(int position) {
         if (position == 0) {
+            EventsTracker.trackNotificationsView();
 //            personalNotificationsFragment.loadNotifications();
         }
         if (position == 1) {
+            EventsTracker.trackActivityView();
 //            activityNotificationsFragment.loadNotifications();
         }
     }
@@ -244,6 +247,16 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     public void getNotifications(GetNotificationsEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             getUserNotifications(false);
+            if (notificationsViewPager != null) {
+                switch (notificationsViewPager.getCurrentItem()) {
+                    case 0:
+                        EventsTracker.trackNotificationsView();
+                        break;
+                    case 1:
+                        EventsTracker.trackActivityView();
+                        break;
+                }
+            }
             return;
         }
         onLoggedOut();
