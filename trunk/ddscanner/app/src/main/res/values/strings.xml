@@ -419,7 +419,7 @@
     <string name="connection_error_title">Connection error</string>
     <string name="connection_error_text"></string>
     <string name="unexcepted_error_title">Error occurred</string>
-    <string name="unexcepted_error_text"></string>
+    <string name="unexcepted_error_text">Opps. Looks like we have an unexpected issue here. Report was captured</string>
     <string name="error_internet_connection">Please, check it and try again</string>
     <string name="error_internet_connection_title">No internet connection</string>
     <string name="add_langueage">Add language</string>

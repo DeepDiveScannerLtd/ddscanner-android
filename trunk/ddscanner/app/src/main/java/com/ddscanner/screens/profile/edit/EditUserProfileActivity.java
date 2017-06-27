@@ -96,6 +96,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
                     Helpers.errorHandling(errorsMap, errorMessage);
                     break;
                 default:
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
