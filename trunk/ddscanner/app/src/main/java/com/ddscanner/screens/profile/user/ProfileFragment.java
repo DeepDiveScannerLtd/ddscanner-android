@@ -393,7 +393,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     public void showDiveCenter(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getDiveCenter().getType() == 1) {
             UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
-        } else {
+        } else if (binding.getProfileFragmentViewModel().getUser().getDiveCenter().getType() == 2) {
             UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), -1);
         }
     }

@@ -137,7 +137,7 @@ public class UserProfileFragment extends Fragment {
     public void showDiveCenter(View view) {
         if (binding.getUserProfileViewModel().getUser().getDiveCenter().getType() == 1) {
             UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), 0);
-        } else {
+        } else if (binding.getUserProfileViewModel().getUser().getDiveCenter().getType() == 1) {
             UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), -1);
         }
     }

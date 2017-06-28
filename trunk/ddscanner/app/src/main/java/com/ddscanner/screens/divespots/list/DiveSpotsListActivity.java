@@ -220,13 +220,11 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
     @Override
     public void onStart() {
         super.onStart();
-//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe
