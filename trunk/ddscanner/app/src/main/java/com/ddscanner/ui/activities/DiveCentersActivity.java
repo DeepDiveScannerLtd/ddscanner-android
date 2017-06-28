@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -94,6 +95,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private Marker diveSpotMarker;
     private String logoPath;
     private int infoWindowHeight;
+    private RelativeLayout mainLayout;
+    private ConstraintLayout no_dive_centers_layout;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveCenter>> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveCenter>>() {
         @Override
@@ -127,6 +130,11 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         setContentView(R.layout.activity_dive_centers);
         infoWindowHeight = Math.round(Helpers.convertDpToPixel(110, this));
         findViews();
+        if (!getIntent().getBooleanExtra("is_someone_working_here", false)) {
+            no_dive_centers_layout.setVisibility(View.VISIBLE);
+        } else {
+            mainLayout.setVisibility(View.VISIBLE);
+        }
         setMapView();
         EventsTracker.trackDiveCentersMapView();
         diveSpotId = getIntent().getStringExtra("id");
@@ -141,7 +149,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private void findViews() {
         diveSpotsMapView = findViewById(R.id.map_view);
         diveSpotsListView = findViewById(R.id.list_view);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -149,6 +156,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
 
         // Map mode
+        no_dive_centers_layout = (ConstraintLayout) findViewById(R.id.no_contacts_layout);
+        mainLayout = (RelativeLayout) findViewById(R.id.main_layout_view);
         diveCenterInfo = (RelativeLayout) findViewById(R.id.dive_spot_info_layout);
         diveCenterInfo.animate().translationY(infoWindowHeight);
         diveCenterName = (TextView) findViewById(R.id.dive_spot_title);
@@ -171,11 +180,12 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     }
 
-    public static void show(Context context, LatLng latLng, String name, String id) {
+    public static void show(Context context, LatLng latLng, String name, String id, boolean isSomebodyWorkingHere) {
         Intent intent = new Intent(context, DiveCentersActivity.class);
         intent.putExtra("LATLNG", latLng);
         intent.putExtra("NAME", name);
         intent.putExtra("id", id);
+        intent.putExtra("is_someone_working_here", isSomebodyWorkingHere);
         context.startActivity(intent);
     }
 
@@ -336,34 +346,28 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         mMapView = (MapView) findViewById(R.id.mapView);
         Log.i(TAG, "mMapView inited");
         mMapView.onCreate(null);
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                Log.i(TAG, "onMapReady, googleMap = " + googleMap);
-                DiveCentersActivity.this.googleMap = googleMap;
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        Log.i(TAG, "onMapLoaded");
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(diveSpotLatLng)
-                                .zoom(8)
-                                .build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-                        diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, googleMap);
-                        googleMap.setOnInfoWindowClickListener(DiveCentersActivity.this);
-                        googleMap.setOnMarkerClickListener(DiveCentersActivity.this);
-                        googleMap.setOnMapClickListener(DiveCentersActivity.this);
-                        googleMap.setOnCameraChangeListener(diveCentersClusterManager);
-                        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
-                        if (diveCenters != null) {
-                            // This means we have already received dive centers
-                            drawMarkers();
-                        }
-                    }
-                });
+        mMapView.getMapAsync(googleMap -> {
+            Log.i(TAG, "onMapReady, googleMap = " + googleMap);
+            DiveCentersActivity.this.googleMap = googleMap;
+            googleMap.setOnMapLoadedCallback(() -> {
+                Log.i(TAG, "onMapLoaded");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(diveSpotLatLng)
+                        .zoom(8)
+                        .build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+                diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, googleMap);
+                googleMap.setOnInfoWindowClickListener(DiveCentersActivity.this);
+                googleMap.setOnMarkerClickListener(DiveCentersActivity.this);
+                googleMap.setOnMapClickListener(DiveCentersActivity.this);
+                googleMap.setOnCameraChangeListener(diveCentersClusterManager);
+                diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
+                if (diveCenters != null) {
+                    // This means we have already received dive centers
+                    drawMarkers();
+                }
+            });
 
-            }
         });
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);

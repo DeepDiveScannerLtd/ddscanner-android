@@ -143,7 +143,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("visibilityForBookButtonFrom")
     public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVER || !viewModel.getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVER) {
                 view.setVisibility(View.GONE);
             }
         }
