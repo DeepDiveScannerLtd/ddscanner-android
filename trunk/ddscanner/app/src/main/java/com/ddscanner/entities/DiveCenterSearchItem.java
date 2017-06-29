@@ -33,6 +33,16 @@ public class DiveCenterSearchItem {
     private ArrayList<Address> addresses;
     private String email;
     private CountryEntity country;
+    @SerializedName("is_invited")
+    private boolean isInvited;
+
+    public boolean isInvited() {
+        return isInvited;
+    }
+
+    public void setInvited(boolean invited) {
+        isInvited = invited;
+    }
 
     public CountryEntity getCountry() {
         return country;

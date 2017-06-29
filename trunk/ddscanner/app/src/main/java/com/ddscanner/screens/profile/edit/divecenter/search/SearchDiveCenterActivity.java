@@ -52,6 +52,29 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         activity.startActivityForResult(intent, requestCode);
     }
 
+    private DDScannerRestClient.ResultListener<Void> addInstructorToDiveCenter = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            progressView.setVisibility(View.GONE);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+    };
+
     private static final int PAGE_SIZE = 15;
     private static final String ARG_ID_FOR_EDIT = "is_for_edit";
     private RecyclerView recyclerView;
@@ -102,10 +125,29 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
             switch (item.getDivCenterType()) {
                 case LEGACY:
                     EventsTracker.trackInstructorRegistrationDcLegacyChosen();
+                    if (item.isInvited()) {
+                        if (!isForEditProfile) {
+                            progressView.setVisibility(View.VISIBLE);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, item.getId(), item.getIntegerType());
+                            break;
+                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(Constants.ARG_DC_NAME, item.getName());
+                        intent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
+                        intent.putExtra(Constants.ARG_ID, item.getId());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        break;
+                    }
                     CreateDiveCenterActivity.showForEditCurrentDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT, new Gson().toJson(item));
                     break;
                 case USER:
                     EventsTracker.trackInstructorRegistrationDcUserChosen();
+                    if (!isForEditProfile) {
+                        progressView.setVisibility(View.VISIBLE);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, item.getId(), item.getIntegerType());
+                        break;
+                    }
                     Intent intent = new Intent();
                     intent.putExtra(Constants.ARG_DC_NAME, item.getName());
                     intent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
@@ -115,6 +157,11 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
                     break;
                 case NEW:
                     EventsTracker.trackInstructorRegistrationAddNewChosen();
+                    if (!isForEditProfile) {
+                        progressView.setVisibility(View.VISIBLE);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, item.getId(), item.getIntegerType());
+                        break;
+                    }
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra(Constants.ARG_DC_NAME, item.getName());
                     returnIntent.putExtra(Constants.ARG_DC_TYPE, item.getIntegerType());
@@ -226,9 +273,10 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
                     if (isForEditProfile) {
                         setResult(RESULT_OK, data);
                         finish();
-                        break;
+                    } else {
+                        progressView.setVisibility(View.VISIBLE);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, data.getIntExtra(Constants.ARG_ID, 0), data.getIntExtra(Constants.ARG_DC_TYPE, 0));
                     }
-                    finish();
                 }
                 break;
         }

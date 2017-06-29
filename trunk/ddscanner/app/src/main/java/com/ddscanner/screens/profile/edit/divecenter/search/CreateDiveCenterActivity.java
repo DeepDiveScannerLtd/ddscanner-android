@@ -26,6 +26,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -174,9 +175,9 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
         materialDialog.show();
         dcName = binding.diveCenterName.getText().toString();
         if (isForEditDiveCenter) {
-            DDScannerApplication.getInstance().getDdScannerRestClient(this).inviteLegacyDiveCenter(resultListener, binding.diveCenterName.getText().toString(), binding.diveCenterEmail.getText().toString(), currentDiveCenterId, gson.toJson(address), countryEntity.getCode());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).inviteLegacyDiveCenter(resultListener, binding.diveCenterName.getText().toString(), binding.diveCenterEmail.getText().toString(), currentDiveCenterId, gson.toJson(address), countryEntity.getCode(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource().equals(SharedPreferenceHelper.SearchSourceType.REGISTRATION));
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient(this).inviteNewDiveCenter(createNewResultListener, binding.diveCenterName.getText().toString(), binding.diveCenterEmail.getText().toString(), gson.toJson(address), countryEntity.getCode());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).inviteNewDiveCenter(createNewResultListener, binding.diveCenterName.getText().toString(), binding.diveCenterEmail.getText().toString(), gson.toJson(address), countryEntity.getCode(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource().equals(SharedPreferenceHelper.SearchSourceType.REGISTRATION));
         }
 
     }

@@ -344,10 +344,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> postAddInstructorToDiveCenter(@Query("id") int id, @Query("dive_center_type") int type);
 
     @POST("v2_1/user.legacy_divecenter.invite")
-    Call<ResponseBody> postLegacyDiveCenterInvite(@Query("id") int id, @Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code);
+    Call<ResponseBody> postLegacyDiveCenterInvite(@Query("id") int id, @Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code, @Query("bind_to_dive_center") int value);
 
     @POST("v2_1/user.divecenter.invite")
-    Call<ResponseBody> postNewDiveCenterInvite(@Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code);
+    Call<ResponseBody> postNewDiveCenterInvite(@Query("email") String email, @Query("name") String name, @Query("address") String address, @Query("country_code") String country_code, @Query("bind_to_dive_center") int value);
 
     @GET("v2_1/user.legacy_divecenter.profile.get")
     Call<ResponseBody> postLegacyDiveCenterInfoGet(@Query("id") int id);

@@ -155,7 +155,7 @@ public class SearchDiveCenterActivityOld extends BaseAppCompatActivity implement
             case R.id.checked_fab:
                 if (isAfterSignUp) {
                     materialDialog.show();
-                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
                     break;
                 }
                 Intent intent = new Intent();
