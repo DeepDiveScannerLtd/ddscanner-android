@@ -47,7 +47,9 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            searchMenuItem.setVisible(true);
+            if (searchMenuItem != null) {
+                searchMenuItem.setVisible(true);
+            }
         }
 
         @Override
