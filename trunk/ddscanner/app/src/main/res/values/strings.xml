@@ -539,4 +539,6 @@
     <string name="new_dive_center">New dive center</string>
     <string name="no_address_provided">No address provided</string>
     <string name="address_is_required">Address is required</string>
+    <string name="invitation_sent">Invitation sent!</string>
+    <string name="dive_center_invited">As soon as the dive center accepts an invitation it will appear in the app</string>
 </resources>

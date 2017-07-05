@@ -18,6 +18,7 @@ import com.ddscanner.databinding.ActivityNewDiveCenterBinding;
 import com.ddscanner.entities.Address;
 import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterSearchItem;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.ChangeAddressActivity;
@@ -32,7 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class CreateDiveCenterActivity extends BaseAppCompatActivity {
+public class CreateDiveCenterActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private static final String ARG_COUNTRY = "country";
     private static final String ARG_ADDRESS = "address";
@@ -59,7 +60,8 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
             intent.putExtra(Constants.ARG_ID, currentDiveCenterId);
             intent.putExtra(Constants.ARG_DC_NAME, dcName);
             setResult(RESULT_OK, intent);
-            finish();
+            showSuccessDialog();
+//            finish();
         }
 
         @Override
@@ -92,7 +94,8 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
             intent.putExtra(Constants.ARG_ID, result);
             intent.putExtra(Constants.ARG_DC_NAME, dcName);
             setResult(RESULT_OK, intent);
-            finish();
+            showSuccessDialog();
+//            finish();
         }
 
         @Override
@@ -124,6 +127,10 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
         Intent intent = new Intent(context, CreateDiveCenterActivity.class);
         intent.putExtra(ARG_DIVE_CENTER, currentData);
         context.startActivityForResult(intent, requestCode);
+    }
+
+    private void showSuccessDialog() {
+        UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.invitation_sent, R.string.dive_center_invited, 1, false);
     }
 
     @Override
@@ -230,5 +237,10 @@ public class CreateDiveCenterActivity extends BaseAppCompatActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }

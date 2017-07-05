@@ -48,6 +48,7 @@ public abstract class RestClient {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.interceptors().add(interceptor);
+            builder.retryOnConnectionFailure(true);
             builder.connectTimeout(30, TimeUnit.SECONDS);
             builder.readTimeout(30, TimeUnit.SECONDS);
             builder.writeTimeout(1, TimeUnit.MINUTES);
