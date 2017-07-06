@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,11 +18,17 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.screens.tutorial.TutorialActivity;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {
 
@@ -52,6 +59,8 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
+        //TODO uncomment in future versions
+//        loadTutorial();
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
@@ -75,6 +84,36 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
         mainLayout.startAnimation(fadeInAnimation);
 
+    }
+
+    public void loadTutorial() {
+        Intent mainAct = new Intent(this, TutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        startActivityForResult(mainAct, 15);
+
+    }
+
+    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+        TutorialItem createItem = new TutorialItem(getString(R.string.tutorial_item_title_create), getString(R.string.tutorial_item_create),
+                R.color.white, R.drawable.ic_create);
+
+        TutorialItem earnItem = new TutorialItem(getString(R.string.tutorial_item_title_earn), getString(R.string.tutorial_item_earn),
+                R.color.white, R.drawable.ic_earn);
+
+        TutorialItem discoverItem = new TutorialItem(getString(R.string.tutorial_item_title_discover), getString(R.string.tutorial_item_discover),
+                R.color.white, R.drawable.ic_discover);
+
+        TutorialItem exploreItem = new TutorialItem(getString(R.string.tutorial_item_explore_title), getString(R.string.tutorial_item_explore),
+                R.color.white, R.drawable.ic_explore);
+
+        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
+        tutorialItems.add(createItem);
+        tutorialItems.add(earnItem);
+        tutorialItems.add(discoverItem);
+        tutorialItems.add(exploreItem);
+
+
+        return tutorialItems;
     }
 
     private void showMainActivity() {

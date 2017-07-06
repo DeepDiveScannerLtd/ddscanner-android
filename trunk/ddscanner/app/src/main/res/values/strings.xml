@@ -541,4 +541,12 @@
     <string name="address_is_required">Address is required</string>
     <string name="invitation_sent">Invitation sent!</string>
     <string name="dive_center_invited">As soon as the dive center accepts an invitation it will appear in the app</string>
+    <string name="tutorial_item_title_create">Create</string>
+    <string name="tutorial_item_create">Add more dive spots to help others get to know the world of oceans better</string>
+    <string name="tutorial_item_title_earn">Earn</string>
+    <string name="tutorial_item_earn">Share your photos, leave reviews or edit the info to become an expert of your region</string>
+    <string name="tutorial_item_title_discover">Discover</string>
+    <string name="tutorial_item_discover">Read informative reviews from our active experts</string>
+    <string name="tutorial_item_explore_title">Explore</string>
+    <string name="tutorial_item_explore">7000 dive spots, 100+ countries gathered in one place</string>
 </resources>
