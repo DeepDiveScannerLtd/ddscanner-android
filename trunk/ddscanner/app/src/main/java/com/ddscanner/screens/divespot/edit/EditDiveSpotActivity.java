@@ -693,8 +693,8 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         if (visibilityMin.getText().toString().isEmpty() || visibilityMax.getText().toString().isEmpty()) {
             isSomethingWrong = true;
             errorVisibility.setVisibility(View.VISIBLE);
-            minVisibilityHint.setVisibility(View.GONE);
-            maxVisibilityHint.setVisibility(View.GONE);
+//            minVisibilityHint.setVisibility(View.GONE);
+//            maxVisibilityHint.setVisibility(View.GONE);
             downestCoordinate = visibilityMax.getBottom();
         } else {
             downestCoordinate = visibilityMax.getBottom();
@@ -702,21 +702,21 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 isSomethingWrong = true;
                 errorVisibility.setVisibility(View.VISIBLE);
                 errorVisibility.setText(R.string.error_visivibility_append);
-                minVisibilityHint.setVisibility(View.GONE);
-                maxVisibilityHint.setVisibility(View.GONE);
+//                minVisibilityHint.setVisibility(View.GONE);
+//                maxVisibilityHint.setVisibility(View.GONE);
             }
             if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
                 isSomethingWrong = true;
                 errorVisibility.setVisibility(View.GONE);
                 errorVisibilityMin.setVisibility(View.VISIBLE);
-                minVisibilityHint.setVisibility(View.GONE);
+//                minVisibilityHint.setVisibility(View.GONE);
             }
 
             if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
                 isSomethingWrong = true;
                 errorVisibility.setVisibility(View.GONE);
-                errorVisibilityMin.setVisibility(View.VISIBLE);
-                maxVisibilityHint.setVisibility(View.GONE);
+                errorVisibilityMax.setVisibility(View.VISIBLE);
+//                maxVisibilityHint.setVisibility(View.GONE);
             }
 
         }
