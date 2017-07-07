@@ -110,7 +110,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (password.getText().length() > 3) {
+            if (password.getText().length() > 3 && password.getText().length() < 33) {
                 isPasswordEmpty = false;
             } else {
                 isPasswordEmpty = true;
