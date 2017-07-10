@@ -59,7 +59,6 @@ import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
-import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;

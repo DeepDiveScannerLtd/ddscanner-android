@@ -23,7 +23,6 @@ import com.ddscanner.entities.User;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
-import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;

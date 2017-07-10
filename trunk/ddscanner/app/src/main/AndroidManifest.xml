@@ -249,9 +249,6 @@
             android:name=".screens.profile.edit.EditDiveCenterProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivityOld"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".screens.instructors.InstructorsActivity"
             android:screenOrientation="portrait" />
         <activity

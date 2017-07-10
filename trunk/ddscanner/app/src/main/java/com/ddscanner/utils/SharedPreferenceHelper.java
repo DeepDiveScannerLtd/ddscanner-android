@@ -52,6 +52,7 @@ public class SharedPreferenceHelper {
     private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
     private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
     private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
+    private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
 
     private static SharedPreferences prefs;
 
@@ -452,6 +453,18 @@ public class SharedPreferenceHelper {
 
     private static void updateUserTypeInApplication() {
         DDScannerApplication.getInstance().setActiveUserType(getActiveUserType().getName());
+    }
+
+    public static void setIsNeedToShowTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_NEED_TO_SHOW_TUTORIAL, false);
+        editor.commit();
+    }
+
+    public static boolean getIsNeedToShowTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_NEED_TO_SHOW_TUTORIAL, true);
     }
 
 }

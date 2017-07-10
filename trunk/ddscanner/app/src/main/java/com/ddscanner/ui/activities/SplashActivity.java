@@ -23,6 +23,7 @@ import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -60,7 +61,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
         setContentView(R.layout.activity_splash);
         //TODO uncomment in future versions
-//        loadTutorial();
+        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+            loadTutorial();
+            SharedPreferenceHelper.setIsNeedToShowTutorial();
+        }
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
@@ -72,7 +76,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
@@ -88,12 +92,12 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
     public void loadTutorial() {
         Intent mainAct = new Intent(this, TutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
         startActivityForResult(mainAct, 15);
 
     }
 
-    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+    private ArrayList<TutorialItem> getTutorialItems() {
         TutorialItem createItem = new TutorialItem(getString(R.string.tutorial_item_title_create), getString(R.string.tutorial_item_create),
                 R.color.white, R.drawable.ic_create);
 

@@ -81,7 +81,9 @@ public class UserDiveCenterProfileFragment extends Fragment {
     }
 
     public void showInstructors(View view) {
-        InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+        if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0 && binding.getDiveCenterViewModel().getDiveCenterProfile().getType() == 1) {
+            InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+        }
     }
 
 }

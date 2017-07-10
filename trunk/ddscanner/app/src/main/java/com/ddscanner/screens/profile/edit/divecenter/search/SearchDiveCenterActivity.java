@@ -112,7 +112,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         materialDialog = Helpers.getMaterialDialog(this);
         TextView addDiveCenter = (TextView) findViewById(R.id.add_spot);
         addDiveCenter.setOnClickListener(view -> CreateDiveCenterActivity.showForCreateDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER));
-        tryToReloadData("%");
+//        tryToReloadData("%");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             initializeListenerForHighVersions();
         } else {
