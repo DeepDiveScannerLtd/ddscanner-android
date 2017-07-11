@@ -61,10 +61,6 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
         setContentView(R.layout.activity_splash);
         //TODO uncomment in future versions
-        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
-            loadTutorial();
-            SharedPreferenceHelper.setIsNeedToShowTutorial();
-        }
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
@@ -76,12 +72,23 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//            skip.setVisibility(View.GONE);
+//            loginButton.setVisibility(View.GONE);
+//            signUpButton.setVisibility(View.GONE);
+//            showMainActivity();
+//        }
+
+        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+            loadTutorial();
+            SharedPreferenceHelper.setIsNeedToShowTutorial();
+        } else if (SharedPreferenceHelper.getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
             showMainActivity();
         }
+
 
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
@@ -202,6 +209,14 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP:
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
+                    showMainActivity();
+                }
+                break;
+            case 15:
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
+                    skip.setVisibility(View.GONE);
+                    loginButton.setVisibility(View.GONE);
+                    signUpButton.setVisibility(View.GONE);
                     showMainActivity();
                 }
                 break;

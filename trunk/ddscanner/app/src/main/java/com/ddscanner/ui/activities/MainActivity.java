@@ -211,19 +211,13 @@ public class MainActivity extends BaseAppCompatActivity
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
+        setContentView(R.layout.activity_main);
         startActivity();
-//        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
-       // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
-//        if (!isHasInternetConnection) {
-//            Log.i(TAG, "internetConnectionClosed 2");
-//            InternetClosedActivity.show(this);
-//        }
         loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
     }
 
     private void startActivity() {
-        getWindow().setBackgroundDrawable(null);
-        setContentView(R.layout.activity_main);
+//        getWindow().setBackgroundDrawable(null);
         findViews();
         setUi();
         searchLocationBtn.setOnClickListener(this);

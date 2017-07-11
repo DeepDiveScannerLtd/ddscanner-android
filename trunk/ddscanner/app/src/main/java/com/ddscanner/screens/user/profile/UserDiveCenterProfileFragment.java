@@ -26,11 +26,13 @@ public class UserDiveCenterProfileFragment extends Fragment {
     private DiveCenterProfile diveCenterProfile;
     private FragmentDiveCenterProfileBinding binding;
     private LatLng diveCenterLocation = null;
+    private int diveCenterType;
 
-    public static UserDiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile) {
+    public static UserDiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile, int diveCenterType) {
         UserDiveCenterProfileFragment userDiveCenterProfileFragment = new UserDiveCenterProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", diveCenterProfile);
+        bundle.putInt("type", diveCenterType);
         userDiveCenterProfileFragment.setArguments(bundle);
         return userDiveCenterProfileFragment;
     }
@@ -42,6 +44,7 @@ public class UserDiveCenterProfileFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dive_center_profile, container, false);
         diveCenterProfile = (DiveCenterProfile) getArguments().getSerializable("user");
         binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
+        diveCenterType = getArguments().getInt("type", 0);
         if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
             diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
         }
@@ -81,7 +84,7 @@ public class UserDiveCenterProfileFragment extends Fragment {
     }
 
     public void showInstructors(View view) {
-        if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0 && binding.getDiveCenterViewModel().getDiveCenterProfile().getType() == 1) {
+        if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0 && diveCenterType == 1) {
             InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
     }

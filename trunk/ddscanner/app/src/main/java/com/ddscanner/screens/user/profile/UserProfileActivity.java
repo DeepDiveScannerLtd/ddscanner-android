@@ -46,6 +46,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     private PhotoAuthor photoAuthor;
     private int userType;
     private ProfileFragment profileFragment;
+    private boolean isDiveCenterLegacy = false;
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -113,6 +114,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserProfileInformation(userId, resultListener);
                 break;
             default:
+                isDiveCenterLegacy = true;
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getLegacyDiveCenterInformation(userId, diveCenterProfileResultListener);
                 break;
         }
@@ -142,7 +144,11 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                         setActiveFragment(diveCenterProfileFragment);
                         break;
                     }
-                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile));
+                    if (!isDiveCenterLegacy) {
+                        setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 1));
+                        break;
+                    }
+                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 2));
                     break;
                 case 1:
                 case 2:
