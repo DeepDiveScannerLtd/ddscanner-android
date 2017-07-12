@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.ddscanner.analytics.EventsTracker;
+
 import java.util.List;
 
 import za.co.riggaroo.materialhelptutorial.MaterialTutorialFragment;
@@ -39,7 +41,9 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
         @Override
         public void onClick(View v) {
             materialTutorialPresenter.doneOrSkipClick();
-
+            if (v.getId() == R.id.activity_help_skip_textview) {
+                EventsTracker.trackSkipTutorial();
+            }
         }
     };
 
@@ -142,5 +146,10 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
         mHelpTutorialViewPager.setPageTransformer(true, (page, position) -> materialTutorialPresenter.transformPage(page, position)
 
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

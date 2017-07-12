@@ -106,6 +106,7 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_EDIT_SEALIFE = "edit_sea_life";
     private static final String EVENT_NAME_EDITED_SEALIFE = "sea_life_edited";
+    private static final String EVENT_NAME_SKIP_TUTORIAL = "skip_tutorial";
 
     // ----------------------------------------------------
     // Logging
@@ -145,6 +146,13 @@ public class EventsTracker {
             return;
         }
         trackEventWithoutParameters(EVENT_NAME_YES_IM_INSTRUCTOR);
+    }
+
+    public static void trackSkipTutorial() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        trackEventWithoutParameters(EVENT_NAME_SKIP_TUTORIAL);
     }
 
     private static void trackInstructorChosingDcEvenets(String eventName) {
