@@ -549,4 +549,5 @@
     <string name="tutorial_item_discover">Read informative reviews from our active experts</string>
     <string name="tutorial_item_explore_title">Explore</string>
     <string name="tutorial_item_explore">7000 dive spots, 100+ countries gathered in one place</string>
+    <string name="delete_this_review">Delete this review?</string>
 </resources>

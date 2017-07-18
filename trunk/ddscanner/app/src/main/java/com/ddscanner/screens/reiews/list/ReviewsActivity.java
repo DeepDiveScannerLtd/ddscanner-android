@@ -29,6 +29,7 @@ import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.ReportReasonIsWritenListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -38,6 +39,7 @@ import com.ddscanner.screens.reiews.edit.EditCommentActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.dialogs.ConfirmationDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.WriteReportReasonDialog;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -52,7 +54,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, ReportReasonIsWritenListener {
+public class ReviewsActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, ReportReasonIsWritenListener, ConfirmationDialogClosedListener {
 
     private static final String ARG_OPENED_SOURCE = "isuser";
     private static final String ARG_LOCATION = "location";
@@ -514,7 +516,9 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
 
     @Subscribe
     public void deleteComment(DeleteCommentEvent event) {
-        deleteUsersComment(String.valueOf(event.getCommentId()));
+        commentToDelete = String.valueOf(event.getCommentId());
+        ConfirmationDialogFragment.showForActivity(getSupportFragmentManager(), R.string.empty_string, R.string.delete_this_review, R.string.yes, R.string.no);
+//        deleteUsersComment(String.valueOf(event.getCommentId()));
     }
 
     @Subscribe
@@ -552,20 +556,6 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     private void showOtherReportDialog() {
         WriteReportReasonDialog writeReportReasonDialog = new WriteReportReasonDialog();
         writeReportReasonDialog.show(getSupportFragmentManager(), null);
-//        new MaterialDialog.Builder(this)
-//                .title("Other")
-//                .widgetColor(ContextCompat.getColor(this, R.color.primary))
-//                .input("Write reason", "", new MaterialDialog.InputCallback() {
-//                    @Override
-//                    public void onInput(MaterialDialog dialog, CharSequence input) {
-//                        if (input.toString().trim().length() > 1) {
-//                            sendReportRequest(reportType, input.toString());
-//                            reportDescription = input.toString();
-//                        } else {
-//                            Toast.makeText(ReviewsActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }).show();
     }
 
     @Override
@@ -635,6 +625,13 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         }
     }
 
+    @Override
+    public void onPositiveDialogClicked() {
+        deleteUsersComment(commentToDelete);
+    }
 
+    @Override
+    public void onNegativeDialogClicked() {
 
+    }
 }
