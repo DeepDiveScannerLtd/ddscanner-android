@@ -121,7 +121,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             changeUiAccordingNewFlags(result);
             if (isClickedEdit) {
                 if (result.isEditable() || (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
-                    EventsTracker.trackDiveSpotEdit();
                     Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
                     editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
                     startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
@@ -434,7 +433,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void tryToCallEditDiveSpotActivity() {
-        EventsTracker.trackDiveSpotEdit();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
@@ -890,6 +888,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void openMapActivityClicked(View view) {
+        EventsTracker.trackDiveSpotLocationOnMapView();
         Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
         intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
         startActivity(intent);
@@ -923,6 +922,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void showCreatorsActivity(View view) {
+        EventsTracker.trackEditorsView();
         EditorsListActivity.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
     }
 
@@ -1066,7 +1066,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
                 binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() + 1);
                 DiveSpotDetailsActivityViewModel.setCheckinsCount(binding.numberOfCheckingPeople, binding.getDiveSpotViewModel());
-                EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+                EventsTracker.trackCheckIn();
                 checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(),DiveSpotDetailsActivity.this);
                 if (!isPopupShown) {
                     checkedInDialogFragment.show(getSupportFragmentManager(), "");

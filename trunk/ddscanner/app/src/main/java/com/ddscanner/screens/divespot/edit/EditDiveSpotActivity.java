@@ -311,8 +311,8 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventsTracker.trackDiveSpotEdit();
         setContentView(R.layout.activity_add_dive_spot);
-        EventsTracker.trackDiveSpotCreation();
         diveSpotDetailsEntity = new Gson().fromJson(getIntent().getStringExtra("divespot"), DiveSpotDetailsEntity.class);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
@@ -769,11 +769,15 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-                // onBackPressed();
+                 onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     private void hideErrorsFields() {

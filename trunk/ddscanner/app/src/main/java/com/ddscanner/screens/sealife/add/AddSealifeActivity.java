@@ -150,12 +150,12 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         }
         makeErrorsMap();
         if (!isForEdit) {
+            EventsTracker.trackSealifeCreation();
             isImageCaptured = false;
             setupToolbar(R.string.add_sealife, R.id.toolbar);
         } else {
             setupToolbar(R.string.edit_sea_life, R.id.toolbar);
         }
-        EventsTracker.trackSealifeCreation();
         progressDialogUpload = Helpers.getMaterialDialog(this);
     }
 

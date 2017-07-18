@@ -516,14 +516,18 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (isSomethingEntered()) {
-                    DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                    onBackPressed();
                 } else {
                     finish();
                 }
-                // onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     private void hideErrorsFields() {

@@ -316,7 +316,6 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
                         isTryToOpenAddDiveSpotActivity = false;
-                        EventsTracker.trackDiveSpotCreation();
                         AddDiveSpotActivity.show(SearchSpotOrLocationActivity.this);
                     }
                 }

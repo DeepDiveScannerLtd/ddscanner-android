@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
@@ -113,6 +114,7 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         switch (source) {
             case MAPS:
                 setupToolbar(R.string.maps_toolbar_title, R.id.toolbar);
+                EventsTracker.trackMapsView();
                 break;
             default:
                 setupToolbar(R.string.photos, R.id.toolbar);

@@ -30,12 +30,12 @@ public class EventsTracker {
     private static final String EVENT_NAME_USER_CHECK_INS_VIEW = "user_check_ins_view";
     private static final String EVENT_NAME_USER_CREATED_VIEW = "user_created_view";
     private static final String EVENT_NAME_USER_EDITED_VIEW = "user_edited_view";
-    private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favourites_view";
+    private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favorites_view";
     private static final String EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW = "dive_spot_check_ins_view";
     private static final String EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW = "dive_spot_photos_view";
     private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
     private static final String EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW = "dive_spot_reviews_view";
-    private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "reviewer_profile_view";
+    private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "foreign_profile_view";
     private static final String EVENT_NAME_SEARCH_BY_DIVE_SPOT = "search_by_dive_spot";
     private static final String EVENT_NAME_SEARCH_BY_LOCATION = "search_by_location";
     private static final String EVENT_NAME_SEARCH_SEA_LIFE = "search_sea_life";
@@ -54,6 +54,10 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
     private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
     private static final String EVENT_NAME_SKIP_REGISTRATION = "skip_registration";
+    private static final String EVENT_NAME_DIVE_SPOT_EDITORS_VIEW = "dive_spot_editors_view";
+    private static final String EVENT_NAME_DIVE_SPOT_MAPS_VIEW = "dive_spot_maps_view";
+    private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE = "type";
+    private static final String EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW = "dive_spot_location_on_map_view";
 
     // ----------------------------------------------------
     // Content management
@@ -63,13 +67,13 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT_INVALID = "dive_spot_invalid";
 //    private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT = "result";
 
-    private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
+    private static final String EVENT_NAME_EDIT_DIVE_SPOT = "dive_spot_edit_click";
 
-    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "create_dive_spot";
+    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "dive_spot_create_click";
     private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "dive_spot_photo_report";
     private static final String EVENT_NAME_DIVE_SPOT_EDITED = "dive_spot_edited";
     private static final String EVENT_NAME_DIVE_SPOT_CREATED = "dive_spot_created";
-    private static final String EVENT_NAME_SEALIFE_CREATE = "create_sea_life";
+    private static final String EVENT_NAME_SEALIFE_CREATE = "sea_life_create_click";
     private static final String EVENT_NAME_SEALIFE_CREATED = "sea_life_created";
     private static final String EVENT_NAME_REPORT_REVIEW = "reviewer_review_report";
     private static final String EVENT_NAME_DELETE_REVIEW = "user_review_delete";
@@ -93,8 +97,8 @@ public class EventsTracker {
     private static final String EVENT_NAME_SEND_REVIEW = "send_review";
     private static final String EVENT_PARAMETER_NAME_SOURCE = "source";
 
-    private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
-    private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
+    private static final String EVENT_NAME_COMMENT_LIKED = "review_liked";
+    private static final String EVENT_NAME_COMMENT_DISLIKED = "review_disliked";
 
     private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
 
@@ -104,7 +108,7 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
-    private static final String EVENT_NAME_EDIT_SEALIFE = "edit_sea_life";
+    private static final String EVENT_NAME_EDIT_SEALIFE = "sea_life_edit_click";
     private static final String EVENT_NAME_EDITED_SEALIFE = "sea_life_edited";
     private static final String EVENT_NAME_SKIP_TUTORIAL = "skip_tutorial";
 
@@ -124,38 +128,106 @@ public class EventsTracker {
     private static final String EVENT_NAME_REGISTRATION_DIVE_CENTER = "registration_dc";
     private static final String EVENT_NAME_REGISTRATION_DIVER = "registration_diver";
     private static final String EVENT_NAME_YES_IM_INSTRUCTOR = "yes_im_instructor";
-    private static final String EVENT_NAME_INSTR_REG_DC_USER_CHOSEN = "instr_reg_dc_user_chosen";
-    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN = "instr_reg_dc_legacy_chosen";
-    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED = "instr_reg_dc_legacy_invited";
-    private static final String EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN = "instr_reg_add_new_chosen";
-    private static final String EVENT_NAME_INSTR_REG_DC_NEW_INVITED = "instr_reg_dc_new_invited";
+    private static final String EVENT_NAME_INSTR_REG_DC_USER_CHOSEN = "dc_search_dc_user_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN = "dc_search_dc_legacy_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED = "dc_search_dc_legacy_invited";
+    private static final String EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN = "dc_search_add_new_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_NEW_INVITED = "dc_search_dc_new_invited";
+    private static final String EVENT_NAME_WATCH_TUTORIAL = "tutorial_watched";
+    private static final String EVENT_PARAMETER_NAME_TUTORIAL_PAGE = "page";
+
 
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    public static void trackDiveSpotLocationOnMapView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW);
+    }
+
+    public static void trackEditorsView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_EDITORS_VIEW);
+    }
+
+    public static void trackMapsView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_MAPS_VIEW);
+    }
+
+    public static void trackWatchTutorial() {
+        trackEventWithoutParameters(EVENT_NAME_WATCH_TUTORIAL);
+    }
 
     public static void trackSkipRegistration() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SKIP_REGISTRATION);
     }
 
     public static void trackYesInstructorClicked() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_YES_IM_INSTRUCTOR);
     }
 
-    public static void trackSkipTutorial() {
+    public static void trackUserAchievementsView(AchievementsViewSource source) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-        trackEventWithoutParameters(EVENT_NAME_SKIP_TUTORIAL);
+
+        String sourceName = source.getName();
+
+        Bundle params = new Bundle();
+
+
+        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, sourceName);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, sourceName);
+        FlurryAgent.logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, sourceName);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_ACHIEVEMENTS_VIEW, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW, params);
+
+
+
+//        trackEventWithoutParameters(EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
+    }
+
+    public static void trackSkipTutorial(String currentPosition) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        Bundle params = new Bundle();
+
+//        trackEventWithoutParameters(EVENT_NAME_SKIP_TUTORIAL);
+
+        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_PAGE, currentPosition);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SKIP_TUTORIAL, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_PAGE, currentPosition);
+        FlurryAgent.logEvent(EVENT_NAME_SKIP_TUTORIAL, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_PAGE, currentPosition);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SKIP_TUTORIAL, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SKIP_TUTORIAL, params);
+
     }
 
     private static void trackInstructorChosingDcEvenets(String eventName) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         Bundle params = new Bundle();
 
@@ -177,37 +249,22 @@ public class EventsTracker {
     }
 
     public static void trackInstructorRegistrationDcUserChosen() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_USER_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcLegacyChosen() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcLegacyInvited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED);
     }
 
     public static void trackInstructorRegistrationAddNewChosen() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN);
     }
 
     public static void trackInstructorRegistrationDcNewInvited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_NEW_INVITED);
     }
 
@@ -216,6 +273,9 @@ public class EventsTracker {
     }
 
     private static void trackEventWithoutParameters(String eventName) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
         String userType = DDScannerApplication.getInstance().getActiveUserType();
         // Google Firebase
         Bundle params = new Bundle();
@@ -265,7 +325,7 @@ public class EventsTracker {
         AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
     }
 
-    public static void trackDiveCenterView(String diveCenterId) {
+    public static void trackDiveCenterView(String diveCenterId, String dcType) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
@@ -273,6 +333,7 @@ public class EventsTracker {
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+        params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, dcType);
         params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
 
@@ -280,12 +341,14 @@ public class EventsTracker {
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
         flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, dcType);
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
 
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
         appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, dcType);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
 
         //Facebook
@@ -351,9 +414,6 @@ public class EventsTracker {
     }
 
     public static void trackRegistration(int userType) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         if (userType == 0) {
             trackEventWithoutParameters(EVENT_NAME_REGISTRATION_DIVE_CENTER);
         } else {
@@ -362,406 +422,220 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotValid() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_VALID);
     }
 
     public static void trackDiveSpotInvalid() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_INVALID);
     }
 
     public static void trackDiveSpotEdit() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_EDIT_DIVE_SPOT);
     }
 
     public static void trackDiveSpotCreation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_CREATE_DIVE_SPOT);
     }
 
     public static void trackSealifeCreation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEALIFE_CREATE);
     }
 
     public static void trackSealifeCreated() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEALIFE_CREATED);
     }
 
     public static void trackReviewEdited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_EDITED_REVIEW);
     }
 
     public static void trackReviewrFacebookOpened() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
     }
 
     public static void trackDiveSpotReviewReportSent() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT);
     }
 
     public static void trackDiveSpotphotoReportSent() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT);
     }
 
     public static void trackDivespotCreated() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_CREATED);
     }
 
     public static void trackDivespotEdited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_EDITED);
     }
 
     public static void trackReviewShowAll() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REVIEW_SHOW_ALL);
     }
 
 
-    public static void trackCheckIn(CheckInStatus status) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_IN, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        FlurryAgent.logEvent(EVENT_NAME_CHECK_IN, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_IN, appsflyerParams);
-
-        //Facebook
-        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CHECK_IN, params);
+    public static void trackCheckIn() {
+       trackEventWithoutParameters(EVENT_NAME_CHECK_IN);
     }
 
     public static void trackCheckOut() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_CHECK_OUT);
     }
 
     public static void trackReviewSent() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REVIEW_SENT);
     }
 
     public static void trackSendReview() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEND_REVIEW);
     }
 
     public static void trackCommentLiked() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_COMMENT_LIKED);
     }
 
     public static void trackCommentDisliked() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_COMMENT_DISLIKED);
     }
 
     public static void trackDiveSpotPhotoAdded() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
     public static void trackContactDiveCenter() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_CONTACT_DIVE_CENTER);
     }
 
     public static void trackDiveSpotMapView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
     }
 
     public static void trackDiveSpotListView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
     }
 
     public static void trackDiveCentersMapView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
     }
 
     public static void trackDiveCentersListView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
     }
 
     public static void trackNotificationsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_NOTIFICATIONS_VIEW);
     }
 
     public static void trackActivityView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_ACTIVITY_VIEW);
     }
 
     public static void trackUserProfileView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_PROFILE_VIEW);
     }
 
     public static void trackUserCheckinsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_CHECK_INS_VIEW);
     }
 
     public static void trackUserEditedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_EDITED_VIEW);
     }
 
     public static void trackUserCreatedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_CREATED_VIEW);
     }
 
     public static void trackUserFavoritesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_FAVORITES_VIEW);
     }
 
     public static void trackDiveSpotCheckinsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
     }
 
     public static void trackEditSealife() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_EDIT_SEALIFE);
     }
 
     public static void trackSealifeEdited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_EDITED_SEALIFE);
     }
 
     public static void trackDiveSpotPhotosView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
     }
 
     public static void trackDiveSpotSealifeView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
     }
 
     public static void trackDeviSpotReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
     }
 
     public static void trackReviewerProfileView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REVIEWER_PROFILE_VIEW);
     }
 
     public static void trackSearchByDiveSpot() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEARCH_BY_DIVE_SPOT);
     }
 
     public static void trackSearchByLocation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEARCH_BY_LOCATION);
     }
 
     public static void trackSearchSeaLife() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_SEARCH_SEA_LIFE);
     }
 
     public static void trackPhotoReport() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO);
     }
 
     public static void trackReviewReport() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_REPORT_REVIEW);
     }
 
     public static void trackDeleteReview() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DELETE_REVIEW);
     }
 
     public static void trackReviewDeleted() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_DELETED_REVIEW);
     }
 
     public static void trackEditReview() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_EDIT_REVIEW);
     }
 
     public static void trackUserLikesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_LIKES_VIEW);
     }
 
     public static void trackUserDislikesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_DISLIKES_VIEW);
     }
 
-    public static void trackUserAchievementsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        trackEventWithoutParameters(EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
-    }
-
     public static void trackUserReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
         trackEventWithoutParameters(EVENT_NAME_USER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        trackEventWithoutParameters(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerCreatedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CREATED_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CREATED_VIEW);
     }
 
     public static void trackReviewerEditedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        trackEventWithoutParameters(EVENT_NAME_REVIEWER_EDITED_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_EDITED_VIEW);
     }
 
     public static void trackReviewerCheckInsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
     }
 
     public static void trackUnknownServerError(String url, String errorText) {
@@ -791,6 +665,22 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+    }
+
+    public enum AchievementsViewSource {
+
+        POINTS("points"), DETAILS("show_details");
+
+        private String name;
+
+        AchievementsViewSource(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
     }
 
     public enum SpotViewSource {

@@ -106,7 +106,6 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventsTracker.trackUserAchievementsView();
         setContentView(R.layout.activity_ahievments);
         findViews();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAchivements(responseEntityResultListener);

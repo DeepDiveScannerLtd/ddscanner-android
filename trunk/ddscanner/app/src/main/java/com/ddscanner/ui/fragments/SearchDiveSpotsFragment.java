@@ -64,7 +64,6 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_spot:
-                EventsTracker.trackDiveSpotCreation();
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     AddDiveSpotActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT, true);
                 } else {

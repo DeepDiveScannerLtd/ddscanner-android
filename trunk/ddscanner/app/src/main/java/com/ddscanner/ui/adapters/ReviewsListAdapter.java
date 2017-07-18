@@ -307,13 +307,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.user_avatar:
-                    EventsTracker.trackReviewerProfileView();
                     switch (comments.get(getAdapterPosition()).getReviewType()) {
                         case USER:
                             DiveSpotDetailsActivity.show(context, String.valueOf(comments.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_PROFILE_REVIEWS);
                             break;
                         case DIVESPOT:
-                            EventsTracker.trackReviewerProfileView();
                             UserProfileActivity.show(context, comments.get(getAdapterPosition()).getAuthor().getId(), comments.get(getAdapterPosition()).getAuthor().getType());
                             break;
                     }

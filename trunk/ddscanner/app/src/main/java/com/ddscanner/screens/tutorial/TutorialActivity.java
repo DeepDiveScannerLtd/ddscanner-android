@@ -42,7 +42,9 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
         public void onClick(View v) {
             materialTutorialPresenter.doneOrSkipClick();
             if (v.getId() == R.id.activity_help_skip_textview) {
-                EventsTracker.trackSkipTutorial();
+                EventsTracker.trackSkipTutorial(String.valueOf(mHelpTutorialViewPager.getCurrentItem()));
+            } else {
+                EventsTracker.trackWatchTutorial();
             }
         }
     };

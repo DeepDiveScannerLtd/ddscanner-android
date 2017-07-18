@@ -382,6 +382,14 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     public void showAchievementsDetails(View view) {
+        switch (view.getId()) {
+            case R.id.points_layout:
+                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.POINTS);
+                break;
+            case R.id.show_achievments_details:
+                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.DETAILS);
+                break;
+        }
         AchievementsActivity.show(getContext());
     }
 

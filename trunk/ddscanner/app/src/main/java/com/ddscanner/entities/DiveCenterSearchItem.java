@@ -11,16 +11,22 @@ public class DiveCenterSearchItem {
 
     public enum DiveCenterType {
 
-        USER(1), LEGACY(2), NEW(3);
+        USER(1, "user"), LEGACY(2, "legacy"), NEW(3, "new");
 
-        int integerType;
+        Integer integerType;
+        String type;
 
-        DiveCenterType(int integerType) {
+        DiveCenterType(int integerType, String type) {
+            this.type = type;
             this.integerType = integerType;
         }
 
-        public int getIntegerType() {
+        public Integer getIntegerType() {
             return this.integerType;
+        }
+
+        public String getType() {
+            return this.type;
         }
 
     }

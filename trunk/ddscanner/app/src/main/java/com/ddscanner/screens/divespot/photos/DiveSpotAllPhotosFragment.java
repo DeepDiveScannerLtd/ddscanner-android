@@ -41,22 +41,6 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         return view;
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-
-        public GridSpacingItemDecoration(int spanCount) {
-            this.spanCount = spanCount;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-            if (position >= spanCount) {
-                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4), getContext()));
-            }
-        }
-    }
 
     public void setList(ArrayList<DiveSpotPhoto> images, String diveSpotId) {
         if (recyclerView == null) {

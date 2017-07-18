@@ -232,8 +232,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-//                onBackPressed();
+                onBackPressed();
                 return true;
             case R.id.send_review:
                 Helpers.hideKeyboard(this);
@@ -242,6 +241,11 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     @Override
