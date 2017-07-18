@@ -32,20 +32,9 @@ public class SharedPreferenceHelper {
     private static final String VISIBILITY = "VISIBILITY";
     private static final String LEVEL = "LEVEL";
     private static final String OBJECT = "OBJECT";
-    private static final String USERID = "USERID";
-    private static final String PHOTOLINK = "PHOTOLINK";
-    private static final String USERNAME = "USERNAME";
-    private static final String LINK = "LINK";
     private static final String USER_SERVER_ID = "USER_SERVER_ID";
     private static final String USER_APP_ID = "USER_APP_ID";
     private static final String IS_USER_APP_ID_RECEIVED = "IS_USER_APP_ID_RECEIVED";
-    private static final String LOGGED_USER = "LOGGED_USER";
-    private static final String LOGGED_DIVE_CENTER = "LOGGED_DIVE_CENTER";
-    private static final String LOGGED_TYPE = "LOGGED_TYPE";
-    private static final String IS_DC_LOGGED_IN = "IS_DC_LOGGED_IN";
-    private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
-    private static final String DC_TOKEN = "DC_TOKEN";
-    private static final String USER_TOKEN= "USER_TOKEN";
     private static final String IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY = "IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY";
     private static final String USERS_LiST = "USERS_LIST";
     private static final String SEALIFES_LIST = "sealifes";
@@ -53,6 +42,7 @@ public class SharedPreferenceHelper {
     private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
     private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
     private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
+    private static final String TUTORIAL_STATE = "tutorial_state";
 
     private static SharedPreferences prefs;
 
@@ -70,11 +60,39 @@ public class SharedPreferenceHelper {
         }
     }
 
+    public enum TutorialState {
+
+        SKIPPED("skipped"), WATCHED("watched"), PARTLY_WATCHED("partly_watched");
+
+        String state;
+
+        TutorialState(String state) {
+            this.state = state;
+        }
+
+        public String getState() {
+            return state;
+        }
+    }
+
+    public void setTutorialState(TutorialState state) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(TUTORIAL_STATE, state.getState());
+        editor.apply();
+        DDScannerApplication.getInstance().setTutorialState(state);
+    }
+
+    public String getTutorialState() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(TUTORIAL_STATE, TutorialState.PARTLY_WATCHED.getState());
+    }
+
     public void setDivecenterSearchSource(SearchSourceType type) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(DIVECENTER_SEARCH_SOURCE, type.getSource());
-        editor.commit();
+        editor.apply();
     }
 
     public String getDivecenterSearchSource() {
@@ -87,7 +105,7 @@ public class SharedPreferenceHelper {
         Editor editor = prefs.edit();
         editor.putString(LAST_USER_KNOWN_LATITUDE, String.valueOf(latLng.latitude));
         editor.putString(LAST_USER_KNOWN_LONGITUDE, String.valueOf(latLng.longitude));
-        editor.commit();
+        editor.apply();
     }
 
     private boolean isLocationSaved() {
@@ -118,7 +136,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean getIsMustRefreshDiveSpotActivity() {
@@ -130,7 +148,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean getIsFirstLaunch() {
@@ -142,14 +160,14 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     public void setUserAppId(String appId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_APP_ID, appId);
-        editor.commit();
+        editor.apply();
     }
 
     public String getUserAppId() {
@@ -161,14 +179,14 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_APP_ID_RECEIVED, true);
-        editor.commit();
+        editor.apply();
     }
 
     public void setCurrents(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(CURRENTS, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getCurrents() {
@@ -180,7 +198,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(LEVEL, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getLevel() {
@@ -189,17 +207,14 @@ public class SharedPreferenceHelper {
     }
 
     public boolean isFiltersApplyied() {
-        if (getLevel().isEmpty() && getObject().isEmpty() && getSealifesList() == null) {
-            return false;
-        }
-        return true;
+        return !(getLevel().isEmpty() && getObject().isEmpty() && getSealifesList() == null);
     }
 
     public void setVisibility(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(VISIBILITY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getVisibility() {
@@ -212,7 +227,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(OBJECT, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getObject() {
@@ -228,7 +243,7 @@ public class SharedPreferenceHelper {
         } else {
             editor.putString(SEALIFES_LIST, new Gson().toJson(sealifesList));
         }
-        editor.commit();
+        editor.apply();
     }
 
     public void clearFilters() {
@@ -250,10 +265,10 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(PREFERENCES_GCM_ID, appInstanceId);
-        editor.commit();
+        editor.apply();
     }
 
-    public void setIsUserSignedIn(boolean isUserSignedIn, SignInType signInType) {
+    private void setIsUserSignedIn(boolean isUserSignedIn, SignInType signInType) {
         Log.i(TAG, "setIsUserSignedIn " + isUserSignedIn);
         if (isUserSignedIn && signInType == null) {
             throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
@@ -261,14 +276,14 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_SIGNED_IN, isUserSignedIn);
-        editor.commit();
+        editor.apply();
     }
 
     public void setToken(String token) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(TOKEN, token);
-        editor.commit();
+        editor.apply();
     }
 
     public String getToken() {
@@ -280,7 +295,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SN, sn);
-        editor.commit();
+        editor.apply();
     }
 
     public String getSn() {
@@ -292,7 +307,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SECRET, secret);
-        editor.commit();
+        editor.apply();
     }
 
     public String getSecret() {
@@ -304,7 +319,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_SERVER_ID, id);
-        editor.commit();
+        editor.apply();
     }
 
     public String getUserServerId() {
@@ -318,7 +333,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putLong("LASTNOTIF", time);
-        editor.commit();
+        editor.apply();
     }
 
     /*Multi accounts mechanism*/
@@ -367,7 +382,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USERS_LiST, new Gson().toJson(users));
-        editor.commit();
+        editor.apply();
         updateUserTypeInApplication();
     }
 
@@ -459,7 +474,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_NEED_TO_SHOW_TUTORIAL, false);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean getIsNeedToShowTutorial() {

@@ -13,7 +13,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.List;
 
@@ -42,8 +44,14 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
         public void onClick(View v) {
             materialTutorialPresenter.doneOrSkipClick();
             if (v.getId() == R.id.activity_help_skip_textview) {
+                if (mHelpTutorialViewPager.getCurrentItem() == 0) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setTutorialState(SharedPreferenceHelper.TutorialState.SKIPPED);
+                } else {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setTutorialState(SharedPreferenceHelper.TutorialState.PARTLY_WATCHED);
+                }
                 EventsTracker.trackSkipTutorial(String.valueOf(mHelpTutorialViewPager.getCurrentItem()));
             } else {
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setTutorialState(SharedPreferenceHelper.TutorialState.WATCHED);
                 EventsTracker.trackWatchTutorial();
             }
         }

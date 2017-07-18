@@ -3,6 +3,7 @@ package com.ddscanner.utils;
 public class Constants {
 
     public static final String ANALYTIC_VERSION = "v1_1";
+    public static final String PLATFORM = "android";
 
     //CreateDiveCenterArguments
     public static final String ARG_ID = "id";

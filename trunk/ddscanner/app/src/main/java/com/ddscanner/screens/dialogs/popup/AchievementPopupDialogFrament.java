@@ -50,14 +50,11 @@ public class AchievementPopupDialogFrament extends DialogFragment {
         builder.setCancelable(false);
         builder.setView(binding.getRoot());
         builder.setTitle(null);
-        binding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                PopupHideListener popupHideListener;
-                popupHideListener = (PopupHideListener) getActivity();
-                popupHideListener.onPopupClosed();
-            }
+        binding.button.setOnClickListener(view -> {
+            dismiss();
+            PopupHideListener popupHideListener;
+            popupHideListener = (PopupHideListener) getActivity();
+            popupHideListener.onPopupClosed();
         });
         return builder.create();
     }

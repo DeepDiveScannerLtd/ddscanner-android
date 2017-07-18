@@ -29,6 +29,7 @@ public class DDScannerApplication extends Application {
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
     private static String activeUserType;
+    private static String tutorialState;
 
     // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
     private DDScannerRestClient ddScannerRestClient;
@@ -57,6 +58,7 @@ public class DDScannerApplication extends Application {
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
         activeUserType = SharedPreferenceHelper.getActiveUserType().getName();
+        tutorialState = sharedPreferenceHelper.getTutorialState();
         dialogHelpers = new DialogHelpers();
     }
 
@@ -119,6 +121,14 @@ public class DDScannerApplication extends Application {
 
     public String getActiveUserType() {
         return activeUserType;
+    }
+
+    public void setTutorialState(SharedPreferenceHelper.TutorialState tutorialState) {
+        DDScannerApplication.tutorialState = tutorialState.getState();
+    }
+
+    public String getTutorialState() {
+        return tutorialState;
     }
 
 }
