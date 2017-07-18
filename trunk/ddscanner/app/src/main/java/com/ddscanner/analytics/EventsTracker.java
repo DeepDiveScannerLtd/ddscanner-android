@@ -139,10 +139,40 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_PAGE = "page";
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_STATE = "tutorial_state";
     private static final String EVENT_PARAMETER_NAME_PLATFORM = "platform";
+    private static final String EVENT_PARAMETER_NAME_TUTORIAL_VERSION = "tutorial_version";
 
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    private static void trackEventWithParameters(Map<String, String> params, String eventName) {
+
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        String userType = DDScannerApplication.getInstance().getActiveUserType();
+
+        String tutorialState = DDScannerApplication.getInstance().getTutorialState();
+
+        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+        params.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        params.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        params.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+
+        Bundle firebaseParams = new Bundle();
+        Map<String, Object> appsflyerParams = new HashMap<>();
+
+        for(Map.Entry entry: params.entrySet()) {
+            firebaseParams.putString(entry.getKey().toString(), entry.getValue().toString());
+            appsflyerParams.put(entry.getKey().toString(), entry.getValue());
+        }
+
+        AnalyticsSystemsManager.getLogger().logEvent(eventName, firebaseParams);
+        FlurryAgent.logEvent(eventName, params);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, firebaseParams);
+    }
 
     private static void trackEventWithoutParameters(String eventName) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
@@ -156,6 +186,7 @@ public class EventsTracker {
         params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         params.putString(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
 
         // Flurry
@@ -163,6 +194,7 @@ public class EventsTracker {
         flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         flurryParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         FlurryAgent.logEvent(eventName, flurryParams);
 
         // Appsflyer
@@ -170,6 +202,7 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         appsflyerParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
 
         //Facebook
@@ -211,34 +244,6 @@ public class EventsTracker {
         Map<String, String> map = new HashMap<>();
         map.put(EVENT_PARAMETER_NAME_QUESTION, question);
         trackEventWithParameters(map, EVENT_NAME_GUIDE_NOT_USEFUL);
-    }
-
-    private static void trackEventWithParameters(Map<String, String> params, String eventName) {
-
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        String userType = DDScannerApplication.getInstance().getActiveUserType();
-
-        String tutorialState = DDScannerApplication.getInstance().getTutorialState();
-
-        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
-        params.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        params.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
-
-        Bundle firebaseParams = new Bundle();
-        Map<String, Object> appsflyerParams = new HashMap<>();
-
-        for(Map.Entry entry: params.entrySet()) {
-            firebaseParams.putString(entry.getKey().toString(), entry.getValue().toString());
-            appsflyerParams.put(entry.getKey().toString(), entry.getValue());
-        }
-
-        AnalyticsSystemsManager.getLogger().logEvent(eventName, firebaseParams);
-        FlurryAgent.logEvent(eventName, params);
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, firebaseParams);
     }
 
     public static void trackDiveSpotLocationOnMapView() {
