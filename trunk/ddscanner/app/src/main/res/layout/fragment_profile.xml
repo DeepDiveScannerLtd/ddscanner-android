@@ -660,7 +660,8 @@
                                 />
                         </LinearLayout>
                     </LinearLayout>
-
+                    <ImageView
+                        style="@style/DividerStyleFull" />
                 </LinearLayout>
             </ScrollView>
 

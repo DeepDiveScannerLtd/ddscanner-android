@@ -33,6 +33,7 @@ import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLangu
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
+import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
@@ -271,6 +272,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
+    }
+
+    public void showAboutDDSButtonClicked(View view) {
+        AboutActivity.show(getContext());
     }
 
     public void logout(View view) {

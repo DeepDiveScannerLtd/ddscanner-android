@@ -484,11 +484,34 @@
                             android:text="@string/log_out" />
 
                         <ImageView
-                            style="@style/DividerStyleFull"
+                            style="@style/DividerStyle"
                             android:layout_alignParentBottom="true" />
                     </RelativeLayout>
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/about_dss_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showAboutDDSButtonClicked}"
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_marginTop="0dp"
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:src="@drawable/ic_profile_about" />
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:layout_width="258dp"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_vertical"
+                            android:text="@string/about_dds"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    style="@style/DividerStyleFull" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
