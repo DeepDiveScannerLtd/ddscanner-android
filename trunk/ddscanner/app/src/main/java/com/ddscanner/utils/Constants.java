@@ -2,6 +2,8 @@ package com.ddscanner.utils;
 
 public class Constants {
 
+    public static final String ANALYTIC_VERSION = "v1_1";
+
     //CreateDiveCenterArguments
     public static final String ARG_ID = "id";
     public static final String ARG_DC_TYPE = "type";
