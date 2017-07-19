@@ -28,15 +28,15 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         multiDexEnabled true
-        versionCode 33
-        versionName "3.0.8"
+        versionCode 34
+        versionName "3.0.9"
         testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
     buildTypes {
         debug {
 //            ext.enableCrashlytics = false
             applicationIdSuffix ".debug"
-            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "false"
+            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "true"
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
