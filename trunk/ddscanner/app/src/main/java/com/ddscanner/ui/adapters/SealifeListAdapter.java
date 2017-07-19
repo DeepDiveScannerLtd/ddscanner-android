@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
 import com.ddscanner.utils.Helpers;
@@ -70,7 +71,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
         @Override
         public void onClick(View v) {
-            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId());
+            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId(), EventsTracker.SealifeViewSource.DIVE_SPOT);
         }
     }
 }

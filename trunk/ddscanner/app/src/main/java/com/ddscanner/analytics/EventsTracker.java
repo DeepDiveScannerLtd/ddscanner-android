@@ -15,12 +15,20 @@ import java.util.Map;
 
 public class EventsTracker {
 
-    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
+    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_centers";
     private static final String EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD = "method";
 
     // ----------------------------------------------------
     // Screens views
     // ----------------------------------------------------
+
+    private static final String EVENT_NAME_ABOUT_DDS_MENU_VIEW = "about_dds_menu_view";
+    private static final String EVENT_NAME_ABOUT_DDS_VIEW = "about_dds_view";
+    private static final String EVENT_NAME_CONTACT_US_VIEW = "contact_us_view";
+    private static final String EVENT_NAME_GUIDE_TO_DDS_VIEW = "guide_to_dds_view";
+    private static final String EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW = "guide_to_dds_item_view";
+    private static final String EVENT_NAME_REVIEW_VIEW = "review_view";
+    private static final String EVENT_NAME_IMAGE_VIEW = "image_view";
 
     private static final String EVENT_NAME_DIVE_SPOTS_MAP_VIEW = "dive_spots_map_view";
     private static final String EVENT_NAME_DIVE_SPOTS_LIST_VIEW = "dive_spots_list_view";
@@ -35,7 +43,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favorites_view";
     private static final String EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW = "dive_spot_check_ins_view";
     private static final String EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW = "dive_spot_photos_view";
-    private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
+    private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "sealife_view";
     private static final String EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW = "dive_spot_reviews_view";
     private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "foreign_profile_view";
     private static final String EVENT_NAME_SEARCH_BY_DIVE_SPOT = "search_by_dive_spot";
@@ -60,6 +68,8 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT_MAPS_VIEW = "dive_spot_maps_view";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE = "type";
     private static final String EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW = "dive_spot_location_on_map_view";
+    private static final String EVENT_NAME_INSTRUCTORS_VIEW = "user_instructors_view";
+    private static final String EVENT_NAME_DIVESPOTS_TO_APPROVE_VIEW = "dive_spots_to_be_approved_view";
 
     // ----------------------------------------------------
     // Content management
@@ -70,23 +80,26 @@ public class EventsTracker {
 //    private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT = "result";
 
     private static final String EVENT_NAME_EDIT_DIVE_SPOT = "dive_spot_edit_click";
-
+    private static final String EVET_NAME_DIVE_SPOT_MAP_ADDED = "dive_spot_map_added";
     private static final String EVENT_NAME_CREATE_DIVE_SPOT = "dive_spot_create_click";
-    private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "dive_spot_photo_report";
+    private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "image_report_click";
     private static final String EVENT_NAME_DIVE_SPOT_EDITED = "dive_spot_edited";
     private static final String EVENT_NAME_DIVE_SPOT_CREATED = "dive_spot_created";
     private static final String EVENT_NAME_SEALIFE_CREATE = "sea_life_create_click";
     private static final String EVENT_NAME_SEALIFE_CREATED = "sea_life_created";
-    private static final String EVENT_NAME_REPORT_REVIEW = "reviewer_review_report";
+    private static final String EVENT_NAME_REPORT_REVIEW = "review_report_click";
     private static final String EVENT_NAME_DELETE_REVIEW = "user_review_delete";
     private static final String EVENT_NAME_DELETED_REVIEW = "user_review_deleted";
-    private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit";
+    private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit_click";
     private static final String EVENT_NAME_EDITED_REVIEW = "user_review_edited";
     private static final String EVENT_NAME_REVIEWER_FACEBOOK_OPENED = "reviewer_facebook_open";
-    private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "dive_spot_photo_report_sent";
-    private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "reviewer_review_report_sent";
+    private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "image_reported";
+    private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "review_reported";
     private static final String EVENT_NAME_REVIEW_SHOW_ALL = "review_show_all";
     private static final String EVENT_NAME_REVIEW_SENT = "review_sent";
+    private static final String EVENT_NAME_APPLY_DS_FILTER = "apply_ds_filter";
+    private static final String EVENT_NAME_NEW_ACCOUNT_ADDED = "new_account_added";
+    private static final String EVENT_NAME_PROFILE_EDITED = "profile_edited";
 
     // ----------------------------------------------------
     // UserOld activity
@@ -96,7 +109,7 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_CHECK_IN_STATUS = "status";
     private static final String EVENT_NAME_CHECK_OUT = "check_out";
 
-    private static final String EVENT_NAME_SEND_REVIEW = "send_review";
+    private static final String EVENT_NAME_SEND_REVIEW = "review_create_screen_view";
     private static final String EVENT_PARAMETER_NAME_SOURCE = "source";
 
     private static final String EVENT_NAME_COMMENT_LIKED = "review_liked";
@@ -207,6 +220,58 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void diveSpotsToApproveView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVESPOTS_TO_APPROVE_VIEW);
+    }
+
+    public static void trackInstructorsView() {
+        trackEventWithoutParameters(EVENT_NAME_INSTRUCTORS_VIEW);
+    }
+
+    public static void trackProfileEdited() {
+        trackEventWithoutParameters(EVENT_NAME_PROFILE_EDITED);
+    }
+
+    public static void trackNewAccountAdded() {
+        trackEventWithoutParameters(EVENT_NAME_NEW_ACCOUNT_ADDED);
+    }
+
+    public static void trackApplyDsFilter() {
+        trackEventWithoutParameters(EVENT_NAME_APPLY_DS_FILTER);
+    }
+
+    public static void trackAboutDDsMenuView() {
+        trackEventWithoutParameters(EVENT_NAME_ABOUT_DDS_MENU_VIEW);
+    }
+
+    public static void trackAboutDDSView() {
+        trackEventWithoutParameters(EVENT_NAME_ABOUT_DDS_VIEW);
+    }
+
+    public static void trackContactUsView() {
+        trackEventWithoutParameters(EVENT_NAME_CONTACT_US_VIEW);
+    }
+
+    public static void trackGuideToDDSView() {
+        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_VIEW);
+    }
+
+    public static void trackGuideToDDSItemView() {
+        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
+    }
+
+    public static void trackReviewView() {
+        trackEventWithoutParameters(EVENT_NAME_REVIEW_VIEW);
+    }
+
+    public static void trackImageView() {
+        trackEventWithoutParameters(EVENT_NAME_IMAGE_VIEW);
+    }
+
+    public static void trackMapAdded() {
+        trackEventWithoutParameters(EVET_NAME_DIVE_SPOT_MAP_ADDED);
     }
 
     public static void trackUserAchievementsView(AchievementsViewSource source) {
@@ -356,7 +421,7 @@ public class EventsTracker {
     }
 
     public static void trackReviewrFacebookOpened() {
-        trackEventWithoutParameters(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
     }
 
     public static void trackDiveSpotReviewReportSent() {
@@ -376,7 +441,7 @@ public class EventsTracker {
     }
 
     public static void trackReviewShowAll() {
-        trackEventWithoutParameters(EVENT_NAME_REVIEW_SHOW_ALL);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEW_SHOW_ALL);
     }
 
 
@@ -388,12 +453,16 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_CHECK_OUT);
     }
 
-    public static void trackReviewSent() {
-        trackEventWithoutParameters(EVENT_NAME_REVIEW_SENT);
+    public static void trackReviewSent(SendReviewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
+        trackEventWithParameters(map, EVENT_NAME_REVIEW_SENT);
     }
 
-    public static void trackSendReview() {
-        trackEventWithoutParameters(EVENT_NAME_SEND_REVIEW);
+    public static void trackSendReview(SendReviewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
+        trackEventWithParameters(map, EVENT_NAME_SEND_REVIEW);
     }
 
     public static void trackCommentLiked() {
@@ -472,8 +541,10 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
     }
 
-    public static void trackDiveSpotSealifeView() {
-        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
+    public static void trackDiveSpotSealifeView(SealifeViewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getSource());
+        trackEventWithParameters(map, EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
     }
 
     public static void trackDeviSpotReviewsView() {
@@ -493,7 +564,7 @@ public class EventsTracker {
     }
 
     public static void trackSearchSeaLife() {
-        trackEventWithoutParameters(EVENT_NAME_SEARCH_SEA_LIFE);
+//        trackEventWithoutParameters(EVENT_NAME_SEARCH_SEA_LIFE);
     }
 
     public static void trackPhotoReport() {
@@ -505,7 +576,7 @@ public class EventsTracker {
     }
 
     public static void trackDeleteReview() {
-        trackEventWithoutParameters(EVENT_NAME_DELETE_REVIEW);
+//        trackEventWithoutParameters(EVENT_NAME_DELETE_REVIEW);
     }
 
     public static void trackReviewDeleted() {
@@ -669,11 +740,11 @@ public class EventsTracker {
     }
 
     public enum SendReviewSource {
-        FROM_RATING_BAR("rating_bar"), FROM_EMPTY_REVIEWS_LIST("empty_reviews_list"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
+        FROM_RATING_BAR("stars"), FROM_REVIEWS_LIST("reviews_list"), CHECK_IN("check_in"), WRITE_REVIEW_BUTTON("write_review_button");
 
         private String name;
 
-        private SendReviewSource(String name) {
+        SendReviewSource(String name) {
             this.name = name;
         }
 
@@ -681,16 +752,6 @@ public class EventsTracker {
             return name;
         }
 
-        public static SendReviewSource getByName(String name) {
-            switch (name) {
-                case "rating_bar":
-                    return FROM_RATING_BAR;
-                case "reviews_list":
-                    return FROM_REVIEWS_LIST;
-                default:
-                    return UNKNOWN;
-            }
-        }
     }
 
     public enum ContactDiveCenterMethod {
@@ -698,7 +759,7 @@ public class EventsTracker {
 
         private String name;
 
-        private ContactDiveCenterMethod(String name) {
+        ContactDiveCenterMethod(String name) {
             this.name = name;
         }
 
@@ -715,6 +776,20 @@ public class EventsTracker {
                 default:
                     return UNKNOWN;
             }
+        }
+    }
+
+    public enum SealifeViewSource {
+        DIVE_SPOT("dive_spot"), REVIEW("review");
+
+        String source;
+
+        SealifeViewSource(String source) {
+            this.source = source;
+        }
+
+        public String getSource() {
+            return source;
         }
     }
 

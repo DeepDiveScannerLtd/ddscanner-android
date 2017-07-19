@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
@@ -411,6 +412,7 @@ public class SharedPreferenceHelper {
             }
             if (!isUserAlsoInList) {
                 users.add(baseUser);
+                EventsTracker.trackNewAccountAdded();
             }
             setUsersList(users);
             return;

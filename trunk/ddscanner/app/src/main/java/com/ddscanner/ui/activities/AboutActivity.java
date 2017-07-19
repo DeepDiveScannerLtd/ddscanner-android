@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AboutScreenItem;
 import com.ddscanner.ui.adapters.AboutListAdapter;
 
@@ -65,6 +66,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     public static void show(Context context) {
+        EventsTracker.trackAboutDDsMenuView();
         Intent intent = new Intent(context, AboutActivity.class);
         context.startActivity(intent);
     }

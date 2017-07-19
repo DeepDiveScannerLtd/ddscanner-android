@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
 import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterProfile;
@@ -170,6 +171,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onSuccess(Void result) {
             materialDialog.dismiss();
             setResult(RESULT_OK);
+            EventsTracker.trackProfileEdited();
             finish();
         }
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 
 public class AboutDDSActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class AboutDDSActivity extends AppCompatActivity {
     }
 
     public static void show(Context context) {
+        EventsTracker.trackAboutDDSView();
         Intent intent = new Intent(context, AboutDDSActivity.class);
         context.startActivity(intent);
     }

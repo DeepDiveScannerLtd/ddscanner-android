@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.FilterChosenEvent;
@@ -134,6 +135,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.FILTER_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.applyFilters:
+                EventsTracker.trackApplyDsFilter();
                 boolean isFiltersApplied = false;
                 if (objectSpinner.getSelectedItemPosition() == 0) {
                     filterChosedEvent.setObject(null);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityEditProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
@@ -78,6 +79,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         @Override
         public void onSuccess(Void v) {
             setResult(RESULT_OK);
+            EventsTracker.trackProfileEdited();
             finish();
         }
 

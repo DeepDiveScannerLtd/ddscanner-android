@@ -12,6 +12,7 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
@@ -104,6 +105,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructors_list);
+        EventsTracker.trackInstructorsView();
         recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressView = (ProgressView) findViewById(R.id.progress_bar);

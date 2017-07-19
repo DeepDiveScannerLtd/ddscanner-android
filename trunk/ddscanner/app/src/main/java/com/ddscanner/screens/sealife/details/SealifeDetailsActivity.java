@@ -64,7 +64,8 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
 
     };
 
-    public static void show(Context context, String id) {
+    public static void show(Context context, String id, EventsTracker.SealifeViewSource source) {
+        EventsTracker.trackDiveSpotSealifeView(source);
         Intent intent = new Intent(context, SealifeDetailsActivity.class);
         intent.putExtra(EXTRA_SEALIFE, id);
         context.startActivity(intent);
@@ -100,8 +101,6 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
                 }
             }
         });
-
-        EventsTracker.trackDiveSpotSealifeView();
         setupToolbar(R.string.empty_string, R.id.toolbar, R.menu.menu_sealife_details);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getSealifeDetails(id, resultListener);
     }

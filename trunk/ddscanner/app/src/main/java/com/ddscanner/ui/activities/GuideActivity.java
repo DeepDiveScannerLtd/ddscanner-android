@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.GuideItem;
 import com.ddscanner.ui.adapters.GuideListAdapter;
 
@@ -23,6 +24,7 @@ public class GuideActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        EventsTracker.trackGuideToDDSView();
         findViews();
     }
 

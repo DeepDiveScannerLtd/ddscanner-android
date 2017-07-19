@@ -39,7 +39,11 @@ public class AddPhotosDoDiveSpotActivity extends BaseAppCompatActivity implement
     private DDScannerRestClient.ResultListener<Void> photosAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            EventsTracker.trackDiveSpotPhotoAdded();
+            if (isMap) {
+                EventsTracker.trackMapAdded();
+            } else {
+                EventsTracker.trackDiveSpotPhotoAdded();
+            }
             materialDialog.dismiss();
             setResult(RESULT_OK);
             finish();

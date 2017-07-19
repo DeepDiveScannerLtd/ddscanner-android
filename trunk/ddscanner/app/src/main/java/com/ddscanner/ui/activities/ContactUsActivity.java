@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ContactUsEntity;
 import com.ddscanner.events.SocialLinkOpenEvent;
 import com.ddscanner.ui.adapters.SocialListAdapter;
@@ -30,7 +31,7 @@ public class ContactUsActivity extends BaseAppCompatActivity {
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
-
+        EventsTracker.trackContactUsView();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

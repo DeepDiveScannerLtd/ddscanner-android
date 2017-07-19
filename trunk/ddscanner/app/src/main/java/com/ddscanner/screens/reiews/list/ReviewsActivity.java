@@ -423,7 +423,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         leaveReview.setVisibility(View.GONE);
                     } else {
-                        LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation);
+                        LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST);
                     }
                 }
                 break;
@@ -442,6 +442,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getCommentsForDiveSpot(commentsResultListener, sourceId);
                 break;
             case SINGLE:
+                EventsTracker.trackReviewView();
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getSingleReview(sourceId, commentsResultListener);
                 break;
         }
@@ -452,7 +453,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.fab_write_review:
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                    LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation);
+                    LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST);
                 } else {
                     LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
                 }
@@ -523,7 +524,6 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EventsTracker.trackEditReview();
         EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW, editCommentEvent.isHaveSealife());
     }
 

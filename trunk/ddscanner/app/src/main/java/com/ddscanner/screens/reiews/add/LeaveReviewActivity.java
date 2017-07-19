@@ -53,7 +53,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
-    private static final String SOURCE = "SOURCE";
+    private static final String ARG_SOURCE = "SOURCE";
     private static final int COMMENT_MAX_LENGTH = 250;
     private static final String ARG_DIVE_SPOT_LOCATION = "location";
 
@@ -73,11 +73,12 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
     private LatLng diveSpotLocation;
+    private EventsTracker.SendReviewSource source;
 
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            EventsTracker.trackReviewSent();
+            EventsTracker.trackReviewSent(source);
             if (!isPopupShown) {
                 Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
             }
@@ -121,8 +122,8 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
-        EventsTracker.trackSendReview();
         Bundle bundle = getIntent().getExtras();
+        source = (EventsTracker.SendReviewSource) bundle.getSerializable(ARG_SOURCE);
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         diveSpotLocation = bundle.getParcelable(ARG_DIVE_SPOT_LOCATION);
         rating = getIntent().getExtras().getFloat(RATING);
@@ -168,15 +169,17 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         materialDialog = Helpers.getMaterialDialog(this);
     }
 
-    public static void showForResult(Activity context, String id, float rating, int requestCode, LatLng diveSpotLocation) {
-        context.startActivityForResult(getShowIntent(context, id, rating, diveSpotLocation), requestCode);
+    public static void showForResult(Activity context, String id, float rating, int requestCode, LatLng diveSpotLocation, EventsTracker.SendReviewSource source) {
+        EventsTracker.trackSendReview(source);
+        context.startActivityForResult(getShowIntent(context, id, rating, diveSpotLocation, source), requestCode);
     }
 
-    private static Intent getShowIntent(Context context, String id, float rating, LatLng diveSpotLocation) {
+    private static Intent getShowIntent(Context context, String id, float rating, LatLng diveSpotLocation, EventsTracker.SendReviewSource source) {
         Intent intent = new Intent(context, LeaveReviewActivity.class);
         intent.putExtra(Constants.DIVESPOTID, id);
         intent.putExtra(RATING, rating);
         intent.putExtra(ARG_DIVE_SPOT_LOCATION, diveSpotLocation);
+        intent.putExtra(ARG_SOURCE, source);
         return intent;
     }
 

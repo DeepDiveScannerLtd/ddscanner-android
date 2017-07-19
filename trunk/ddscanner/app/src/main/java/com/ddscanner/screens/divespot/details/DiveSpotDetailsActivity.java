@@ -948,14 +948,14 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     private void tryingToShowLeaveReviewActivity(int rating, boolean isFromRatingBar) {
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), EventsTracker.SendReviewSource.WRITE_REVIEW_BUTTON);
             } else {
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
             }
         } else {
             EventsTracker.trackReviewShowAll();
             if (isFromRatingBar) {
-                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), EventsTracker.SendReviewSource.FROM_RATING_BAR);
                 return;
             }
             ReviewsActivity.showForDiveSpot(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
