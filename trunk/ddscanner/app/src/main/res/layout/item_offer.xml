@@ -12,8 +12,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="178dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
         android:layout_marginTop="12dp">
 
@@ -32,48 +32,14 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ds_head_photo_def"
                     app:loadPhotoFrom="@{offerViewModel}"/>
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/ShadowOfferTitleText"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginBottom="13dp"
-                    android:layout_marginRight="18dp"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:text="@{offerViewModel.offer.diveCenterName}" />
-                <LinearLayout
-                    android:id="@+id/price_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/offer_price_background"
-                    android:orientation="vertical"
-                    android:paddingBottom="6dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/price_from"
-                        android:textColor="@color/black_text"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@{offerViewModel.offer.price}"
-                        android:textColor="@color/black_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
             </RelativeLayout>
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <LinearLayout
+                android:layout_toLeftOf="@+id/price_layout"
+                android:id="@+id/text_layout"
                 android:layout_width="match_parent"
                 android:layout_height="73dp"
                 android:orientation="vertical"
@@ -98,7 +64,37 @@
                     android:textColor="@color/gray"
                     android:text="@{offerViewModel.offer.allSpotsAsString}"/>
             </LinearLayout>
+                <LinearLayout
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/price_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/offer_price_background"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_from"
+                        android:textColor="@color/black_text"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="@{offerViewModel.offer.price}"
+                        android:textColor="@color/black_text"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
 

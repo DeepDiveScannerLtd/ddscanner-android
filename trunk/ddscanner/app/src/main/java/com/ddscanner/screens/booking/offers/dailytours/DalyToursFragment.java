@@ -49,7 +49,7 @@ public class DalyToursFragment extends Fragment {
         spots.add("Kon mok");
         spots.add("Blue Hole");
         spots.add("Tuk tuker");
-        Offer offer = new Offer("1", "Lashketuk", "Good offer", "1500 B", spots, "https://pp.userapi.com/c626824/v626824069/3fae/lZ_07Lvm9MA.jpg");
+        Offer offer = new Offer("1", "Good offer", "1500 B", spots, "https://pp.userapi.com/c626824/v626824069/3fae/lZ_07Lvm9MA.jpg");
         ArrayList<Offer> offers = new ArrayList<>();
         offers.add(offer);
         offers.add(offer);

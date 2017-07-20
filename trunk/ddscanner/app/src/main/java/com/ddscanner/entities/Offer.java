@@ -6,15 +6,13 @@ import java.util.ArrayList;
 public class Offer implements Serializable {
 
     private String id;
-    private String diveCenterName;
     private String offerName;
     private String price;
     private ArrayList<String> spots;
     private String image;
 
-    public Offer(String id, String diveCenterName, String offerName, String price, ArrayList<String> spots, String image) {
+    public Offer(String id, String offerName, String price, ArrayList<String> spots, String image) {
         this.id = id;
-        this.diveCenterName = diveCenterName;
         this.offerName = offerName;
         this.price = price;
         this.spots = spots;
@@ -27,14 +25,6 @@ public class Offer implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getDiveCenterName() {
-        return diveCenterName;
-    }
-
-    public void setDiveCenterName(String diveCenterName) {
-        this.diveCenterName = diveCenterName;
     }
 
     public String getOfferName() {

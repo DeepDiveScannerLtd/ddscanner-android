@@ -15,6 +15,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
         android:layout_marginTop="12dp">
 
         <LinearLayout
@@ -30,47 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ds_head_photo_default"
+                    android:src="@drawable/ds_head_photo_def"
                     app:loadPhotoFrom="@{courseViewModel}"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/ShadowOfferTitleText"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginBottom="13dp"
-                    android:layout_marginRight="18dp"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:text="@{courseViewModel.course.diveCenterName}" />
-                <LinearLayout
-                    android:id="@+id/price_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/offer_price_background"
-                    android:orientation="vertical"
-                    android:paddingBottom="6dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/price_from"
-                        android:textColor="@color/black_text"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@{courseViewModel.course.price}"
-                        android:textColor="@color/black_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -78,7 +41,7 @@
                 android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_toLeftOf="@+id/dc_logo"
+                android:layout_toLeftOf="@+id/price_layout"
                 android:layout_width="match_parent"
                 android:layout_height="73dp"
                 android:orientation="vertical"
@@ -103,15 +66,36 @@
                     android:textColor="@color/gray"
                     android:text="@{courseViewModel.course.courceLength}"/>
             </LinearLayout>
-                <ImageView
-                    android:id="@+id/dc_logo"
-                    android:layout_centerVertical="true"
+                <LinearLayout
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="14dp"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:scaleType="centerCrop"
-                    app:loadDiveCenterLogoFrom="@{courseViewModel}"/>
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:id="@+id/price_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/offer_price_background"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_from"
+                        android:textColor="@color/black_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@{courseViewModel.course.price}"
+                        android:textColor="@color/black_text"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 

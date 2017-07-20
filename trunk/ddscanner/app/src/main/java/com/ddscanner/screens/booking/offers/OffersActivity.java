@@ -21,6 +21,7 @@ public class OffersActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_offers);
+        setupToolbar(R.string.offers, R.id.toolbar);
         setupTabs();
     }
 

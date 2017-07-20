@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Course {
 
     private String id;
-    private String diveCenterName;
     private String courceName;
     private String courceLength;
     private String image;
@@ -26,14 +25,6 @@ public class Course {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getDiveCenterName() {
-        return diveCenterName;
-    }
-
-    public void setDiveCenterName(String diveCenterName) {
-        this.diveCenterName = diveCenterName;
     }
 
     public String getCourceName() {

@@ -37,7 +37,6 @@ public class CoursesListFragment extends Fragment {
         Course course = new Course();
         course.setCourceLength("3 day, 5 dives");
         course.setCourceName("Discover SCUBA Diving");
-        course.setDiveCenterName("Raya divers");
         course.setPrice("13000 B");
         course.setDiveCenterLogo("http://img.diveadvisor.com/diveshops/5974.jpg");
         course.setImage("http://www.scubadiving.com/sites/scubadiving.com/files/styles/large_1x_/public/scuba-myths-shutterstock_208265431.jpg");

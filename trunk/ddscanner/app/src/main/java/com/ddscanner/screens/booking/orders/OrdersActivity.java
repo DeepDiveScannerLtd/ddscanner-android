@@ -14,10 +14,11 @@ import com.ddscanner.screens.booking.offers.OffersActivity;
 import com.ddscanner.screens.booking.offers.OffersViewPagerAdapter;
 import com.ddscanner.screens.booking.offers.cources.CoursesListFragment;
 import com.ddscanner.screens.booking.offers.dailytours.DalyToursFragment;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-public class OrdersActivity extends AppCompatActivity {
+public class OrdersActivity extends BaseAppCompatActivity {
 
     private ActivityOffersBinding binding;
     private OrdersListFragment pastOrderListFragment = new OrdersListFragment();
@@ -27,6 +28,7 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_offers);
+        setupToolbar(R.string.orders, R.id.toolbar);
         setupTabs();
     }
 

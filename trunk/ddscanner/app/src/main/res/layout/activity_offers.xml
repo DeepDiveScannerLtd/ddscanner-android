@@ -13,18 +13,7 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="@color/primary"
-                android:minHeight="?actionBarSize"
-                android:transitionName="toolbar"
-                app:layout_collapseMode="pin"
-                android:titleTextColor="@color/white"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                auto:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            <include layout="@layout/view_toolbar" />
 
         </android.support.design.widget.AppBarLayout>
 

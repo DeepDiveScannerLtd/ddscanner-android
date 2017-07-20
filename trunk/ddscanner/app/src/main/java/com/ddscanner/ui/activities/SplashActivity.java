@@ -133,8 +133,8 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         Log.i(TAG, "showMainActivity");
         showMainActivityRunnable = () -> {
             MainActivity.show(SplashActivity.this);
-                MainActivity.show(SplashActivity.this);
-//                OrdersActivity.show(SplashActivity.this);
+//                MainActivity.show(SplashActivity.this);
+                OffersActivity.show(SplashActivity.this);
             SplashActivity.this.finish();
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {
