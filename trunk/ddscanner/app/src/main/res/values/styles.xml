@@ -427,6 +427,7 @@
     <style name="OrderDetailsSubtitleStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_text</item>
+    </style>
     <style name="NewNotApprovedSpotsLabelBackground">
         <item name="android:background">@drawable/approve_count_background</item>
     </style>
