@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,17 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
-import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 29.1.16.
- */
 public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersListAdapter.DiveCentersListViewHolder> {
 
     private static final String TAG = DiveCentersListAdapter.class.getName();
@@ -59,12 +56,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             diveCentersListViewHolder.dcAddress.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
         }
-        if (diveCenter.getLogo() != null) {
-            String imageUrlPath = logoPath + diveCenter.getLogo();
-            Picasso.with(context).load(imageUrlPath).placeholder(R.drawable.avatar_dc_list_empty).into(diveCentersListViewHolder.imgLogo);
-        } else {
-            diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_list_empty));
-        }
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCenter.getLogo(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.avatar_dc_profile_def).into(diveCentersListViewHolder.imgLogo);
         rating = Math.round(diveCenter.getRating());
         diveCentersListViewHolder.starsLayout.removeAllViews();
         for (int k = 0; k < rating; k++) {
@@ -119,7 +111,9 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         @Override
         public void onClick(View v) {
-            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
+            UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0);
+//            EventsTracker.trackDiveCenterView(diveCenters.get(getAdapterPosition()).getId(), EventsTracker.SpotViewSource.FROM_LIST);
+//            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }

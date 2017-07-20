@@ -1,13 +1,11 @@
 package com.ddscanner.ui.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -16,9 +14,7 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,7 +25,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
     private static final String TAG = ReviewPhotosAdapter.class.getName();
 
-    public ArrayList<DiveSpotPhoto> photos;
+    public ArrayList<DiveSpotPhoto> photos = new ArrayList<>();
     public String reviewId;
     public Activity context;
     public boolean isSelfPhotos;
@@ -37,14 +33,22 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     private int photosCount;
     private String commentId;
 
-    public ReviewPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
+    public void setData(ArrayList<DiveSpotPhoto> photos, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
         this.photos = photos;
-        this.context = context;
         this.isSelfPhotos =  isSelfPhotos;
         this.commentPosition = commentPosition;
         this.photosCount = photosCount;
         this.commentId = commentId;
        // Helpers.appendImagesWithPath(photos, path);
+    }
+
+    public ReviewPhotosAdapter(Activity context, ArrayList<DiveSpotPhoto> photos, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
+        this.context = context;
+        this.photos = photos;
+        this.isSelfPhotos =  isSelfPhotos;
+        this.commentPosition = commentPosition;
+        this.photosCount = photosCount;
+        this.commentId = commentId;
     }
 
     @Override
@@ -61,15 +65,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo,
-                new ImageLoadedCallback(holder.progressBar){
-                    @Override
-                    public void onSuccess() {
-                        if (holder.progressBar != null) {
-                            holder.progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo);
     }
 
     @Override
@@ -84,14 +80,12 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         protected ImageView photo;
         protected TextView morePhotos;
-        private ProgressBar progressBar;
 
         public ReviewPhotosAdapterViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             photo = (ImageView) v.findViewById(R.id.image);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override

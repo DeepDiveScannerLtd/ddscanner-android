@@ -4,11 +4,18 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
-        <item name="colorAccent">@color/orange</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
         <item name="colorControlActivated">@color/primary</item>
+        <item name="colorControlHighlight">@color/spinner_triangle_color</item>
+    </style>
+
+    <style name="customSpinnerTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/spinner_triangle_color</item>
+        <item name="colorControlActivated">@color/spinner_triangle_color</item>
+        <item name="colorControlHighlight">@color/spinner_triangle_color</item>
     </style>
 
     <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
@@ -61,9 +68,8 @@
     </style>
 
     <style name="AddDsCharTitleStyle">
-        <item name="android:textSize">@dimen/add_ds_char_title</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/black_text</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColorHint">#B2B2B2</item>
         <item name="android:background">@android:color/transparent</item>
@@ -106,8 +112,8 @@
     </style>
 
     <style name="tabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabSelectedTextColor">#2e80a0</item>
-        <item name="tabIndicatorColor">#2e80a0</item>
+        <item name="tabSelectedTextColor">#293e75</item>
+        <item name="tabIndicatorColor">#3b518b</item>
         <item name="tabTextAppearance">@style/customTabText</item>
     </style>
 
@@ -121,6 +127,8 @@
     <style name="customTabText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#a3a3a3</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="radio_button">
@@ -137,8 +145,15 @@
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
         <item name="cpd_strokeColor">@color/primary</item>
-        <item name="cpd_strokeSize">2dp</item>
+        <item name="cpd_strokeSize">2.5dp</item>
     </style>
+
+    <style name="LocationProgress" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_strokeColor">#3b518b</item>
+        <item name="cpd_strokeSize">2.5dp</item>
+    </style>
+
+
 
     <style name="CustomDialog" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@null</item>
@@ -149,7 +164,7 @@
         <item name="android:layout_width">65dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:scaleType">center</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 
     <style name="CharacteristicsDiveSpotListTitle">
@@ -162,9 +177,9 @@
     <style name="ProfileNumberDivespotsSrtyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">#616161</item>
+        <item name="android:textColor">@color/black_text</item>
         <item name="android:layout_marginLeft">4dp</item>
     </style>
 
@@ -204,12 +219,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
-    <style name="OrangeButtons">
+
+    <style name="OrangeButtons" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_text</item>
         <item name="android:background">@drawable/border_button_orange_2px</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="BlueButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/blue_button_text_color</item>
+        <item name="android:background">@drawable/primary_button</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
@@ -306,7 +331,6 @@
         <item name="android:paddingTop">7dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="PhotosTabDisabled">
@@ -315,7 +339,6 @@
         <item name="android:paddingTop">7dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:background">@null</item>
     </style>
 
@@ -404,6 +427,43 @@
     <style name="OrderDetailsSubtitleStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_text</item>
+    <style name="NewNotApprovedSpotsLabelBackground">
+        <item name="android:background">@drawable/approve_count_background</item>
+    </style>
+
+    <style name="DialogCloseButtonStyle">
+        <item name="android:background">@drawable/dialog_achievement_button_background</item>
+    </style>
+
+    <style name="YesButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_yes_button</item>
+    </style>
+
+    <style name="NoButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_no_button</item>
+    </style>
+
+    <style name="AddSealifeButtonStyle">
+        <item name="android:background">@drawable/gray_rectangle</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+    </style>
+
+    <style name="FacebookLoginButtonBackground">
+        <item name="android:background">@drawable/fb_login_btn_background</item>
+    </style>
+
+    <style name="GoogleLoginButtonBackground">
+        <item name="android:background">@drawable/google_login_button</item>
+    </style>
+
+    <style name="SigningInputStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:lines">1</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColorHint">#a3a3a3</item>
     </style>
 
 </resources>

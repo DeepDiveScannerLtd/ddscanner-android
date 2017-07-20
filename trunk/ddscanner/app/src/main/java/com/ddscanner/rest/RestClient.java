@@ -5,6 +5,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -23,34 +24,34 @@ public abstract class RestClient {
 
     public static DDScannerRestService getDdscannerServiceInstance() {
         if (ddscannerServiceInstance == null) {
-            Interceptor interceptor = new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                        Request request = chain.request();
-                        request = request.newBuilder()
-                               // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
-                                //   .addHeader("Content-Type", "application/json;charset=utf-8")
-                                .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserToken())
-                                .build();
-                        Response response = chain.proceed(request);
-                        return response;
-                    }
+            Interceptor interceptor = chain -> {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     Request request = chain.request();
                     request = request.newBuilder()
-//                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                           // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                             //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                            .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserToken())
                             .build();
                     Response response = chain.proceed(request);
                     return response;
                 }
+                Request request = chain.request();
+                request = request.newBuilder()
+//                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                        //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                        .build();
+                Response response = chain.proceed(request);
+                return response;
             };
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.interceptors().add(interceptor);
+            builder.retryOnConnectionFailure(true);
             builder.connectTimeout(30, TimeUnit.SECONDS);
             builder.readTimeout(30, TimeUnit.SECONDS);
-            builder.writeTimeout(10, TimeUnit.MINUTES);
+            builder.writeTimeout(1, TimeUnit.MINUTES);
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 

@@ -12,11 +12,7 @@ import com.ddscanner.entities.GuideItem;
 import com.ddscanner.ui.activities.GuideDescriptionActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class GuideListAdapter extends RecyclerView.Adapter<GuideListAdapter.GuideListViewHolder> {
 
     private ArrayList<GuideItem> guideItems;

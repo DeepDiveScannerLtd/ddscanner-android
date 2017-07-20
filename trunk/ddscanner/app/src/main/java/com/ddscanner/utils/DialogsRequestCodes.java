@@ -66,6 +66,7 @@ public class DialogsRequestCodes {
 // AddDiveSpotActivity
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;
+    public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED = 2303;
 
     // LeaveReviewActivity
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;

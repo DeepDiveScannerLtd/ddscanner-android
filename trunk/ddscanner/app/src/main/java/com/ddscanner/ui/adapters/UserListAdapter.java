@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-/**
- * Created by lashket on 28.4.16.
- */
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     private Context context;
@@ -44,15 +41,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
                 .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
-                .placeholder(R.drawable.avatar_profile_default)
+                .placeholder(R.drawable.gray_circle_placeholder)
                 .error(R.drawable.avatar_profile_default)
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
-        holder.info.setText(users.get(position).getCounters().getCommentsCount() + " reviews, " +
-                users.get(position).getCounters().getLikesCount() + " likes");
+        int reviewsCount = users.get(position).getCounters().getCommentsCount();
+        if (reviewsCount < 2) {
+            holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count_smaller_of_two, String.valueOf(reviewsCount)));
+        } else {
+            holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count, String.valueOf(reviewsCount)));
+        }
     }
 
     @Override
@@ -78,7 +79,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            if (!users.get(getAdapterPosition()).getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
+                UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            }
         }
     }
 

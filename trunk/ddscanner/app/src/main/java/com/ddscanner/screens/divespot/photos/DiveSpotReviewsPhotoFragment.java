@@ -12,13 +12,9 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotReviewsPhotoFragment extends Fragment {
 
     private ArrayList<DiveSpotPhoto> images;

@@ -12,15 +12,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -34,6 +35,7 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -51,13 +53,15 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
-    private static final String SOURCE = "SOURCE";
+    private static final String ARG_SOURCE = "SOURCE";
     private static final int COMMENT_MAX_LENGTH = 250;
+    private static final String ARG_DIVE_SPOT_LOCATION = "location";
 
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
     private TextView errorText;
+    private TextView errorRating;
     private float rating;
     private LinearLayout buttonAddSealife;
     private MaterialDialog materialDialog;
@@ -68,10 +72,17 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private RequestBody requestId = null, requestComment = null, requestRating = null;
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
+    private LatLng diveSpotLocation;
+    private EventsTracker.SendReviewSource source;
 
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackReviewSent(source);
+            if (!isPopupShown) {
+                Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
+            }
+            materialDialog.dismiss();
             setResult(RESULT_OK);
             finish();
         }
@@ -101,6 +112,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -111,7 +123,9 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
         Bundle bundle = getIntent().getExtras();
+        source = (EventsTracker.SendReviewSource) bundle.getSerializable(ARG_SOURCE);
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
+        diveSpotLocation = bundle.getParcelable(ARG_DIVE_SPOT_LOCATION);
         rating = getIntent().getExtras().getFloat(RATING);
         findViews();
         setupToolbar(R.string.new_review, R.id.toolbar, R.menu.menu_add_review);
@@ -120,6 +134,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void findViews() {
+        errorRating = (TextView) findViewById(R.id.rating_error);
         text = (EditText) findViewById(R.id.review_text);
         sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         text.setTag("review");
@@ -137,7 +152,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void setRcSettings() {
-        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<SealifeShort>(), LeaveReviewActivity.this);
+        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<>(), LeaveReviewActivity.this);
         addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(LeaveReviewActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -154,19 +169,33 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         materialDialog = Helpers.getMaterialDialog(this);
     }
 
-    public static void show(Context context, String id, float rating) {
-        context.startActivity(getShowIntent(context, id, rating));
+    public static void showForResult(Activity context, String id, float rating, int requestCode, LatLng diveSpotLocation, EventsTracker.SendReviewSource source) {
+        EventsTracker.trackSendReview(source);
+        context.startActivityForResult(getShowIntent(context, id, rating, diveSpotLocation, source), requestCode);
     }
 
-    public static void showForResult(Activity context, String id, float rating, int requestCode) {
-        context.startActivityForResult(getShowIntent(context, id, rating), requestCode);
-    }
-
-    private static Intent getShowIntent(Context context, String id, float rating) {
+    private static Intent getShowIntent(Context context, String id, float rating, LatLng diveSpotLocation, EventsTracker.SendReviewSource source) {
         Intent intent = new Intent(context, LeaveReviewActivity.class);
         intent.putExtra(Constants.DIVESPOTID, id);
         intent.putExtra(RATING, rating);
+        intent.putExtra(ARG_DIVE_SPOT_LOCATION, diveSpotLocation);
+        intent.putExtra(ARG_SOURCE, source);
         return intent;
+    }
+
+    private boolean isDataValid() {
+        boolean isDataValid = true;
+        errorRating.setVisibility(View.GONE);
+        errorText.setVisibility(View.GONE);
+        if (text.getText().toString().trim().length() < 30) {
+            errorText.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        if (ratingBar.getRating() < 1) {
+            errorRating.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        return isDataValid;
     }
 
     private void sendReview() {
@@ -174,8 +203,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
-        if (text.getText().toString().trim().length() < 30) {
-            errorText.setVisibility(View.VISIBLE);
+        if (!isDataValid()) {
             return;
         }
         List<MultipartBody.Part> sealifes = new ArrayList<>();
@@ -199,7 +227,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, sealifes, requestId, requestRating, requestComment);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postLeaveCommentForDiveSpot(commentAddedResultListener, images, sealifes, requestId, requestRating, requestComment);
     }
 
 
@@ -207,9 +235,10 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                onBackPressed();
                 return true;
             case R.id.send_review:
+                Helpers.hideKeyboard(this);
                 sendReview();
                 return true;
             default:
@@ -218,11 +247,20 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
+    public void onBackPressed() {
+        if (addPhotoToDsListAdapter.getItemCount() > 1 || sealifesAdapter.getItemCount() > 0 || text.getText().toString().length() > 0) {
+            DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+            return;
+        }
+        finish();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_sealife:
                 EventsTracker.trackSearchSeaLife();
-                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE, null);
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
                 break;
         }
     }
@@ -237,7 +275,9 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
                         sendReview();
                     } else {
-                        //TODO dive center try leave review, must handle this case
+                        Toast.makeText(this, R.string.dc_cant_leave_review, Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -271,13 +311,13 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe

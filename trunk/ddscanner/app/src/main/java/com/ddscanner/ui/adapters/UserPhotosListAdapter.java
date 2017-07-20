@@ -1,8 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +14,9 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.OpenPhotosActivityEvent;
-import com.ddscanner.screens.divespot.details.DiveSpotPhotosAdapter;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -65,14 +60,9 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0, RoundedCornersTransformation.CornerType.ALL))
-                    .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
-                        @Override
-                        public void onSuccess() {
-                            if (holder.progressBar != null) {
-                                holder.progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
+                    .error(R.drawable.placeholder_photo_wit_round_corners)
+                    .into(holder.photo);
         }
     }
 
@@ -92,7 +82,6 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
             photo = (ImageView) v.findViewById(R.id.image);
             photo.setOnClickListener(this);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override

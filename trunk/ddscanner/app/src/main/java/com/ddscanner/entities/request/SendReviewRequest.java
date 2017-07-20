@@ -1,8 +1,5 @@
 package com.ddscanner.entities.request;
 
-/**
- * Created by lashket on 14.3.16.
- */
 public class SendReviewRequest {
     private String diveSpotId;
     private String comment;

@@ -16,8 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.events.ObjectChosedEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -47,7 +47,9 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            searchMenuItem.setVisible(true);
+            if (searchMenuItem != null) {
+                searchMenuItem.setVisible(true);
+            }
         }
 
         @Override
@@ -79,7 +81,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
         setContentView(R.layout.activity_search);
         setupToolbar(R.string.chose_country, R.id.toolbar);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getListOfCountries(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getListOfCountries(resultListener);
     }
 
 
@@ -93,13 +95,11 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
     }
 
     @Override

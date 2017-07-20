@@ -26,6 +26,9 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.events.HidePhotoInfoEvent;
+
 public class ScallingImageView extends ImageView {
 
     private static final String DEBUG = "DEBUG";
@@ -730,6 +733,7 @@ public class ScallingImageView extends ImageView {
             if(doubleTapListener != null) {
                 return doubleTapListener.onSingleTapConfirmed(e);
             }
+            DDScannerApplication.bus.post(new HidePhotoInfoEvent());
             return performClick();
         }
 

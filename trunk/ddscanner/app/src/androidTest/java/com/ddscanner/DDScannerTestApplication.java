@@ -2,7 +2,6 @@ package com.ddscanner;
 
 
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.screens.profile.ProfileTestRestClient;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class DDScannerTestApplication extends DDScannerApplication {
@@ -15,11 +14,6 @@ public class DDScannerTestApplication extends DDScannerApplication {
 
     public void setSharedPreferenceHelper(SharedPreferenceHelper sharedPreferenceHelper) {
         this.sharedPreferenceHelper = sharedPreferenceHelper;
-    }
-
-    @Override
-    public DDScannerRestClient getDdScannerRestClient() {
-        return ddScannerTestRestClient;
     }
 
     @Override

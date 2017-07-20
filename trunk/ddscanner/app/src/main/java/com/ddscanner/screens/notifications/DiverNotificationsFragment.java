@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,17 +16,16 @@ import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.entities.Notifications;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.GetNotificationsEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -35,10 +33,9 @@ import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, DialogClosedListener {
 
     private static final String TAG = DiverNotificationsFragment.class.getName();
 
@@ -50,40 +47,9 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     private RelativeLayout loginView;
     private ProgressView progressView;
     private LoginView customLoginView;
-    private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
+    private PersonalNotificationsFragment personalNotificationsFragment = new PersonalNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
-//    private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
-//        @Override
-//        public void onSuccess(Notifications result) {
-//            notifications = result;
-//            progressView.setVisibility(View.GONE);
-//            notificationsViewPager.setVisibility(View.VISIBLE);
-//            setData();
-//            swipeRefreshLayout.setRefreshing(false);
-//        }
-//
-//        @Override
-//        public void onConnectionFailure() {
-//            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
-//        }
-//
-//        @Override
-//        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-//            switch (errorType) {
-//                case UNAUTHORIZED_401:
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-//                    DDScannerApplication.bus.post(new LoggedOutEvent());
-//                    break;
-//                default:
-//                    EventsTracker.trackUnknownServerError(url, errorMessage);
-//                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
-//                    break;
-//            }
-//        }
-//    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,16 +63,21 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         findViews(view);
         setupViewPager();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            progressView.setVisibility(View.VISIBLE);
-            notificationsViewPager.setVisibility(View.GONE);
-            //  getUserNotifications();
-        }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             onLoggedIn();
         } else {
             onLoggedOut();
         }
+//        activityNotificationsFragment.loadNotifications();
         return view;
+    }
+
+    public void showPersonalNotificationsFragment() {
+        if (notificationsViewPager == null) {
+            return;
+        }
+        if (notificationsViewPager.getCurrentItem() != 0) {
+            notificationsViewPager.setCurrentItem(0);
+        }
     }
 
     @TargetApi(23)
@@ -151,19 +122,17 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
         progressView = (ProgressView) v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
-        swipeRefreshLayout.setOnRefreshListener(this);
         customLoginView = (LoginView) v.findViewById(R.id.login_view);
     }
 
     private void setUpTabLayout() {
         tabLayout.getTabAt(1).setText("Activity");
-        tabLayout.getTabAt(0).setText("Notifications");
+        tabLayout.getTabAt(0).setText("You");
     }
 
     private void setupViewPager() {
-        NotificationsPagerAdapter notificationsPagerAdapter = new NotificationsPagerAdapter(getFragmentManager());
-        notificationsPagerAdapter.addFragment(allNotificationsFragment, "Notifications");
+        NotificationsPagerAdapter notificationsPagerAdapter = new NotificationsPagerAdapter(getChildFragmentManager());
+        notificationsPagerAdapter.addFragment(personalNotificationsFragment, "Notifications");
         notificationsPagerAdapter.addFragment(activityNotificationsFragment, "Activity");
         notificationsViewPager.setAdapter(notificationsPagerAdapter);
         setUi();
@@ -178,19 +147,8 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void onResume() {
         super.onResume();
-        if (DDScannerApplication.isActivitiesFragmentVisible) {
-            Date date1 = new Date();
-            long currentDateInMillis = date1.getTime();
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
-        } else {
-//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//                progressView.setVisibility(View.VISIBLE);
-//                notificationsViewPager.setVisibility(View.GONE);
-//               // getUserNotifications();
-//            }
-        }
-        if (!getUserVisibleHint()) {
-            return;
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            onLoggedOut();
         }
     }
 
@@ -211,67 +169,28 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible) {
-            if (getView() != null) {
-                isViewNull = false;
-                if (DDScannerApplication.isActivitiesFragmentVisible) {
-                    Date date1 = new Date();
-                    long currentDateInMillis = date1.getTime();
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
-                } else {
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//                        progressView.setVisibility(View.VISIBLE);
-//                        notificationsViewPager.setVisibility(View.GONE);
-//                   //     getUserNotifications();
-                    }
-                }
-            } else {
-                isViewNull = true;
-            }
-        }
+
     }
 
-    private void getUserNotifications() {
-        //DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
-    }
+    public void getUserNotifications(boolean isAfterLogin) {
+        if (notificationsViewPager != null) {
+            if (!isAfterLogin) {
+                activityNotificationsFragment.loadNotifications();
+                personalNotificationsFragment.loadNotifications();
 
-    private void setData() {
-        Log.i(TAG, "asdf setData this = " + this);
-        if (notificationsViewPager.getCurrentItem() == 0) {
-            if (allNotificationsFragment != null) {
-                if (notifications.getNotificationOlds() != null) {
-                    allNotificationsFragment.addList((ArrayList<NotificationOld>)
-                            notifications.getNotificationOlds());
-                } else {
-                    allNotificationsFragment.addList(null);
-                }
             }
         }
-        if (notificationsViewPager.getCurrentItem() == 1) {
-            if (activityNotificationsFragment != null) {
-                if (notifications.getActivities() != null) {
-                    activities = notifications.getActivities();
-                    activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-                } else {
-                    activityNotificationsFragment.addList(null);
-                }
-            }
-        }
-
     }
 
     @Override
     public void onPageSelected(int position) {
         if (position == 0) {
-            if (notifications.getNotificationOlds() != null) {
-                allNotificationsFragment.addList((ArrayList<NotificationOld>) notifications.getNotificationOlds());
-            }
+            EventsTracker.trackNotificationsView();
+//            personalNotificationsFragment.loadNotifications();
         }
         if (position == 1) {
-            if (notifications.getActivities() != null) {
-                activities = notifications.getActivities();
-                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-            }
+            EventsTracker.trackActivityView();
+//            activityNotificationsFragment.loadNotifications();
         }
     }
 
@@ -302,7 +221,8 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setEnabled(true);
+            tabLayout.setVisibility(View.VISIBLE);
+            getUserNotifications(true);
         }
     }
 
@@ -311,7 +231,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
-            swipeRefreshLayout.setEnabled(false);
+            tabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -319,14 +239,24 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         this.activityNotificationsFragment = activityNotificationsFragment;
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
-        this.allNotificationsFragment = allNotificationsFragment;
+    public void setPersonalNotificationsFragment(PersonalNotificationsFragment personalNotificationsFragment) {
+        this.personalNotificationsFragment = personalNotificationsFragment;
     }
 
     @Subscribe
     public void getNotifications(GetNotificationsEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            getUserNotifications();
+            getUserNotifications(false);
+            if (notificationsViewPager != null) {
+                switch (notificationsViewPager.getCurrentItem()) {
+                    case 0:
+                        EventsTracker.trackNotificationsView();
+                        break;
+                    case 1:
+                        EventsTracker.trackActivityView();
+                        break;
+                }
+            }
             return;
         }
         onLoggedOut();
@@ -342,13 +272,9 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         }
     }
 
-    @Override
-    public void onRefresh() {
-        // DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
-    }
-
     @Subscribe
     public void changeLoginView(ChangeLoginViewEvent event) {
         customLoginView.changeViewToStart();
     }
+
 }

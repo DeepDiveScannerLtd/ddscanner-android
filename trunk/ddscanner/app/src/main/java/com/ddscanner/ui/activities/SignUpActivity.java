@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -29,13 +28,13 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -60,7 +59,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class SignUpActivity extends AppCompatActivity implements ConfirmationDialogClosedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class SignUpActivity extends BaseAppCompatActivity implements ConfirmationDialogClosedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SignUpActivity.class.getSimpleName();
 
@@ -110,7 +109,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (password.getText().length() > 3) {
+            if (password.getText().length() > 3 && password.getText().length() < 33) {
                 isPasswordEmpty = false;
             } else {
                 isPasswordEmpty = true;
@@ -295,10 +294,10 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
             case R.id.btn_login_or_sign_up_via_email:
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signInResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(email.getText().toString(), password.getText().toString(), null, null, null, null, signInResultListener);
                 break;
         }
     }
@@ -356,7 +355,6 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -395,12 +393,10 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
 
                     @Override
                     public void onCancel() {
-                        // TODO Implement
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        // TODO Implement
                     }
                 });
     }
@@ -408,7 +404,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, null, null, signInType, token, signInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
     }
 
     @Override
@@ -424,6 +420,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
                 finish();
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
+                materialDialog.dismiss();
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
                     GoogleSignInAccount acct = result.getSignInAccount();
@@ -472,6 +469,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
             baseUser.setToken(result.getToken());
             baseUser.setId(result.getId());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
+            EventsTracker.trackRegistration(result.getType());
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
                 return;
@@ -497,13 +495,15 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_email_exist, R.string.message_email_exist, false);
                     break;
                 default:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     }
@@ -516,6 +516,7 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
 
     @Override
     public void onPositiveDialogClicked() {
-        SearchDiveCenterActivity.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, true);
+        EventsTracker.trackYesInstructorClicked();
+        SearchDiveCenterActivity.showForResult(SignUpActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER, false);
     }
 }

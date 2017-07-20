@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.BusRegisteringListener;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
@@ -29,17 +27,18 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
+import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
-import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
-import com.ddscanner.events.ChangeLoginViewEvent;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
@@ -61,9 +60,13 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private BusRegisteringListener busListener = new BusRegisteringListener();
 
+    private static final String ARG_USER = "ARG_USER";
+
     private User user;
 
     private FragmentProfileBinding binding;
+
+    private boolean isLogouting;
 
     private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -101,7 +104,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
@@ -117,22 +120,40 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     };
 
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment userProfileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_USER, new Gson().toJson(user));
+        userProfileFragment.setArguments(bundle);
+        return userProfileFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
+        Bundle bundle = new Bundle();
+        bundle = getArguments();
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View v = binding.getRoot();
         setupUi();
         binding.setHandlers(this);
-
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
-            getUserDataRequest();
-        }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            onLoggedIn();
+        if (getArguments() != null && bundle.getString(ARG_USER) != null) {
+            binding.logout.setVisibility(View.GONE);
+            user = new Gson().fromJson(bundle.getString(ARG_USER), User.class);
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(user));
+            binding.about.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.GONE);
+            changeUi();
         } else {
-            onLoggedOut();
+            isLogouting = true;
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
+                getUserDataRequest();
+            }
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                onLoggedIn();
+            } else {
+                onLoggedOut();
+            }
         }
         return v;
     }
@@ -167,9 +188,8 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         try {
             MainActivity mainActivity = (MainActivity) context;
             mainActivity.setProfileFragment(this);
-        } catch (ClassCastException e) {
-            // waaat?
-            e.printStackTrace();
+        } catch (ClassCastException ignored) {
+
         }
     }
 
@@ -225,7 +245,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     private void getUserDataRequest() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getUserSelfInformation(userResultListener);
         binding.about.scrollTo(0,0);
     }
 
@@ -239,14 +259,16 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         }
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
             binding.noPhotosView.setVisibility(View.GONE);
+            binding.photosList.setNestedScrollingEnabled(false);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
             binding.photosList.setVisibility(View.VISIBLE);
         }
-        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
+        ArrayList<ProfileAchievement> achievmentProfiles;
         if (binding.getProfileFragmentViewModel().getUser().getAchievements() != null && binding.getProfileFragmentViewModel().getUser().getAchievements().size() > 0) {
             achievmentProfiles = (ArrayList<ProfileAchievement>) binding.getProfileFragmentViewModel().getUser().getAchievements();
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
+            binding.achievmentRv.setNestedScrollingEnabled(false);
             binding.achievmentRv.setLayoutManager(linearLayoutManager);
             binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
             binding.noAchievementsView.setVisibility(View.GONE);
@@ -290,13 +312,13 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getUserSelfInformation(userResultListener);
       //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
     }
 
     public void logoutUser(View view) {
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(0);
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
         onLoggedOut();
     }
 
@@ -360,6 +382,14 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     public void showAchievementsDetails(View view) {
+        switch (view.getId()) {
+            case R.id.points_layout:
+                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.POINTS);
+                break;
+            case R.id.show_achievments_details:
+                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.DETAILS);
+                break;
+        }
         AchievementsActivity.show(getContext());
     }
 
@@ -369,7 +399,15 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     public void showDiveCenter(View view) {
-        UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
+        if (binding.getProfileFragmentViewModel().getUser().getDiveCenter().getType() == 1) {
+            UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
+        } else if (binding.getProfileFragmentViewModel().getUser().getDiveCenter().getType() == 2) {
+            UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), -1);
+        }
+    }
+
+    public void logout(View view) {
+        DDScannerApplication.bus.post(new LogoutEvent());
     }
 
 }

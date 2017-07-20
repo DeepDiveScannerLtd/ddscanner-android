@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="62dp"
+    android:paddingLeft="20dp"
+    android:background="?attr/selectableItemBackground"
+    tools:ignore="RtlSymmetry">
+    <ImageView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/dive_center_photo"/>
+    <LinearLayout
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/dive_center_photo"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="@color/black_text"
+            tools:text="Aquacenter Russia"
+            android:id="@+id/dive_center_name"
+            />
+        <TextView
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#a3a3a3"
+            android:letterSpacing="0.02"
+            android:lineSpacingExtra="1.5sp"
+            tools:text="Steigenberger Al Dau Resort, Yussif Affifi..."
+            android:id="@+id/dive_center_address"
+            />
+    </LinearLayout>
+    <ImageView
+        android:layout_marginLeft="60dp"
+        style="@style/DividerStyleFull"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

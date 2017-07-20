@@ -9,10 +9,8 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.entities.Language;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpotsListForEditDcAdapter.DiveSpotViewHolder> {
 

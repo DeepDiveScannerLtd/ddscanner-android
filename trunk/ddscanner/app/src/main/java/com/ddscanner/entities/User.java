@@ -24,6 +24,55 @@ public class User implements Serializable {
     private int photosCount;
     @SerializedName("dive_center")
     private DiveCenterProfile diveCenter;
+    @SerializedName("is_creator")
+    private boolean isCreator;
+    @SerializedName("provider_id")
+    private String facebookLink;
+    @SerializedName("provider_type")
+    private Integer providerType;
+    private String link;
+    @SerializedName("dc_type")
+    private int diveCenterType;
+
+    public int getDiveCenterType() {
+        return diveCenterType;
+    }
+
+    public void setDiveCenterType(int diveCenterType) {
+        this.diveCenterType = diveCenterType;
+    }
+
+    public String getFacebookLink() {
+        return facebookLink;
+    }
+
+    public void setFacebookLink(String facebookLink) {
+        this.facebookLink = facebookLink;
+    }
+
+    public Integer getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(Integer providerType) {
+        this.providerType = providerType;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public boolean isCreator() {
+        return isCreator;
+    }
+
+    public void setCreator(boolean creator) {
+        isCreator = creator;
+    }
 
     public DiveCenterProfile getDiveCenter() {
         return diveCenter;
@@ -130,6 +179,9 @@ public class User implements Serializable {
     }
 
     public String getPhoto() {
+        if (photo == null) {
+            return "";
+        }
         return photo;
     }
 

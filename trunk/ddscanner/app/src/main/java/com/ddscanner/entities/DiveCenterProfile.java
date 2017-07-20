@@ -20,6 +20,7 @@ public class DiveCenterProfile implements Serializable{
     private String countryName;
     @SerializedName("country_code")
     private String countryCode;
+    private CountryEntity country;
     private ArrayList<Address> addresses;
     private ArrayList<String> emails;
     private ArrayList<String> phones;
@@ -41,9 +42,22 @@ public class DiveCenterProfile implements Serializable{
     @SerializedName("new_instructors_exist")
     private boolean isNewInstructors;
     @SerializedName("service_type")
-    private int serviceType;
+    private Integer serviceType;
+    @SerializedName("provider_type")
+    private Integer providerType;
+
+    public Integer getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(Integer providerType) {
+        this.providerType = providerType;
+    }
 
     public DiveCenterServiceType getServiceType() {
+        if (serviceType == null) {
+            return DiveCenterServiceType.COMPANY;
+        }
         switch (serviceType) {
             case 1:
                 return DiveCenterServiceType.COMPANY;
@@ -54,7 +68,15 @@ public class DiveCenterProfile implements Serializable{
         }
     }
 
-    public void setServiceType(int serviceType) {
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
+
+    public void setServiceType(Integer serviceType) {
         this.serviceType = serviceType;
     }
 

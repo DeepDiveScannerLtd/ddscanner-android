@@ -12,13 +12,9 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.ContactUsEntity;
 import com.ddscanner.events.SocialLinkOpenEvent;
-import com.ddscanner.ui.views.DDProgressBarView;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 6.8.16.
- */
 public class SocialListAdapter extends RecyclerView.Adapter<SocialListAdapter.SocialListViewHolder> {
 
     private ArrayList<ContactUsEntity> contactUsEntities;

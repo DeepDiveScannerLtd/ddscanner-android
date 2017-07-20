@@ -1,6 +1,5 @@
 package com.ddscanner.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -17,14 +15,10 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
-import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 15.6.16.
- */
 public class SearchLocationFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView locationRecyclerView;
@@ -66,7 +60,6 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         if (places == null || places.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             content.setVisibility(View.GONE);
-            Helpers.hideKeyboard(getActivity());
         } else {
             noResultsView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);

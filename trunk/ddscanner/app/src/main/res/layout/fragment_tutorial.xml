@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:background="#000000">
+
+    <TextView
+        android:layout_below="@+id/fragment_help_tutorial_text"
+        android:gravity="center"
+        android:id="@+id/fragment_help_tutorial_subtitle_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:fontFamily="sans-serif"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="9sp"
+        android:layout_marginTop="3dp"
+        tools:text="Line 2 of this description" />
+
+    <TextView
+        android:id="@+id/fragment_help_tutorial_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_help_tutorial_imageview"
+        android:layout_centerHorizontal="true"
+        android:autoLink="web"
+        android:fontFamily="sans-serif-medium"
+        android:padding="8dp"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/black_text"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:textSize="18sp"
+        tools:text="Browse this wonderful tutorial." />
+
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_help_tutorial_imageview_background"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment_help_tutorial_text"
+        android:scaleType="fitCenter" />
+    <ImageView
+        android:layout_marginTop="91dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_help_tutorial_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
+        tools:src="@drawable/ic_navigate_next"
+        android:scaleType="fitCenter" />
+</RelativeLayout><!-- From: file:/Users/rebeccafranks/Personal/Github/HelpTutorialExample/materialhelptutorial/src/main/res/layout/fragment_help_tutorial_image.xml -->

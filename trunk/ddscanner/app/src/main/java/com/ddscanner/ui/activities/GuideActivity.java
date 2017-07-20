@@ -1,21 +1,20 @@
 package com.ddscanner.ui.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.GuideItem;
 import com.ddscanner.ui.adapters.GuideListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -25,6 +24,7 @@ public class GuideActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        EventsTracker.trackGuideToDDSView();
         findViews();
     }
 

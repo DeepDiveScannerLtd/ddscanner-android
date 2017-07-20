@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Instructor;
-import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
@@ -54,7 +53,7 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
                 }
             }
         }
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.review_default_avatar).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(35, context)),Math.round(Helpers.convertDpToPixel(35, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).resize(Math.round(Helpers.convertDpToPixel(36, context)),Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
     }
 
     @Override

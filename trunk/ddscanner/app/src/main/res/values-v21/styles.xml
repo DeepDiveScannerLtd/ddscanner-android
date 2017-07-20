@@ -10,8 +10,15 @@
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="colorControlHighlight">@color/spinner_triangle_color</item>
     </style>
 
+    <style name="tabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">#293e75</item>
+        <item name="tabIndicatorColor">#3b518b</item>
+        <item name="tabTextAppearance">@style/customTabText</item>
+        <item name="android:elevation">2dp</item>
+    </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_bar</item>
@@ -50,6 +57,56 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="OrangeButtons" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:background">@drawable/orange_ripple_drawable</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:elevation">1dp</item>
+    </style>
+
+    <style name="BlueButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/blue_button_text_color</item>
+        <item name="android:background">@drawable/login_button_ripple</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:elevation">1dp</item>
+    </style>
+
+    <style name="NewNotApprovedSpotsLabelBackground">
+        <item name="android:background">@drawable/approve_spots_ripple_background</item>
+    </style>
+
+    <style name="DialogCloseButtonStyle">
+        <item name="android:background">@drawable/dialog_button_ripple</item>
+    </style>
+
+    <style name="YesButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_yes_button_ripple</item>
+    </style>
+
+    <style name="NoButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_no_button_ripple</item>
+    </style>
+
+    <style name="AddSealifeButtonStyle">
+        <item name="android:background">@drawable/add_sealife_ripple_background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+    </style>
+
+    <style name="FacebookLoginButtonBackground">
+        <item name="android:background">@drawable/fb_ripple_button</item>
+    </style>
+
+    <style name="GoogleLoginButtonBackground">
+        <item name="android:background">@drawable/google_login_ripple</item>
     </style>
 
 </resources>

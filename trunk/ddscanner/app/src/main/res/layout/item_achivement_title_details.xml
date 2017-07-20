@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.achievements.AchievementTitleDetailsViewModel" />
+    </data>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginBottom="15dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/flag"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@color/photos_placeholder"
+            android:layout_centerVertical="true"
+            bind:loadCountryFlag="@{viewModel}"/>
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/flag"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#2b2b2b"
+            android:letterSpacing="0.01"
+            android:text="@{viewModel.achievementTitleDetails.country.name}"
+            />
+
+        <TextView
+            app:setProgressText="@{viewModel}"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#bbbbbb"
+            android:letterSpacing="0.02"
+            android:lineSpacingExtra="7.2sp"
+            android:gravity="end"
+            tools:text="100"
+            />
+
+    </RelativeLayout>
+
+    <com.ddscanner.ui.views.AchievementLineProgresView
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/progress_view_background_shape"
+        app:setProgress="@{viewModel}"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#a3a3a3"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="5sp"
+        android:text="@{viewModel.achievementTitleDetails.actions}"
+        tools:text="3 new spots, 8 edited spots, 24 reviews, 38 check-ins"
+        />
+</LinearLayout>
+</layout>

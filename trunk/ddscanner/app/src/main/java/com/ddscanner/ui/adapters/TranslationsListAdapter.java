@@ -11,7 +11,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.ChangeTranslationEvent;
-import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
 
 import java.util.ArrayList;
 

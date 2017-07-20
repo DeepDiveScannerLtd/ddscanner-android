@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,11 +15,11 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentOld;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.reiews.edit.EditCommentActivity;
 import com.ddscanner.ui.adapters.SelfReviewsListAdapter;
@@ -33,7 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SelfCommentsActivity extends AppCompatActivity implements DialogClosedListener {
+public class SelfCommentsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private ArrayList<CommentOld> commentOlds;
     private RecyclerView commentsRc;
@@ -52,7 +51,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
            // path = comments.getDiveSpotPathMedium();
-            commentsRc.setAdapter(new SelfReviewsListAdapter(result, SelfCommentsActivity.this));
+            commentsRc.setAdapter(new SelfReviewsListAdapter(result, null));
         }
 
         @Override
@@ -124,7 +123,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserComments(commentsResultListener, userId);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserComments(commentsResultListener, userId);
     }
 
     public static void show(Context context, String userId) {
@@ -175,7 +174,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResulListener, id);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postDeleteReview(deleteCommentResulListener, id);
     }
 
     @Subscribe
@@ -196,13 +195,13 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override

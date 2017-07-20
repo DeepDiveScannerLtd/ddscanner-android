@@ -1,9 +1,15 @@
 package com.ddscanner.utils;
 
-/**
- * Created by lashket on 7.5.16.
- */
 public class Constants {
+
+    public static final String ANALYTIC_VERSION = "v1_1";
+    public static final String PLATFORM = "android";
+    public static final String TUTORIAL_VERSION = "slider_1";
+
+    //CreateDiveCenterArguments
+    public static final String ARG_ID = "id";
+    public static final String ARG_DC_TYPE = "type";
+    public static final String ARG_DC_NAME = "dc_name";
 
     public static final String images = "https:";
     public static final String DIVESPOTID = "ID";

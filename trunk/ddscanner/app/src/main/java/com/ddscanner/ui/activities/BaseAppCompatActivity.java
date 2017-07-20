@@ -1,7 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,7 +17,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.interfaces.ShowPopupLstener;
+import com.ddscanner.screens.dialogs.popup.AchievementPopupDialogFrament;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
@@ -30,10 +33,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
-public class BaseAppCompatActivity extends AppCompatActivity {
+public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopupLstener, AchievementPopupDialogFrament.PopupHideListener {
 
     private static final String TAG = BaseAppCompatActivity.class.getName();
     public static final int RESULT_CODE_PROFILE_LOGOUT = 1010;
+    public static final int RESULT_CODE_FILTERS_RESETED = 1011;
+    public static final int RESULT_CODE_DIVE_SPOT_REMOVED = 1012;
+    public static final int RESULT_CODE_DIVE_SPOT_ADDED = 1013;
 
 
     private LocationHelper locationHelper;
@@ -41,6 +47,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private int menuResourceId = -1;
     private PictureTakenListener takedListener;
     private File tempFile;
+    public boolean isPopupShown = false;
+    private boolean isCloseActivityAfterPopupClosed = false;
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
@@ -101,7 +109,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void pickSinglePhotoFromGallery() {
-        if (checkReadStoragePermission(this)) {
+        if (checkReadStoragePermission()) {
             pickphotoFromGallery();
         } else {
             android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE);
@@ -109,15 +117,15 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void pickPhotoFromCamera() {
-        if (checkWriteStoragePermission()) {
+        if (checkWriteStoragePermission() && checkReadStoragePermission()) {
             dispatchTakePictureIntent();
         } else {
-            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
+            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
         }
     }
 
     public void pickPhotosFromGallery() {
-        if (checkReadStoragePermission(this)) {
+        if (checkReadStoragePermission()) {
             Intent intent = new Intent();
             intent.setType("image/*");
             if (Build.VERSION.SDK_INT >= 18) {
@@ -131,18 +139,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkReadStoragePermission(Activity context) {
-        if (android.support.v13.app.ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+    private boolean checkReadStoragePermission() {
+        return android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean checkWriteStoragePermission() {
-        if (android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void pickphotoFromGallery() {
@@ -185,8 +187,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 Log.i(TAG, "onRequestPermissionsResult grantResults = " + grantResults[0] + " " + grantResults[1]);
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     getLocation(-1);
-                } else {
-                    // Do nothing. Keep showing this activity
                 }
                 break;
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE:
@@ -221,11 +221,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        return image;
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
     private void dispatchTakePictureIntent() {
@@ -235,15 +234,49 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
                 tempFile = photoFile;
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
 
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.ddscanner.debug", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, getString(R.string.application_id), photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA);
             }
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Override
+    public void onPopupMustBeShown(String popup) {
+        AchievementPopupDialogFrament.showDialog(getSupportFragmentManager(), popup);
+        isPopupShown = true;
+    }
+
+    @Override
+    public void finish() {
+        if (isPopupShown) {
+            isCloseActivityAfterPopupClosed = true;
+            return;
+        }
+        super.finish();
+    }
+
+    @Override
+    public void onPopupClosed() {
+        isPopupShown = false;
+        if (isCloseActivityAfterPopupClosed) {
+            finish();
+        }
+    }
 }

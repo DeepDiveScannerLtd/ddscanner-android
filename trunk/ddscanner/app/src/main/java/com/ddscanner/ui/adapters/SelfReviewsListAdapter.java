@@ -25,9 +25,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-/**
- * Created by Lenovo on 26.08.2016.
- */
 public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsListAdapter.SelfReviewsListViewHolder>{
 
     private ArrayList<SelfCommentEntity> comments;

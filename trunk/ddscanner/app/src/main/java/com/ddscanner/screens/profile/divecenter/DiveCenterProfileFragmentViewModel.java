@@ -1,6 +1,5 @@
 package com.ddscanner.screens.profile.divecenter;
 
-import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +27,25 @@ public class DiveCenterProfileFragmentViewModel {
         return diveCenterProfile;
     }
 
+    @BindingAdapter({"loadLanguagesFrom"})
+    public static void loadLanguagesFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getDiveCenterProfile().getLanguages() == null || viewModel.getDiveCenterProfile().getLanguages().size() == 0) {
+                view.setText("0");
+                return;
+            }
+            if (viewModel.getDiveCenterProfile().getLanguages().size() == 2) {
+                view.setText(String.format("%s, %s", viewModel.getDiveCenterProfile().getLanguages().get(0), viewModel.getDiveCenterProfile().getLanguages().get(1)));
+                return;
+            }
+            if (viewModel.getDiveCenterProfile().getLanguages().size() == 1) {
+                view.setText(viewModel.getDiveCenterProfile().getLanguages().get(0));
+                return;
+            }
+            view.setText(String.valueOf(viewModel.getDiveCenterProfile().getLanguages().size()));
+        }
+    }
+
     @BindingAdapter({"countEditedFrom"})
     public static void editedCount(TextView view, DiveCenterProfileFragmentViewModel diveCenterProfileFragmentViewModel) {
         if (diveCenterProfileFragmentViewModel != null) {
@@ -47,7 +65,11 @@ public class DiveCenterProfileFragmentViewModel {
         if (diveCenterProfileFragmentViewModel !=null) {
             if (diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount() > 0) {
                 view.setVisibility(View.VISIBLE);
-                view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(diveCenterProfileFragmentViewModel.diveCenterProfile.getId().toString())) {
+                    view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
+                    return;
+                }
+                view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count_foreign, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
             }
         }
     }
@@ -55,7 +77,7 @@ public class DiveCenterProfileFragmentViewModel {
     @BindingAdapter({"loadImageFrom"})
     public static void loadProfileImage(ImageView view, DiveCenterProfileFragmentViewModel viewModel) {
         if (viewModel != null) {
-            Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getDiveCenterProfile().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(65, view.getContext())), Math.round(Helpers.convertDpToPixel(65, view.getContext()))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL)).into(view);
+            Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getDiveCenterProfile().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(65, view.getContext())), Math.round(Helpers.convertDpToPixel(65, view.getContext()))).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.avatar_dc_profile_def).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL)).into(view);
         }
     }
 
@@ -72,21 +94,27 @@ public class DiveCenterProfileFragmentViewModel {
 
     @BindingAdapter({"setEmails"})
     public static void setEmailsFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
-        String outString = "";
+        StringBuilder outString = new StringBuilder();
         if (viewModel != null && viewModel.getDiveCenterProfile().getEmails() != null) {
             for (String email : viewModel.getDiveCenterProfile().getEmails()) {
-                outString = outString + email + " ";
+                StringBuilder append = outString.append(email);
+                if (viewModel.getDiveCenterProfile().getEmails().indexOf(email) != viewModel.getDiveCenterProfile().getEmails().size() - 1) {
+                    append.append(", ");
+                }
             }
         }
-        view.setText(outString);
+        view.setText(outString.toString());
     }
 
     @BindingAdapter({"setPhones"})
     public static void setPhones(TextView view, DiveCenterProfileFragmentViewModel viewModel){
-        String outString = "";
+        StringBuilder outString = new StringBuilder();
         if (viewModel != null && viewModel.getDiveCenterProfile().getPhones() != null) {
             for (String phone : viewModel.getDiveCenterProfile().getPhones()) {
-                outString = outString + phone + " ";
+                StringBuilder append = outString.append(phone);
+                if (viewModel.getDiveCenterProfile().getPhones().indexOf(phone) != viewModel.getDiveCenterProfile().getPhones().size() - 1) {
+                    append.append(", ");
+                }
             }
         }
         view.setText(outString);

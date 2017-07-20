@@ -218,7 +218,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_deep" />
+                        android:src="@drawable/ic_ds_deep_2" />
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/depth"
@@ -242,6 +242,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:layout_height="56dp"
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_visibility" />
 
@@ -263,7 +264,7 @@
                                 android:layout_height="56dp"
                                 android:hint="@string/min"
                                 android:inputType="number"
-                                android:maxLength="5" />
+                                android:maxLength="3" />
 
                             <ImageView
                                 style="@style/DividerStyleFull" />
@@ -299,7 +300,7 @@
                                     android:layout_marginLeft="15dp"
                                     android:hint="@string/max"
                                     android:inputType="number"
-                                    android:maxLength="5" />
+                                    android:maxLength="3" />
 
                                 <ImageView
                                     android:layout_marginLeft="15dp"
@@ -340,7 +341,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_currents" />
+                        android:src="@drawable/ic_ds_currents" />
                     
 
                         <android.support.v7.widget.AppCompatSpinner
@@ -349,6 +350,7 @@
                             android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
+                            app:backgroundTint="@color/spinner_triangle_color"
                             android:popupBackground="@color/white" />
                 </LinearLayout>
 
@@ -367,7 +369,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_level" />
+                        android:src="@drawable/ic_ds_level" />
 
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/level_spinner"
@@ -375,6 +377,7 @@
                             android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
+                            app:backgroundTint="@color/spinner_triangle_color"
                             android:popupBackground="@color/white"
                              />
                 </LinearLayout>
@@ -402,6 +405,7 @@
                             android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
+                            app:backgroundTint="@color/spinner_triangle_color"
                             android:popupBackground="@color/white" />
                     
                 </LinearLayout>
@@ -452,13 +456,11 @@
                     android:layout_marginLeft="20dp"
                     android:visibility="visible" />
                 <LinearLayout
+                    style="@style/AddSealifeButtonStyle"
                     android:id="@+id/btn_add_sealife"
                     android:layout_marginTop="11dp"
                     android:layout_marginBottom="20dp"
                     android:layout_below="@+id/sealifes_rc"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/gray_rectangle"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:orientation="horizontal"
@@ -471,7 +473,7 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <ImageView style="@style/DividerStyle" />
+            <ImageView style="@style/DividerStyleFull" />
 
             <TextView
                 android:text="@string/one_sealife"
@@ -504,6 +506,8 @@
                     app:theme="@style/ColorSwitchStyle"
                     />
             </LinearLayout>
+            <ImageView
+                style="@style/DividerStyleFull" />
             <LinearLayout
                 android:visibility="gone"
                 android:id="@+id/edit_layout"
@@ -531,15 +535,12 @@
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/border_button_orange_2px"
-                android:text="@string/btn_save"
-                android:textColor="@color/black_text"
-                android:textSize="15sp" />
+                style="@style/OrangeButtons"
+                android:text="@string/btn_save" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

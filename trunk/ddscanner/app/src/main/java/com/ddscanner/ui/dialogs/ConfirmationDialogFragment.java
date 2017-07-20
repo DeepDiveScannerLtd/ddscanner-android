@@ -15,7 +15,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.DialogYesNoBinding;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
-import com.ddscanner.utils.Helpers;
 
 public class ConfirmationDialogFragment extends DialogFragment {
 
@@ -62,6 +61,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
         binding.yesButton.setText(args.getString(ARG_POSITIVE));
         binding.message.setText(args.getString(ARG_MESSAGE));
         builder.setView(binding.getRoot());
+        builder.setCancelable(false);
         builder.setTitle(null);
         if (!args.getString(ARG_TITLE).isEmpty()) {
             binding.title.setVisibility(View.VISIBLE);

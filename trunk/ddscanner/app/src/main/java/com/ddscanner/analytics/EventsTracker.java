@@ -5,20 +5,30 @@ import android.os.Bundle;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.utils.Constants;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class EventsTracker {
 
-    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
+    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_centers";
     private static final String EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD = "method";
 
     // ----------------------------------------------------
     // Screens views
     // ----------------------------------------------------
+
+    private static final String EVENT_NAME_ABOUT_DDS_MENU_VIEW = "about_dds_menu_view";
+    private static final String EVENT_NAME_ABOUT_DDS_VIEW = "about_dds_view";
+    private static final String EVENT_NAME_CONTACT_US_VIEW = "contact_us_view";
+    private static final String EVENT_NAME_GUIDE_TO_DDS_VIEW = "guide_to_dds_view";
+    private static final String EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW = "guide_to_dds_item_view";
+    private static final String EVENT_NAME_REVIEW_VIEW = "review_view";
+    private static final String EVENT_NAME_IMAGE_VIEW = "image_view";
 
     private static final String EVENT_NAME_DIVE_SPOTS_MAP_VIEW = "dive_spots_map_view";
     private static final String EVENT_NAME_DIVE_SPOTS_LIST_VIEW = "dive_spots_list_view";
@@ -30,12 +40,12 @@ public class EventsTracker {
     private static final String EVENT_NAME_USER_CHECK_INS_VIEW = "user_check_ins_view";
     private static final String EVENT_NAME_USER_CREATED_VIEW = "user_created_view";
     private static final String EVENT_NAME_USER_EDITED_VIEW = "user_edited_view";
-    private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favourites_view";
+    private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favorites_view";
     private static final String EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW = "dive_spot_check_ins_view";
     private static final String EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW = "dive_spot_photos_view";
-    private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
+    private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "sealife_view";
     private static final String EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW = "dive_spot_reviews_view";
-    private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "reviewer_profile_view";
+    private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "foreign_profile_view";
     private static final String EVENT_NAME_SEARCH_BY_DIVE_SPOT = "search_by_dive_spot";
     private static final String EVENT_NAME_SEARCH_BY_LOCATION = "search_by_location";
     private static final String EVENT_NAME_SEARCH_SEA_LIFE = "search_sea_life";
@@ -53,6 +63,13 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_ID = "dive_spot_id";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
     private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
+    private static final String EVENT_NAME_SKIP_REGISTRATION = "skip_registration";
+    private static final String EVENT_NAME_DIVE_SPOT_EDITORS_VIEW = "dive_spot_editors_view";
+    private static final String EVENT_NAME_DIVE_SPOT_MAPS_VIEW = "dive_spot_maps_view";
+    private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE = "type";
+    private static final String EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW = "dive_spot_location_on_map_view";
+    private static final String EVENT_NAME_INSTRUCTORS_VIEW = "user_instructors_view";
+    private static final String EVENT_NAME_DIVESPOTS_TO_APPROVE_VIEW = "dive_spots_to_be_approved_view";
 
     // ----------------------------------------------------
     // Content management
@@ -62,23 +79,27 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT_INVALID = "dive_spot_invalid";
 //    private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT = "result";
 
-    private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
-
-    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "create_dive_spot";
-    private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "dive_spot_photo_report";
+    private static final String EVENT_NAME_EDIT_DIVE_SPOT = "dive_spot_edit_click";
+    private static final String EVET_NAME_DIVE_SPOT_MAP_ADDED = "dive_spot_map_added";
+    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "dive_spot_create_click";
+    private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "image_report_click";
     private static final String EVENT_NAME_DIVE_SPOT_EDITED = "dive_spot_edited";
     private static final String EVENT_NAME_DIVE_SPOT_CREATED = "dive_spot_created";
-    private static final String EVENT_NAME_SEALIFE_CREATE = "create_sea_life";
+    private static final String EVENT_NAME_SEALIFE_CREATE = "sea_life_create_click";
     private static final String EVENT_NAME_SEALIFE_CREATED = "sea_life_created";
-    private static final String EVENT_NAME_REPORT_REVIEW = "reviewer_review_report";
+    private static final String EVENT_NAME_REPORT_REVIEW = "review_report_click";
     private static final String EVENT_NAME_DELETE_REVIEW = "user_review_delete";
     private static final String EVENT_NAME_DELETED_REVIEW = "user_review_deleted";
-    private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit";
+    private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit_click";
     private static final String EVENT_NAME_EDITED_REVIEW = "user_review_edited";
     private static final String EVENT_NAME_REVIEWER_FACEBOOK_OPENED = "reviewer_facebook_open";
-    private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "dive_spot_photo_report_sent";
-    private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "reviewer_review_report_sent";
+    private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "image_reported";
+    private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "review_reported";
     private static final String EVENT_NAME_REVIEW_SHOW_ALL = "review_show_all";
+    private static final String EVENT_NAME_REVIEW_SENT = "review_sent";
+    private static final String EVENT_NAME_APPLY_DS_FILTER = "apply_ds_filter";
+    private static final String EVENT_NAME_NEW_ACCOUNT_ADDED = "new_account_added";
+    private static final String EVENT_NAME_PROFILE_EDITED = "profile_edited";
 
     // ----------------------------------------------------
     // UserOld activity
@@ -88,11 +109,11 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_CHECK_IN_STATUS = "status";
     private static final String EVENT_NAME_CHECK_OUT = "check_out";
 
-    private static final String EVENT_NAME_SEND_REVIEW = "send_review";
-    private static final String EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE = "source";
+    private static final String EVENT_NAME_SEND_REVIEW = "review_create_screen_view";
+    private static final String EVENT_PARAMETER_NAME_SOURCE = "source";
 
-    private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
-    private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
+    private static final String EVENT_NAME_COMMENT_LIKED = "review_liked";
+    private static final String EVENT_NAME_COMMENT_DISLIKED = "review_disliked";
 
     private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
 
@@ -102,6 +123,10 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
+    private static final String EVENT_NAME_EDIT_SEALIFE = "sea_life_edit_click";
+    private static final String EVENT_NAME_EDITED_SEALIFE = "sea_life_edited";
+    private static final String EVENT_NAME_SKIP_TUTORIAL = "skip_tutorial";
+
     // ----------------------------------------------------
     // Logging
     // ----------------------------------------------------
@@ -109,943 +134,530 @@ public class EventsTracker {
     private static final String EVENT_NAME_UNKNOWN_SERVER_ERROR = "unknown_error";
     private static final String EVENT_PARAMETER_NAME_ERROR_URL = "url";
     private static final String EVENT_PARAMETER_NAME_ERROR_TEXT = "text";
+    private static final String EVENT_PARAMETER_NAME_USER_TYPE = "user_type";
+
+    // ----------------------------------------------------
+    // Sales
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_REGISTRATION_DIVE_CENTER = "registration_dc";
+    private static final String EVENT_NAME_REGISTRATION_DIVER = "registration_diver";
+    private static final String EVENT_NAME_YES_IM_INSTRUCTOR = "yes_im_instructor";
+    private static final String EVENT_NAME_INSTR_REG_DC_USER_CHOSEN = "dc_search_dc_user_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN = "dc_search_dc_legacy_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED = "dc_search_dc_legacy_invited";
+    private static final String EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN = "dc_search_add_new_chosen";
+    private static final String EVENT_NAME_INSTR_REG_DC_NEW_INVITED = "dc_search_dc_new_invited";
+    private static final String EVENT_NAME_WATCH_TUTORIAL = "tutorial_watched";
+    private static final String EVENT_PARAMETER_NAME_TUTORIAL_PAGE = "page";
+    private static final String EVENT_PARAMETER_NAME_TUTORIAL_STATE = "tutorial_state";
+    private static final String EVENT_PARAMETER_NAME_PLATFORM = "platform";
+    private static final String EVENT_PARAMETER_NAME_TUTORIAL_VERSION = "tutorial_version";
 
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    private static void trackEventWithParameters(Map<String, String> params, String eventName) {
+
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        String userType = DDScannerApplication.getInstance().getActiveUserType();
+
+        String tutorialState = DDScannerApplication.getInstance().getTutorialState();
+
+        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+        params.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        params.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        params.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+
+        Bundle firebaseParams = new Bundle();
+        Map<String, Object> appsflyerParams = new HashMap<>();
+
+        for(Map.Entry entry: params.entrySet()) {
+            firebaseParams.putString(entry.getKey().toString(), entry.getValue().toString());
+            appsflyerParams.put(entry.getKey().toString(), entry.getValue());
+        }
+
+        AnalyticsSystemsManager.getLogger().logEvent(eventName, firebaseParams);
+        FlurryAgent.logEvent(eventName, params);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, firebaseParams);
+    }
+
+    private static void trackEventWithoutParameters(String eventName) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+        String tutorialState = DDScannerApplication.getInstance().getTutorialState();
+        String userType = DDScannerApplication.getInstance().getActiveUserType();
+        // Google Firebase
+        Bundle params = new Bundle();
+
+        params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+        params.putString(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+        flurryParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+        FlurryAgent.logEvent(eventName, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void diveSpotsToApproveView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVESPOTS_TO_APPROVE_VIEW);
+    }
+
+    public static void trackInstructorsView() {
+        trackEventWithoutParameters(EVENT_NAME_INSTRUCTORS_VIEW);
+    }
+
+    public static void trackProfileEdited() {
+        trackEventWithoutParameters(EVENT_NAME_PROFILE_EDITED);
+    }
+
+    public static void trackNewAccountAdded() {
+        trackEventWithoutParameters(EVENT_NAME_NEW_ACCOUNT_ADDED);
+    }
+
+    public static void trackApplyDsFilter() {
+        trackEventWithoutParameters(EVENT_NAME_APPLY_DS_FILTER);
+    }
+
+    public static void trackAboutDDsMenuView() {
+        trackEventWithoutParameters(EVENT_NAME_ABOUT_DDS_MENU_VIEW);
+    }
+
+    public static void trackAboutDDSView() {
+        trackEventWithoutParameters(EVENT_NAME_ABOUT_DDS_VIEW);
+    }
+
+    public static void trackContactUsView() {
+        trackEventWithoutParameters(EVENT_NAME_CONTACT_US_VIEW);
+    }
+
+    public static void trackGuideToDDSView() {
+        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_VIEW);
+    }
+
+    public static void trackGuideToDDSItemView() {
+        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
+    }
+
+    public static void trackReviewView() {
+        trackEventWithoutParameters(EVENT_NAME_REVIEW_VIEW);
+    }
+
+    public static void trackImageView() {
+        trackEventWithoutParameters(EVENT_NAME_IMAGE_VIEW);
+    }
+
+    public static void trackMapAdded() {
+        trackEventWithoutParameters(EVET_NAME_DIVE_SPOT_MAP_ADDED);
+    }
+
+    public static void trackUserAchievementsView(AchievementsViewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
+        trackEventWithParameters(map, EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
+    }
+
+    public static void trackSkipTutorial(String currentPosition) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_TUTORIAL_PAGE, currentPosition);
+        trackEventWithParameters(map, EVENT_NAME_SKIP_TUTORIAL);
+    }
+
+    public static void trackDiveSpotView(String diveSpotId) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
+        trackEventWithParameters(map, EVENT_NAME_DIVE_SPOT_VIEW);
+    }
+
+    public static void trackDiveCenterView(String diveCenterId, String dcType) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, dcType);
+        trackEventWithParameters(map, EVENT_NAME_DIVE_CENTER_VIEW);
+    }
+
+    public static void trackGuideUseful(String question) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        trackEventWithParameters(map, EVENT_NAME_GUIDE_USEFUL);
+    }
+
+    public static void trackGuideNotUseful(String question) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        trackEventWithParameters(map, EVENT_NAME_GUIDE_NOT_USEFUL);
+    }
+
+    public static void trackDiveSpotLocationOnMapView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW);
+    }
+
+    public static void trackEditorsView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_EDITORS_VIEW);
+    }
+
+    public static void trackMapsView() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_MAPS_VIEW);
+    }
+
+    public static void trackWatchTutorial() {
+        trackEventWithoutParameters(EVENT_NAME_WATCH_TUTORIAL);
+    }
+
+    public static void trackSkipRegistration() {
+        trackEventWithoutParameters(EVENT_NAME_SKIP_REGISTRATION);
+    }
+
+    public static void trackYesInstructorClicked() {
+        trackEventWithoutParameters(EVENT_NAME_YES_IM_INSTRUCTOR);
+    }
+
+    private static void trackInstructorChosingDcEvenets(String eventName) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        Bundle params = new Bundle();
+
+        params.putString(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        FlurryAgent.logEvent(eventName, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_SOURCE, DDScannerApplication.getInstance().getSharedPreferenceHelper().getDivecenterSearchSource());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void trackInstructorRegistrationDcUserChosen() {
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_USER_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcLegacyChosen() {
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcLegacyInvited() {
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_LEGACY_INVITED);
+    }
+
+    public static void trackInstructorRegistrationAddNewChosen() {
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_ADD_NEW_CHOSEN);
+    }
+
+    public static void trackInstructorRegistrationDcNewInvited() {
+        trackInstructorChosingDcEvenets(EVENT_NAME_INSTR_REG_DC_NEW_INVITED);
+    }
 
     private EventsTracker() {
 
     }
 
-    public static void trackDiveSpotView(String diveSpotId, SpotViewSource spotViewSource) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
+    public static void trackRegistration(int userType) {
+        if (userType == 0) {
+            trackEventWithoutParameters(EVENT_NAME_REGISTRATION_DIVE_CENTER);
+        } else {
+            trackEventWithoutParameters(EVENT_NAME_REGISTRATION_DIVER);
         }
-
-        // Google Firebase
-        // way 1
-//        Bundle params = new Bundle();
-//        params.putLong(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-//        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
-        // way 2
-        Bundle params = new Bundle();
-        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
-        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
-        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VIEW, appsflyerParams);
-    }
-
-    public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
-    }
-
-    public static void trackGuideUseful(String question) {
-
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_QUESTION, question);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_GUIDE_USEFUL, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
-        FlurryAgent.logEvent(EVENT_NAME_GUIDE_USEFUL, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_USEFUL, appsflyerParams);
-
-    }
-
-    public static void trackGuideNotUseful(String question) {
-
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_QUESTION, question);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
-        FlurryAgent.logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_NOT_USEFUL, appsflyerParams);
-
-
     }
 
     public static void trackDiveSpotValid() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VALID, null);
-
-        // Flurry
-//        Map<String, String> flurryParams = new HashMap<>();
-//        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
-//        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID, flurryParams);
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VALID, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_VALID);
     }
 
     public static void trackDiveSpotInvalid() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_INVALID, null);
-
-        // Flurry
-//        Map<String, String> flurryParams = new HashMap<>();
-//        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
-//        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID, flurryParams);
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_INVALID, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_INVALID);
     }
 
     public static void trackDiveSpotEdit() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_DIVE_SPOT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_DIVE_SPOT, null);
+        trackEventWithoutParameters(EVENT_NAME_EDIT_DIVE_SPOT);
     }
 
     public static void trackDiveSpotCreation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CREATE_DIVE_SPOT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CREATE_DIVE_SPOT, null);
+        trackEventWithoutParameters(EVENT_NAME_CREATE_DIVE_SPOT);
     }
 
     public static void trackSealifeCreation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEALIFE_CREATE, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_SEALIFE_CREATE);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATE, null);
+        trackEventWithoutParameters(EVENT_NAME_SEALIFE_CREATE);
     }
 
     public static void trackSealifeCreated() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEALIFE_CREATED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_SEALIFE_CREATED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATED, null);
+        trackEventWithoutParameters(EVENT_NAME_SEALIFE_CREATED);
     }
 
     public static void trackReviewEdited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDITED_REVIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_EDITED_REVIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDITED_REVIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_EDITED_REVIEW);
     }
 
     public static void trackReviewrFacebookOpened() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_FACEBOOK_OPENED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_FACEBOOK_OPENED, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
     }
 
     public static void trackDiveSpotReviewReportSent() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT, null);
+        trackEventWithoutParameters(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT);
     }
 
     public static void trackDiveSpotphotoReportSent() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT);
     }
 
     public static void trackDivespotCreated() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_CREATED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CREATED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CREATED, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_CREATED);
     }
 
-     public static void trackDivespotEdited() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_EDITED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_EDITED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_EDITED, null);
+    public static void trackDivespotEdited() {
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_EDITED);
     }
 
     public static void trackReviewShowAll() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEW_SHOW_ALL, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEW_SHOW_ALL);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEW_SHOW_ALL, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEW_SHOW_ALL);
     }
 
 
-    public static void trackCheckIn(CheckInStatus status) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_IN, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        FlurryAgent.logEvent(EVENT_NAME_CHECK_IN, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_IN, appsflyerParams);
+    public static void trackCheckIn() {
+       trackEventWithoutParameters(EVENT_NAME_CHECK_IN);
     }
 
     public static void trackCheckOut() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_OUT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_CHECK_OUT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_OUT, null);
+        trackEventWithoutParameters(EVENT_NAME_CHECK_OUT);
     }
 
-    public static void trackSendReview(SendReviewSource sendReviewSource) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
+    public static void trackReviewSent(SendReviewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
+        trackEventWithParameters(map, EVENT_NAME_REVIEW_SENT);
+    }
 
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEND_REVIEW, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEND_REVIEW, appsflyerParams);
+    public static void trackSendReview(SendReviewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
+        trackEventWithParameters(map, EVENT_NAME_SEND_REVIEW);
     }
 
     public static void trackCommentLiked() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_LIKED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_COMMENT_LIKED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_LIKED, null);
+        trackEventWithoutParameters(EVENT_NAME_COMMENT_LIKED);
     }
 
     public static void trackCommentDisliked() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_DISLIKED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_DISLIKED, null);
+        trackEventWithoutParameters(EVENT_NAME_COMMENT_DISLIKED);
     }
 
     public static void trackDiveSpotPhotoAdded() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
-    public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CONTACT_DIVE_CENTER, appsflyerParams);
+    public static void trackContactDiveCenter() {
+        trackEventWithoutParameters(EVENT_NAME_CONTACT_DIVE_CENTER);
     }
 
     public static void trackDiveSpotMapView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
     }
 
     public static void trackDiveSpotListView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
     }
 
     public static void trackDiveCentersMapView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
     }
 
     public static void trackDiveCentersListView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
     }
 
     public static void trackNotificationsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_NOTIFICATIONS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_NOTIFICATIONS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_NOTIFICATIONS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_NOTIFICATIONS_VIEW);
     }
 
     public static void trackActivityView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_ACTIVITY_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_ACTIVITY_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_ACTIVITY_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_ACTIVITY_VIEW);
     }
 
     public static void trackUserProfileView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_PROFILE_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_PROFILE_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_PROFILE_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_PROFILE_VIEW);
     }
 
     public static void trackUserCheckinsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CHECK_INS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_CHECK_INS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CHECK_INS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_CHECK_INS_VIEW);
     }
 
     public static void trackUserEditedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_EDITED_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_EDITED_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_EDITED_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_EDITED_VIEW);
     }
 
     public static void trackUserCreatedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CREATED_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_CREATED_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CREATED_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_CREATED_VIEW);
     }
 
     public static void trackUserFavoritesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_FAVORITES_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_FAVORITES_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_FAVORITES_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_FAVORITES_VIEW);
     }
 
     public static void trackDiveSpotCheckinsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
+    }
 
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
+    public static void trackEditSealife() {
+        trackEventWithoutParameters(EVENT_NAME_EDIT_SEALIFE);
+    }
 
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
+    public static void trackSealifeEdited() {
+        trackEventWithoutParameters(EVENT_NAME_EDITED_SEALIFE);
     }
 
     public static void trackDiveSpotPhotosView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
     }
 
-    public static void trackDiveSpotSealifeView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
+    public static void trackDiveSpotSealifeView(SealifeViewSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getSource());
+        trackEventWithParameters(map, EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
     }
 
     public static void trackDeviSpotReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
     }
 
     public static void trackReviewerProfileView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_REVIEWER_PROFILE_VIEW);
     }
 
     public static void trackSearchByDiveSpot() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
+        trackEventWithoutParameters(EVENT_NAME_SEARCH_BY_DIVE_SPOT);
     }
 
     public static void trackSearchByLocation() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_LOCATION, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_SEARCH_BY_LOCATION);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_LOCATION, null);
+        trackEventWithoutParameters(EVENT_NAME_SEARCH_BY_LOCATION);
     }
 
     public static void trackSearchSeaLife() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_SEA_LIFE, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_SEARCH_SEA_LIFE);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_SEA_LIFE, null);
+//        trackEventWithoutParameters(EVENT_NAME_SEARCH_SEA_LIFE);
     }
 
     public static void trackPhotoReport() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REPORT_PHOTO, null);
+        trackEventWithoutParameters(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO);
     }
 
     public static void trackReviewReport() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REPORT_REVIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REPORT_REVIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REPORT_REVIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_REPORT_REVIEW);
     }
 
     public static void trackDeleteReview() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DELETE_REVIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DELETE_REVIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETE_REVIEW, null);
+//        trackEventWithoutParameters(EVENT_NAME_DELETE_REVIEW);
     }
 
     public static void trackReviewDeleted() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DELETED_REVIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_DELETED_REVIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETED_REVIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_DELETED_REVIEW);
     }
 
     public static void trackEditReview() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_REVIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_EDIT_REVIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_REVIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_EDIT_REVIEW);
     }
 
     public static void trackUserLikesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_LIKES_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_LIKES_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_LIKES_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_LIKES_VIEW);
     }
 
     public static void trackUserDislikesView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_DISLIKES_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_DISLIKES_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_DISLIKES_VIEW, null);
-    }
-
-    public static void trackUserAchievementsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_ACHIEVEMENTS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_DISLIKES_VIEW);
     }
 
     public static void trackUserReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_REVIEWS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_USER_REVIEWS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_REVIEWS_VIEW, null);
+        trackEventWithoutParameters(EVENT_NAME_USER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerReviewsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_REVIEWS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEWS_VIEW, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerCreatedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_CREATED_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_CREATED_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CREATED_VIEW, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CREATED_VIEW);
     }
 
     public static void trackReviewerEditedView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_EDITED_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_EDITED_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_EDITED_VIEW, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_EDITED_VIEW);
     }
 
     public static void trackReviewerCheckInsView() {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-
-        // Google Firebase
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_CHECK_INS_VIEW, null);
-
-        // Flurry
-        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
-
-        // Appsflyer
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CHECK_INS_VIEW, null);
+//        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
     }
 
     public static void trackUnknownServerError(String url, String errorText) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
-
+        String userType = DDScannerApplication.getInstance().getActiveUserType();
         // Google Firebase
-//        Bundle params = new Bundle();
-//        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
         flurryParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         FlurryAgent.logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, flurryParams);
 
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
         appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_UNKNOWN_SERVER_ERROR, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+    }
+
+    public enum AchievementsViewSource {
+
+        POINTS("points"), DETAILS("show_details");
+
+        private String name;
+
+        AchievementsViewSource(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
     }
 
     public enum SpotViewSource {
@@ -1128,11 +740,11 @@ public class EventsTracker {
     }
 
     public enum SendReviewSource {
-        FROM_RATING_BAR("rating_bar"), FROM_EMPTY_REVIEWS_LIST("empty_reviews_list"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
+        FROM_RATING_BAR("stars"), FROM_REVIEWS_LIST("reviews_list"), CHECK_IN("check_in"), WRITE_REVIEW_BUTTON("write_review_button");
 
         private String name;
 
-        private SendReviewSource(String name) {
+        SendReviewSource(String name) {
             this.name = name;
         }
 
@@ -1140,16 +752,6 @@ public class EventsTracker {
             return name;
         }
 
-        public static SendReviewSource getByName(String name) {
-            switch (name) {
-                case "rating_bar":
-                    return FROM_RATING_BAR;
-                case "reviews_list":
-                    return FROM_REVIEWS_LIST;
-                default:
-                    return UNKNOWN;
-            }
-        }
     }
 
     public enum ContactDiveCenterMethod {
@@ -1157,7 +759,7 @@ public class EventsTracker {
 
         private String name;
 
-        private ContactDiveCenterMethod(String name) {
+        ContactDiveCenterMethod(String name) {
             this.name = name;
         }
 
@@ -1174,6 +776,20 @@ public class EventsTracker {
                 default:
                     return UNKNOWN;
             }
+        }
+    }
+
+    public enum SealifeViewSource {
+        DIVE_SPOT("dive_spot"), REVIEW("review");
+
+        String source;
+
+        SealifeViewSource(String source) {
+            this.source = source;
+        }
+
+        public String getSource() {
+            return source;
         }
     }
 

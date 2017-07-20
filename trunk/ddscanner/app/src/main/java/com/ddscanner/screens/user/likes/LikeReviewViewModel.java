@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -30,7 +29,7 @@ public class LikeReviewViewModel {
         if (viewModel != null) {
             Picasso.with(view.getContext())
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getLikeEntity().getUser().getPhoto(), "1"))
-                    .placeholder(R.drawable.avatar_profile_default)
+                    .placeholder(R.drawable.gray_circle_placeholder)
                     .error(R.drawable.avatar_profile_default)
                     .resize(Math.round(Helpers.convertDpToPixel(40, view.getContext())), Math.round(Helpers.convertDpToPixel(40, view.getContext())))
                     .centerCrop()

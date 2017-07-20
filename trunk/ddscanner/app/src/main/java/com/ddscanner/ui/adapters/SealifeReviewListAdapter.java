@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
 import com.ddscanner.utils.Helpers;
@@ -23,9 +24,13 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
     private ArrayList<SealifeShort> sealifes = new ArrayList<>();
     private Context context;
 
-    public SealifeReviewListAdapter(ArrayList<SealifeShort> sealifes, Context context) {
-        this.sealifes = sealifes;
+    public SealifeReviewListAdapter(Context context, ArrayList<SealifeShort> sealifes) {
         this.context = context;
+        this.sealifes = sealifes;
+    }
+
+    public void setData(ArrayList<SealifeShort> sealifes) {
+        this.sealifes = sealifes;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealifes.get(position).getImage(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(100, context)), Math.round(Helpers.convertDpToPixel(60, context)))
                 .centerCrop()
-                .placeholder(R.drawable.placeholder_photos_activity)
+                .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                 .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL))
                 .into(holder.photo);
     }
@@ -61,7 +66,7 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
 
         @Override
         public void onClick(View view) {
-            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId());
+            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId(), EventsTracker.SealifeViewSource.REVIEW);
         }
     }
 

@@ -17,7 +17,7 @@
 
         <variable
             name="handlers"
-            type="com.ddscanner.screens.user.profile.DiveCenterProfileFragment" />
+            type="com.ddscanner.screens.user.profile.UserDiveCenterProfileFragment" />
     </data>
 
     <ScrollView
@@ -232,7 +232,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
+                            android:layout_marginRight="20dp"
                             android:src="@drawable/ic_arrow" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -265,7 +265,7 @@
 
                             <TextView
                                 style="@style/DiveCenterProfileCharacteristicDesciption"
-                                android:text="@{diveCenterViewModel.diveCenterProfile.languages.get(0)}" />
+                                app:loadLanguagesFrom="@{diveCenterViewModel}" />
                         </LinearLayout>
 
                         <ImageView
@@ -274,7 +274,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
+                            android:layout_marginRight="20dp"
                             android:src="@drawable/ic_arrow" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -329,7 +329,7 @@
                     android:onClick="@{handlers::showCreated}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="5dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -360,7 +360,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
+                            android:layout_marginRight="20dp"
                             android:src="@drawable/ic_arrow" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -401,7 +401,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
+                            android:layout_marginRight="20dp"
                             android:src="@drawable/ic_arrow" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -409,15 +409,11 @@
                 <Button
                     android:onClick="@{handlers::showDiveSpots}"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/dive_center_profile_dive_spots"
-                    android:fontFamily="sans-serif-medium"
                     android:textAllCaps="false"
-                    android:textColor="#e3e9fb"
-                    android:textSize="15sp"
+                    style="@style/BlueButton"
                     android:visibility="gone"
                     app:myDiveSpotsCount="@{diveCenterViewModel}" />
             </LinearLayout>

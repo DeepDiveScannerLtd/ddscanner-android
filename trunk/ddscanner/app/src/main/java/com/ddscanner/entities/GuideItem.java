@@ -2,9 +2,6 @@ package com.ddscanner.entities;
 
 import java.io.Serializable;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class GuideItem implements Serializable {
 
     private String title;

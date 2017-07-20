@@ -26,7 +26,7 @@
 
         <include layout="@layout/view_toolbar" />
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -84,7 +84,17 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/name"
                                 android:hint="@string/name"
+                                android:lines="1"
+                                android:maxLength="31"
+                                android:inputType="text"
+                                android:maxLines="1"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
+
+                            <TextView
+                                android:text="@string/name_is_required_edit_dc"
+                                android:layout_marginLeft="0dp"
+                                android:id="@+id/name_error"
+                                style="@style/ValidationErrorTextView" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -186,23 +196,24 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/add_photo_background"
+                        style="@style/AddSealifeButtonStyle"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:onClick="@{handlers::addDiveSpotClicked}">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_addds_plus_sl" />
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
                             android:text="@string/add_ds"
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dive_spot_error"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/dive_spot_is_required"
+                        android:layout_marginLeft="20dp"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:layout_marginTop="20dp"
@@ -232,23 +243,44 @@
                         android:background="@drawable/add_photo_background"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        style="@style/AddSealifeButtonStyle"
                         android:onClick="@{handlers::addLanguageClicked}">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_addds_plus_sl" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
                             android:text="@string/add_lang"
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
                     <ImageView
                         android:layout_marginTop="20dp"
                         style="@style/DividerStyleFull" />
+                    <RelativeLayout
+                        android:background="?attr/selectableItemBackground"
+                        android:id="@+id/change_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:visibility="@{dcViewModel.diveCenterProfile.providerType != null ? View.GONE : View.VISIBLE}"
+                        android:onClick="@{handlers::changePassword}">
+
+                        <ImageView
+                            android:id="@+id/change_password_icon"
+                            android:layout_marginTop="0dp"
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:src="@drawable/ic_profile_edit" />
+
+                        <TextView
+                            android:layout_toRightOf="@+id/change_password_icon"
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center_vertical"
+                            android:text="@string/change_password_edit" />
+                        <ImageView
+                            android:layout_alignParentBottom="true"
+                            style="@style/DividerStyleFull" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <ImageView
@@ -267,7 +299,7 @@
 
                         <android.support.v7.widget.AppCompatRadioButton
                             android:id="@+id/company_radio"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="#3b518b"
                             android:textSize="16sp"
@@ -279,7 +311,7 @@
                             android:id="@+id/reseller_radio"
                             android:textSize="16sp"
                             android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="#3b518b"
                             app:checkResellerRadioButton="@{dcViewModel}"
@@ -300,6 +332,6 @@
                     android:onClick="@{handlers::saveChangesClicked}"/>
 
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </layout>

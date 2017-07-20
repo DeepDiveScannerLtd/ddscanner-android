@@ -13,10 +13,11 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -110,19 +111,29 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         progressView = (ProgressView) findViewById(R.id.progress_view);
         source = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         loadedInfoId = getIntent().getStringExtra("id");
-        setupToolbar(R.string.photos, R.id.toolbar);
+        switch (source) {
+            case MAPS:
+                setupToolbar(R.string.maps_toolbar_title, R.id.toolbar);
+                EventsTracker.trackMapsView();
+                break;
+            default:
+                setupToolbar(R.string.photos, R.id.toolbar);
+                break;
+        }
         setupRecyclerView();
         switch (source) {
             case PROFILE:
                 photoAuthor = new Gson().fromJson(getIntent().getStringExtra("user"), PhotoAuthor.class);
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(resultListener, loadedInfoId);
                 break;
             case MAPS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(loadedInfoId, resultListener);
                 break;
             case REVIEW:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(resultListener, loadedInfoId);
                 break;
+            case NOTIFICATION:
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getNotificationPhotos(resultListener, loadedInfoId);
         }
     }
 
@@ -150,13 +161,13 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
                     isDataChanged = true;
                     switch (source) {
                         case PROFILE:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserAddedPhotos(resultListener, loadedInfoId);
                             break;
                         case MAPS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(loadedInfoId, resultListener);
                             break;
                         case REVIEW:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewPhotos(resultListener, loadedInfoId);
                             break;
                     }
                 }

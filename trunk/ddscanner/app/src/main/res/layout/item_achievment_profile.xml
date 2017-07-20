@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:gravity="center_vertical">
+    android:layout_height="56dp"
+    android:layout_margin="5dp"
+    android:background="@drawable/achievemnt_item_profile_background"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
     <TextView
-        android:layout_centerVertical="true"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:ellipsize="end"
+        android:lines="1"
         android:textColor="@color/black_text"
-        tools:text="Diver"/>
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/more_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/countries"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="#a3a3a3" />
+        android:textSize="12sp"
+        tools:text="Diver" />
+
     <LinearLayout
-        android:id="@+id/countries"
-        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"/>
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/countries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:gravity="right"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/more_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#a3a3a3"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
 </RelativeLayout>

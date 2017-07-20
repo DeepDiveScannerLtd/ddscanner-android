@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -16,9 +15,9 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChosedEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.LanguageSearchAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -30,7 +29,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
+public class PickLanguageActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
     private static final String TAG = PickLanguageActivity.class.getSimpleName();
 
@@ -41,14 +40,17 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     private ProgressView progressView;
     private LanguageSearchAdapter languageSearchAdapter;
     private boolean isPickLanguage;
+    private MenuItem searchItem;
 
     private DDScannerRestClient.ResultListener<ArrayList<Language>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
         @Override
         public void onSuccess(ArrayList<Language> result) {
+            languagesList = result;
             languageSearchAdapter = new LanguageSearchAdapter(PickLanguageActivity.this, result);
             recyclerView.setAdapter(languageSearchAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            searchItem.setVisible(true);
         }
 
         @Override
@@ -80,7 +82,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         setContentView(R.layout.activity_search);
         isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotLanguages(resultListener);
     }
 
     private void findViews() {
@@ -101,21 +103,21 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
@@ -160,5 +162,16 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return true;
+        }
     }
 }

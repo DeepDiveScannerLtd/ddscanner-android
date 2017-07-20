@@ -8,7 +8,7 @@
     <color name="primary_dark">#172342</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="empty_buttons">#2e80a0</color>
-    <color name="radio_button_fill">#2d80a1</color>
+    <color name="radio_button_fill">#3b518b</color>
     <color name="radio_button_empty">#7b797a</color>
 
     <color name="green_100">#C8E6C9</color>
@@ -68,5 +68,23 @@
     <color name="notification_time_color">#bfbfbf</color>
     
     <color name="empty_login_button_text">#66202020</color>
-    
+
+    <color name="notification_clickable_text_color">#3b528b</color>
+
+    <color name="photos_placeholder">#EFEFEF</color>
+
+    <color name="spinner_triangle_color">#b9b9b9</color>
+
+    <color name="blue_button_text_color">#e3e9fb</color>
+
+    <color name="blue_button_background_color">#283E75</color>
+
+    <color name="achievement_progress_color">#5a74b7</color>
+
+    <color name="achievement_item_background">#f9f9f9</color>
+
+    <color name="profile_counter_gray_color">#959595</color>
+
+    <color name="swipe_refresh_angle_color">#526CAE</color>
+
 </resources>

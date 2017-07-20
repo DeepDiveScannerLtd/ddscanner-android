@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,15 +15,23 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.screens.booking.offers.OffersActivity;
 import com.ddscanner.screens.booking.orders.OrdersActivity;
+import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.screens.tutorial.TutorialActivity;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {
 
@@ -40,8 +49,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO remove after creating working login mechanism
-       // DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsFirstLaunch()) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
+        }
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -51,6 +62,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
+        //TODO uncomment in future versions
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
@@ -62,12 +74,23 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+//        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//            skip.setVisibility(View.GONE);
+//            loginButton.setVisibility(View.GONE);
+//            signUpButton.setVisibility(View.GONE);
+//            showMainActivity();
+//        }
+
+        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+            loadTutorial();
+            SharedPreferenceHelper.setIsNeedToShowTutorial();
+        } else if (SharedPreferenceHelper.getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
             showMainActivity();
         }
+
 
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
@@ -76,15 +99,43 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
     }
 
+    public void loadTutorial() {
+        Intent mainAct = new Intent(this, TutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
+        startActivityForResult(mainAct, 15);
+
+    }
+
+    private ArrayList<TutorialItem> getTutorialItems() {
+        TutorialItem createItem = new TutorialItem(getString(R.string.tutorial_item_title_create), getString(R.string.tutorial_item_create),
+                R.color.white, R.drawable.ic_create);
+
+        TutorialItem earnItem = new TutorialItem(getString(R.string.tutorial_item_title_earn), getString(R.string.tutorial_item_earn),
+                R.color.white, R.drawable.ic_earn);
+
+        TutorialItem discoverItem = new TutorialItem(getString(R.string.tutorial_item_title_discover), getString(R.string.tutorial_item_discover),
+                R.color.white, R.drawable.ic_discover);
+
+        TutorialItem exploreItem = new TutorialItem(getString(R.string.tutorial_item_explore_title), getString(R.string.tutorial_item_explore),
+                R.color.white, R.drawable.ic_explore);
+
+        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
+        tutorialItems.add(createItem);
+        tutorialItems.add(earnItem);
+        tutorialItems.add(discoverItem);
+        tutorialItems.add(exploreItem);
+
+
+        return tutorialItems;
+    }
+
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
-        showMainActivityRunnable = new Runnable() {
-            @Override
-            public void run() {
+        showMainActivityRunnable = () -> {
+            MainActivity.show(SplashActivity.this);
 //                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
                 OrdersActivity.show(SplashActivity.this);
-                SplashActivity.this.finish();
-            }
+            SplashActivity.this.finish();
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {
             handler.postDelayed(showMainActivityRunnable, DDProgressBarView.ANIMATION_DURATION - (System.currentTimeMillis() - activityShowTimestamp));
@@ -105,23 +156,16 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         super.onResume();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-     //   handler.removeCallbacks(showMainActivityRunnable);
-        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        DDScannerApplication.bus.register(this);
     }
 
     @Subscribe
@@ -150,7 +194,9 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.skip:
-                showMainActivity();
+                EventsTracker.trackSkipRegistration();
+                MainActivity.show(SplashActivity.this);
+                SplashActivity.this.finish();
                 break;
             case R.id.login:
                 SignUpActivity.showForResult(this, false, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN);
@@ -167,6 +213,14 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP:
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
+                    showMainActivity();
+                }
+                break;
+            case 15:
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
+                    skip.setVisibility(View.GONE);
+                    loginButton.setVisibility(View.GONE);
+                    signUpButton.setVisibility(View.GONE);
                     showMainActivity();
                 }
                 break;

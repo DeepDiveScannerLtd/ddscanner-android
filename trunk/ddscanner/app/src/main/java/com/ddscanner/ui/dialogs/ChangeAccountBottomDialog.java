@@ -12,11 +12,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.ui.adapters.AccountsListAdapter;
-
-import java.util.ArrayList;
 
 public class ChangeAccountBottomDialog extends BottomSheetDialogFragment implements View.OnClickListener {
 

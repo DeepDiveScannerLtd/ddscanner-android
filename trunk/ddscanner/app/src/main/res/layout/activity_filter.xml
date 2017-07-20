@@ -31,54 +31,36 @@
         android:orientation="vertical"
         android:paddingBottom="10dp">
 
-        <com.rey.material.widget.Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/object_spinner"
-            style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
             android:dropDownWidth="150dp"
             android:gravity="center_vertical"
             android:popupBackground="@color/white"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_arrowColor="@android:color/transparent"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_label="@string/filter_object"
-            app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/defaultGrayTitleColor"
-            app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null" />
-
-        <ImageView
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:theme="@style/customSpinnerTheme"
             android:layout_marginLeft="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/divider" />
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            app:backgroundTint="@color/spinner_triangle_color"
+            />
 
-        <com.rey.material.widget.Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/level_spinner"
-            style="@style/Material.Widget.Spinner"
+            android:theme="@style/customSpinnerTheme"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
             android:dropDownWidth="150dp"
             android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             android:popupBackground="@color/white"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_arrowColor="@android:color/transparent"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_label="@string/filter_label"
-            app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/defaultGrayTitleColor"
-            app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null" />
+            app:backgroundTint="@color/spinner_triangle_color"
+            />
         <TextView
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -93,39 +75,27 @@
             android:id="@+id/btn_add_sealife"
             android:layout_marginTop="11dp"
             android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/gray_rectangle"
+            style="@style/AddSealifeButtonStyle"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:orientation="horizontal"
             android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_addds_plus"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_sea_life"
-                android:textColor="#a9a9a9"
-                android:layout_marginLeft="7dp"/>
+                android:textColor="#a9a9a9" />
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
         style="@style/DividerStyleFull"/>
 
-    <com.rey.material.widget.Button
+    <Button
         android:id="@+id/applyFilters"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/orange"
-        android:text="@string/btn_save"
-        style="@style/OrangeButtons"
-        app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView" />
+        android:layout_margin="20dp"
+        android:text="@string/apply"
+        style="@style/OrangeButtons"/>
     </LinearLayout>
 </LinearLayout>

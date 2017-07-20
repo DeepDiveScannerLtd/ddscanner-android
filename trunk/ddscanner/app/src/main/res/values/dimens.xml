@@ -27,4 +27,10 @@
 
     <dimen name="image_in_divespot_small">75dp</dimen>
     <dimen name="base_block_margin_top">10dp</dimen>
+
+    <dimen name="base_avatar_diameter">36dp</dimen>
+
+    <dimen name="button_height">50dp</dimen>
+    <dimen name="photos_radius">2dp</dimen>
+    <dimen name="line_spacing">5sp</dimen>
 </resources>

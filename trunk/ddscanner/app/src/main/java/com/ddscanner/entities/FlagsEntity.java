@@ -5,63 +5,75 @@ import com.google.gson.annotations.SerializedName;
 public class FlagsEntity {
 
     @SerializedName("is_checked_in")
-    private boolean isCheckedIn;
+    private Boolean isCheckedIn;
     @SerializedName("is_favorite")
-    private boolean isFavorite;
+    private Boolean isFavorite;
     @SerializedName("is_approved")
-    private boolean isApproved;
+    private Boolean isApproved;
     @SerializedName("is_working_here")
-    private boolean isWorkingHere;
+    private Boolean isWorkingHere;
     @SerializedName("is_editable")
-    private boolean isEditable;
+    private Boolean isEditable;
     @SerializedName("is_reviewed")
-    private boolean isReviewed;
+    private Boolean isReviewed;
 
-    public boolean isReviewed() {
+    public Boolean isReviewed() {
         return isReviewed;
     }
 
-    public void setReviewed(boolean reviewed) {
+    public void setReviewed(Boolean reviewed) {
         isReviewed = reviewed;
     }
 
-    public boolean isEditable() {
+    public Boolean isEditable() {
         return isEditable;
     }
 
-    public void setEditable(boolean editable) {
+    public void setEditable(Boolean editable) {
         isEditable = editable;
     }
 
-    public boolean isWorkingHere() {
+    public Boolean isWorkingHere() {
+        if (isWorkingHere == null) {
+            return false;
+        }
         return isWorkingHere;
     }
 
-    public void setWorkingHere(boolean workingHere) {
+    public void setWorkingHere(Boolean workingHere) {
         isWorkingHere = workingHere;
     }
 
-    public boolean isCheckedIn() {
+    public Boolean isCheckedIn() {
+        if (isCheckedIn == null) {
+            return false;
+        }
         return isCheckedIn;
     }
 
-    public void setCheckedIn(boolean checkedIn) {
+    public void setCheckedIn(Boolean checkedIn) {
         isCheckedIn = checkedIn;
     }
 
-    public boolean isFavorite() {
+    public Boolean isFavorite() {
+        if (isFavorite == null) {
+            return false;
+        }
         return isFavorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavorite(Boolean favorite) {
         isFavorite = favorite;
     }
 
-    public boolean isApproved() {
+    public Boolean isApproved() {
+        if (isApproved == null) {
+            return false;
+        }
         return isApproved;
     }
 
-    public void setApproved(boolean approved) {
+    public void setApproved(Boolean approved) {
         isApproved = approved;
     }
 }

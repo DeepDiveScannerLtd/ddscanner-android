@@ -7,26 +7,26 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.User;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 28.4.16.
- */
 public class CheckInPeoplesActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView usersRecyclerView;
+    private ProgressView progressView;
 
     private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
 
@@ -60,14 +60,17 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
         setContentView(R.layout.activity_peoples_checkin);
         findViews();
         setupToolbar(R.string.people, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsCheckedInUsers(usersResultListener, getIntent().getStringExtra("id"));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsCheckedInUsers(usersResultListener, getIntent().getStringExtra("id"));
     }
 
     private void findViews() {
+        progressView = (ProgressView) findViewById(R.id.progress_bar);
         usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
     }
 
     private void setUi(ArrayList<User> users) {
+        progressView.setVisibility(View.GONE);
+        usersRecyclerView.setVisibility(View.VISIBLE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
         usersRecyclerView.setAdapter(new UserListAdapter(this, users));
@@ -92,13 +95,13 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override

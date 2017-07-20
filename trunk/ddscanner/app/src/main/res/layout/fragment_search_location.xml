@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="#fbfbfb"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/view_no_location_found"/>
+    <include
+        layout="@layout/view_no_location_found"/>
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/go_to_my_location"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
@@ -30,6 +31,7 @@
             android:textColor="@color/black_text"/>
     </LinearLayout>
     <ImageView
+        android:visibility="gone"
         style="@style/DividerStyleFull" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/places_recyclerview"

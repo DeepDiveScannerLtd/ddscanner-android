@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.ui.views.ProfileCountersTextView;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +25,34 @@ public class ProfileFragmentViewModel {
 
     public User getUser() {
         return user;
+    }
+
+    @BindingAdapter({"countLikesFrom"})
+    public static void likesCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getLikesCount());
+        }
+    }
+
+    @BindingAdapter({"countDislikesFrom"})
+    public static void dislikesCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getDislikesCount());
+        }
+    }
+
+    @BindingAdapter({"countReviewsFrom"})
+    public static void reviewsCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getCommentsCount());
+        }
+    }
+
+    @BindingAdapter({"countPointsFrom"})
+    public static void pointsCount(ProfileCountersTextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setValue(viewModel.getUser().getCounters().getPoints());
+        }
     }
 
     @BindingAdapter({"countFavoriteFrom"})
@@ -56,18 +85,21 @@ public class ProfileFragmentViewModel {
 
     @BindingAdapter({"diverLevelFrom"})
     public static void diverLevelLabel(TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null) {
-            view.setText(profileFragmentViewModel.getUser().getDiverLevelString().toUpperCase());
+        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null && profileFragmentViewModel.getUser().getDiverLevel() > 0) {
+            view.setText(profileFragmentViewModel.getUser().getDiverLevelString());
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
         }
     }
 
     @BindingAdapter({"loadImageFrom"})
     public static void loadImage(ImageView view, ProfileFragmentViewModel profileFragmentViewModel) {
-        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getPhoto() != null) {
+        if (profileFragmentViewModel != null && !profileFragmentViewModel.getUser().getPhoto().isEmpty()) {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, profileFragmentViewModel.getUser().getPhoto(), "2"))
-                    .resize(Math.round(Helpers.convertDpToPixel(100, view.getContext())),
-                            Math.round(Helpers.convertDpToPixel(100, view.getContext()))).centerCrop()
-                    .placeholder(R.drawable.avatar_profile_default)
+                    .resize(Math.round(Helpers.convertDpToPixel(50, view.getContext())),
+                            Math.round(Helpers.convertDpToPixel(50, view.getContext()))).centerCrop()
+                    .placeholder(R.drawable.gray_circle_placeholder)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
         }
@@ -79,8 +111,8 @@ public class ProfileFragmentViewModel {
             if (viewModel.getUser().getDiveCenter() != null && viewModel.getUser().getDiveCenter().getPhoto() != null) {
                 view.setVisibility(View.VISIBLE);
                 Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getUser().getDiveCenter().getPhoto(), "1"))
-                        .resize(Math.round(Helpers.convertDpToPixel(22, view.getContext())),
-                                Math.round(Helpers.convertDpToPixel(22, view.getContext()))).centerCrop()
+                        .resize(Math.round(Helpers.convertDpToPixel(36, view.getContext())),
+                                Math.round(Helpers.convertDpToPixel(36, view.getContext()))).centerCrop()
                         .placeholder(R.drawable.placeholder_photos_activity)
                         .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL)).into(view);
             } else {

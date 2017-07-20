@@ -19,16 +19,16 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -36,6 +36,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -51,6 +52,7 @@ import okhttp3.RequestBody;
 
 public class EditCommentActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
+    private static final String ARG_DIVE_SPOT_LOCATION = "location";
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
@@ -70,6 +72,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
     private boolean isHaveSealifes;
+    private TextView errorRating;
 
     private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
         @Override
@@ -127,6 +130,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -166,13 +170,14 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         sealifeList.setAdapter(sealifesAdapter);
         if (isHaveSealifes) {
             materialDialog.show();
-            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewSealifes(sealifeResultListener, comment.getId());
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getReviewSealifes(sealifeResultListener, comment.getId());
             //
             //sealifesAdapter.addSealifesList(comment.getSealifes());
         }
     }
 
     private void findViews() {
+        errorRating = (TextView) findViewById(R.id.rating_error);
         sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         buttonAddSealife.setOnClickListener(this);
@@ -207,13 +212,13 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     public static void showForResult(Activity context, Comment comment, int requestCode, boolean isSealifes) {
@@ -227,15 +232,20 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-//                onBackPressed();
+                onBackPressed();
                 return true;
             case R.id.send_review:
+                Helpers.hideKeyboard(this);
                 updateReview();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     @Override
@@ -260,10 +270,23 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private void updateReview() {
+    private boolean isDataValid() {
+        boolean isDataValid = true;
+        errorRating.setVisibility(View.GONE);
         errorText.setVisibility(View.GONE);
         if (text.getText().toString().trim().length() < 30) {
             errorText.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        if (ratingBar.getRating() < 1) {
+            errorRating.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+        return isDataValid;
+    }
+
+    private void updateReview() {
+        if (!isDataValid()) {
             return;
         }
         materialDialog.show();
@@ -294,7 +317,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         for (SealifeShort sealife : sealifesAdapter.getSealifes()) {
             sealifes.add(MultipartBody.Part.createFormData("sealifes[]", sealife.getId()));
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, sealifes, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateReview(editCommentResultListener, newImages, deletedImages, sealifes, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
     }
 
     @Override

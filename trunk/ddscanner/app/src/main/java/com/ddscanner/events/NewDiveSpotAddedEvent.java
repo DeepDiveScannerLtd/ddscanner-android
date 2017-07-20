@@ -2,9 +2,6 @@ package com.ddscanner.events;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by Lenovo on 07.09.2016.
- */
 public class NewDiveSpotAddedEvent {
 
     private LatLng latLng;

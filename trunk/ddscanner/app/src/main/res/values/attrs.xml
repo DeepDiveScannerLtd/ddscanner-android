@@ -5,4 +5,10 @@
         <attr name="title" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="DiveSpotCharacteristicView">
+        <attr name="icon" format="reference" />
+        <attr name="block_title" format="reference" />
+        <attr name="block_subtitle" format="string" />
+    </declare-styleable>
+
 </resources>

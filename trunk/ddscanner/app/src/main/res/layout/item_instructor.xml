@@ -6,8 +6,8 @@
         android:id="@+id/avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/avatar_checkin"
-        android:scaleType="center"/>
+        android:padding="12dp"
+        android:src="@drawable/avatar_checkin" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

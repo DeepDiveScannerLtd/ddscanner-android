@@ -19,20 +19,21 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.BusRegisteringListener;
-import com.ddscanner.entities.DiveSpotListSource;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
-import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
@@ -49,34 +50,24 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
+    private static final String ARG_USER = "ARG_USER";
     private boolean isHaveSpots = false;
     private LatLng diveCenterLocation = null;
     private BusRegisteringListener busListener = new BusRegisteringListener();
     private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
         public void onSuccess(DiveCenterProfile result) {
-            switch (result.getType()) {
-                case 2:
-                case 1:
-                    break;
-                case 0:
                     diveCenterProfile = result;
                     BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
                     baseUser.setName(diveCenterProfile.getName());
                     baseUser.setPhoto(diveCenterProfile.getPhoto());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
-                    if (result.getWorkingCount() != null && result.getWorkingCount() > 0) {
-                        isHaveSpots = true;
-                    }
                     setUi();
-                    binding.progressBarLoading.setVisibility(View.GONE);
-                    binding.aboutLayout.setVisibility(View.VISIBLE);
                     if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
                         diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
                     }
-                    break;
-            }
+
         }
 
         @Override
@@ -88,8 +79,8 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
+                    DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
@@ -105,20 +96,43 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     };
 
+    public static DiveCenterProfileFragment newInstance(DiveCenterProfile user) {
+        DiveCenterProfileFragment userProfileFragment = new DiveCenterProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_USER, new Gson().toJson(user));
+        userProfileFragment.setArguments(bundle);
+        return userProfileFragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.view_divecenter_profile, container, false);
         binding.setHandlers(this);
         View view = binding.getRoot();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+        Bundle bundle = new Bundle();
+        bundle = getArguments();
+        if (getArguments() != null && bundle.getString(ARG_USER) != null) {
+            binding.logout.setVisibility(View.GONE);
+            diveCenterProfile = new Gson().fromJson(bundle.getString(ARG_USER), DiveCenterProfile.class);
+            binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
+            setUi();
+        } else {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+                DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
+            }
         }
         return view;
     }
 
     private void setUi() {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() != null && binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
+            isHaveSpots = true;
+        }
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.aboutLayout.setVisibility(View.VISIBLE);
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
+            binding.photosList.setNestedScrollingEnabled(false);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
             binding.scrollView.scrollTo(0,0);
@@ -187,13 +201,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
         }
     }
 
     public void reloadData() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             binding.scrollView.scrollTo(0,0);
         }
     }
@@ -239,7 +253,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), binding.getDiveCenterViewModel().getDiveCenterProfile().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), 0)), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
     public void showLanguages(View view) {
@@ -258,6 +272,14 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
+    }
+
+    public void showAboutDDSButtonClicked(View view) {
+        AboutActivity.show(getContext());
+    }
+
+    public void logout(View view) {
+        DDScannerApplication.bus.post(new LogoutEvent());
     }
 
 }

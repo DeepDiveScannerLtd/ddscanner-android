@@ -35,6 +35,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY = 1312;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY = 1314;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR = 1315;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_FILTERS = 1316;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;
@@ -96,11 +97,11 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS = 2217;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG = 2218;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW = 2219;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LOAD_DATA = 2220;
 
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS = 2302;
-    // TODO Get rid of this code. It is impossible to face case when it is used
     public static final int REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW = 2303;
 
     //    LeaveReviewActivity
@@ -185,6 +186,7 @@ public class ActivitiesRequestCodes {
     public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_SPOT = 4201;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION = 4202;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE = 4203;
+    public static final int EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS = 4204;
 
     //Edit profile activity
     public static final int REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER = 4301;
@@ -207,5 +209,25 @@ public class ActivitiesRequestCodes {
 
     //SignUpActivity
     public static final int REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER = 4801;
+
+    //ChangeAddressActivity
+    public static final int REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP = 4901;
+    public static final int REQUEST_CODE_ADDRESS_ACTIVITY_CHOOSE_COUNTRY = 4902;
+
+    //SealifeDetailsActivity
+    public static final int REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE = 5001;
+
+    //DiveSpotListAdapter
+    public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER = 6001;
+
+    //SearchSpotActivity
+    public static final int REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT = 6101;
+
+    //SealiefDetails
+    public static final int REQUEST_CODE_LOGINFOR_EDIT_SEALIFE = 6201;
+
+    //SearchDveCenterActivity
+    public static final int REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER = 6301;
+    public static final int REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT = 6302;
 
 }

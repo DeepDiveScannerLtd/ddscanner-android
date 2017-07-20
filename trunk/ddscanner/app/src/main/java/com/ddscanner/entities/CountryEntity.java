@@ -1,6 +1,8 @@
 package com.ddscanner.entities;
 
-public class CountryEntity {
+import java.io.Serializable;
+
+public class CountryEntity implements Serializable {
 
     private String name;
     private String code;

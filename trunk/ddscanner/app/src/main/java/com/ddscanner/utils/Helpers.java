@@ -26,19 +26,8 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Countries;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
-import com.ddscanner.entities.Photo;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
-import com.ddscanner.entities.errors.Field;
-import com.ddscanner.entities.errors.ValidationError;
-import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -48,7 +37,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,9 +51,6 @@ import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-/**
- * Created by lashket on 9.4.16.
- */
 public class Helpers {
 
     private static final String TAG = Helpers.class.getName();
@@ -112,6 +97,10 @@ public class Helpers {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
+    }
+
+    public static int convertDpToIntPixels(float dp, Context context) {
+        return Math.round(convertDpToPixel(dp, context));
     }
 
     /**
@@ -293,7 +282,7 @@ public class Helpers {
                 return String.valueOf(differenceOfTime / hourSeconds) + "h";
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
-                return String.valueOf(differenceOfTime / minuteSeconds) + "m";
+                return String.valueOf(differenceOfTime / minuteSeconds) + "min";
             }
             if (differenceOfTime > 0 && differenceOfTime < 60) {
                 return String.valueOf(differenceOfTime) + "s";
@@ -494,7 +483,6 @@ public class Helpers {
             java.lang.reflect.Field idField = c.getDeclaredField(resName);
             return idField.getInt(idField);
         } catch (Exception e) {
-            e.printStackTrace();
             return -1;
         }
     }
@@ -578,7 +566,7 @@ public class Helpers {
     }
 
     public static String getDiverLevel(Integer position) {
-        if (position != null) {
+        if (position != null && position > 0) {
             List<String> levels = getDiveLevelTypes();
             if (levels.get(position - 1) == null) {
                 return "";

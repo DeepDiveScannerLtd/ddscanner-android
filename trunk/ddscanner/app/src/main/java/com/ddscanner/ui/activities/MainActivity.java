@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.ChangeAccountEvent;
@@ -34,13 +36,15 @@ import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
-import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
+import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.events.OpenDiveSpotDetailsActivityEvent;
+import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.events.ShowLoginActivityIntent;
@@ -48,27 +52,28 @@ import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
+import com.ddscanner.screens.notifications.DiverNotificationsFragment;
+import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
+import com.ddscanner.screens.profile.user.ProfileFragment;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
-import com.ddscanner.screens.notifications.DiverNotificationsFragment;
-import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -80,10 +85,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -105,10 +107,9 @@ public class MainActivity extends BaseAppCompatActivity
     private DiverNotificationsFragment diverNotificationsFragment;
     private DiveCenterNotificationsFragment diveCenterNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
-    private AllNotificationsFragment allNotificationsFragment;
+    private PersonalNotificationsFragment allNotificationsFragment;
     private DiveCenterProfileFragment diveCenterProfileFragment;
     private ImageView imageView;
-    private boolean isHasInternetConnection;
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
@@ -127,6 +128,60 @@ public class MainActivity extends BaseAppCompatActivity
 
     private SigningUserResultListener signUpResultListener = new SigningUserResultListener(true);
     private SigningUserResultListener signInResultListener = new SigningUserResultListener(false);
+
+    private DDScannerRestClient.ResultListener<Void> notificationReadResultListner = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            DDScannerApplication.getInstance().clearNotificationsContainer();
+            getIsHasNewotifications();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<NotificationsCountEntity> newotificationsCountEntity = new DDScannerRestClient.ResultListener<NotificationsCountEntity>() {
+        @Override
+        public void onSuccess(NotificationsCountEntity result) {
+            if (result.getYou() > 0) {
+                toolbarTabLayout.getTabAt(1).setCustomView(null);
+                toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item_new);
+                if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                    mainViewPagerAdapter.getDiverNotificationsFragment().showPersonalNotificationsFragment();
+                }
+            } else {
+                toolbarTabLayout.getTabAt(1).setCustomView(null);
+                toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<Void> instructorsResultListene = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -155,21 +210,14 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
-        clearFilterSharedPreferences();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
+        setContentView(R.layout.activity_main);
         startActivity();
-        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
-       // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
-//        if (!isHasInternetConnection) {
-//            Log.i(TAG, "internetConnectionClosed 2");
-//            InternetClosedActivity.show(this);
-//        }
         loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
     }
 
     private void startActivity() {
-        getWindow().setBackgroundDrawable(null);
-        setContentView(R.layout.activity_main);
+//        getWindow().setBackgroundDrawable(null);
         findViews();
         setUi();
         searchLocationBtn.setOnClickListener(this);
@@ -177,7 +225,6 @@ public class MainActivity extends BaseAppCompatActivity
         setupTabLayout();
         mainViewPager.setCurrentItem(0);
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-        EventsTracker.trackDiveSpotMapView();
     }
 
     private void initGoogleLoginManager() {
@@ -204,7 +251,6 @@ public class MainActivity extends BaseAppCompatActivity
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        // TODO Implement
                     }
                 })
                 .build();
@@ -233,12 +279,7 @@ public class MainActivity extends BaseAppCompatActivity
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
-                            }
-                        }).executeAsync();
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken())).executeAsync();
                     }
 
                     @Override
@@ -289,11 +330,20 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
+        getIsHasNewotifications();
     }
 
-    public static void show(Context context, boolean isHasInternet) {
+    private void getIsHasNewotifications() {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getNewNotificationsCount(newotificationsCountEntity);
+            return;
+        }
+        toolbarTabLayout.getTabAt(1).setCustomView(null);
+        toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
+    }
+
+    public static void show(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(Constants.IS_HAS_INTERNET, isHasInternet);
         context.startActivity(intent);
     }
 
@@ -308,6 +358,9 @@ public class MainActivity extends BaseAppCompatActivity
                 showSearchFilterMenuItems();
                 changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
+                if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                }
                 break;
             case 1:
                 DDScannerApplication.bus.post(new GetNotificationsEvent());
@@ -319,6 +372,9 @@ public class MainActivity extends BaseAppCompatActivity
                 DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                 EventsTracker.trackUserProfileView();
                 hideSearchFilterMenuItems();
+                if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                }
                 break;
         }
     }
@@ -370,7 +426,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS);
                 //        EventsTracker.trackFiltersActivityOpened();
                 break;
             case R.id.change_account:
@@ -394,6 +450,14 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
+                if (resultCode == RESULT_OK) {
+                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
+                }
+                if (resultCode == RESULT_CODE_FILTERS_RESETED) {
+                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
+                }
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
                 switch (resultCode) {
@@ -404,6 +468,9 @@ public class MainActivity extends BaseAppCompatActivity
                     case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");
                         getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION);
+                        break;
+                    case RESULT_CODE_DIVE_SPOT_ADDED:
+                        diveSpotAdded(data);
                         break;
                 }
 
@@ -421,21 +488,21 @@ public class MainActivity extends BaseAppCompatActivity
                     }
                 }
                 if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                        mainViewPagerAdapter.notifyDataSetChanged();
-                        mainViewPager.destroyDrawingCache();
-                        setupTabLayout();
-                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-                    } else {
-                        mainViewPagerAdapter.onLoggedOut();
-                        changeVisibilityChangeAccountLayout(View.GONE);
-                    }
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
+//                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+//                        mainViewPagerAdapter.notifyDataSetChanged();
+//                        mainViewPager.destroyDrawingCache();
+//                        setupTabLayout();
+//                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+//                    } else {
+//                        mainViewPagerAdapter.onLoggedOut();
+//                        changeVisibilityChangeAccountLayout(View.GONE);
+//                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -472,6 +539,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
+                materialDialog.dismiss();
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {
@@ -486,11 +554,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
-                    String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
-                    if (latLng != null) {
-                        DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
-                    }
+                    diveSpotAdded(data);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT:
@@ -515,11 +579,20 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
+    private void diveSpotAdded(Intent data) {
+        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, false);
+        LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
+        String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
+        if (latLng != null) {
+            DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         Log.i(TAG, "onStart");
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
         if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
@@ -531,7 +604,11 @@ public class MainActivity extends BaseAppCompatActivity
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
-        DDScannerApplication.bus.unregister(this);
+        newotificationsCountEntity.setCancelled(true);
+//        DDScannerApplication.bus.unregister(this);
+        if (mainViewPager.getCurrentItem() == 1) {
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+        }
     }
 
     @Override
@@ -546,10 +623,17 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        newotificationsCountEntity.setCancelled(false);
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
+        getIsHasNewotifications();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
+        }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFiltersApplyied()) {
+            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
+        } else {
+            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
         }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.onLoggedIn();
@@ -560,8 +644,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        // TODO Debug: switch calls after tests
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(null, null, null, null, signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -596,12 +679,11 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLoginViaEmail(LoginSignUpViaEmailEvent event) {
-        //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", event.getName(), signUpResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signInResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).postUserLogin(event.getEmail(), event.getPassword(), null, null, null, null, signInResultListener);
         }
     }
 
@@ -635,14 +717,6 @@ public class MainActivity extends BaseAppCompatActivity
         setupTabLayout();
 
         mainViewPagerAdapter.onLoggedIn();
-    }
-
-    @Subscribe
-    public void onLoggedOut(LoggedOutEvent event) {
-        mainViewPagerAdapter.notifyDataSetChanged();
-        setupTabLayout();
-
-        mainViewPagerAdapter.onLoggedOut();
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -716,7 +790,7 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
+    public void setAllNotificationsFragment(PersonalNotificationsFragment allNotificationsFragment) {
         if (mainViewPagerAdapter != null) {
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
         } else {
@@ -751,12 +825,6 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private void clearFilterSharedPreferences() {
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
-    }
-
-
     @Subscribe
     public void chengeLoginView(SignupLoginButtonClicked event) {
         isSignupClicked = event.isShowing();
@@ -785,7 +853,13 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPositiveDialogClicked() {
-        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
+        EventsTracker.trackYesInstructorClicked();
+        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, false);
+    }
+
+    @Subscribe
+    public void openUserProfileActivity(OpenUserProfileActivityFromNotifications event) {
+        UserProfileActivity.show(this, event.getId(), event.getType());
     }
 
     class SigningUserResultListener extends DDScannerRestClient.ResultListener<SignUpResponseEntity> {
@@ -809,9 +883,13 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
             DDScannerApplication.bus.post(new LoggedInEvent());
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
             }
+            EventsTracker.trackRegistration(result.getType());
         }
 
         @Override
@@ -838,6 +916,36 @@ public class MainActivity extends BaseAppCompatActivity
         public void onInternetConnectionClosed() {
             materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+    }
+
+    @Subscribe
+    public void openDiveSpotDetails(OpenDiveSpotDetailsActivityEvent event) {
+        DiveSpotDetailsActivity.show(this, event.getId(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+    }
+
+    @Subscribe
+    public void logoutUser(LogoutEvent event) {
+        SharedPreferenceHelper.UserType currentUserType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            mainViewPagerAdapter.notifyDataSetChanged();
+            mainViewPager.destroyDrawingCache();
+            if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {
+                mainViewPagerAdapter.getDiverNotificationsFragment().getUserNotifications(false);
+            }
+            setupTabLayout();
+            DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+        } else {
+            mainViewPagerAdapter.onLoggedOut();
+            if (currentUserType == SharedPreferenceHelper.UserType.DIVECENTER) {
+                mainViewPagerAdapter.notifyDataSetChanged();
+                mainViewPager.destroyDrawingCache();
+                setupTabLayout();
+            } else {
+                getIsHasNewotifications();
+            }
+            changeVisibilityChangeAccountLayout(View.GONE);
         }
     }
 

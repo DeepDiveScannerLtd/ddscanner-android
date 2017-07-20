@@ -63,7 +63,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             phoneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.PHONE_CALL);
+//                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.PHONE_CALL);
                     try {
                         String uri = "tel:" + diveCenter.getPhone();
                         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -82,7 +82,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             emailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.EMAIL);
+//                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.EMAIL);
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{diveCenter.getEmail()});
@@ -139,7 +139,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
 
     public static void show(Context context, DiveCenter diveCenter, String path, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveCenterView(diveCenter.getId(), spotViewSource);
+//            EventsTracker.trackDiveCenterView(diveCenter.getId(), spotViewSource);
         }
         Intent intent = new Intent(context, DiveCenterDetailsActivity.class);
         intent.putExtra("DC", diveCenter);

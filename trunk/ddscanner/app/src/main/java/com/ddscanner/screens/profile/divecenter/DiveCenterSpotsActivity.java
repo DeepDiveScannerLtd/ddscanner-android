@@ -24,16 +24,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.events.MarkerClickedEvent;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
+import com.ddscanner.events.MarkerClickedEvent;
+import com.ddscanner.events.ShowDIveSpotDetailsActivityEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCenterSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -105,6 +105,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private RelativeLayout please;
     private Marker lastClickeMarker;
     private String id;
+    private int diveSpotInfoHeight;
     
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -130,6 +131,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE, false);
         }
 
@@ -153,6 +155,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         id = getIntent().getStringExtra("id");
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, this));
         findViews();
         setMapView(savedInstanceState);
     }
@@ -189,6 +192,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
+        diveSpotInfo.animate().translationY(diveSpotInfoHeight);
     }
 
     @Override
@@ -204,13 +208,13 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     @Override
     protected void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Override
@@ -337,34 +341,20 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         mapListFAB.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(new Bundle());
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                DiveCenterSpotsActivity.this.googleMap = googleMap;
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-//                        Log.i(TAG, "onMapLoaded");
-//                        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                                .target(diveSpotLatLng)
-//                                .zoom(8)
-//                                .build();
-                     //   googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-                     //   googleMap.moveCamera(CameraUpdateFactory.newLatLng(diveCenterLatLng));
-                        diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
-                        googleMap.setOnMarkerClickListener(diveCenterSpotsClusterManager);
-                        googleMap.setOnCameraChangeListener(diveCenterSpotsClusterManager);
-                        googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
-                        googleMap.getUiSettings().setRotateGesturesEnabled(false);
-                        googleMap.getUiSettings().setTiltGesturesEnabled(false);
-                        if (diveCenterLatLng != null) {
-                            diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
-                        }
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
-                        //     diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
-                    }
-                });
-            }
+        mapView.getMapAsync(googleMap -> {
+            DiveCenterSpotsActivity.this.googleMap = googleMap;
+            googleMap.setOnMapLoadedCallback(() -> {
+                diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
+                googleMap.setOnMarkerClickListener(diveCenterSpotsClusterManager);
+                googleMap.setOnCameraChangeListener(diveCenterSpotsClusterManager);
+                googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
+                if (diveCenterLatLng != null) {
+                    diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
+                }
+                DDScannerApplication.getInstance().getDdScannerRestClient(DiveCenterSpotsActivity.this).getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
+            });
         });
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);
@@ -396,11 +386,9 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     }
 
     public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
-        DDScannerApplication.bus.post(new InfowWindowOpenedEvent(null));
-        mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
-        addDsFab.animate().translationY(-diveSpotInfo.getHeight());
-        mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
-        diveSpotInfo.animate()
+        mapControlLayout.animate().translationY(-diveSpotInfoHeight);
+        mapListFAB.animate().translationY(-diveSpotInfoHeight);
+            diveSpotInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)
                 .setDuration(300)
@@ -411,6 +399,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         diveSpotInfo.setVisibility(View.VISIBLE);
                     }
                 });
+
         diveSpotName.setText(diveSpotShort.getName());
         diveSpotType.setText(diveSpotShort.getObject());
         diveSpotInfo.setBackground(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
@@ -436,7 +425,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             addDsFab.animate().translationY(0);
             mapListFAB.animate().translationY(0);
             diveSpotInfo.animate()
-                    .translationY(diveSpotInfo.getHeight())
+                    .translationY(diveSpotInfoHeight)
                     .alpha(0.0f)
                     .setDuration(300)
                     .setListener(new AnimatorListenerAdapter() {
@@ -481,5 +470,10 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Subscribe
+    public void showDiveSpotDetailsActivity(ShowDIveSpotDetailsActivityEvent event) {
+        DiveSpotDetailsActivity.show(this, event.getId(), EventsTracker.SpotViewSource.UNKNOWN);
     }
 }

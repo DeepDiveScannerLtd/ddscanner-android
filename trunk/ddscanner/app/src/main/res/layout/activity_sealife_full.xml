@@ -19,29 +19,31 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="239dp"
-            android:background="@color/black_text"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="251dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:fitsSystemWindows="true">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:contentScrim="@color/primary"
-
+                android:fitsSystemWindows="true"
+                app:popupTheme="@style/ToolbarMenuStyle"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <RelativeLayout
+                    android:background="@color/black_text"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true">
 
                     <ImageView
                         android:id="@+id/sealife_full_photo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        app:layout_collapseMode="parallax"
-                        app:loadImageFrom="@{sealifeViewModel}" />
+                        app:loadImageFrom="@{sealifeViewModel}"
+                        android:fitsSystemWindows="true"/>
 
                     <ProgressBar
                         android:id="@+id/progress_bar"
@@ -60,7 +62,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin" />
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ToolbarMenuStyle"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
@@ -234,6 +237,7 @@
                             android:text="@string/distribution" />
 
                         <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:id="@+id/distribution"
                             style="@style/SealifeCharachteristicValue"
                             android:text="@{sealifeViewModel.sealife.distribution}" />
@@ -252,6 +256,7 @@
                             android:text="@string/habitat" />
 
                         <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:id="@+id/habitat"
                             style="@style/SealifeCharachteristicValue"
                             android:text="@{sealifeViewModel.sealife.habitat}" />

@@ -8,11 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
-import java.util.List;
 
-/**
- * Created by lashket on 20.1.16.
- */
 public class DiveSpotShort implements Serializable, ClusterItem {
 
     private static final String TAG = DiveSpotShort.class.getName();
@@ -29,6 +25,15 @@ public class DiveSpotShort implements Serializable, ClusterItem {
     private int object;
     @SerializedName("is_new")
     private boolean isNew;
+    private CountryEntity country;
+
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
 
     public boolean getIsNew() {
         return isNew;

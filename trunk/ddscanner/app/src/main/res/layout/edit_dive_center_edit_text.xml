@@ -13,7 +13,8 @@
         android:inputType="phone"
         android:lines="1"
         android:maxLength="32"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:maxLines="1"/>
 
     <TextView
         android:layout_marginLeft="0dp"

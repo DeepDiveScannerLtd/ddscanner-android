@@ -17,15 +17,9 @@
             type="com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity" />
     </data>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <include layout="@layout/view_connection_error" />
 
-        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.design.widget.CoordinatorLayout
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
@@ -34,8 +28,9 @@
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                android:layout_height="200dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:fitsSystemWindows="true">
 
                 <android.support.design.widget.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar"
@@ -43,19 +38,22 @@
                     android:layout_height="match_parent"
                     app:contentScrim="@color/primary"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                    app:popupTheme="@style/ToolbarMenuStyle">
+                    app:popupTheme="@style/ToolbarMenuStyle"
+                    android:fitsSystemWindows="true">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:fitsSystemWindows="true">
 
                         <ImageView
                             android:id="@+id/main_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="180dp"
+                            android:layout_height="200dp"
                             android:fitsSystemWindows="true"
                             android:scaleType="centerCrop"
-                            app:loadMainImageFrom="@{diveSpotViewModel}" />
+                            app:loadMainImageFrom="@{diveSpotViewModel}"
+                            />
 
                         <TextView
                             android:id="@+id/newDiveSpot"
@@ -127,14 +125,16 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="70dp"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:background="@color/white"
                             android:gravity="center"
+                            android:paddingTop="15dp"
                             android:orientation="horizontal"
                             android:paddingLeft="14dp">
 
                             <TextView
+                                android:layout_marginRight="60dp"
                                 android:id="@+id/dive_spot_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -162,6 +162,7 @@
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
                             android:paddingTop="15dp"
+                            android:lineSpacingExtra="@dimen/line_spacing"
                             android:text="@{diveSpotViewModel.diveSpotDetailsEntity.description}"
                             android:textColor="@color/black_text"
                             android:textSize="15sp"
@@ -207,18 +208,21 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@+id/ic_layout_working"
-                                android:fontFamily="sans-serif-medium"
                                 android:paddingRight="13dp"
                                 android:text="@string/i_am_working_here"
                                 android:textSize="15sp"
                                 app:theme="@style/ColorSwitchStyle" />
                         </RelativeLayout>
-
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="vertical">
                         <RelativeLayout
                             android:id="@+id/check_in_peoples"
                             android:layout_width="match_parent"
                             android:layout_height="58dp"
-                            android:background="@color/white"
+                            android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showCheckinsActivity}">
 
                             <ImageView
@@ -233,7 +237,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="57dp"
                                 android:layout_toRightOf="@+id/ic_layout_check_in"
-                                android:fontFamily="sans-serif-medium"
                                 android:gravity="center"
                                 android:text="@string/no_one_has_checked_in_here"
                                 android:textColor="@color/black_text"
@@ -252,11 +255,11 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showCreatorsActivity}"
                             android:id="@+id/creator"
                             android:layout_width="match_parent"
-                            android:layout_height="58dp"
-                            android:background="@color/white">
+                            android:layout_height="58dp">
 
                             <View
                                 android:id="@+id/anchor"
@@ -301,7 +304,7 @@
                                 android:src="@drawable/ic_arrow"
                                 android:visibility="visible" />
                         </RelativeLayout>
-
+                        </LinearLayout>
                         <RelativeLayout
                             android:id="@+id/editors_wrapper"
                             android:layout_width="match_parent"
@@ -392,6 +395,7 @@
                                     android:layout_below="@+id/maps"
                                     android:layout_marginBottom="20dp"
                                     android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="15dp"
                                     android:layout_marginTop="13dp"
                                     android:visibility="gone" />
 
@@ -402,6 +406,7 @@
                                     android:layout_below="@+id/maps"
                                     android:layout_marginBottom="20dp"
                                     android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="15dp"
                                     android:layout_marginTop="13dp"
                                     android:visibility="gone" />
 
@@ -423,193 +428,39 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingBottom="20dp">
 
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setCountryFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/country_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_country" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/country_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/country_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/country_characteristic" />
-
-                                    <TextView
-                                        android:id="@+id/country"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/country_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.countryName}"
-                                        tools:text="wall" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setObjectFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/object_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_object" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/object_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/object_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/object_characteristic" />
-
-                                    <TextView
-                                        android:id="@+id/object"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/object_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.object}"
-                                        tools:text="wall" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setLevelFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/level_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_level" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/level_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/level_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_level" />
-
-                                    <TextView
-                                        android:id="@+id/level"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/level_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.diverLevel}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setDepthFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/depth_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_deep" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/depth_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/depth_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_depth" />
-
-                                    <TextView
-                                        android:id="@+id/depth"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/depth_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.depth}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setVisibilityFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/visibility_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_visibility" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/visibility_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/visibility_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_visibility" />
-
-                                    <TextView
-                                        android:id="@+id/visibility"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/visibility_title"
-                                        app:changeVisibilityFrom="@{diveSpotViewModel}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setCurrentFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/currents_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_currents" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/currents_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/currents_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_currents" />
-
-                                    <TextView
-                                        android:id="@+id/currents"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/currents_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.currents}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
                         </LinearLayout>
 
                         <ImageView
@@ -617,10 +468,17 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
 
-                        <ImageView
+                        <LinearLayout
+                            android:visibility="@{diveSpotViewModel.diveSpotDetailsEntity.sealifes != null ? View.VISIBLE : View.GONE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:background="@color/white"
+                            android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
 
                         <TextView
@@ -634,27 +492,19 @@
                             android:textColor="@color/black_text"
                             android:textSize="16sp" />
 
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="140dp"
-                            android:background="@color/white"
-                            android:visibility="visible">
-
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/sealife_rc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="20dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginTop="20dp" />
-                        </RelativeLayout>
+                                android:layout_marginTop="5dp" />
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
-
+                        </LinearLayout>
                         <LinearLayout
                             app:reviewsRatingLayoutVisibilityFrom="@{diveSpotViewModel}"
                             android:id="@+id/reviews_rating_layout"
@@ -678,9 +528,9 @@
 
                                 <RatingBar
                                     android:id="@+id/rating_bar"
-                                    style="@style/CustomRatingBar"
+                                    style="@style/ModalRatingBar"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="31dp"
+                                    android:layout_height="30dp"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginTop="19dp"
                                     android:numStars="5"
@@ -699,29 +549,27 @@
 
                             <Button
                                 android:id="@+id/btn_show_all_reviews"
-                                android:layout_width="320dp"
-                                android:layout_height="45dp"
+                                android:layout_width="match_parent"
+                                android:layout_margin="20dp"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="22dp"
-                                android:layout_marginTop="22dp"
-                                android:background="@drawable/border_button_blue_2px"
+                                style="@style/BlueButton"
                                 android:onClick="@{handlers::writeReviewClicked}"
                                 android:textAllCaps="false"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
                                 app:setCountReviewsFrom="@{diveSpotViewModel}"
                                 tools:text="Show all reviews (7)" />
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/divider" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/divider" />
 
                             <LinearLayout
                                 android:id="@+id/map_layout"
@@ -742,7 +590,7 @@
                                 android:id="@+id/button_show_divecenters"
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
-                                android:background="@color/orange"
+                                android:background="@drawable/contact_dive_center_background"
                                 android:onClick="@{handlers::showDiveCentersButtonClicked}"
                                 android:text="@string/contact_dive_centers"
                                 android:visibility="visible"
@@ -806,5 +654,5 @@
                 android:scaleType="center"/>
 
         </android.support.design.widget.CoordinatorLayout>
-    </RelativeLayout>
+
 </layout>

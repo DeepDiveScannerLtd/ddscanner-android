@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.entities.AboutScreenItem;
 import com.ddscanner.R;
+import com.ddscanner.entities.AboutScreenItem;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class AboutListAdapter extends RecyclerView.Adapter<AboutListAdapter.AboutListViewholder> {
 
     private ArrayList<AboutScreenItem> aboutScreenItems;

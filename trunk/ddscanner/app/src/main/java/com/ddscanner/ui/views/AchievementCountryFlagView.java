@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -57,9 +56,13 @@ public class AchievementCountryFlagView extends View {
     }
 
     public void setFlagBitmap(int resourceId) {
-        flagBitmap = BitmapFactory.decodeResource(getResources(), resourceId);
-        flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
-        invalidate();
+        try {
+            flagBitmap = BitmapFactory.decodeResource(getResources(), resourceId);
+            flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
+            invalidate();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public void setFlagBitmap(Bitmap bitmap) {

@@ -31,6 +31,6 @@
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@drawable/dialog_achievement_button_background"
+        style="@style/DialogCloseButtonStyle"
         android:text="@string/close"/>
 </LinearLayout>

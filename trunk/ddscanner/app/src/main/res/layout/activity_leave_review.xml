@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f6f6f6"
@@ -39,7 +38,11 @@
             </LinearLayout>
 
             <ImageView style="@style/DividerStyleFull" />
-
+            <TextView
+                android:id="@+id/rating_error"
+                style="@style/ValidationErrorTextView"
+                android:layout_marginLeft="20dp"
+                android:text="@string/rate_ds_error" />
             <ImageView
                 style="@style/DividerStyleFull"
                 android:layout_marginTop="@dimen/base_block_margin_top" />
@@ -55,6 +58,7 @@
                     android:text="@string/share_a_few_words" />
 
                 <EditText
+                    android:lineSpacingExtra="@dimen/line_spacing"
                     android:id="@+id/review_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,6 +67,7 @@
                     android:background="@android:color/transparent"
                     android:cursorVisible="true"
                     android:gravity="top"
+                    android:maxLength="2048"
                     android:hint="@string/write_a_review"
                     android:minHeight="80dp"
                     android:textColorHint="#bbbbbb"
@@ -99,10 +104,8 @@
 
                 <LinearLayout
                     android:id="@+id/btn_add_sealife"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    style="@style/AddSealifeButtonStyle"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/gray_rectangle"
                     android:gravity="center"
                     android:orientation="horizontal">
 

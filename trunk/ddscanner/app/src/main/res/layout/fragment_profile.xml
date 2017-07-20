@@ -39,7 +39,7 @@
 
             <ScrollView
                 android:id="@+id/about"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -53,222 +53,241 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
-                        <RelativeLayout
-                            android:visibility="@{profileFragmentViewModel.user.type == 1 ? View.GONE : View.VISIBLE}"
-                            android:layout_width="match_parent"
-                            android:layout_height="32dp"
-                            android:background="#f9f9f9"
-                            android:onClick="@{handlers::showDiveCenter}">
-                            <LinearLayout
-                                android:layout_centerInParent="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:orientation="horizontal"
-                                android:gravity="center">
-                                
-                                    <ImageView
-                                        app:loadDiveCenterImageFrom="@{profileFragmentViewModel}"
-                                        android:layout_marginRight="8dp"
-                                        android:layout_width="22dp"
-                                        android:layout_height="22dp" />
-                                
-                                    <TextView
-                                        android:text="@{profileFragmentViewModel.user.diveCenter.name}"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="13sp"
-                                        android:textColor="@color/black_text"/>
-                                
-                            </LinearLayout>
-                            <ImageView
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="10dp"
-                                android:layout_width="6dp"
-                                android:layout_height="10dp"
-                                android:src="@drawable/ic_arrow"
-                                android:scaleType="center"/>
-                        </RelativeLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
+                            android:layout_gravity="center_vertical"
                             android:paddingTop="15dp">
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="85dp">
 
                                 <ImageView
                                     android:id="@+id/user_avatar"
-                                    android:layout_width="80dp"
-                                    android:layout_height="80dp"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginRight="20dp"
                                     android:src="@drawable/avatar_profile_default"
                                     app:loadImageFrom="@{profileFragmentViewModel}" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:background="@drawable/user_level_label"
-                                    android:paddingBottom="1dp"
-                                    android:paddingLeft="5dp"
-                                    android:paddingRight="5dp"
-                                    android:paddingTop="1dp"
-                                    android:visibility="@{profileFragmentViewModel.user.diverLevel != null ? View.VISIBLE : View.GONE}">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/black_text"
-                                        android:textSize="11sp"
-                                        android:textStyle="bold"
-                                        app:diverLevelFrom="@{profileFragmentViewModel}" />
-                                </LinearLayout>
-                            </RelativeLayout>
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="50dp"
                                 android:orientation="vertical"
                                 android:paddingRight="20dp"
-                                android:paddingTop="3dp">
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:id="@+id/user_name"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="7dp"
-                                    android:layout_marginRight="10dp"
-                                    android:layout_marginTop="10dp"
+                                    android:lines="1"
+                                    android:ellipsize="end"
+                                    android:fontFamily="sans-serif-medium"
                                     android:text="@{profileFragmentViewModel.user.name != null ? profileFragmentViewModel.user.name : null}"
                                     android:textColor="@color/black_text"
-                                    android:textSize="18sp"
+                                    android:textSize="16sp"
                                     android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}" />
-
                                 <TextView
-                                    android:id="@+id/user_about"
-                                    android:layout_width="match_parent"
+                                    android:layout_below="@+id/user_name"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"
-                                    android:textColor="#616161"
+                                    android:textColor="#526cae"
                                     android:textSize="13sp"
-                                    android:visibility="@{profileFragmentViewModel.user.about != null ? View.VISIBLE : View.GONE}" />
-
-                            </LinearLayout>
+                                    android:visibility="gone"
+                                    app:diverLevelFrom="@{profileFragmentViewModel}" />
+                            </RelativeLayout>
                         </LinearLayout>
 
-                        <ImageView
-                            style="@style/DividerStyleFull"
-                            android:layout_marginTop="15dp" />
+                        <TextView
+                            android:lineSpacingExtra="@dimen/line_spacing"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="14dp"
+                            android:id="@+id/user_about"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"
+                            android:textColor="#616161"
+                            android:textSize="13sp"
+                            android:visibility="@{profileFragmentViewModel.user.about != null ? View.VISIBLE : View.GONE}" />
 
                         <android.support.percent.PercentRelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="horizontal">
+                            android:layout_marginLeft="20dp">
 
                             <LinearLayout
                                 android:id="@+id/comments_layout"
                                 android:layout_height="64dp"
-                                android:layout_alignParentLeft="true"
-                                android:background="?attr/selectableItemBackground"
-                                android:gravity="center"
+                                android:gravity="center_vertical"
                                 android:onClick="@{handlers::showComments}"
                                 android:orientation="vertical"
-                                app:layout_widthPercent="33%">
+                                app:layout_widthPercent="25%">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:text="@string/reviews_profile"
-                                    android:textColor="#a3a3a3"
-                                    android:textSize="11sp" />
-
-                                <TextView
+                                <com.ddscanner.ui.views.ProfileCountersTextView
                                     android:layout_marginLeft="0dp"
                                     android:id="@+id/user_comments"
                                     style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"
+                                    app:countReviewsFrom="@{profileFragmentViewModel}"
                                     tools:text="321" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/reviews_profile"
+                                    android:textColor="@color/profile_counter_gray_color"
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
-                            <RelativeLayout
+                            <LinearLayout
                                 android:id="@+id/likeLayout"
                                 android:layout_height="64dp"
-                                android:layout_centerHorizontal="true"
-                                android:background="?attr/selectableItemBackground"
+                                android:layout_toRightOf="@+id/comments_layout"
                                 android:onClick="@{handlers::showLikes}"
-                                app:layout_widthPercent="33%">
+                                android:gravity="center_vertical"
+                                android:orientation="vertical"
+                                app:layout_widthPercent="25%">
 
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_centerHorizontal="true"
-                                    android:gravity="center"
-                                    android:orientation="vertical">
+                                    <com.ddscanner.ui.views.ProfileCountersTextView
+                                        android:layout_marginLeft="0dp"
+                                        android:id="@+id/user_likes"
+                                        style="@style/ProfileNumberDivespotsSrtyle"
+                                        app:countLikesFrom="@{profileFragmentViewModel}"
+                                        tools:text="321" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:fontFamily="sans-serif-medium"
                                         android:text="@string/likes_profile"
-                                        android:textColor="#a3a3a3"
-                                        android:textSize="11sp" />
-
-
-                                    <TextView
-                                        android:layout_marginLeft="0dp"
-                                        android:id="@+id/user_likes"
-                                        style="@style/ProfileNumberDivespotsSrtyle"
-                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"
-                                        tools:text="321" />
-                                </LinearLayout>
-                            </RelativeLayout>
+                                        android:textColor="@color/profile_counter_gray_color"
+                                        android:textSize="12sp" />
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:id="@+id/dislikeLayout"
                                 android:layout_height="64dp"
-                                android:layout_alignParentRight="true"
-                                android:background="?attr/selectableItemBackground"
-                                android:gravity="center"
+                                android:layout_toRightOf="@+id/likeLayout"
+                                android:gravity="center_vertical"
                                 android:onClick="@{handlers::showDislikes}"
                                 android:orientation="vertical"
-                                app:layout_widthPercent="33%">
+                                app:layout_widthPercent="25%">
+
+                                <com.ddscanner.ui.views.ProfileCountersTextView
+                                    android:layout_marginLeft="0dp"
+                                    android:id="@+id/user_dislikes"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    app:countDislikesFrom="@{profileFragmentViewModel}"
+                                    tools:text="321" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
                                     android:text="@string/dislikes"
-                                    android:textColor="#a3a3a3"
-                                    android:textSize="11sp" />
+                                    android:textColor="@color/profile_counter_gray_color"
+                                    android:textSize="12sp" />
 
+                            </LinearLayout>
+                            <View
+                                android:id="@+id/divider"
+                                android:layout_toRightOf="@+id/dislikeLayout"
+                                android:layout_height="32dp"
+                                android:layout_width="1dp"
+                                android:background="#ebebeb"
+                                android:layout_centerVertical="true"/>
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:id="@+id/points_layout"
+                                android:layout_height="64dp"
+                                android:layout_toRightOf="@+id/divider"
+                                android:gravity="center_vertical"
+                                android:onClick="@{handlers::showAchievementsDetails}"
+                                android:orientation="vertical"
+                                app:layout_widthPercent="25%">
+
+                                <com.ddscanner.ui.views.ProfileCountersTextView
+                                    android:layout_marginLeft="0dp"
+                                    android:id="@+id/user_points"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    app:countPointsFrom="@{profileFragmentViewModel}"
+                                    tools:text="321" />
 
                                 <TextView
-                                    android:layout_marginLeft="0dp"
-                                    android:id="@+id/user_dislikes"
-                                    style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"
-                                    tools:text="321" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/points"
+                                    android:textColor="@color/profile_counter_gray_color"
+                                    android:textSize="12sp" />
+
                             </LinearLayout>
                         </android.support.percent.PercentRelativeLayout>
                     </LinearLayout>
 
                     <ImageView style="@style/DividerStyleFull" />
 
-                    <ImageView
-                        style="@style/DividerStyleFull"
-                        android:layout_marginTop="15dp" />
+                    <RelativeLayout
+                        android:layout_marginTop="@dimen/base_block_margin_top"
+                        android:visibility="@{profileFragmentViewModel.user.type == 1 ? View.GONE : View.VISIBLE}"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@color/white"
+                        android:onClick="@{handlers::showDiveCenter}">
+
+                        <ImageView style="@style/DividerStyleFull" />
+
+                        <ImageView
+                            android:layout_alignParentBottom="true"
+                            style="@style/DividerStyleFull" />
+
+                        <LinearLayout
+                            android:layout_centerInParent="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="20dp">
+
+                            <ImageView
+                                app:loadDiveCenterImageFrom="@{profileFragmentViewModel}"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_marginRight="14dp"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
+                            <TextView
+                                android:text="@{profileFragmentViewModel.user.diveCenter.name}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="@color/black_text"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/gray"
+                                    android:textSize="12sp"
+                                    android:text="@string/profile_dive_center"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:src="@drawable/ic_arrow"
+                            android:scaleType="center"/>
+                    </RelativeLayout>
+
 
                     <LinearLayout
+                        android:layout_marginTop="@dimen/base_block_margin_top"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
+
+                        <ImageView
+                            style="@style/DividerStyleFull" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -298,8 +317,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="12dp"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
                             android:paddingTop="12dp"
                             android:visibility="gone" />
 
@@ -343,7 +362,7 @@
 
                     <ImageView
                         style="@style/DividerStyleFull"
-                        android:layout_marginTop="15dp" />
+                        android:layout_marginTop="@dimen/base_block_margin_top" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -376,7 +395,7 @@
                             android:gravity="center"
                             android:paddingBottom="12dp"
                             android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
+                            android:paddingRight="15dp"
                             android:paddingTop="12dp"
                             android:text="@string/no_photos_yet"
                             android:textColor="#bbbbbb"
@@ -387,7 +406,7 @@
 
                     <ImageView
                         style="@style/DividerStyleFull"
-                        android:layout_marginTop="15dp" />
+                        android:layout_marginTop="@dimen/base_block_margin_top" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -395,21 +414,23 @@
                         android:background="@color/white"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/checkins_activity"
                             android:layout_width="match_parent"
                             android:layout_height="66dp"
+                            android:paddingRight="20dp"
                             android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showCheckinns}"
-                            android:orientation="horizontal"
                             android:paddingTop="10dp">
 
                             <ImageView
+                                android:id="@+id/checkin_icon"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_profile_checkin" />
 
                             <LinearLayout
+                                android:layout_toRightOf="@+id/checkin_icon"
                                 android:layout_width="258dp"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
@@ -427,29 +448,30 @@
                             </LinearLayout>
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_alignParentRight="true"
                                 android:layout_height="match_parent"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_arrow" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
-                        <ImageView style="@style/DividerStyle" />
-
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/created_activity"
                             android:layout_width="match_parent"
                             android:layout_height="66dp"
                             android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showAdded}"
-                            android:orientation="horizontal"
+                            android:paddingRight="20dp"
                             android:paddingTop="10dp">
 
                             <ImageView
+                                android:id="@+id/icon_added"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_profile_added" />
 
                             <LinearLayout
+                                android:layout_toRightOf="@+id/icon_added"
                                 android:layout_width="258dp"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
@@ -467,29 +489,31 @@
                             </LinearLayout>
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_alignParentRight="true"
                                 android:layout_height="match_parent"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_arrow" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
-                        <ImageView style="@style/DividerStyle" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/edited_activity"
                             android:layout_width="match_parent"
                             android:layout_height="66dp"
                             android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showEdited}"
-                            android:orientation="horizontal"
+                            android:paddingRight="20dp"
                             android:paddingTop="10dp">
 
                             <ImageView
+                                android:id="@+id/icon_edited"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_profile_edited" />
 
                             <LinearLayout
+                                android:layout_toRightOf="@id/icon_edited"
                                 android:layout_width="258dp"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
@@ -507,29 +531,31 @@
                             </LinearLayout>
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_alignParentRight="true"
                                 android:layout_height="match_parent"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_arrow" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
-                        <ImageView style="@style/DividerStyle" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/favorites_activity"
                             android:layout_width="match_parent"
                             android:layout_height="66dp"
                             android:background="?attr/selectableItemBackground"
                             android:onClick="@{handlers::showFavorites}"
-                            android:orientation="horizontal"
+                            android:paddingRight="20dp"
                             android:paddingTop="10dp">
 
                             <ImageView
+                                android:id="@+id/icon_favorite"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_profile_fav" />
 
                             <LinearLayout
+                                android:layout_toRightOf="@+id/icon_favorite"
                                 android:layout_width="258dp"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
@@ -547,17 +573,19 @@
                             </LinearLayout>
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_alignParentRight="true"
                                 android:layout_height="match_parent"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_arrow" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <ImageView
                             style="@style/DividerStyle"
                             android:layout_marginTop="10dp" />
 
                         <LinearLayout
+                            android:background="?attr/selectableItemBackground"
                             android:id="@+id/edit_profile"
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
@@ -565,6 +593,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:layout_marginTop="0dp"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:src="@drawable/ic_profile_edit" />
 
@@ -581,6 +610,33 @@
 
                         <ImageView style="@style/DividerStyle" />
 
+                        <RelativeLayout
+                            android:background="?attr/selectableItemBackground"
+                            android:id="@+id/logout"
+                            android:layout_width="match_parent"
+                            android:layout_height="55dp"
+                            android:onClick="@{handlers::logout}">
+
+                            <ImageView
+                                android:id="@+id/logout_icon"
+                                android:layout_marginTop="0dp"
+                                style="@style/CharacteristicsDiveSpotListIcons"
+                                android:src="@drawable/ic_profile_logout" />
+
+                            <TextView
+                                android:layout_toRightOf="@+id/logout_icon"
+                                style="@style/CharacteristicsDiveSpotListTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_vertical"
+                                android:text="@string/log_out" />
+                            <ImageView
+                                android:layout_alignParentBottom="true"
+                                style="@style/DividerStyle" />
+                        </RelativeLayout>
+
+
                         <LinearLayout
                             android:id="@+id/about_dss_layout"
                             android:layout_width="match_parent"
@@ -590,6 +646,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:layout_marginTop="0dp"
                                 style="@style/CharacteristicsDiveSpotListIcons"
                                 android:src="@drawable/ic_profile_about" />
 
@@ -603,7 +660,8 @@
                                 />
                         </LinearLayout>
                     </LinearLayout>
-
+                    <ImageView
+                        style="@style/DividerStyleFull" />
                 </LinearLayout>
             </ScrollView>
 

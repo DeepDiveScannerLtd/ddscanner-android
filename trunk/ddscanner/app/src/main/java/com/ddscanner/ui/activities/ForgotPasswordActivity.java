@@ -30,9 +30,8 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            //TODO change text
             materialDialog.dismiss();
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.sorry, R.string.success_added, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.message_sent, R.string.forgot_password_messagesent, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
         }
 
         @Override
@@ -46,10 +45,10 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
             materialDialog.dismiss();
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.success_added, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.email_incorrect, false);
                     break;
                 case ENTITY_NOT_FOUND_404:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.success_added, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.user_email_not_found, false);
                     break;
                 default:
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
@@ -105,10 +104,9 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
             case R.id.send:
                 if (isEmailValid(email.getText().toString())) {
                     materialDialog.show();
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postForgotPassword(email.getText().toString(), resultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient(this).postForgotPassword(email.getText().toString(), resultListener);
                 } else {
-                    //TODO change text
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.sc_name, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.email_incorrect, false);
                 }
                 break;
         }

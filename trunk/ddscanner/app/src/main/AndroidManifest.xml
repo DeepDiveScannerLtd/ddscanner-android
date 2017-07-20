@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ddscanner" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ddscanner">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -13,8 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
-    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+    <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
@@ -27,29 +28,30 @@
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".DDScannerApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ddscanner.debug"
+            android:authorities="${applicationId}"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
         <receiver
             android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -57,7 +59,7 @@
         <receiver
             android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -68,7 +70,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".services.NetworkLisetener" >
+        <receiver android:name=".services.NetworkLisetener">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -77,42 +79,23 @@
 
         <activity
             android:name=".ui.activities.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <!--<data android:scheme="http"-->
-                <!--android:host="www.ddscanner.com"-->
-                <!--android:pathPrefix="/splash" />-->
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data android:scheme="ddscanner"
-                    android:host="splash" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.activities.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <data android:scheme="com.ddscanner" />
-
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
-
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:label="@string/app_name" />
 
         <meta-data
             android:name="firebase_analytics_collection_enabled"
@@ -127,8 +110,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
+        <activity android:name=".screens.tutorial.TutorialActivity"
+            android:screenOrientation="portrait" />
+
         <activity
-            android:name=".ui.activities.DiveSpotsListActivity"
+            android:name=".screens.divespots.list.DiveSpotsListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SelfCommentsActivity"
@@ -142,12 +128,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SearchSpotOrLocationActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".screens.booking.offers.OffersActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divespot.add.AddDiveSpotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.ChangePasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divespot.photos.DiveSpotPhotosActivity"
@@ -201,6 +191,9 @@
             android:name=".screens.divespot.details.DiveSpotDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.PickLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.SearchSealifeActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -214,10 +207,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.AboutActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.GuideActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.GuideDescriptionActivity"
             android:screenOrientation="portrait" />
@@ -241,7 +234,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SignUpActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
@@ -259,12 +252,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.profile.edit.EditUserProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".screens.profile.edit.EditDiveCenterProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.instructors.InstructorsActivity"
@@ -278,23 +269,30 @@
         <activity
             android:name=".screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity"
             android:screenOrientation="portrait" />
-        <service
-            android:name=".services.FirebaseMessagingService">
+        <activity
+            android:name=".ui.activities.ChangeAddressActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".services.FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".services.FirebaseInstanceIDService">
+        <service android:name=".services.FirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ed7107427d4db24c8d8509e14cd4e3e30daf7805" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".screens.profile.edit.divecenter.search.CreateDiveCenterActivity" />
+        <activity android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

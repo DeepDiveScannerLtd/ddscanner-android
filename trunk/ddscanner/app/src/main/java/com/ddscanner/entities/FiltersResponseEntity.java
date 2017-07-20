@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by lashket on 24.1.16.
- */
 public class FiltersResponseEntity implements Serializable {
     private Map<String, String> currents;
     private Map<String, String> level;

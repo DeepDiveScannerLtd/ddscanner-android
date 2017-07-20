@@ -24,7 +24,7 @@ public class LikePhotoItemViewModel extends LikeReviewViewModel {
             Picasso.with(view.getContext())
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getLikeEntity().getPhoto().get(0).getId(), "1"))
                     .resize(Math.round(Helpers.convertDpToPixel(40, view.getContext())), Math.round(Helpers.convertDpToPixel(40, view.getContext())))
-                    .placeholder(R.drawable.ds_list_photo_default)
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .error(R.drawable.ds_list_photo_default)
                     .centerCrop()
                     .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2,view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL))

@@ -1,8 +1,5 @@
 package com.ddscanner.entities.request;
 
-/**
- * Created by lashket on 19.5.16.
- */
 public class IdentifyRequest {
 
     private String appId;

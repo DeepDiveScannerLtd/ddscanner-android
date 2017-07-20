@@ -13,7 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.FilterChosenEvent;
@@ -73,7 +73,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     private LatLng lastKnownNorthEast;
     private LatLng newDiveSpotLatLng;
     private boolean isNewDiveSpotMarkerClicked;
-
+    private ArrayList<DiveSpotShort> allDiveSpots = new ArrayList<>();
     private int newDiveSpotId = -1;
 
     private DDScannerRestClient.ResultListener<List<DiveSpotShort>> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
@@ -81,7 +81,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         public void onSuccess(List<DiveSpotShort> diveSpotShorts) {
             hideProgressBar();
             updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
-            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
+            allDiveSpots =(ArrayList<DiveSpotShort>) diveSpotShorts;
+//            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
         }
 
         @Override
@@ -229,7 +230,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         }
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
+//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
         if (diveSpotsRequestMap.size() == 0) {
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -413,9 +414,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         }
     }
 
-    private ArrayList<DiveSpotShort> getVisibleMarkersList(ArrayList<DiveSpotShort> oldList) {
+    public ArrayList<DiveSpotShort> getVisibleMarkersList() {
         ArrayList<DiveSpotShort> newList = new ArrayList<>();
-        for (DiveSpotShort diveSpotShort : oldList) {
+        for (DiveSpotShort diveSpotShort : allDiveSpots) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpotShort.getLat()), Float.valueOf(diveSpotShort.getLng()))) {
                 newList.add(diveSpotShort);
             }
@@ -464,6 +465,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     }
 
     private void sendRequest(LatLng northeast, LatLng southwest) {
+        ArrayList<String> sealifesIds = null;
         diveSpotsRequestMap.clear();
         showProgressBar();
         isCanMakeRequest = true;
@@ -479,10 +481,17 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject())) {
             diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList() != null) {
+            ArrayList<SealifeShort> sealifeShorts = DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList();
+            sealifesIds = new ArrayList<>();
+            for (SealifeShort sealifeShort : sealifeShorts) {
+                sealifesIds.add(sealifeShort.getId());
+            }
+        }
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
             Log.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(context).getDiveSpotsByArea(sealifesIds, diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }
 
     @Subscribe

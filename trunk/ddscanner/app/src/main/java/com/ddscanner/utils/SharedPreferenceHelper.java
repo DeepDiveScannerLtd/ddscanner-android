@@ -7,10 +7,11 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
-import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
-import com.ddscanner.entities.User;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -24,7 +25,7 @@ public class SharedPreferenceHelper {
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
     private static final String TOKEN = "TOKEN";
     private static final String IS_USER_SIGNED_IN = "ISLOGINED";
-    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH_VERSION_3_0_5";
     private static final String SIGN_IN_TYPE = "SIGN_IN_TYPE";
     private static final String SN = "SOCIALNETWORK";
     private static final String SECRET = "SECRET";
@@ -32,30 +33,111 @@ public class SharedPreferenceHelper {
     private static final String VISIBILITY = "VISIBILITY";
     private static final String LEVEL = "LEVEL";
     private static final String OBJECT = "OBJECT";
-    private static final String USERID = "USERID";
-    private static final String PHOTOLINK = "PHOTOLINK";
-    private static final String USERNAME = "USERNAME";
-    private static final String LINK = "LINK";
     private static final String USER_SERVER_ID = "USER_SERVER_ID";
     private static final String USER_APP_ID = "USER_APP_ID";
     private static final String IS_USER_APP_ID_RECEIVED = "IS_USER_APP_ID_RECEIVED";
-    private static final String LOGGED_USER = "LOGGED_USER";
-    private static final String LOGGED_DIVE_CENTER = "LOGGED_DIVE_CENTER";
-    private static final String LOGGED_TYPE = "LOGGED_TYPE";
-    private static final String IS_DC_LOGGED_IN = "IS_DC_LOGGED_IN";
-    private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
-    private static final String DC_TOKEN = "DC_TOKEN";
-    private static final String USER_TOKEN= "USER_TOKEN";
     private static final String IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY = "IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY";
     private static final String USERS_LiST = "USERS_LIST";
+    private static final String SEALIFES_LIST = "sealifes";
+    private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
+    private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
+    private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
+    private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
+    private static final String TUTORIAL_STATE = "tutorial_state";
 
     private static SharedPreferences prefs;
+
+    public enum SearchSourceType {
+        REGISTRATION("registration"), PROFILE("profile");
+
+        private String source;
+
+        SearchSourceType(String source) {
+            this.source = source;
+        }
+
+        public String getSource() {
+            return source;
+        }
+    }
+
+    public enum TutorialState {
+
+        SKIPPED("skipped"), WATCHED("watched"), PARTLY_WATCHED("partly_watched");
+
+        String state;
+
+        TutorialState(String state) {
+            this.state = state;
+        }
+
+        public String getState() {
+            return state;
+        }
+    }
+
+    public void setTutorialState(TutorialState state) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(TUTORIAL_STATE, state.getState());
+        editor.apply();
+        DDScannerApplication.getInstance().setTutorialState(state);
+    }
+
+    public String getTutorialState() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(TUTORIAL_STATE, TutorialState.PARTLY_WATCHED.getState());
+    }
+
+    public void setDivecenterSearchSource(SearchSourceType type) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(DIVECENTER_SEARCH_SOURCE, type.getSource());
+        editor.apply();
+    }
+
+    public String getDivecenterSearchSource() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(DIVECENTER_SEARCH_SOURCE, "");
+    }
+
+    public void setUserLocation(LatLng latLng) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(LAST_USER_KNOWN_LATITUDE, String.valueOf(latLng.latitude));
+        editor.putString(LAST_USER_KNOWN_LONGITUDE, String.valueOf(latLng.longitude));
+        editor.apply();
+    }
+
+    private boolean isLocationSaved() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        if (prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getUserLattitude() {
+        if (isLocationSaved()) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+            return prefs.getString(LAST_USER_KNOWN_LATITUDE, "");
+        }
+        return null;
+    }
+
+    public String getUserLongitude() {
+        if (isLocationSaved()) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+            return prefs.getString(LAST_USER_KNOWN_LONGITUDE, "");
+        }
+        return null;
+    }
 
     public void setIsMustRefreshDiveSpotActivity(boolean value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean getIsMustRefreshDiveSpotActivity() {
@@ -63,11 +145,30 @@ public class SharedPreferenceHelper {
         return prefs.getBoolean(IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY, false);
     }
 
+    public void setIsFirstLaunch(boolean isFirstLaunch) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
+        editor.apply();
+    }
+
+    public boolean getIsFirstLaunch() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_FIRST_LAUNCH, true);
+    }
+
+    public void clear() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+    }
+
     public void setUserAppId(String appId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_APP_ID, appId);
-        editor.commit();
+        editor.apply();
     }
 
     public String getUserAppId() {
@@ -79,31 +180,14 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_APP_ID_RECEIVED, true);
-        editor.commit();
-    }
-
-    public boolean isUserAppIdReceived() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_USER_APP_ID_RECEIVED, false);
-    }
-
-    public void setPhotolink(String value) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putString(PHOTOLINK, value);
-        editor.commit();
-    }
-
-    public String getPhotolink() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(PHOTOLINK, "");
+        editor.apply();
     }
 
     public void setCurrents(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(CURRENTS, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getCurrents() {
@@ -115,7 +199,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(LEVEL, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getLevel() {
@@ -123,12 +207,15 @@ public class SharedPreferenceHelper {
         return prefs.getString(LEVEL, "");
     }
 
+    public boolean isFiltersApplyied() {
+        return !(getLevel().isEmpty() && getObject().isEmpty() && getSealifesList() == null);
+    }
 
     public void setVisibility(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(VISIBILITY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getVisibility() {
@@ -141,7 +228,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(OBJECT, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getObject() {
@@ -149,14 +236,40 @@ public class SharedPreferenceHelper {
         return prefs.getString(OBJECT, "");
     }
 
+    public void setSealifesList(ArrayList<SealifeShort> sealifesList) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        if (sealifesList == null) {
+            editor.putString(SEALIFES_LIST, "");
+        } else {
+            editor.putString(SEALIFES_LIST, new Gson().toJson(sealifesList));
+        }
+        editor.apply();
+    }
+
+    public void clearFilters() {
+        setObject("");
+        setLevel("");
+        setSealifesList(null);
+    }
+
+    public ArrayList<SealifeShort> getSealifesList() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        if (prefs.getString(SEALIFES_LIST, "").isEmpty()) {
+            return null;
+        }
+        Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
+        return new Gson().fromJson(prefs.getString(SEALIFES_LIST,""), listType);
+    }
+
     public void setGcmId(String appInstanceId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(PREFERENCES_GCM_ID, appInstanceId);
-        editor.commit();
+        editor.apply();
     }
 
-    public void setIsUserSignedIn(boolean isUserSignedIn, SignInType signInType) {
+    private void setIsUserSignedIn(boolean isUserSignedIn, SignInType signInType) {
         Log.i(TAG, "setIsUserSignedIn " + isUserSignedIn);
         if (isUserSignedIn && signInType == null) {
             throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
@@ -164,31 +277,14 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_SIGNED_IN, isUserSignedIn);
-        editor.commit();
-    }
-
-    public boolean isFirstLaunch() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_FIRST_LAUNCH, true);
-    }
-
-    public void setIsFirstLaunch(boolean isFirstLaunch) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
-        editor.commit();
-    }
-
-    public String getGcmId() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(PREFERENCES_GCM_ID, "");
+        editor.apply();
     }
 
     public void setToken(String token) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(TOKEN, token);
-        editor.commit();
+        editor.apply();
     }
 
     public String getToken() {
@@ -200,7 +296,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SN, sn);
-        editor.commit();
+        editor.apply();
     }
 
     public String getSn() {
@@ -212,7 +308,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SECRET, secret);
-        editor.commit();
+        editor.apply();
     }
 
     public String getSecret() {
@@ -220,20 +316,11 @@ public class SharedPreferenceHelper {
         return prefs.getString(SECRET, "");
     }
 
-    public void logout() {
-      //  SharedPreferenceHelper.setToken("");
-        setUserServerId("");
-        setSecret("");
-        setSn("");
-        setToken("");
-        setIsUserSignedIn(false, null);
-    }
-
     public void setUserServerId(String id) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_SERVER_ID, id);
-        editor.commit();
+        editor.apply();
     }
 
     public String getUserServerId() {
@@ -247,42 +334,27 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putLong("LASTNOTIF", time);
-        editor.commit();
+        editor.apply();
     }
-
-    public long getLastShowingNotificationTime() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getLong("LASTNOTIF", 0);
-    }
-
-    public void setLastShowingActivityTime(long time) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putLong("LASTACTIVITY", time);
-        editor.commit();
-    }
-
-    public long getLastShowingActivityTime() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getLong("LASTACTIVITY", 0);
-    }
-
-    public void clear() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
-    }
-
-
 
     /*Multi accounts mechanism*/
 
     public enum UserType {
-        DIVECENTER, DIVER, INSTRUCTOR, NONE
+        DIVECENTER("dc"), DIVER("diver"), INSTRUCTOR("instructor"), NONE("not_logged_in");
+
+        private String name;
+
+        UserType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
     }
 
-    public UserType getActiveUserType() {
+    public static UserType getActiveUserType() {
         if (getIsUserSignedIn()) {
             switch (getActiveUser().getType()) {
                 case 0:
@@ -311,10 +383,11 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USERS_LiST, new Gson().toJson(users));
-        editor.commit();
+        editor.apply();
+        updateUserTypeInApplication();
     }
 
-    public boolean getIsUserSignedIn() {
+    public static boolean getIsUserSignedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         if (prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0) {
             return false;
@@ -339,6 +412,7 @@ public class SharedPreferenceHelper {
             }
             if (!isUserAlsoInList) {
                 users.add(baseUser);
+                EventsTracker.trackNewAccountAdded();
             }
             setUsersList(users);
             return;
@@ -346,6 +420,12 @@ public class SharedPreferenceHelper {
         users = new ArrayList<>();
         users.add(baseUser);
         setUsersList(users);
+    }
+
+    public void logoutFromAllAccounts() {
+        setIsUserSignedIn(false, null);
+        setUsersList(new ArrayList<BaseUser>());
+        updateUserTypeInApplication();
     }
 
     public static void removeUserFromList(String id) {
@@ -386,6 +466,22 @@ public class SharedPreferenceHelper {
             }
         }
         setUsersList(users);
+    }
+
+    private static void updateUserTypeInApplication() {
+        DDScannerApplication.getInstance().setActiveUserType(getActiveUserType().getName());
+    }
+
+    public static void setIsNeedToShowTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_NEED_TO_SHOW_TUTORIAL, false);
+        editor.apply();
+    }
+
+    public static boolean getIsNeedToShowTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_NEED_TO_SHOW_TUTORIAL, true);
     }
 
 }

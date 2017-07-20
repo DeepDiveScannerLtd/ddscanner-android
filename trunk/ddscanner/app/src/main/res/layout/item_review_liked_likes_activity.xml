@@ -32,7 +32,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="14dp"
-                android:src="@color/black_text"
                 app:loadAvatarFrom="@{likeViewModel}"/>
 
             <LinearLayout
@@ -43,6 +42,7 @@
 
                 <TextView
                     android:id="@+id/text"
+                    android:layout_marginRight="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"

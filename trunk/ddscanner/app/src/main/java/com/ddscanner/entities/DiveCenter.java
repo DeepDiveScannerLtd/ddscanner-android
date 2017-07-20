@@ -4,13 +4,9 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
-import java.io.Serializable;
-
-/**
- * Created by lashket on 5.2.16.
- */
 public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCenter> {
 
     private String id;
@@ -19,6 +15,7 @@ public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCente
     private String phone;
     private String lat;
     private String lng;
+    @SerializedName("photo")
     private String logo;
     private String address;
     private float rating;

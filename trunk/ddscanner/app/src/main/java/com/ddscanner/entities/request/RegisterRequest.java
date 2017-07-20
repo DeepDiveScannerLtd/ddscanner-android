@@ -1,8 +1,5 @@
 package com.ddscanner.entities.request;
 
-/**
- * Created by lashket on 11.3.16.
- */
 public class RegisterRequest {
 
     protected String appId;

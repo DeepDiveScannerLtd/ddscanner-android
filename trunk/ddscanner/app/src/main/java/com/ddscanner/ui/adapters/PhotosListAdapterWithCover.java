@@ -34,10 +34,12 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
     private List<SpotPhotoEditScreenEntity> deletedPhotos = new ArrayList<>();
     private int coverPhotoPosition = 0;
     private int previousCoverPhotoPosition;
+    private String userServerId;
 
-    public PhotosListAdapterWithCover(Context context) {
+    public PhotosListAdapterWithCover(Context context, String userServerId) {
         this.context = context;
         this.coverPhotoPosition = -1;
+        this.userServerId = userServerId;
     }
 
     @Override
@@ -66,14 +68,14 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
             EditSpotListPhotoViewHolder viewHolder = (EditSpotListPhotoViewHolder) holder;
             viewHolder.coverLabel.setVisibility(View.GONE);
             viewHolder.icDelete.setVisibility(View.GONE);
-            if (allPhotos.get(viewHolder.getAdapterPosition()).getAuthorId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+            if (allPhotos.get(viewHolder.getAdapterPosition()).getAuthorId().equals(userServerId) && allPhotos.size() > 1) {
                 viewHolder.icDelete.setVisibility(View.VISIBLE);
             }
             if (allPhotos.get(viewHolder.getAdapterPosition()).isCover()) {
                 viewHolder.coverLabel.setVisibility(View.VISIBLE);
             }
             if (position < serverPhotos.size()) {
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, allPhotos.get(position).getPhotoPath(), "1")).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, allPhotos.get(position).getPhotoPath(), "1")).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
             } else {
                 String path = allPhotos.get(holder.getAdapterPosition()).getPhotoPath();
                 if (!path.contains("file:")) {

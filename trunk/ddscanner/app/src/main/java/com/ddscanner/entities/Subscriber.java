@@ -1,8 +1,5 @@
 package com.ddscanner.entities;
 
-/**
- * Created by lashket on 26.1.16.
- */
 public class Subscriber {
 
     private String firstName;

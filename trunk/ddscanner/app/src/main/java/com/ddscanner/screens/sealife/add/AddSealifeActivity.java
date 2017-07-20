@@ -5,15 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,7 +29,6 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
-import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -57,6 +51,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private MaterialDialog progressDialogUpload;
     private File fileToSend;
     private boolean isForEdit;
+    private boolean isImageCaptured = false;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -81,7 +76,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case BAD_REQUEST_ERROR_400:
@@ -95,6 +90,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
         @Override
         public void onInternetConnectionClosed() {
+            progressDialogUpload.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
@@ -102,22 +98,39 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-
+            progressDialogUpload.dismiss();
+            EventsTracker.trackSealifeEdited();
+            setResult(RESULT_OK);
+            finish();
         }
 
         @Override
         public void onConnectionFailure() {
-
+            progressDialogUpload.dismiss();
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            progressDialogUpload.dismiss();
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
+                    LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    Helpers.errorHandling(errorsMap, errorMessage);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-
+            progressDialogUpload.dismiss();
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
 
@@ -128,14 +141,21 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         binding.setHandlers(this);
         isForEdit = getIntent().getBooleanExtra(ARG_IS_EDIT, false);
         if (isForEdit) {
+            isImageCaptured = true;
+            EventsTracker.trackEditSealife();
             binding.setSealifeViewModel(new EditSealifeActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_SEALIFE), Sealife.class)));
             if (binding.getSealifeViewModel().getSealife().getImage() != null) {
                 setBackImage(binding.getSealifeViewModel().getSealife().getImage(), true);
             }
         }
         makeErrorsMap();
-        setupToolbar(R.string.add_sealife, R.id.toolbar);
-        EventsTracker.trackSealifeCreation();
+        if (!isForEdit) {
+            EventsTracker.trackSealifeCreation();
+            isImageCaptured = false;
+            setupToolbar(R.string.add_sealife, R.id.toolbar);
+        } else {
+            setupToolbar(R.string.edit_sea_life, R.id.toolbar);
+        }
         progressDialogUpload = Helpers.getMaterialDialog(this);
     }
 
@@ -214,12 +234,16 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             sealifeTranslation.setName(binding.name.getText().toString().trim());
             sealifeTranslations.add(sealifeTranslation);
             MultipartBody.Part body = null;
-            fileToSend = new File(filePath);
-            fileToSend = Helpers.compressFile(fileToSend, this);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
-            body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+            if (filePath != null) {
+                fileToSend = new File(filePath);
+                fileToSend = Helpers.compressFile(fileToSend, this);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
+                body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+            }
             if (!isForEdit) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+            } else {
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateSealife(updateResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)), Helpers.createRequestBodyForString(binding.getSealifeViewModel().getSealife().getId()));
             }
         }
     }
@@ -232,7 +256,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             binding.nameError.setVisibility(View.VISIBLE);
         }
 
-        if (filePath == null) {
+        if (!isImageCaptured) {
             isSomethingWrong = true;
             binding.errorImage.setVisibility(View.VISIBLE);
         }
@@ -289,6 +313,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
+        isImageCaptured = true;
         filePath = pictures.get(0);
         setBackImage(filePath, false);
     }
@@ -298,6 +323,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     }
 
     public void deletePhotoClicked(View view) {
+        isImageCaptured = false;
         filePath = null;
         binding.sealifePhoto.setImageDrawable(null);
         binding.sealifePhoto.setVisibility(View.GONE);

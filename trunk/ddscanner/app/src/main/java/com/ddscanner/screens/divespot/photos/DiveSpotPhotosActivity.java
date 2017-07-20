@@ -13,7 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,11 +22,12 @@ import android.widget.Toast;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -41,7 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener, ViewPager.OnPageChangeListener {
+public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, ViewPager.OnPageChangeListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
 
@@ -305,7 +305,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void getDiveSpotPhotos() {
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
     }
 
     private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {
@@ -369,9 +369,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     public void onPageSelected(int position) {
         switch (position) {
             case 0:
+            case 1:
                 fabAddPhoto.show();
                 break;
-            case 1:
             case 2:
                 fabAddPhoto.hide();
                 break;

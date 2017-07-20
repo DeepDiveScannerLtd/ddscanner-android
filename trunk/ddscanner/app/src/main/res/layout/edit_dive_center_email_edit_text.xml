@@ -10,6 +10,8 @@
     android:paddingTop="10dp"
     android:hint="@string/email"
     android:maxLength="252"
+    android:inputType="textEmailAddress"
+    android:maxLines="1"
     xmlns:android="http://schemas.android.com/apk/res/android" />
 
     <TextView

@@ -6,20 +6,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
+import com.ddscanner.screens.notifications.DiverNotificationsFragment;
+import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
-import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.views.LoginView;
 
-import java.util.ArrayList;
-
-/**
- * Created by lashket on 20.4.16.
- */
 public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implements LoginView.LoginStateChangeListener {
 
     private static final String TAG = MainActivityPagerAdapter.class.getName();
@@ -28,39 +23,19 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     private ProfileFragment profileFragment = new ProfileFragment();
     private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
     private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
-    private DiveCenterNotificationsFragment diveCenterNotificationsFragment = new DiveCenterNotificationsFragment();
-
-    private ArrayList<String> titles = new ArrayList<>();
 
     public MainActivityPagerAdapter(FragmentManager manager) {
         super(manager);
-        titles.add("1");
-        titles.add("2");
-        titles.add("3");
-        titles.add("4");
-//        profileFragment.setTitle("3");
-//        diveCenterProfileFragment.setTitle("4");
-//        mapListFragment.setTitle("1");
-//        diverNotificationsFragment.setTitle("2");
 
     }
 
     @Override
     public Fragment getItem(int position) {
-        Log.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.getIsUserSignedIn() = " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn());
         switch (position) {
             case 0:
                 return mapListFragment;
             case 1:
-                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                    case DIVECENTER:
-                        return diveCenterNotificationsFragment;
-                    case DIVER:
-                    case INSTRUCTOR:
-                        return diverNotificationsFragment;
-                    case NONE:
-                        return diverNotificationsFragment;
-                }
+                return diverNotificationsFragment;
             case 2:
                 switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                     case DIVECENTER:
@@ -116,8 +91,8 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         this.diverNotificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
-        this.diverNotificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
+    public void setAllNotificationsFragment(PersonalNotificationsFragment personalNotificationsFragment) {
+        this.diverNotificationsFragment.setPersonalNotificationsFragment(personalNotificationsFragment);
     }
 
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
@@ -125,11 +100,15 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     }
 
     public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
-        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
+//        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
     }
 
     public ProfileFragment getProfileFragment() {
         return profileFragment;
+    }
+
+    public DiverNotificationsFragment getDiverNotificationsFragment() {
+        return diverNotificationsFragment;
     }
 
     public DiveCenterProfileFragment getDiveCenterProfileFragment() {

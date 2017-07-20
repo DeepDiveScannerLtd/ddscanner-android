@@ -19,6 +19,7 @@
             android:paddingBottom="5dp"
             android:textColor="@color/black_text"
             android:textSize="14sp"
+            android:lineSpacingExtra="@dimen/line_spacing"
             tools:text="Vwry very good spot in whateewer very good play market bla bla bla bla " />
 
         <TextView
@@ -29,7 +30,7 @@
             android:gravity="left|center"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="Show more"
+            tools:text="Show more"
             android:textColor="@color/primary"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -60,7 +61,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp" />
     </LinearLayout>
 

@@ -1,6 +1,5 @@
 package com.ddscanner.events;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 public class MarkerClickedEvent {

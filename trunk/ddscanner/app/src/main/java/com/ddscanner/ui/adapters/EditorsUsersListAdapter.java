@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-/**
- * Created by lashket on 2.7.16.
- */
 public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersListAdapter.EditorsUsersListViewHolder> {
 
     private Context context;
@@ -42,9 +39,9 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.userAvatar);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context))).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).transform(new CropCircleTransformation()).into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
-        if (position == 0) {
+        if (users.get(position).isCreator()) {
             holder.creatorLabel.setVisibility(View.VISIBLE);
             holder.info.setText(R.string.creator);
         } else {
@@ -76,7 +73,9 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-            UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            if (!users.get(getAdapterPosition()).getId().equals(DDScannerApplication.getInstance().getString(R.string.dds_server_id))) {
+                UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
+            }
         }
     }
 

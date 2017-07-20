@@ -11,15 +11,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -30,7 +27,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
@@ -44,11 +40,13 @@ import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
+import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
@@ -64,12 +62,9 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
@@ -87,23 +82,17 @@ import okhttp3.RequestBody;
 public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
-
-    private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-    private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this);
+    private static final String ARG_LOCATION = "location";
+    private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
     private PhotosListAdapterWithoutCover mapsListAdapter = new PhotosListAdapterWithoutCover(EditDiveSpotActivity.this);
-    private ImageButton btnAddPhoto;
     private LinearLayout btnAddSealife;
 
-    private Toolbar toolbar;
     private LatLng diveSpotLocation;
-    private LatLngBounds diveSpotLatLngBounds;
 
     private LinearLayout pickLocation;
     private RecyclerView diveSpotPhotosRecyclrView;
-    private TextView addPhotoTitle;
     private TextView locationTitle;
     private TextView countryTitle;
-    private LinearLayout countryLayout;
     private AppCompatSpinner levelAppCompatSpinner;
     private AppCompatSpinner currentsAppCompatSpinner;
     private AppCompatSpinner objectAppCompatSpinner;
@@ -150,7 +139,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
 
-    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestCoverId, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
+    private RequestBody requestIsWorkingHere, requestIsEdit = null, translations, requestCoverNumber, requestCoverId, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
@@ -260,7 +249,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -282,6 +271,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
         @Override
         public void onInternetConnectionClosed() {
+            progressDialogUpload.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -321,14 +311,15 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventsTracker.trackDiveSpotEdit();
         setContentView(R.layout.activity_add_dive_spot);
-        EventsTracker.trackDiveSpotCreation();
         diveSpotDetailsEntity = new Gson().fromJson(getIntent().getStringExtra("divespot"), DiveSpotDetailsEntity.class);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         languages.add("Language");
+        setupToolbar(R.string.edit_dive_spot, R.id.toolbar);
         findViewsAndSetupCurrentData(diveSpotDetailsEntity);
         makeErrorsMap();
         init();
@@ -342,8 +333,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
     private void init() {
         diveSpotLocation = diveSpotDetailsEntity.getPosition();
-        diveSpotLatLngBounds = new LatLngBounds(new LatLng(diveSpotLocation.latitude - 1, diveSpotLocation.longitude - 1), new LatLng(diveSpotLocation.latitude + 1, diveSpotLocation.longitude + 1));
-        sealifes =(ArrayList<SealifeShort>) diveSpotDetailsEntity.getSealifes();
+        if (diveSpotDetailsEntity.getSealifes() != null) {
+            sealifes = (ArrayList<SealifeShort>) diveSpotDetailsEntity.getSealifes();
+        }
     }
 
     private void findViewsAndSetupCurrentData(DiveSpotDetailsEntity diveSpot) {
@@ -363,7 +355,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         errorCountry = (TextView) findViewById(R.id.error_country);
         btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         diveSpotPhotosRecyclrView = (RecyclerView) findViewById(R.id.photos_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         levelAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
         objectAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
         currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
@@ -386,7 +377,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         photos = (TextView) findViewById(R.id.photos);
         maps = (TextView) findViewById(R.id.maps);
         mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
-        countryLayout = (LinearLayout) findViewById(R.id.country_layout);
+        LinearLayout countryLayout = (LinearLayout) findViewById(R.id.country_layout);
         countryTitle = (TextView) findViewById(R.id.country_title);
         countryLayout.setOnClickListener(this);
         addTranslationButton = (RelativeLayout) findViewById(R.id.button_add_language);
@@ -399,7 +390,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
                 isWorkingSwitch.setChecked(true);
                 isEditLayout.setVisibility(View.VISIBLE);
-                if (diveSpotDetailsEntity.isEdit()) {
+                if (diveSpotDetailsEntity.getFlags().isEditable()) {
                     isEditSwitch.setChecked(true);
                 }
             }
@@ -411,16 +402,11 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         addTranslationButton.setOnClickListener(this);
         isEditSwitch.setOnCheckedChangeListener(this);
         isWorkingSwitch.setOnCheckedChangeListener(this);
-//        diveSpotDetailsEntity.setPhotos(userPhotosIds);
-//        diveSpotDetailsEntity.setMaps(userMapsIds);
-        requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountryCode());
+        requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountry().getCode());
         countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-        countryTitle.setText(diveSpotDetailsEntity.getCountryName());
+        countryTitle.setText(diveSpotDetailsEntity.getCountry().getName());
         photosListAdapter.addServerPhoto(userPhotosIds);
         mapsListAdapter.addServerPhoto(userMapsIds);
-        if (diveSpotDetailsEntity.getMaps() != null) {
-//            mapsListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getMaps());
-        }
         locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         progressDialogUpload = Helpers.getMaterialDialog(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
@@ -453,10 +439,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
 
         /*Toolbar settings*/
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.edit_dive_spot);
 
         progressDialog.setCancelable(false);
         progressView.setVisibility(View.GONE);
@@ -467,14 +449,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
-                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null && !data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME).isEmpty()) {
-                        locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
-                    } else {
-                        locationTitle.setText(R.string.location);
-                    }
+                    this.diveSpotLocation = data.getParcelableExtra(ARG_LOCATION);
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                 }
                 break;
@@ -482,13 +459,11 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 Helpers.hideKeyboard(this);
                 if (resultCode == RESULT_OK) {
                     SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
-
-                    if (Helpers.checkIsSealifeAlsoInList((ArrayList<SealifeShort>) sealifes, sealifeShort.getId())) {
-                        Helpers.showToast(EditDiveSpotActivity.this, R.string.sealife_already_added);
+                    if (Helpers.checkIsSealifeAlsoInList(sealifes, sealifeShort.getId())) {
                         return;
                     }
                     sealifes.add(sealifeShort);
-                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<SealifeShort>) sealifes, this);
+                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(sealifes, this);
                     sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
                 }
                 break;
@@ -500,13 +475,18 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE:
                 if (resultCode == RESULT_OK) {
                     Language language = (Language) data.getSerializableExtra("language");
+                    for (Translation temp : translationsListAdapter.getTranslations()) {
+                        if (temp.getCode().equals(language.getCode())) {
+                            return;
+                        }
+                    }
+                    AddTranslationDialogFragment.show(getSupportFragmentManager(), language.getCode(), language.getName(), "", "");
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
                     Place place = PlacePicker.getPlace(this, data);
                     diveSpotLocation = place.getLatLng();
-                    diveSpotLatLngBounds = place.getViewport();
                     if (place.getAddress() != null) {
                         locationTitle.setText(place.getAddress());
                     }
@@ -525,7 +505,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag, String current) {
-        ArrayList<String> objects = new ArrayList<String>();
+        ArrayList<String> objects = new ArrayList<>();
         objects.add(tag);
         objects.addAll(values);
         ArrayAdapter<String> adapter = new CharacteristicSpinnerItemsAdapter(this, R.layout.spinner_item, objects);
@@ -535,39 +515,20 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
     private void sendUpdateDiveSpotRequest() {
         progressDialogUpload.show();
-        //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-//        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
-    }
-
-    private void showPlacePikerIntent() {
-        try {
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            builder.setLatLngBounds(diveSpotLatLngBounds);
-            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.i(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.i(TAG, e.toString());
-        }
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                showPlacePikerIntent();
+                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
                 break;
             case R.id.button_create:
-//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 createRequestBodyies();
-//                } else {
-//                    Intent loginIntent = new Intent(this, SocialNetworks.class);
-//                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
-//                }
                 break;
             case R.id.photos:
                 changeViewState(photos, maps);
@@ -581,6 +542,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 break;
             case R.id.country_layout:
                 PickCountryActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY);
+                break;
+            case R.id.button_add_language:
+                PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
                 break;
         }
     }
@@ -618,7 +582,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 }
             } else {
                 requestIsWorkingHere = Helpers.createRequestBodyForString("0");
-                requestIsEdit = Helpers.createRequestBodyForString("1");
             }
         }
         if (photosListAdapter.getServerPhotoCoverId() != null) {
@@ -727,35 +690,35 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = currentsAppCompatSpinner.getBottom();
         }
 
-        if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
+        if (visibilityMin.getText().toString().isEmpty() || visibilityMax.getText().toString().isEmpty()) {
             isSomethingWrong = true;
             errorVisibility.setVisibility(View.VISIBLE);
-            minVisibilityHint.setVisibility(View.GONE);
-            maxVisibilityHint.setVisibility(View.GONE);
+//            minVisibilityHint.setVisibility(View.GONE);
+//            maxVisibilityHint.setVisibility(View.GONE);
             downestCoordinate = visibilityMax.getBottom();
         } else {
             downestCoordinate = visibilityMax.getBottom();
-            if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
-                if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
-                    isSomethingWrong = true;
-                    errorVisibility.setVisibility(View.VISIBLE);
-                    errorVisibility.setText(R.string.error_visivibility_append);
-                    minVisibilityHint.setVisibility(View.GONE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
-            } else {
-                if (visibilityMin.getText().toString().isEmpty() || Integer.parseInt(visibilityMin.getText().toString()) < 1 || Integer.parseInt(visibilityMin.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    minVisibilityHint.setVisibility(View.GONE);
-                }
-
-                if (visibilityMax.getText().toString().isEmpty() || Integer.parseInt(visibilityMax.getText().toString()) < 1 || Integer.parseInt(visibilityMax.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
+            if (Float.parseFloat(visibilityMax.getText().toString()) <= Float.parseFloat(visibilityMin.getText().toString())) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.VISIBLE);
+                errorVisibility.setText(R.string.error_visivibility_append);
+//                minVisibilityHint.setVisibility(View.GONE);
+//                maxVisibilityHint.setVisibility(View.GONE);
             }
+            if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMin.setVisibility(View.VISIBLE);
+//                minVisibilityHint.setVisibility(View.GONE);
+            }
+
+            if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMax.setVisibility(View.VISIBLE);
+//                maxVisibilityHint.setVisibility(View.GONE);
+            }
+
         }
 
         if (depth.getText().toString().isEmpty()) {
@@ -764,7 +727,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = depth.getBottom();
         } else {
             downestCoordinate = depth.getBottom();
-            if (Integer.parseInt(depth.getText().toString()) < 5 || Integer.parseInt(depth.getText().toString()) > 1092) {
+            if (Float.parseFloat(depth.getText().toString()) > 1092) {
                 isSomethingWrong = true;
                 errorDepth.setText(R.string.depth_vlue);
                 errorDepth.setVisibility(View.VISIBLE);
@@ -784,7 +747,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = addTranslationButton.getBottom();
         }
 
-        if (photosListAdapter.getItemCount() < 1) {
+        if (photosListAdapter.getItemCount() < 2) {
             isSomethingWrong = true;
             errorImages.setVisibility(View.VISIBLE);
             downestCoordinate = errorImages.getBottom();
@@ -799,23 +762,22 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void scrollToError(final int bottom) {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mainLayout.scrollTo(0, bottom);
-            }
-        });
+        new Handler().post(() -> mainLayout.scrollTo(0, bottom));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-                // onBackPressed();
+                 onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     private void hideErrorsFields() {
@@ -824,6 +786,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         }
         errorDepth.setText(R.string.depth_required);
         errorVisibility.setText(R.string.visibility_rquired);
+        errorVisibility.setVisibility(View.GONE);
         minVisibilityHint.setVisibility(View.VISIBLE);
         maxVisibilityHint.setVisibility(View.VISIBLE);
     }
@@ -855,18 +818,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        DDScannerApplication.bus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe

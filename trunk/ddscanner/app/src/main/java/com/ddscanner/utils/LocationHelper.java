@@ -1,6 +1,7 @@
 package com.ddscanner.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -19,15 +20,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class LocationHelper implements LocationListener {
 
     private static final String TAG = LocationHelper.class.getName();
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final long MIN_TIME_BETWEEN_UPDATES = 1000L * 60 * 1;
-    private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 60 * 60 * 1000; // in millis
+    private static final long MIN_TIME_BETWEEN_UPDATES = 1000L * 60;
+    private static final long MAX_LOCATION_LIFE_PERIOD = (long) 60 * 1000 * 60; // in millis
     private static final int LOCATION_ACCURACY = 2000; // in meters
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
@@ -75,19 +75,11 @@ public class LocationHelper implements LocationListener {
     }
 
     private boolean isLocationPermissionsGranted(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
     }
 
-    public boolean isLocationProvidersAvailable() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
+    private boolean isLocationProvidersAvailable() {
+        return !(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
     }
 
     public static boolean isLocationProvidersAvailable(Context context) {
@@ -99,6 +91,7 @@ public class LocationHelper implements LocationListener {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void requestLocation(HashSet<Integer> requestCodes) {
         Log.i(TAG, "location check: requestLocation codes = " + requestCodes);
         this.requestCodes.addAll(requestCodes);
@@ -141,8 +134,9 @@ public class LocationHelper implements LocationListener {
     }
 
     private void sendUpdateLocationRequest(LatLng latLng) {
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserLocation(latLng);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateUserLocation(updateLocationResultListener, new UpdateLocationRequest(FirebaseInstanceId.getInstance().getId(), String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 2));
+            DDScannerApplication.getInstance().getDdScannerRestClient(null).postUpdateUserLocation(updateLocationResultListener, new UpdateLocationRequest(FirebaseInstanceId.getInstance().getId(), String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 2));
         }
     }
 
@@ -210,7 +204,6 @@ public class LocationHelper implements LocationListener {
             DDScannerApplication.bus.post(new LocationReadyEvent(location, requestCodes));
             requestCodes.clear();
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO Why the fuck do we need to request permission when removing location updates listener!?
                 return;
             }
             locationManager.removeUpdates(this);

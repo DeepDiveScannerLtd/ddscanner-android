@@ -11,12 +11,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
-import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -49,22 +44,15 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
         if (photosCount > 8 && position == 7) {
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
-                    .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
-                    .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
-                    .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
-                        @Override
-                        public void onSuccess() {
-                            if (holder.progressBar != null) {
-                                holder.progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
+                    .into(holder.photo);
         }
     }
 

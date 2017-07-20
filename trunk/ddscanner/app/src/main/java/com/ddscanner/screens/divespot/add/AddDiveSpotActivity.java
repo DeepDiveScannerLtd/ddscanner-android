@@ -3,11 +3,9 @@ package com.ddscanner.screens.divespot.add;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -27,13 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
@@ -42,15 +37,17 @@ import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
+import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
 import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
@@ -62,8 +59,6 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
@@ -86,6 +81,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
+    private static final String ARG_LOCATION = "location";
 
     private LinearLayout btnAddSealife;
 
@@ -104,6 +100,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     private EditText visibilityMin;
     private EditText visibilityMax;
     private Button btnSave;
+    private String createdSpotId;
     private RecyclerView sealifesRc;
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
     private ScrollView mainLayout;
@@ -171,6 +168,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         @Override
         public void onConnectionFailure() {
             progressDialogUpload.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR, false);
         }
 
         @Override
@@ -178,7 +176,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                     LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case BAD_REQUEST_ERROR_400:
@@ -186,12 +184,14 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     break;
                 case SERVER_INTERNAL_ERROR_500:
                 default:
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            progressDialogUpload.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -208,12 +208,12 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
-        photosListAdapter = new PhotosListAdapterWithCover(this);
+        photosListAdapter = new PhotosListAdapterWithCover(this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         mapsListAdapter = new PhotosListAdapterWithoutCover(this);
         findViews();
         setUi();
         requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
-      //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
+        //  DDScannerApplication.getInstance().getDdScannerRestClient(this).getFilters(filtersResultListener);
         makeErrorsMap();
     }
 
@@ -317,12 +317,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
-                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null && !data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME).isEmpty()) {
-                        locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
-                    } else {
-                        locationTitle.setText(R.string.location);
-                    }
+                    this.diveSpotLocation = data.getParcelableExtra(ARG_LOCATION);
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                 }
                 break;
@@ -350,7 +345,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     Language language = (Language) data.getSerializableExtra("language");
                     for (Translation temp : translationsListAdapter.getTranslations()) {
                         if (temp.getCode().equals(language.getCode())) {
-                            //TODO pogovorit' s sanei po povody daloga
                             return;
                         }
                     }
@@ -361,7 +355,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                 if (resultCode == RESULT_OK) {
                     isCountryChosed = true;
                     countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity)data.getSerializableExtra("country");
+                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity) data.getSerializableExtra("country");
                     countryTitle.setText(baseIdNamePhotoEntity.getName());
                     requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
                 }
@@ -380,20 +374,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         }
     }
 
-    private void showPlacePikerIntent() {
-        try {
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            if (diveSpotLatLngBounds != null) {
-                builder.setLatLngBounds(diveSpotLatLngBounds);
-            }
-            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.i(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.i(TAG, e.toString());
-        }
-    }
-
     private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag) {
         ArrayList<String> objects = new ArrayList<String>();
         objects.add(tag);
@@ -404,15 +384,15 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-     //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
+        //   DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                showPlacePikerIntent();
+                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
@@ -452,6 +432,13 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
         disableTextView.setBackground(null);
         disableTextView.setOnClickListener(this);
+    }
+
+    private boolean isSomethingEntered() {
+        if (diveSpotLocation != null || isCountryChosed || !depth.getText().toString().isEmpty() || languagesList.size() > 0 || photosListAdapter.getItemCount() > 1 || mapsListAdapter.getItemCount() > 1 || !visibilityMin.getText().toString().isEmpty() || !visibilityMax.getText().toString().isEmpty() || currentsAppCompatSpinner.getSelectedItemPosition() != 0 || levelAppCompatSpinner.getSelectedItemPosition() != 0 || objectAppCompatSpinner.getSelectedItemPosition() != 0 || sealifes.size() > 0) {
+            return true;
+        }
+        return false;
     }
 
     private void createRequestBodyies() {
@@ -528,11 +515,19 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
-                // onBackPressed();
+                if (isSomethingEntered()) {
+                    onBackPressed();
+                } else {
+                    finish();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
     }
 
     private void hideErrorsFields() {
@@ -541,8 +536,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         }
         errorDepth.setText(R.string.depth_required);
         errorVisibility.setText(R.string.visibility_rquired);
-        minVisibilityHint.setVisibility(View.VISIBLE);
-        maxVisibilityHint.setVisibility(View.VISIBLE);
+        errorVisibility.setVisibility(View.GONE);
+//        minVisibilityHint.setVisibility(View.VISIBLE);
+//        maxVisibilityHint.setVisibility(View.VISIBLE);
     }
 
     private void makeErrorsMap() {
@@ -590,35 +586,35 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = currentsAppCompatSpinner.getBottom();
         }
 
-        if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
+        if (visibilityMin.getText().toString().isEmpty() || visibilityMax.getText().toString().isEmpty()) {
             isSomethingWrong = true;
             errorVisibility.setVisibility(View.VISIBLE);
-            minVisibilityHint.setVisibility(View.GONE);
-            maxVisibilityHint.setVisibility(View.GONE);
+//            minVisibilityHint.setVisibility(View.GONE);
+//            maxVisibilityHint.setVisibility(View.GONE);
             downestCoordinate = visibilityMax.getBottom();
         } else {
             downestCoordinate = visibilityMax.getBottom();
-            if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
-                if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
-                    isSomethingWrong = true;
-                    errorVisibility.setVisibility(View.VISIBLE);
-                    errorVisibility.setText(R.string.error_visivibility_append);
-                    minVisibilityHint.setVisibility(View.GONE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
-            } else {
-                if (visibilityMin.getText().toString().isEmpty() || Integer.parseInt(visibilityMin.getText().toString()) < 1 || Integer.parseInt(visibilityMin.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    minVisibilityHint.setVisibility(View.GONE);
-                }
-
-                if (visibilityMax.getText().toString().isEmpty() || Integer.parseInt(visibilityMax.getText().toString()) < 1 || Integer.parseInt(visibilityMax.getText().toString()) > 100) {
-                    isSomethingWrong = true;
-                    errorVisibilityMin.setVisibility(View.VISIBLE);
-                    maxVisibilityHint.setVisibility(View.GONE);
-                }
+            if (Float.parseFloat(visibilityMax.getText().toString()) <= Float.parseFloat(visibilityMin.getText().toString())) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.VISIBLE);
+                errorVisibility.setText(R.string.error_visivibility_append);
+//                minVisibilityHint.setVisibility(View.GONE);
+//                maxVisibilityHint.setVisibility(View.GONE);
             }
+            if (visibilityMin.getText().toString().isEmpty() || Float.parseFloat(visibilityMin.getText().toString()) < 1 || Float.parseFloat(visibilityMin.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMin.setVisibility(View.VISIBLE);
+//                minVisibilityHint.setVisibility(View.GONE);
+            }
+
+            if (visibilityMax.getText().toString().isEmpty() || Float.parseFloat(visibilityMax.getText().toString()) < 1 || Float.parseFloat(visibilityMax.getText().toString()) > 100) {
+                isSomethingWrong = true;
+                errorVisibility.setVisibility(View.GONE);
+                errorVisibilityMax.setVisibility(View.VISIBLE);
+//                maxVisibilityHint.setVisibility(View.GONE);
+            }
+
         }
 
         if (depth.getText().toString().isEmpty()) {
@@ -627,7 +623,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             downestCoordinate = depth.getBottom();
         } else {
             downestCoordinate = depth.getBottom();
-            if (Integer.parseInt(depth.getText().toString()) < 5 || Integer.parseInt(depth.getText().toString()) > 1092) {
+            if (Float.parseFloat(depth.getText().toString()) > 1092) {
                 isSomethingWrong = true;
                 errorDepth.setText(R.string.depth_vlue);
                 errorDepth.setVisibility(View.VISIBLE);
@@ -668,12 +664,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void scrollToError(final int bottom) {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mainLayout.scrollTo(0, bottom);
-            }
-        });
+        new Handler().post(() -> mainLayout.scrollTo(0, bottom));
     }
 
     @Override
@@ -694,47 +685,29 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     private void showSuccessDialog(final String diveSpotId) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-                .title(R.string.thank_you_title)
-                .content(R.string.success_added)
-                .positiveText(R.string.ok)
-                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-                .cancelable(false)
-                .dismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        if (!isFromMap) {
-                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, EventsTracker.SpotViewSource.UNKNOWN);
-                            finish();
-                        } else {
-                            Intent intent = new Intent();
-                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                });
-
-        dialog.show();
+        this.createdSpotId = diveSpotId;
+        if (!isFromMap) {
+            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, createdSpotId, EventsTracker.SpotViewSource.UNKNOWN);
+            finish();
+        } else {
+            Intent intent = new Intent();
+            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, createdSpotId);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+//        UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED, false);
     }
 
     public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
@@ -749,6 +722,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR:
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR:
                 finish();
+                break;
         }
     }
 

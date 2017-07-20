@@ -21,9 +21,6 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-/**
- * Created by lashket on 7.4.16.
- */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
 
     private final LayoutInflater layoutInflater;
@@ -127,7 +124,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
 
         public void bind(SealifeShort model) {
             name.setText(model.getName());
-            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, model.getImage(), "2")).resize(photo.getWidth(), Math.round(Helpers.convertDpToPixel(100, context))).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context )), 0, RoundedCornersTransformation.CornerType.TOP)).centerCrop().into(photo);
+            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, model.getImage(), "2")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context )), 0, RoundedCornersTransformation.CornerType.TOP)).into(photo);
         }
 
         @Override

@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ContactUsEntity;
 import com.ddscanner.events.SocialLinkOpenEvent;
 import com.ddscanner.ui.adapters.SocialListAdapter;
@@ -23,7 +22,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactUsActivity extends AppCompatActivity {
+public class ContactUsActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
     private List<ContactUsEntity> contactUsEntities = new ArrayList<>();
@@ -32,7 +31,7 @@ public class ContactUsActivity extends AppCompatActivity {
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
-
+        EventsTracker.trackContactUsView();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -66,7 +65,11 @@ public class ContactUsActivity extends AppCompatActivity {
         Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
         String facebookUrl = getFacebookPageURL(this);
         facebookIntent.setData(Uri.parse(facebookUrl));
-        startActivity(facebookIntent);
+        try {
+            startActivity(facebookIntent);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PROFILE_DIALOG_FACEBOOK_URL + "DDScanner")));
+        }
     }
 
     private void openTwitterApp() {
@@ -161,13 +164,13 @@ public class ContactUsActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
         super.onStop();
     }
 

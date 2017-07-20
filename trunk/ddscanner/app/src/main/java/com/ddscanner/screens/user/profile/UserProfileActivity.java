@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,18 +12,22 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.DiveCenterSearchItem;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -32,6 +37,8 @@ import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
+import static com.ddscanner.utils.ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY;
+
 public class UserProfileActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private ProgressView progressView;
@@ -39,6 +46,8 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     private String userId;
     private PhotoAuthor photoAuthor;
     private int userType;
+    private ProfileFragment profileFragment;
+    private boolean isDiveCenterLegacy = false;
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -69,7 +78,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         @Override
         public void onSuccess(DiveCenterProfile result) {
             progressView.setVisibility(View.GONE);
-            setupFragment(result.getType(), result);
+            setupFragment(0, result);
         }
 
         @Override
@@ -97,10 +106,21 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         setContentView(R.layout.activity_user_profile);
         progressView = (ProgressView) findViewById(R.id.progress_view);
         setupToolbar(R.string.profile, R.id.toolbar);
-        if (userType != 0) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserProfileInformation(userId, resultListener);
-        } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterInformation(userId, diveCenterProfileResultListener);
+        switch (userType) {
+            case 0:
+                EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.USER.getType());
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterInformation(userId, diveCenterProfileResultListener);
+                break;
+            case 1:
+            case 2:
+                EventsTracker.trackReviewerProfileView();
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserProfileInformation(userId, resultListener);
+                break;
+            default:
+                isDiveCenterLegacy = true;
+                EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.LEGACY.getType());
+                DDScannerApplication.getInstance().getDdScannerRestClient(this).getLegacyDiveCenterInformation(userId, diveCenterProfileResultListener);
+                break;
         }
     }
 
@@ -117,25 +137,43 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     }
 
     private void setupFragment(int userType, Object object) {
-        switch (userType) {
-            case 0:
-                DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
-                photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
-                FragmentTransaction dcfragmentTransaction = getSupportFragmentManager().beginTransaction();
-                DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
-                dcfragmentTransaction.replace(R.id.content, diveCenterProfileFragment);
-                dcfragmentTransaction.commit();
-                break;
-            case 1:
-            case 2:
-                User user = (User) object;
-                photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user);
-                fragmentTransaction.replace(R.id.content, userProfileFragment);
-                fragmentTransaction.commit();
-                break;
+        try {
+            switch (userType) {
+                case 0:
+                    DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
+                    photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), 0);
+                    if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
+                        setActiveFragment(diveCenterProfileFragment);
+                        break;
+                    }
+                    if (!isDiveCenterLegacy) {
+                        setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 1));
+                        break;
+                    }
+                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 2));
+                    break;
+                case 1:
+                case 2:
+                    User user = (User) object;
+                    photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
+                    if (user.getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        profileFragment = ProfileFragment.newInstance(user);
+                        setActiveFragment(profileFragment);
+                        break;
+                    }
+                    setActiveFragment(UserProfileFragment.newInstance(user));
+                    break;
+            }
+        } catch (IllegalStateException e) {
+            finish();
         }
+    }
+
+    private void setActiveFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -151,13 +189,13 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     @Override
     protected void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
+//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe
@@ -199,6 +237,10 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                     UserLikesDislikesActivity.show(this, false, userId);
                 }
                 break;
+            case REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    profileFragment.reloadData();
+                }
         }
     }
 }

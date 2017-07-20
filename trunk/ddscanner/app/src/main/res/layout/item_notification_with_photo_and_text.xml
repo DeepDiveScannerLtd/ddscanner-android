@@ -4,19 +4,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="60dp"
-    android:background="#fbfbfb">
+    android:minHeight="54dp"
+    android:background="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/user_avatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_margin="15dp"
-        android:src="@drawable/review_default_avatar"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_star_title"
+        android:scaleType="center"
         />
 
-    <TextView
-        android:layout_marginTop="12dp"
+    <com.klinker.android.link_builder.LinkConsumableTextView
+        android:layout_marginTop="9dp"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="18dp"
         android:id="@+id/notification_text"
@@ -26,6 +30,10 @@
         android:layout_centerVertical="true"
         android:textColor="@color/black_text"
         android:textSize="13sp"
+        android:lineSpacingExtra="2sp"
         android:layout_toRightOf="@+id/user_avatar"/>
-
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
 </RelativeLayout>

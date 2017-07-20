@@ -78,36 +78,34 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         message.setText(getArguments().getString(ARG_MESSAGE));
         builder.setView(view);
         builder.setTitle(null);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                DialogClosedListener dialogClosedListener;
-                switch (callbackType) {
-                    case CALLBACK_TYPE_NONE:
-                        break;
-                    case CALLBACK_TYPE_ACTIVITY:
-                        try {
-                            dialogClosedListener = (DialogClosedListener) getActivity();
-                            dialogClosedListener.onDialogClosed(requestCode);
-                        } catch (ClassCastException e) {
-                            throw new RuntimeException("Activity must implement DialogClosedListener interface");
-                        }
-                        break;
-                    case CALLBACK_TYPE_FRAGMENT:
-                        if (getParentFragment() == null) {
-                            throw new RuntimeException("Parent fragment is null. Please check that you pass FragmentManger retrieved via getChildFragmentManager() when calling showForFragmentResult().");
-                        }
-                        try {
-                            dialogClosedListener = (DialogClosedListener) getParentFragment();
-                            dialogClosedListener.onDialogClosed(requestCode);
-                        } catch (ClassCastException e) {
-                            throw new RuntimeException("Fragment must implement DialogClosedListener interface");
-                        }
-                        break;
-                }
-
+        builder.setCancelable(false);
+        button.setOnClickListener(view1 -> {
+            dismiss();
+            DialogClosedListener dialogClosedListener;
+            switch (callbackType) {
+                case CALLBACK_TYPE_NONE:
+                    break;
+                case CALLBACK_TYPE_ACTIVITY:
+                    try {
+                        dialogClosedListener = (DialogClosedListener) getActivity();
+                        dialogClosedListener.onDialogClosed(requestCode);
+                    } catch (ClassCastException e) {
+                        throw new RuntimeException("Activity must implement DialogClosedListener interface");
+                    }
+                    break;
+                case CALLBACK_TYPE_FRAGMENT:
+                    if (getParentFragment() == null) {
+                        throw new RuntimeException("Parent fragment is null. Please check that you pass FragmentManger retrieved via getChildFragmentManager() when calling showForFragmentResult().");
+                    }
+                    try {
+                        dialogClosedListener = (DialogClosedListener) getParentFragment();
+                        dialogClosedListener.onDialogClosed(requestCode);
+                    } catch (ClassCastException e) {
+                        throw new RuntimeException("Fragment must implement DialogClosedListener interface");
+                    }
+                    break;
             }
+
         });
         return builder.create();
     }
