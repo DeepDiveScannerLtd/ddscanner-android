@@ -135,6 +135,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         notificationsPagerAdapter.addFragment(personalNotificationsFragment, "Notifications");
         notificationsPagerAdapter.addFragment(activityNotificationsFragment, "Activity");
         notificationsViewPager.setAdapter(notificationsPagerAdapter);
+        notificationsViewPager.setCurrentItem(1);
         setUi();
     }
 
