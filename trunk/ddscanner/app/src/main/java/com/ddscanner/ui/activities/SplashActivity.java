@@ -60,10 +60,6 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustTrackFbEvent()) {
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setFbTracked();
-            EventsTracker.trackFirstLaunchForFacebookAnalytics();
-        }
         //TODO uncomment in future versions
         activityShowTimestamp = System.currentTimeMillis();
 
@@ -84,6 +80,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 //        }
 
         if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustTrackFbEvent()) {
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setFbTracked();
+                EventsTracker.trackFirstLaunchForFacebookAnalytics();
+            }
             loadTutorial();
             SharedPreferenceHelper.setIsNeedToShowTutorial();
         } else if (SharedPreferenceHelper.getIsUserSignedIn()) {

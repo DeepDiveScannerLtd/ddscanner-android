@@ -42,6 +42,7 @@ public class SharedPreferenceHelper {
     private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
     private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
     private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
+    //using for fb event, don't delete this
     private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
     private static final String TUTORIAL_STATE = "tutorial_state";
     private static final String IS_MUST_TRACK_FB_EVENT = "fb_event";
