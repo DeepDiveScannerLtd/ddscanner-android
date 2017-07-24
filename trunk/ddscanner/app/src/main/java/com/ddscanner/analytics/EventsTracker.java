@@ -6,6 +6,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.utils.Constants;
+import com.facebook.appevents.AppEventsConstants;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -153,10 +154,21 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_STATE = "tutorial_state";
     private static final String EVENT_PARAMETER_NAME_PLATFORM = "platform";
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_VERSION = "tutorial_version";
+    private static final String EVENT_NAME_DC_SEARCH_NEW_CHOSEN = "dc_search_new_chosen";
 
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    public static void trackFirstLaunchForFacebookAnalytics() {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, "0");
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "0");
+        params.putInt(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, 0);
+        params.putInt(AppEventsConstants.EVENT_PARAM_PAYMENT_INFO_AVAILABLE, 0);
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "0");
+        AnalyticsSystemsManager.getLogger().logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, 0, params);
+    }
 
     private static void trackEventWithParameters(Map<String, String> params, String eventName) {
 
@@ -220,6 +232,10 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void tracNewDcChosenEvent() {
+        trackEventWithoutParameters(EVENT_NAME_DC_SEARCH_NEW_CHOSEN);
     }
 
     public static void diveSpotsToApproveView() {

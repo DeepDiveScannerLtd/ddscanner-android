@@ -268,8 +268,19 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    if (isForEditProfile) {
+                        setResult(RESULT_OK, data);
+                        finish();
+                    } else {
+                        progressView.setVisibility(View.VISIBLE);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, data.getIntExtra(Constants.ARG_ID, 0), data.getIntExtra(Constants.ARG_DC_TYPE, 0));
+                    }
+                }
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER:
                 if (resultCode == RESULT_OK) {
+                    EventsTracker.tracNewDcChosenEvent();
                     if (isForEditProfile) {
                         setResult(RESULT_OK, data);
                         finish();

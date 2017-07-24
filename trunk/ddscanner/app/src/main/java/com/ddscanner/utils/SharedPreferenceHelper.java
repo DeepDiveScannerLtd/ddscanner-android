@@ -44,6 +44,7 @@ public class SharedPreferenceHelper {
     private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
     private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
     private static final String TUTORIAL_STATE = "tutorial_state";
+    private static final String IS_MUST_TRACK_FB_EVENT = "fb_event";
 
     private static SharedPreferences prefs;
 
@@ -74,6 +75,18 @@ public class SharedPreferenceHelper {
         public String getState() {
             return state;
         }
+    }
+
+    public void setFbTracked() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_TRACK_FB_EVENT, false);
+        editor.apply();
+    }
+
+    public boolean getIsMustTrackFbEvent() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_TRACK_FB_EVENT, true);
     }
 
     public void setTutorialState(TutorialState state) {
