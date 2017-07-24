@@ -276,7 +276,7 @@ public class EventsTracker {
 
     public static void trackGuideToDDSItemView(String question) {
         Map<String, String> map = new HashMap<>();
-        map.put(EVENT_PARAMETER_NAME_QUESTION, question)
+        map.put(EVENT_PARAMETER_NAME_QUESTION, question);
         trackEventWithParameters(map, EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
     }
 
