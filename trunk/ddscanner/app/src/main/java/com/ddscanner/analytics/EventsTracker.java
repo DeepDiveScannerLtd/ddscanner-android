@@ -274,8 +274,10 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_VIEW);
     }
 
-    public static void trackGuideToDDSItemView() {
-        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
+    public static void trackGuideToDDSItemView(String question) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_QUESTION, question)
+        trackEventWithParameters(map, EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
     }
 
     public static void trackReviewView() {
