@@ -544,7 +544,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     } else {
                         circle.setCenter(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
                         myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
-                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        if (diveSpotsClusterManager != null) {
+                            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        }
                     }
                     break;
             }
