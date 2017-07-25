@@ -62,10 +62,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         //TODO uncomment in future versions
         activityShowTimestamp = System.currentTimeMillis();
 
-        progressMessage = (TextView) findViewById(R.id.message);
-        skip = (TextView) findViewById(R.id.skip);
-        loginButton = (Button) findViewById(R.id.login);
-        signUpButton = (Button) findViewById(R.id.sign_up);
+        progressMessage = findViewById(R.id.message);
+        skip = findViewById(R.id.skip);
+        loginButton = findViewById(R.id.login);
+        signUpButton = findViewById(R.id.sign_up);
 
         skip.setOnClickListener(this);
         loginButton.setOnClickListener(this);
@@ -93,7 +93,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         }
 
 
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
+        LinearLayout mainLayout = findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
         mainLayout.startAnimation(fadeInAnimation);
