@@ -83,7 +83,7 @@
                         android:layout_alignParentRight="true"
                         android:background="?attr/selectableItemBackground"
                         android:scaleType="center"
-                        android:src="@drawable/ic_ac_tab_acc"
+                        android:src="@drawable/ic_ac_changeprofile"
                         app:layout_widthPercent="50%" />
                 </android.support.percent.PercentRelativeLayout>
             </android.support.percent.PercentRelativeLayout>
