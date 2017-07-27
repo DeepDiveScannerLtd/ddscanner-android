@@ -216,12 +216,13 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                 }
                 break;
             case 15:
-                if (SharedPreferenceHelper.getIsUserSignedIn()) {
-                    skip.setVisibility(View.GONE);
-                    loginButton.setVisibility(View.GONE);
-                    signUpButton.setVisibility(View.GONE);
-                    showMainActivity();
-                }
+                showMainActivity();
+//                if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//                    skip.setVisibility(View.GONE);
+//                    loginButton.setVisibility(View.GONE);
+//                    signUpButton.setVisibility(View.GONE);
+//                    showMainActivity();
+//                }
                 break;
         }
     }
