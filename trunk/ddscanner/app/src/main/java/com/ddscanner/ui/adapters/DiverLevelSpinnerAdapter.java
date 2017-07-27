@@ -35,9 +35,9 @@ public class DiverLevelSpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = inflater.inflate(R.layout.spinner_level_first_item, parent, false);
-        TextView textView = (TextView) row.findViewById(R.id.spinner_text);
+        TextView textView = row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
-        TextView titleView = (TextView) row.findViewById(R.id.title);
+        TextView titleView = row.findViewById(R.id.title);
         titleView.setText(title);
         return row;
     }
@@ -55,7 +55,7 @@ public class DiverLevelSpinnerAdapter extends ArrayAdapter<String> {
 
     private View getRowView(int position, ViewGroup parent) {
         View row = inflater.inflate(R.layout.item_language_spinner, parent, false);
-        TextView textView = (TextView) row.findViewById(R.id.spinner_text);
+        TextView textView = row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
         if (position == 0) {
             textView.setTextColor(ContextCompat.getColor(getContext(), R.color.defaultGrayTitleColor));

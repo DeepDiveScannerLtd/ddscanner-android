@@ -230,10 +230,7 @@ public class Helpers {
             return false;
         } else {
             NetworkInfo wifiInfo = cm.getActiveNetworkInfo();
-            if (wifiInfo != null) {
-                return true;
-            }
-            return false;
+            return wifiInfo != null;
         }
     }
 
@@ -367,10 +364,7 @@ public class Helpers {
         format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
         try {
             Date notificationDate = format.parse(notificationTime);
-            if (lastShowingTime < notificationDate.getTime()) {
-                return true;
-            }
-            return false;
+            return lastShowingTime < notificationDate.getTime();
         } catch (ParseException e) {
             return false;
         }

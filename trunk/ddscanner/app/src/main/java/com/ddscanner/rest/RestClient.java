@@ -3,6 +3,7 @@ package com.ddscanner.rest;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -24,13 +25,13 @@ public abstract class RestClient {
     public static DDScannerRestService getDdscannerServiceInstance() {
         if (ddscannerServiceInstance == null) {
             Interceptor interceptor = chain -> {
-                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
                     Request request = chain.request();
                     request = request.newBuilder()
                            // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                             //   .addHeader("Content-Type", "application/json;charset=utf-8")
 //                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
-                            .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserToken())
+                            .addHeader("Authorization", "Bearer " + SharedPreferenceHelper.getActiveUserToken())
                             .build();
                     Response response = chain.proceed(request);
                     return response;

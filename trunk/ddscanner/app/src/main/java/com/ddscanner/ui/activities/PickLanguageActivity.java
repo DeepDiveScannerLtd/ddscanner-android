@@ -86,10 +86,10 @@ public class PickLanguageActivity extends BaseAppCompatActivity implements Searc
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
+        progressView = findViewById(R.id.progress_bar);
         setupToolbar();
     }
 

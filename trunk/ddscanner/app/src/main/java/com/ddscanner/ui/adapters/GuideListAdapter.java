@@ -47,7 +47,7 @@ public class GuideListAdapter extends RecyclerView.Adapter<GuideListAdapter.Guid
 
         public GuideListViewHolder(View v) {
             super(v);
-            title = (TextView) v.findViewById(R.id.title);
+            title = v.findViewById(R.id.title);
             v.setOnClickListener(this);
         }
 

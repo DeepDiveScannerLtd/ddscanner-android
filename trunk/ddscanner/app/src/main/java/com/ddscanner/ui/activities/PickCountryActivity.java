@@ -87,9 +87,9 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
+        progressView = findViewById(R.id.progress_bar);
     }
 
     @Override

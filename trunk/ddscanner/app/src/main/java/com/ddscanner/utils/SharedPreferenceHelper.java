@@ -125,10 +125,7 @@ public class SharedPreferenceHelper {
 
     private boolean isLocationSaved() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        if (prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty()) {
-            return false;
-        }
-        return true;
+        return !(prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty());
     }
 
     public String getUserLattitude() {
@@ -403,10 +400,7 @@ public class SharedPreferenceHelper {
 
     public static boolean getIsUserSignedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        if (prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0) {
-            return false;
-        }
-        return true;
+        return !(prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0);
     }
 
     public void addUserToList(BaseUser baseUser) {

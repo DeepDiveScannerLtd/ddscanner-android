@@ -110,10 +110,10 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progress_view);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        viewPager = (ViewPager) findViewById(R.id.search_view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.search_tab_layout);
+        progressView = findViewById(R.id.progress_view);
+        toolbar = findViewById(R.id.toolbar);
+        viewPager = findViewById(R.id.search_view_pager);
+        tabLayout = findViewById(R.id.search_tab_layout);
         if (isForDiveCenter) {
             tabLayout.setVisibility(View.GONE);
         }

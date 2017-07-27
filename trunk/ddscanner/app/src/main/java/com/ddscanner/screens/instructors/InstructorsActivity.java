@@ -106,9 +106,9 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructors_list);
         EventsTracker.trackInstructorsView();
-        recyclerView = (RecyclerView) findViewById(R.id.list);
+        recyclerView = findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
+        progressView = findViewById(R.id.progress_bar);
         materialDialog = Helpers.getMaterialDialog(this);
         userId = getIntent().getStringExtra("id");
         setupToolbar(R.string.instructors, R.id.toolbar);

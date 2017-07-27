@@ -58,7 +58,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         @Override
         public void onSuccess(DiveCenterProfile result) {
                     diveCenterProfile = result;
-                    BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
+                    BaseUser baseUser = SharedPreferenceHelper.getActiveUser();
                     baseUser.setName(diveCenterProfile.getName());
                     baseUser.setPhoto(diveCenterProfile.getPhoto());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
@@ -118,7 +118,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
             setUi();
         } else {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+            if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                 DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             }
         }
@@ -200,13 +200,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
         }
     }
 
     public void reloadData() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             binding.scrollView.scrollTo(0,0);
         }

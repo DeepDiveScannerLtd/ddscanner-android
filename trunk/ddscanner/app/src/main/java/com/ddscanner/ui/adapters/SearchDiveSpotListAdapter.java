@@ -49,8 +49,8 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
         SearchDiveSpotListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            diveSpotName = (TextView) v.findViewById(R.id.diveSpotName);
-            countryName = (TextView) v.findViewById(R.id.country);
+            diveSpotName = v.findViewById(R.id.diveSpotName);
+            countryName = v.findViewById(R.id.country);
         }
 
         @Override

@@ -427,10 +427,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     private boolean isSpotVisibleOnScreen(float lat, float lng) {
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        if (lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude) {
-            return true;
-        }
-        return false;
+        return lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude;
     }
 
     public void mapZoomPlus() {

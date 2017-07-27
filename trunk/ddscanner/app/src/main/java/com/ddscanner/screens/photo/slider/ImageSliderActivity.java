@@ -283,21 +283,21 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     private void findViews() {
-        userDataLayout = (LinearLayout) findViewById(R.id.user_data);
-        bottomLayout = (RelativeLayout) findViewById(R.id.bottom_layout);
-        topLayout = (RelativeLayout) findViewById(R.id.top_layout);
-        title = (TextView) findViewById(R.id.title);
-        photosCount = (TextView) findViewById(R.id.images_count);
-        likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
-        likeIcon = (ImageView) findViewById(R.id.icon);
-        likesCount = (TextView) findViewById(R.id.likes_count);
-        viewPager = (SliderViewPager) findViewById(R.id.image_slider);
-        close = (ImageView) findViewById(R.id.close_btn);
-        baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
-        avatar = (ImageView) findViewById(R.id.user_avatar);
-        date = (TextView) findViewById(R.id.date);
-        userName = (TextView) findViewById(R.id.user_name);
-        options = (ImageView) findViewById(R.id.options);
+        userDataLayout = findViewById(R.id.user_data);
+        bottomLayout = findViewById(R.id.bottom_layout);
+        topLayout = findViewById(R.id.top_layout);
+        title = findViewById(R.id.title);
+        photosCount = findViewById(R.id.images_count);
+        likesLayout = findViewById(R.id.likes_layout);
+        likeIcon = findViewById(R.id.icon);
+        likesCount = findViewById(R.id.likes_count);
+        viewPager = findViewById(R.id.image_slider);
+        close = findViewById(R.id.close_btn);
+        baseLayout = findViewById(R.id.swipe_layout);
+        avatar = findViewById(R.id.user_avatar);
+        date = findViewById(R.id.date);
+        userName = findViewById(R.id.user_name);
+        options = findViewById(R.id.options);
     }
 
     private void setUi() {

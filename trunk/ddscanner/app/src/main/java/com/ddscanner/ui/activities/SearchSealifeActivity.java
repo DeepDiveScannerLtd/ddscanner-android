@@ -95,12 +95,12 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_sealife);
         EventsTracker.trackSearchSeaLife();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        sealifeList = (RecyclerView) findViewById(R.id.recyclerView);
-        notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
-        addManually = (TextView) findViewById(R.id.add_manualy);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        contentLayout = (RelativeLayout) findViewById(R.id.content_layout);
+        toolbar = findViewById(R.id.toolbar);
+        sealifeList = findViewById(R.id.recyclerView);
+        notFoundLayout = findViewById(R.id.not_found_layout);
+        addManually = findViewById(R.id.add_manualy);
+        progressView = findViewById(R.id.progressBarFull);
+        contentLayout = findViewById(R.id.content_layout);
         addManually.setOnClickListener(this);
         if (getIntent().getParcelableExtra(ARG_LOCATION) != null) {
             isHasLocation = true;

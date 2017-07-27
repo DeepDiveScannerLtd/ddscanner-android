@@ -313,11 +313,11 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        commentsRecyclerView = (RecyclerView) findViewById(R.id.reviews_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
+        commentsRecyclerView = findViewById(R.id.reviews_rc);
+        toolbar = findViewById(R.id.toolbar);
+        leaveReview = findViewById(R.id.fab_write_review);
+        progressView = findViewById(R.id.progressBarFull);
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
             leaveReview.setVisibility(View.GONE);
             leaveReview.setOnClickListener(null);
         } else {
@@ -419,7 +419,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+                    if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         leaveReview.setVisibility(View.GONE);
                     } else {
@@ -452,7 +452,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_write_review:
-                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
                     LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW, diveSpotLocation, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST);
                 } else {
                     LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
@@ -566,7 +566,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
 
     private void sendReportRequest(String type, String description) {
         EventsTracker.trackReviewReport();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
@@ -575,7 +575,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     }
 
     private void likeComment(String id, final int position) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
@@ -584,7 +584,7 @@ public class ReviewsActivity extends BaseAppCompatActivity implements View.OnCli
     }
 
     private void dislikeComment(String id, final int position) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }

@@ -120,7 +120,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             updateMenuItems(menu);
             changeUiAccordingNewFlags(result);
             if (isClickedEdit) {
-                if (result.isEditable() || (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
+                if (result.isEditable() || (SharedPreferenceHelper.getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
                     Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
                     editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
                     startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
@@ -149,7 +149,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         @Override
         public void onSuccess(DiveSpotDetailsEntity result) {
             diveSpotDetailsEntity = result;
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 if (result.getFlags() == null) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
                 } else {
@@ -241,13 +241,13 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void changeUiAccordingNewFlags(FlagsEntity flagsEntity) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && flagsEntity.isWorkingHere()) {
+        if (SharedPreferenceHelper.getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && flagsEntity.isWorkingHere()) {
             flagsEntity.setEditable(true);
         }
         DiveSpotDetailsActivityViewModel.setVisibilityReviewsBlock(binding.reviewsRatingLayout, binding.getDiveSpotViewModel());
         DiveSpotDetailsActivityViewModel.setVisibilityOfRatingLayout(binding.ratingLayout, binding.getDiveSpotViewModel());
         DiveSpotDetailsActivityViewModel.setBookButtonVisibility(binding.buttonShowDivecenters, binding.getDiveSpotViewModel());
-        switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+        switch (SharedPreferenceHelper.getActiveUserType()) {
             case DIVECENTER:
                 binding.fabCheckin.setVisibility(View.GONE);
                 binding.workinLayout.setVisibility(View.VISIBLE);
@@ -294,10 +294,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void setUi() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
             binding.fabCheckin.setVisibility(View.VISIBLE);
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER && binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isWorkingHere()) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER && binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isWorkingHere()) {
             binding.switchWorkingButton.setChecked(true);
         }
         binding.switchWorkingButton.setOnCheckedChangeListener(this);
@@ -324,10 +324,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags() != null) {
             isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         }
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             updateMenuItems(menu);
         } else {
             updateMenuItems(menu);
@@ -418,7 +418,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void openImagePickerActivity(int requestCode) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
             Intent intent = new Intent();
@@ -433,7 +433,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void tryToCallEditDiveSpotActivity() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
             isClickedEdit = true;
@@ -444,7 +444,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     private void checkIn() {
         checkInUi();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             checkOutUi();
             isClickedCkeckin = true;
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
@@ -469,7 +469,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     private void checkOut() {
         checkOutUi();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             checkInUi();
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
             return;
@@ -517,7 +517,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     private void addDiveSpotToFavorites() {
         isClickedFavorite = true;
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
             return;
         }
@@ -525,7 +525,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void removeFromFavorites() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
             return;
         }
@@ -678,7 +678,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+                    if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         reloadFlags();
                     } else {
@@ -704,8 +704,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void updateMenuItems(Menu menu) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+            switch (SharedPreferenceHelper.getActiveUserType()) {
                 case DIVECENTER:
                     menu.findItem(R.id.menu_three_dots).setVisible(true);
                     menu.findItem(R.id.favorite).setVisible(false);
@@ -756,7 +756,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     private void reloadFlags() {
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
-        switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+        switch (SharedPreferenceHelper.getActiveUserType()) {
             case DIVECENTER:
                 isClickedCkeckin = false;
                 isClickedFavorite = false;
@@ -947,7 +947,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     private void tryingToShowLeaveReviewActivity(int rating, boolean isFromRatingBar) {
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), EventsTracker.SendReviewSource.WRITE_REVIEW_BUTTON);
             } else {
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);

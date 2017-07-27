@@ -52,7 +52,7 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
 
     private View getRowView(int position, ViewGroup parent, boolean isDropDown) {
         View row = inflater.inflate(R.layout.item_language_spinner, parent, false);
-        TextView textView = (TextView) row.findViewById(R.id.spinner_text);
+        TextView textView = row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
         if (!isDropDown) {
             row.setPadding(0, padding, padding, padding);

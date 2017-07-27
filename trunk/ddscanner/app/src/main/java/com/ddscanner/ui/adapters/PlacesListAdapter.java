@@ -64,7 +64,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
             super(v);
             context = v.getContext();
             v.setOnClickListener(this);
-            placeName = (TextView) v.findViewById(R.id.diveSpotName);
+            placeName = v.findViewById(R.id.diveSpotName);
         }
 
         @Override

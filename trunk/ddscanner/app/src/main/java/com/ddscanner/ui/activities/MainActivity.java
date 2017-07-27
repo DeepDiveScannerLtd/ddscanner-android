@@ -213,7 +213,7 @@ public class MainActivity extends BaseAppCompatActivity
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         setContentView(R.layout.activity_main);
         startActivity();
-        loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
+        loggedInDuringLastOnStart = SharedPreferenceHelper.getIsUserSignedIn();
     }
 
     private void startActivity() {
@@ -316,13 +316,13 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        toolbarTabLayout = (TabLayout) findViewById(R.id.toolbar_tablayout);
-        mainViewPager = (ViewPager) findViewById(R.id.main_viewpager);
-        menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
-        searchLocationBtn = (ImageView) findViewById(R.id.search_location_menu_button);
-        btnFilter = (ImageView) findViewById(R.id.filter_menu_button);
-        acountChangeLayout = (PercentRelativeLayout) findViewById(R.id.account_change_layout);
-        changeAccountButton = (ImageView) findViewById(R.id.change_account);
+        toolbarTabLayout = findViewById(R.id.toolbar_tablayout);
+        mainViewPager = findViewById(R.id.main_viewpager);
+        menuItemsLayout = findViewById(R.id.menu_items_layout);
+        searchLocationBtn = findViewById(R.id.search_location_menu_button);
+        btnFilter = findViewById(R.id.filter_menu_button);
+        acountChangeLayout = findViewById(R.id.account_change_layout);
+        changeAccountButton = findViewById(R.id.change_account);
         changeAccountButton.setOnClickListener(this);
     }
 
@@ -334,7 +334,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void getIsHasNewotifications() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             DDScannerApplication.getInstance().getDdScannerRestClient(this).getNewNotificationsCount(newotificationsCountEntity);
             return;
         }
@@ -403,7 +403,7 @@ public class MainActivity extends BaseAppCompatActivity
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         menuItemsLayout.setVisibility(View.GONE);
-                        if (mainViewPager.getCurrentItem() == 2 && DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                        if (mainViewPager.getCurrentItem() == 2 && SharedPreferenceHelper.getIsUserSignedIn()) {
                             changeVisibilityChangeAccountLayout(View.VISIBLE);
                         }
                     }
@@ -477,7 +477,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                    switch (SharedPreferenceHelper.getActiveUserType()) {
                         case DIVECENTER:
                             mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
                             break;
@@ -522,7 +522,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                    switch (SharedPreferenceHelper.getActiveUserType()) {
                         case DIVECENTER:
                             if (mainViewPagerAdapter.getDiveCenterProfileFragment() != null) {
                                 mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
@@ -593,10 +593,10 @@ public class MainActivity extends BaseAppCompatActivity
         super.onStart();
         Log.i(TAG, "onStart");
 //        DDScannerApplication.bus.register(this);
-        if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (loggedInDuringLastOnStart != SharedPreferenceHelper.getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
-            loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
+            loggedInDuringLastOnStart = SharedPreferenceHelper.getIsUserSignedIn();
         }
     }
 
@@ -635,7 +635,7 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             mainViewPagerAdapter.onLoggedIn();
         } else {
             mainViewPagerAdapter.onLoggedOut();
@@ -816,7 +816,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void openAddDiveSpotActivity(OpenAddDiveSpotActivity event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
         } else {
             isTryToOpenAddDiveSpotActivity = true;
@@ -838,7 +838,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void changeActiveAccount(ChangeAccountEvent event) {
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().changeActiveUser(event.getId());
+        SharedPreferenceHelper.changeActiveUser(event.getId());
         mainViewPagerAdapter.notifyDataSetChanged();
         mainViewPager.destroyDrawingCache();
         setupTabLayout();
@@ -926,9 +926,9 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void logoutUser(LogoutEvent event) {
-        SharedPreferenceHelper.UserType currentUserType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        SharedPreferenceHelper.UserType currentUserType = SharedPreferenceHelper.getActiveUserType();
+        SharedPreferenceHelper.removeUserFromList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             mainViewPager.destroyDrawingCache();
             if (mainViewPagerAdapter.getDiverNotificationsFragment() != null) {

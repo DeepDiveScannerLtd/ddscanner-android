@@ -149,29 +149,29 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private void findViews() {
         diveSpotsMapView = findViewById(R.id.map_view);
         diveSpotsListView = findViewById(R.id.list_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.dive_centers);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
 
         // Map mode
-        no_dive_centers_layout = (ConstraintLayout) findViewById(R.id.no_contacts_layout);
-        mainLayout = (RelativeLayout) findViewById(R.id.main_layout_view);
-        diveCenterInfo = (RelativeLayout) findViewById(R.id.dive_spot_info_layout);
+        no_dive_centers_layout = findViewById(R.id.no_contacts_layout);
+        mainLayout = findViewById(R.id.main_layout_view);
+        diveCenterInfo = findViewById(R.id.dive_spot_info_layout);
         diveCenterInfo.animate().translationY(infoWindowHeight);
-        diveCenterName = (TextView) findViewById(R.id.dive_spot_title);
-        rating = (LinearLayout) findViewById(R.id.rating);
-        zoomIn = (ImageView) findViewById(R.id.zoom_plus);
-        zoomOut = (ImageView) findViewById(R.id.zoom_minus);
-        goToMyLocation = (ImageView) findViewById(R.id.go_to_my_location);
-        mapListFAB = (FloatingActionButton) findViewById(R.id.map_list_fab);
-        diveCenterAddress = (TextView) findViewById(R.id.address);
-        progressBar = (ProgressView) findViewById(R.id.progressBar);
+        diveCenterName = findViewById(R.id.dive_spot_title);
+        rating = findViewById(R.id.rating);
+        zoomIn = findViewById(R.id.zoom_plus);
+        zoomOut = findViewById(R.id.zoom_minus);
+        goToMyLocation = findViewById(R.id.go_to_my_location);
+        mapListFAB = findViewById(R.id.map_list_fab);
+        diveCenterAddress = findViewById(R.id.address);
+        progressBar = findViewById(R.id.progressBar);
 
         // List mode
-        rc = (RecyclerView) findViewById(R.id.cv);
-        mapListFAB = (FloatingActionButton) findViewById(R.id.map_list_fab);
+        rc = findViewById(R.id.cv);
+        mapListFAB = findViewById(R.id.map_list_fab);
         mapListFAB.setOnClickListener(this);
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -343,7 +343,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void setMapView() {
-        mMapView = (MapView) findViewById(R.id.mapView);
+        mMapView = findViewById(R.id.mapView);
         Log.i(TAG, "mMapView inited");
         mMapView.onCreate(null);
         mMapView.getMapAsync(googleMap -> {
@@ -373,7 +373,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
         diveCenterInfo.setOnClickListener(this);
-        mapControlLayout = (RelativeLayout) findViewById(R.id.map_control_layout);
+        mapControlLayout = findViewById(R.id.map_control_layout);
     }
 
     private void drawMarkers() {

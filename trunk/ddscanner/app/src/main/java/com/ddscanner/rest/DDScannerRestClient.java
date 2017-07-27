@@ -45,6 +45,7 @@ import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -1222,7 +1223,7 @@ public class DDScannerRestClient {
 
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             map.put("social", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             map.put("token", DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {

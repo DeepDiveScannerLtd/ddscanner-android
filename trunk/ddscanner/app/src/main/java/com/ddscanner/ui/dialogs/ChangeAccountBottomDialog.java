@@ -14,6 +14,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.ui.adapters.AccountsListAdapter;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class ChangeAccountBottomDialog extends BottomSheetDialogFragment implements View.OnClickListener {
 
@@ -40,8 +41,8 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         View view = View.inflate(getContext(), R.layout.dialog_choose_account, null);
-        accountsList = (RecyclerView) view.findViewById(R.id.users_recycler_view);
-        addAccountButton = (TextView) view.findViewById(R.id.add_account_button);
+        accountsList = view.findViewById(R.id.users_recycler_view);
+        addAccountButton = view.findViewById(R.id.add_account_button);
         addAccountButton.setOnClickListener(this);
         dialog.setContentView(view);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) view.getParent()).getLayoutParams();
@@ -55,8 +56,8 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
 
     private void setupRecyclerView() {
         accountsList.setLayoutManager(new LinearLayoutManager(getContext()));
-        accountsList.setAdapter(new AccountsListAdapter(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList()));
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList() != null && DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList().size() > MAX_ACCOUNTS - 1) {
+        accountsList.setAdapter(new AccountsListAdapter(SharedPreferenceHelper.getUsersList()));
+        if (SharedPreferenceHelper.getUsersList() != null && SharedPreferenceHelper.getUsersList().size() > MAX_ACCOUNTS - 1) {
             addAccountButton.setVisibility(View.GONE);
         }
     }

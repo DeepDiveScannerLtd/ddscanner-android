@@ -29,8 +29,8 @@ public class GuideActivity extends BaseAppCompatActivity {
     }
 
     private void findViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recyclerView);
+        toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

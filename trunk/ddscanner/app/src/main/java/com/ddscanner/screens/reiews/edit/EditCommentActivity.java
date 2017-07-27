@@ -177,18 +177,18 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void findViews() {
-        errorRating = (TextView) findViewById(R.id.rating_error);
-        sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
-        buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
+        errorRating = findViewById(R.id.rating_error);
+        sealifeList= findViewById(R.id.sealife_list);
+        buttonAddSealife = findViewById(R.id.btn_add_sealife);
         buttonAddSealife.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        text = (EditText) findViewById(R.id.review_text);
+        toolbar = findViewById(R.id.toolbar);
+        text = findViewById(R.id.review_text);
         text.setTag("comment");
-        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        ratingBar = findViewById(R.id.rating_bar);
 //        symbolNumberLeft = (TextView) findViewById(R.id.left_number);
-        photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
-        errorText = (TextView) findViewById(R.id.comment_error);
+        photosRecyclerView = findViewById(R.id.photos_rc);
+        errorText = findViewById(R.id.comment_error);
         errorsMap.put("comment", errorText);
 
         setUi();

@@ -65,8 +65,8 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
-        usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
+        progressView = findViewById(R.id.progress_bar);
+        usersRecyclerView = findViewById(R.id.peoples_rc);
     }
 
     private void setUi(ArrayList<User> users) {

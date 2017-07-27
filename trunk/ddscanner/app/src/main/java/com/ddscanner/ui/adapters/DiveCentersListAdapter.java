@@ -102,11 +102,11 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             super(v);
             v.setOnClickListener(this);
             context = itemView.getContext();
-            imgLogo = (ImageView) v.findViewById(R.id.dc_avatar);
-            dcName = (TextView) v.findViewById(R.id.dc_name);
-            dcAddress = (TextView) v.findViewById(R.id.dc_address);
-            starsLayout = (LinearLayout) v.findViewById(R.id.stars);
-            cardView = (CardView) v.findViewById(R.id.cv);
+            imgLogo = v.findViewById(R.id.dc_avatar);
+            dcName = v.findViewById(R.id.dc_name);
+            dcAddress = v.findViewById(R.id.dc_address);
+            starsLayout = v.findViewById(R.id.stars);
+            cardView = v.findViewById(R.id.cv);
         }
 
         @Override

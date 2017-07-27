@@ -51,11 +51,11 @@ public class TutorialFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_tutorial, container, false);
         v.setTag(page);
 
-        ImageView imageViewFront = (ImageView) v.findViewById(R.id.fragment_help_tutorial_imageview);
-        ImageView imageViewBack = (ImageView) v.findViewById(R.id.fragment_help_tutorial_imageview_background);
-        TextView textViewSubTitle = (TextView) v.findViewById(R.id.fragment_help_tutorial_subtitle_text);
+        ImageView imageViewFront = v.findViewById(R.id.fragment_help_tutorial_imageview);
+        ImageView imageViewBack = v.findViewById(R.id.fragment_help_tutorial_imageview_background);
+        TextView textViewSubTitle = v.findViewById(R.id.fragment_help_tutorial_subtitle_text);
 
-        TextView textView = (TextView) v.findViewById(R.id.fragment_help_tutorial_text);
+        TextView textView = v.findViewById(R.id.fragment_help_tutorial_text);
         if (!TextUtils.isEmpty(tutorialItem.getTitleText())) {
             textView.setText(tutorialItem.getTitleText());
         } else if (tutorialItem.getTitleTextRes() != -1) {

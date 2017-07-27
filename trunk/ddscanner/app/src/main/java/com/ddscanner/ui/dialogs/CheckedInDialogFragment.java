@@ -57,8 +57,8 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
     }
 
     private void findViews(View view) {
-        closeButton = (Button) view.findViewById(R.id.button_close);
-        closeImage = (ImageView) view.findViewById(R.id.image_close);
+        closeButton = view.findViewById(R.id.button_close);
+        closeImage = view.findViewById(R.id.image_close);
         setupUi();
 
     }

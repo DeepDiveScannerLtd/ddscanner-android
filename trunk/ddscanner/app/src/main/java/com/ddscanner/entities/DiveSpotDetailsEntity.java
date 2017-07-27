@@ -164,10 +164,7 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     }
 
     public boolean isVerified() {
-        if (verifiedValue == 0) {
-            return false;
-        }
-        return true;
+        return verifiedValue != 0;
     }
 
     public void setVerifiedValue(int verifiedValue) {

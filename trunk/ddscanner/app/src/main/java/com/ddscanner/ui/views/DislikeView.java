@@ -36,8 +36,8 @@ public class DislikeView extends LinearLayout {
 
     private void init(AttributeSet attrs) {
         inflate(getContext(), R.layout.view_dislike, this);
-        dislikeImage = (ImageView) findViewById(R.id.dislikes_image);
-        count = (TextView) findViewById(R.id.dislikes_count);
+        dislikeImage = findViewById(R.id.dislikes_image);
+        count = findViewById(R.id.dislikes_count);
     }
 
     public void setDisikeValues(boolean isDisliked, String dislikesCount) {

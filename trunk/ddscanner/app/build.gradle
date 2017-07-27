@@ -139,7 +139,7 @@ dependencies {
     compile 'cn.gavinliu.android.lib:ShapedImageView:0.8.4'
     compile 'za.co.riggaroo:materialhelptutorial:1.+'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
-        transitive = true;
+        transitive = true
     }
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude module: 'stax'

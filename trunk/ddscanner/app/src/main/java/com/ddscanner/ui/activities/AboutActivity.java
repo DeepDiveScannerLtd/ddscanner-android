@@ -30,8 +30,8 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recyclerView);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

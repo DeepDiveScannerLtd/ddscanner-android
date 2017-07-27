@@ -78,7 +78,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
      * @param toolbarId toolbar id in layout
      */
     public void setupToolbar(int titleresId, int toolbarId) {
-        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        setSupportActionBar(findViewById(toolbarId));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(titleresId);
@@ -92,7 +92,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
      */
     public void setupToolbar(int titleresId, int toolbarId, int menuResId) {
         this.menuResourceId = menuResId;
-        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        setSupportActionBar(findViewById(toolbarId));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(titleresId);

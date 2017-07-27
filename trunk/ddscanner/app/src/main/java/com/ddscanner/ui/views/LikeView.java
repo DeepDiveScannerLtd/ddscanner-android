@@ -37,8 +37,8 @@ public class LikeView extends LinearLayout {
     private void init(AttributeSet attrs) {
         inflate(getContext(), R.layout.view_like, this);
 
-        likeImage = (ImageView) findViewById(R.id.likes_image);
-        count = (TextView) findViewById(R.id.likes_count);
+        likeImage = findViewById(R.id.likes_image);
+        count = findViewById(R.id.likes_count);
     }
 
     public void setLikeValues(boolean isLiked, String likesCount) {

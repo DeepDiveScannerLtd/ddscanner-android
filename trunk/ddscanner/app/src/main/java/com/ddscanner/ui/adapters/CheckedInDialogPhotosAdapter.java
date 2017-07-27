@@ -96,7 +96,7 @@ public class CheckedInDialogPhotosAdapter extends RecyclerView.Adapter<RecyclerV
         public CheckedInDialogPhotosViewHolder(View v) {
             super(v);
 
-            image = (ImageView) v.findViewById(R.id.photo);
+            image = v.findViewById(R.id.photo);
         }
 
     }

@@ -88,9 +88,9 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
 
         public AchievmentProfileListViewHolder(View view) {
             super(view);
-            countries = (LinearLayout) view.findViewById(R.id.countries);
-            title = (TextView) view.findViewById(R.id.title);
-            moreCount = (TextView) view.findViewById(R.id.more_count);
+            countries = view.findViewById(R.id.countries);
+            title = view.findViewById(R.id.title);
+            moreCount = view.findViewById(R.id.more_count);
         }
 
     }

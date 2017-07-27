@@ -34,7 +34,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
     public SealifeSearchAdapter(Context context, List<SealifeShort> models) {
         layoutInflater = LayoutInflater.from(context);
         sealifes = new ArrayList<>(models);
-        this.context = context;
+        SealifeSearchAdapter.context = context;
     }
 
     @Override
@@ -117,8 +117,8 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
         public SearchListViewHolder(View itemView) {
             super(itemView);
 
-            name = (TextView) itemView.findViewById(R.id.name);
-            photo = (ImageView) itemView.findViewById(R.id.image);
+            name = itemView.findViewById(R.id.name);
+            photo = itemView.findViewById(R.id.image);
             itemView.setOnClickListener(this);
         }
 

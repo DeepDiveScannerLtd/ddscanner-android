@@ -156,20 +156,20 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
 
         public SelfReviewsListViewHolder(View v) {
             super(v);
-            expand = (TextView) v.findViewById(R.id.button_toggle);
-            menu = (ImageView) v.findViewById(R.id.overflow);
-            date = (TextView) v.findViewById(R.id.date);
-            user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (LinearLayout) v.findViewById(R.id.stars);
-            user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (TextView) v.findViewById(R.id.review);
-            photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
-            like = (LinearLayout) v.findViewById(R.id.like_layout);
-            dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
-            likesCount = (TextView) v.findViewById(R.id.likes_count);
-            dislikesCount = (TextView) v.findViewById(R.id.dislikes_count);
-            likeImage = (ImageView) v.findViewById(R.id.likes_image);
-            dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
+            expand = v.findViewById(R.id.button_toggle);
+            menu = v.findViewById(R.id.overflow);
+            date = v.findViewById(R.id.date);
+            user_avatar = v.findViewById(R.id.user_avatar);
+            rating = v.findViewById(R.id.stars);
+            user_name = v.findViewById(R.id.user_name);
+            user_review = v.findViewById(R.id.review);
+            photos = v.findViewById(R.id.review_photos_rc);
+            like = v.findViewById(R.id.like_layout);
+            dislike = v.findViewById(R.id.dislike_layout);
+            likesCount = v.findViewById(R.id.likes_count);
+            dislikesCount = v.findViewById(R.id.dislikes_count);
+            likeImage = v.findViewById(R.id.likes_image);
+            dislikeImage = v.findViewById(R.id.dislikes_image);
             user_avatar.setOnClickListener(this);
         }
 

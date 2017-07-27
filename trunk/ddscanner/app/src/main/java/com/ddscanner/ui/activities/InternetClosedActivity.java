@@ -22,7 +22,7 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_internet);
-        Button btnRefresh = (Button) findViewById(R.id.btn_retry);
+        Button btnRefresh = findViewById(R.id.btn_retry);
         btnRefresh.setOnClickListener(this);
 
         Window w = getWindow();

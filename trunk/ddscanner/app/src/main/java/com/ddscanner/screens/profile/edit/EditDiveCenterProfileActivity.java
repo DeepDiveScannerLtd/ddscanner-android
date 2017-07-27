@@ -293,8 +293,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     public void addEmailClicked(View view) {
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
-        EditText editText = (EditText) linearLayout.findViewById(R.id.email);
-        TextView textView = (TextView) linearLayout.findViewById(R.id.email_error);
+        EditText editText = linearLayout.findViewById(R.id.email);
+        TextView textView = linearLayout.findViewById(R.id.email_error);
         emailsErrors.add(textView);
         editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailsEditTexts.add(editText);
@@ -303,8 +303,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     public void addPhoneClicked(View view) {
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
-        EditText editText =(EditText) linearLayout.findViewById(R.id.phone);
-        TextView textView = (TextView) linearLayout.findViewById(R.id.phone_error);
+        EditText editText = linearLayout.findViewById(R.id.phone);
+        TextView textView = linearLayout.findViewById(R.id.phone_error);
         phonesErrors.add(textView);
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
@@ -313,8 +313,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private void addEmailView(String text) {
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
-        EditText editText = (EditText) linearLayout.findViewById(R.id.email);
-        TextView textView = (TextView) linearLayout.findViewById(R.id.email_error);
+        EditText editText = linearLayout.findViewById(R.id.email);
+        TextView textView = linearLayout.findViewById(R.id.email_error);
         emailsErrors.add(textView);
         editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailsEditTexts.add(editText);
@@ -324,8 +324,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private void addPhoneView(String text) {
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
-        EditText editText =(EditText) linearLayout.findViewById(R.id.phone);
-        TextView textView = (TextView) linearLayout.findViewById(R.id.phone_error);
+        EditText editText = linearLayout.findViewById(R.id.phone);
+        TextView textView = linearLayout.findViewById(R.id.phone_error);
         phonesErrors.add(textView);
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
@@ -448,9 +448,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private void addAddressesView(String address, String country) {
         if (addressEditText == null) {
             LinearLayout addressLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.edit_dive_center_address_edit_text, null);
-            addressEditText  = (EditText) addressLayout.findViewById(R.id.address);
+            addressEditText  = addressLayout.findViewById(R.id.address);
             addressEditText.setEnabled(false);
-            editAddress = (TextView) addressLayout.findViewById(R.id.edit_dive_center_address);
+            editAddress = addressLayout.findViewById(R.id.edit_dive_center_address);
             binding.addresses.addView(addressLayout);
             editAddress.setOnClickListener(new View.OnClickListener() {
                 @Override

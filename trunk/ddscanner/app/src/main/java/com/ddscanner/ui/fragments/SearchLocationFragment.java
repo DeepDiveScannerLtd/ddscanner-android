@@ -41,10 +41,10 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
     }
 
     private void findViews(View v){
-        locationRecyclerView = (RecyclerView) v.findViewById(R.id.places_recyclerview);
-        goToMyLocation = (LinearLayout) v.findViewById(R.id.go_to_my_location);
-        noResultsView = (ScrollView) v.findViewById(R.id.no_results);
-        content = (LinearLayout) v.findViewById(R.id.content);
+        locationRecyclerView = v.findViewById(R.id.places_recyclerview);
+        goToMyLocation = v.findViewById(R.id.go_to_my_location);
+        noResultsView = v.findViewById(R.id.no_results);
+        content = v.findViewById(R.id.content);
 
         goToMyLocation.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

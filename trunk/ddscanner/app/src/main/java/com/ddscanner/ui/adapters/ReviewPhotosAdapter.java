@@ -84,8 +84,8 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         public ReviewPhotosAdapterViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            photo = (ImageView) v.findViewById(R.id.image);
-            morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
+            photo = v.findViewById(R.id.image);
+            morePhotos = v.findViewById(R.id.number_of_more_images);
         }
 
         @Override

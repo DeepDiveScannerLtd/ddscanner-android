@@ -58,8 +58,8 @@ public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpot
 
         public DiveSpotViewHolder(View view) {
             super(view);
-            name = (TextView) view.findViewById(R.id.dive_spot_name);
-            delete = (ImageView) view.findViewById(R.id.ic_delete);
+            name = view.findViewById(R.id.dive_spot_name);
+            delete = view.findViewById(R.id.ic_delete);
             delete.setOnClickListener(this);
         }
 

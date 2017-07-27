@@ -101,7 +101,7 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
         public LanguageSearchViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            languageName = (TextView) view.findViewById(R.id.language_name);
+            languageName = view.findViewById(R.id.language_name);
         }
 
         public void bind(Language name) {

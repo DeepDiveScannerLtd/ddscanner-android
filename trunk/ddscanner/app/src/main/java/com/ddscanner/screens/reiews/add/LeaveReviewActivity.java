@@ -134,19 +134,19 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void findViews() {
-        errorRating = (TextView) findViewById(R.id.rating_error);
-        text = (EditText) findViewById(R.id.review_text);
-        sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
+        errorRating = findViewById(R.id.rating_error);
+        text = findViewById(R.id.review_text);
+        sealifeList= findViewById(R.id.sealife_list);
         text.setTag("review");
-        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
+        ratingBar = findViewById(R.id.rating_bar);
+        buttonAddSealife = findViewById(R.id.btn_add_sealife);
         if (rating > 0) {
             ratingBar.setRating(rating);
         } else {
             ratingBar.setRating(1);
         }
-        photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
-        errorText = (TextView) findViewById(R.id.comment_error);
+        photosRecyclerView = findViewById(R.id.photos_rc);
+        errorText = findViewById(R.id.comment_error);
         errorsMap.put("review", errorText);
         buttonAddSealife.setOnClickListener(this);
     }
@@ -199,7 +199,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void sendReview() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
@@ -272,7 +272,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
+                    if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
                         sendReview();
                     } else {
                         Toast.makeText(this, R.string.dc_cant_leave_review, Toast.LENGTH_SHORT).show();

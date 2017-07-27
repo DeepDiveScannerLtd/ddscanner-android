@@ -61,11 +61,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (name.getText().length() > 0) {
-                isNameEmpty = false;
-            } else {
-                isNameEmpty = true;
-            }
+            isNameEmpty = name.getText().length() <= 0;
             changeButtonState();
         }
 
@@ -82,11 +78,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (password.getText().length() > 3) {
-                isPasswordEmpty = false;
-            } else {
-                isPasswordEmpty = true;
-            }
+            isPasswordEmpty = password.getText().length() <= 3;
             changeButtonState();
         }
 
@@ -103,11 +95,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-                isEmailEmpty = false;
-            } else {
-                isEmailEmpty = true;
-            }
+            isEmailEmpty = !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches();
             changeButtonState();
         }
 
@@ -140,20 +128,20 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
         userType = Constants.USER_TYPE_DIVER;
 
-        titleTextView = (TextView) findViewById(R.id.need_to_login_message);
-        privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
-        signUpButton = (Button) findViewById(R.id.sign_up);
-        loginButton = (Button) findViewById(R.id.login);
-        signView = (RelativeLayout) findViewById(R.id.sign_up_view);
-        loginView = (RelativeLayout) findViewById(R.id.login_view_first);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        buttonSubmitData = (Button) findViewById(R.id.btn_login_or_sign_up_via_email);
-        loginWithFacebook = (LinearLayout) findViewById(R.id.fb_custom);
-        loginWithGoogle = (LinearLayout) findViewById(R.id.custom_google);
-        forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        name = (EditText) findViewById(R.id.name);
+        titleTextView = findViewById(R.id.need_to_login_message);
+        privacyPolicy = findViewById(R.id.privacy_policy);
+        signUpButton = findViewById(R.id.sign_up);
+        loginButton = findViewById(R.id.login);
+        signView = findViewById(R.id.sign_up_view);
+        loginView = findViewById(R.id.login_view_first);
+        tabLayout = findViewById(R.id.tab_layout);
+        buttonSubmitData = findViewById(R.id.btn_login_or_sign_up_via_email);
+        loginWithFacebook = findViewById(R.id.fb_custom);
+        loginWithGoogle = findViewById(R.id.custom_google);
+        forgotPasswordView = findViewById(R.id.forgot_password);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        name = findViewById(R.id.name);
         name.addTextChangedListener(nameTextWatcher);
         email.addTextChangedListener(emailTextWatcher);
         password.addTextChangedListener(passwordTextWatcher);

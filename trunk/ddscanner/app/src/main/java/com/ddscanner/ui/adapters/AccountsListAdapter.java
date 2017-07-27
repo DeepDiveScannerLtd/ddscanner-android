@@ -62,10 +62,10 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         public AccountsListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            userName = (TextView) v.findViewById(R.id.user_name);
-            userType = (TextView) v.findViewById(R.id.user_type);
-            icCheck = (ImageView) v.findViewById(R.id.active_user);
-            avatar = (ImageView) v.findViewById(R.id.avatar);
+            userName = v.findViewById(R.id.user_name);
+            userType = v.findViewById(R.id.user_type);
+            icCheck = v.findViewById(R.id.active_user);
+            avatar = v.findViewById(R.id.avatar);
         }
 
         @Override

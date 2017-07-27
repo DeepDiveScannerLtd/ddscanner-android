@@ -104,7 +104,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         userId = getIntent().getStringExtra("id");
         userType = getIntent().getIntExtra("type", 0);
         setContentView(R.layout.activity_user_profile);
-        progressView = (ProgressView) findViewById(R.id.progress_view);
+        progressView = findViewById(R.id.progress_view);
         setupToolbar(R.string.profile, R.id.toolbar);
         switch (userType) {
             case 0:

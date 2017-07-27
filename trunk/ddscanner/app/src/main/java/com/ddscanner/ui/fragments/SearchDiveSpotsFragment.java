@@ -19,6 +19,7 @@ import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -33,9 +34,9 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_serach_dive_spot, container, false);
-        diveSpotsListRc = (RecyclerView) view.findViewById(R.id.spots_list_rc);
-        noResultsView = (RelativeLayout) view.findViewById(R.id.no_results);
-        addManually = (TextView) view.findViewById(R.id.add_spot);
+        diveSpotsListRc = view.findViewById(R.id.spots_list_rc);
+        noResultsView = view.findViewById(R.id.no_results);
+        addManually = view.findViewById(R.id.add_spot);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         diveSpotsListRc.setLayoutManager(linearLayoutManager);
         addManually.setOnClickListener(this);
@@ -64,7 +65,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_spot:
-                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
                     AddDiveSpotActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_SPOT_ADD_SPOT, true);
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());

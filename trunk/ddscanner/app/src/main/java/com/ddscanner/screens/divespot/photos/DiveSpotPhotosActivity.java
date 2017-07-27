@@ -35,6 +35,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
 import java.io.File;
@@ -134,12 +135,12 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progressBar);
-        tabLayout = (TabLayout) findViewById(R.id.photos_tab_layout);
-        photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
+        progressView = findViewById(R.id.progressBar);
+        tabLayout = findViewById(R.id.photos_tab_layout);
+        photosViewPager = findViewById(R.id.photos_view_pager);
         photosViewPager.setOnPageChangeListener(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        fabAddPhoto = (FloatingActionButton) findViewById(R.id.fab_add_photo);
+        toolbar = findViewById(R.id.toolbar);
+        fabAddPhoto = findViewById(R.id.fab_add_photo);
         fabAddPhoto.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -287,7 +288,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void addPhotosToDiveSpot() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
             Intent intent = new Intent();
@@ -334,10 +335,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

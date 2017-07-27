@@ -88,10 +88,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
     private FragmentPersonalNotificationsBinding binding;
 
     public boolean isNotificationsLoaded() {
-        if (notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE) {
-            return true;
-        }
-        return false;
+        return notificationsListAdapter != null && binding.progressBar.getVisibility() == View.GONE && binding.activityRc.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -113,7 +110,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         } else {
             initilizeListenerForLowVersions();
         }
-        notificationsListAdapter = new NotificationsListAdapter(getActivity(), true, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() );
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), true, SharedPreferenceHelper.getActiveUserType() );
         binding.activityRc.setAdapter(notificationsListAdapter);
         binding.approveLayout.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
@@ -216,7 +213,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
     }
 
     public void loadNotifications() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER)) {
+        if (SharedPreferenceHelper.getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER)) {
             DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getApproveCount(resultListener);
         }
         DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getPersonalNotifications(simpleResultListener, null);

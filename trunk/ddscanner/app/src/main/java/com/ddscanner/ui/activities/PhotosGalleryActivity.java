@@ -106,9 +106,9 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_photos);
-        photosRecyclerView = (RecyclerView) findViewById(R.id.maps_rv);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        progressView = (ProgressView) findViewById(R.id.progress_view);
+        photosRecyclerView = findViewById(R.id.maps_rv);
+        toolbar = findViewById(R.id.toolbar);
+        progressView = findViewById(R.id.progress_view);
         source = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         loadedInfoId = getIntent().getStringExtra("id");
         switch (source) {

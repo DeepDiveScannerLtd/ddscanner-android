@@ -58,9 +58,9 @@ public class SocialListAdapter extends RecyclerView.Adapter<SocialListAdapter.So
         public SocialListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            title = (TextView) v.findViewById(R.id.title);
-            subTitle = (TextView) v.findViewById(R.id.subTitle);
-            icon = (ImageView) v.findViewById(R.id.icon);
+            title = v.findViewById(R.id.title);
+            subTitle = v.findViewById(R.id.subTitle);
+            icon = v.findViewById(R.id.icon);
         }
 
         @Override

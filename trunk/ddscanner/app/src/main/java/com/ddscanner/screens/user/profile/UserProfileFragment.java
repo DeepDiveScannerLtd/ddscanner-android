@@ -31,6 +31,7 @@ import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -73,7 +74,7 @@ public class UserProfileFragment extends Fragment {
     public void showCheckinns(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCheckinsCount() > 0) {
             EventsTracker.trackReviewerCheckInsView();
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CHECKINS);
@@ -84,7 +85,7 @@ public class UserProfileFragment extends Fragment {
     public void showAdded(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getAddedCount() > 0) {
             EventsTracker.trackReviewerCreatedView();
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CREATED);
@@ -95,7 +96,7 @@ public class UserProfileFragment extends Fragment {
     public void showEdited(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getEditedCount() > 0) {
             EventsTracker.trackReviewerEditedView();
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_EDITED);
@@ -106,7 +107,7 @@ public class UserProfileFragment extends Fragment {
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
             EventsTracker.trackReviewerReviewsView();
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 ReviewsActivity.showForResult(getActivity(), binding.getUserProfileViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS);
@@ -116,7 +117,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showLikes(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getLikesCount() > 0) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 UserLikesDislikesActivity.show(getActivity(), true, binding.getUserProfileViewModel().getUser().getId());
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES);
@@ -126,7 +127,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showDislikes(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getDislikesCount() > 0) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 UserLikesDislikesActivity.show(getActivity(), false, binding.getUserProfileViewModel().getUser().getId());
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES);

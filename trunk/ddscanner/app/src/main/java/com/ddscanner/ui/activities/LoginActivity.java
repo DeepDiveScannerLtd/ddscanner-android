@@ -45,9 +45,9 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        signUp = (Button) findViewById(R.id.sign_up);
-        login = (Button) findViewById(R.id.login);
+        toolbar = findViewById(R.id.toolbar);
+        signUp = findViewById(R.id.sign_up);
+        login = findViewById(R.id.login);
 
         signUp.setOnClickListener(this);
         login.setOnClickListener(this);

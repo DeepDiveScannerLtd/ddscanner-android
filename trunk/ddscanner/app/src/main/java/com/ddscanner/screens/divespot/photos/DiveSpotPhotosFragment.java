@@ -41,7 +41,7 @@ public class DiveSpotPhotosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_divespot_photo, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.photos);
+        recyclerView = view.findViewById(R.id.photos);
         Log.i(TAG, this.toString());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));

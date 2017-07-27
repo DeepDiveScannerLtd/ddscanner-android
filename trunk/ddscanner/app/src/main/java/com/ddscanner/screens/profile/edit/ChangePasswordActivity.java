@@ -117,10 +117,7 @@ public class ChangePasswordActivity extends BaseAppCompatActivity implements Vie
     }
 
     private boolean checkNewPassword() {
-        if (binding.newPassword.getText().toString().equals(binding.newPasswordRepeat.getText().toString())) {
-            return true;
-        }
-        return false;
+        return binding.newPassword.getText().toString().equals(binding.newPasswordRepeat.getText().toString());
     }
 
     @Override

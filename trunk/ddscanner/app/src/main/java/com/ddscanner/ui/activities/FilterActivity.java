@@ -70,14 +70,14 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        progressView = (ProgressView) findViewById(R.id.progressBar);
-        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        objectSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
-        levelSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
-        save = (Button) findViewById(R.id.applyFilters);
-        addSealifeButton = (LinearLayout) findViewById(R.id.btn_add_sealife);
-        sealifesRecyclerView = (RecyclerView) findViewById(R.id.sealife_recycler_view);
+        progressView = findViewById(R.id.progressBar);
+        mainLayout = findViewById(R.id.main_layout);
+        toolbar = findViewById(R.id.toolbar);
+        objectSpinner = findViewById(R.id.object_spinner);
+        levelSpinner = findViewById(R.id.level_spinner);
+        save = findViewById(R.id.applyFilters);
+        addSealifeButton = findViewById(R.id.btn_add_sealife);
+        sealifesRecyclerView = findViewById(R.id.sealife_recycler_view);
         sealifesRecyclerView.setAdapter(sealifeListAddingDiveSpotAdapter);
         sealifesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         save.setOnClickListener(this);

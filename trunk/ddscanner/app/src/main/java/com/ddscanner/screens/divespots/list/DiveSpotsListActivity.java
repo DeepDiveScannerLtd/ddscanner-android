@@ -136,9 +136,9 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
     }
     
     private void findViews() {
-        rc = (RecyclerView) findViewById(R.id.divespots_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        progressBarFull = (ProgressView) findViewById(R.id.progressBar);
+        rc = findViewById(R.id.divespots_rc);
+        toolbar = findViewById(R.id.toolbar);
+        progressBarFull = findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String title = "";

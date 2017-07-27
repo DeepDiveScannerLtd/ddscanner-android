@@ -111,8 +111,8 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
     }
 
     private void findViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.likesRecyclerView);
-        progressView = (ProgressView) findViewById(R.id.progressBar);
+        recyclerView = findViewById(R.id.likesRecyclerView);
+        progressView = findViewById(R.id.progressBar);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

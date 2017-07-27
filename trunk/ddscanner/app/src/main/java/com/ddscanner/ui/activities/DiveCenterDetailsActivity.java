@@ -107,16 +107,16 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        dc_logo = (ImageView) findViewById(R.id.dc_logo);
-        dc_name = (TextView) findViewById(R.id.dc_name);
-        dc_address = (TextView) findViewById(R.id.dc_address);
-        dc_phone = (TextView) findViewById(R.id.dc_phone);
-        dc_email = (TextView) findViewById(R.id.dc_email);
-        addressLayout = (LinearLayout) findViewById(R.id.dc_address_layout);
-        phoneLayout = (LinearLayout) findViewById(R.id.dc_phone_layout);
-        emailLayout = (LinearLayout) findViewById(R.id.dc_email_layout);
-        stars = (LinearLayout) findViewById(R.id.stars);
+        toolbar = findViewById(R.id.toolbar);
+        dc_logo = findViewById(R.id.dc_logo);
+        dc_name = findViewById(R.id.dc_name);
+        dc_address = findViewById(R.id.dc_address);
+        dc_phone = findViewById(R.id.dc_phone);
+        dc_email = findViewById(R.id.dc_email);
+        addressLayout = findViewById(R.id.dc_address_layout);
+        phoneLayout = findViewById(R.id.dc_phone_layout);
+        emailLayout = findViewById(R.id.dc_email_layout);
+        stars = findViewById(R.id.stars);
     }
 
     @Override
