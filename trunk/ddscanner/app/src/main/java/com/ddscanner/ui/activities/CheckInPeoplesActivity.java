@@ -114,9 +114,6 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

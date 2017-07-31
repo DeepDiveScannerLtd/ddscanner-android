@@ -674,9 +674,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

@@ -115,9 +115,6 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

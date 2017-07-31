@@ -203,9 +203,6 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

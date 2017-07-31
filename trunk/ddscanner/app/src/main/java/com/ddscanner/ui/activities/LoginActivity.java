@@ -93,9 +93,6 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     public static void showForResult(Activity context, int code) {

@@ -440,9 +440,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

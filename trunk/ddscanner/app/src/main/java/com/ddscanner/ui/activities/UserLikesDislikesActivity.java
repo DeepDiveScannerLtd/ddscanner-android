@@ -176,9 +176,6 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

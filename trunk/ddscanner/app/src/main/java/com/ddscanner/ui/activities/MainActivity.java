@@ -627,9 +627,6 @@ public class MainActivity extends BaseAppCompatActivity
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
         getIsHasNewotifications();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFiltersApplyied()) {
             btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
         } else {

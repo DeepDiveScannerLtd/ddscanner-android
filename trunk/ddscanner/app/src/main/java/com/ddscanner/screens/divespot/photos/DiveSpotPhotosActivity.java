@@ -184,9 +184,6 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

@@ -815,9 +815,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Subscribe

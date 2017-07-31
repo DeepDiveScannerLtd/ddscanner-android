@@ -295,9 +295,6 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     private void hideErrorsFields() {

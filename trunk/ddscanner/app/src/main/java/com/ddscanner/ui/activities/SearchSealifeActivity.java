@@ -215,9 +215,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

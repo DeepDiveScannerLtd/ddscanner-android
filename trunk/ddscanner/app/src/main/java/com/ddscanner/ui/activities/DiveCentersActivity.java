@@ -220,9 +220,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
         mMapView.onResume();
     }
 
