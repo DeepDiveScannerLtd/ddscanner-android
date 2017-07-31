@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.squareup.picasso.Picasso;
@@ -21,19 +20,12 @@ import java.util.ArrayList;
 
 public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersListAdapter.DiveCentersListViewHolder> {
 
-    private static final String TAG = DiveCentersListAdapter.class.getName();
-    public ArrayList<DiveCenter> diveCenters;
-    private String logoPath;
+    private ArrayList<DiveCenter> diveCenters;
     private Context context;
 
-    public DiveCentersListAdapter(ArrayList<DiveCenter> diveCenters, String logoPath, Context context) {
+    public DiveCentersListAdapter(ArrayList<DiveCenter> diveCenters, Context context) {
         this.diveCenters = diveCenters;
-        this.logoPath = logoPath;
         this.context = context;
-    }
-
-    public String getLogopath() {
-        return logoPath;
     }
 
     @Override
@@ -47,7 +39,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     @Override
     public void onBindViewHolder(DiveCentersListViewHolder diveCentersListViewHolder, int i) {
-        int rating = 0;
+        int rating;
         final DiveCenter diveCenter = diveCenters.get(i);
         if (diveCenter.getName() != null) {
             diveCentersListViewHolder.dcName.setText(diveCenter.getName());
@@ -74,9 +66,8 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     }
 
-    public void setDiveCenters(ArrayList<DiveCenter> diveCenters, String logoPathN) {
+    public void setDiveCenters(ArrayList<DiveCenter> diveCenters) {
         this.diveCenters = diveCenters;
-        this.logoPath = logoPathN;
         notifyDataSetChanged();
     }
 
@@ -112,8 +103,6 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         @Override
         public void onClick(View v) {
             UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0);
-//            EventsTracker.trackDiveCenterView(diveCenters.get(getAdapterPosition()).getId(), EventsTracker.SpotViewSource.FROM_LIST);
-//            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }

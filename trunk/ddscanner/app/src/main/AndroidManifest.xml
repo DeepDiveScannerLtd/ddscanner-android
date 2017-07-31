@@ -176,9 +176,6 @@
             android:name=".screens.reiews.add.LeaveReviewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.DiveCenterDetailsActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".screens.divespot.details.DiveSpotDetailsActivity"
             android:screenOrientation="portrait" />
         <activity

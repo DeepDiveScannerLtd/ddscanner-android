@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
-import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -22,8 +20,6 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
     private static final String ARG_LOCATION = "location";
 
-    private CheckedInDialogPhotosAdapter checkedInDialogPhotosAdapter;
-    private RecyclerView recyclerView;
     private ImageView closeImage;
     private Button closeButton;
     private String diveSpotId;
@@ -51,7 +47,6 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
         builder.setTitle(null);
         diveSpotLocation = getArguments().getParcelable(ARG_LOCATION);
         diveSpotId = getArguments().getString("divespotid");
-        checkedInDialogPhotosAdapter = new CheckedInDialogPhotosAdapter(getContext());
         findViews(view);
         return builder.create();
     }

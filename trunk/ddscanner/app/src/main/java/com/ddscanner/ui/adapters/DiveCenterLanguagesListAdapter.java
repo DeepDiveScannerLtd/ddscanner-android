@@ -56,7 +56,7 @@ public class DiveCenterLanguagesListAdapter extends RecyclerView.Adapter<DiveCen
         private TextView name;
         private ImageView delete;
 
-        public LanguagesViewHolder(View view) {
+        LanguagesViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.dive_spot_name);
             delete = view.findViewById(R.id.ic_delete);

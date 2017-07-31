@@ -76,7 +76,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private Marker myLocationMarker;
     private Circle circle;
     private DiveCenter diveCenter;
-    private String path = "";
     private ProgressView progressBar;
 
     private View diveSpotsMapView;
@@ -93,7 +92,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private ArrayList<DiveCenter> diveCenters;
     private Marker lastClickedMarker;
     private Marker diveSpotMarker;
-    private String logoPath;
     private int infoWindowHeight;
     private RelativeLayout mainLayout;
     private ConstraintLayout no_dive_centers_layout;
@@ -250,8 +248,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 break;
             case R.id.dive_spot_info_layout:
                 UserProfileActivity.show(this, diveCenter.getId(), 0);
-//                EventsTracker.trackDiveCenterView(diveCenter.getId(), EventsTracker.SpotViewSource.FROM_MAP);
-//                DiveCenterDetailsActivity.show(this, diveCenter, path, EventsTracker.SpotViewSource.FROM_MAP);
                 break;
         }
     }
@@ -303,9 +299,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-        if (!marker.getPosition().equals(diveSpotMarker.getPosition())) {
-            DiveCenterDetailsActivity.show(this, diveCentersMap.get(marker.getPosition()), logoPath, EventsTracker.SpotViewSource.FROM_MAP);
-        }
+
     }
 
     @Override
@@ -326,7 +320,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc_selected));
         if (diveCentersMap.get(marker.getPosition()) != null) {
-            DDScannerApplication.bus.post(new DiveCenterMarkerClickEvent(diveCentersMap.get(marker.getPosition()), logoPath));
+            DDScannerApplication.bus.post(new DiveCenterMarkerClickEvent(diveCentersMap.get(marker.getPosition())));
         }
         return true;
     }
@@ -390,7 +384,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     public void fillDiveSpotsList() {
         Collections.sort(diveCenters);
-        diveCentersListAdapter = new DiveCentersListAdapter(diveCenters, logoPath, this);
+        diveCentersListAdapter = new DiveCentersListAdapter(diveCenters, this);
         rc.setAdapter(diveCentersListAdapter);
 
         if (!diveCenters.isEmpty()) {
@@ -432,7 +426,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     @UiThread
     @Subscribe
     public void getdiveCenterInfow(DiveCenterMarkerClickEvent event) {
-        path = event.getPath();
         diveCenter = event.getDiveCenter();
         mapControlLayout.animate().translationY(-infoWindowHeight);
         mapListFAB.animate().translationY(-infoWindowHeight);
