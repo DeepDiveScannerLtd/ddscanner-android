@@ -180,7 +180,7 @@ public class EventsTracker {
 
         String tutorialState = DDScannerApplication.getInstance().getTutorialState();
 
-        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         params.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         params.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         params.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
@@ -209,7 +209,7 @@ public class EventsTracker {
         Bundle params = new Bundle();
 
         params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         params.putString(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         params.putString(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
@@ -217,7 +217,7 @@ public class EventsTracker {
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         flurryParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         FlurryAgent.logEvent(eventName, flurryParams);
@@ -225,7 +225,7 @@ public class EventsTracker {
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         appsflyerParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);

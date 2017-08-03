@@ -11,6 +11,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -78,6 +79,10 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.toptas.fancyshowcase.DismissListener;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+
 public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
@@ -112,6 +117,31 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     private WorkingHereResultListener removeWorkngResultListener = new WorkingHereResultListener(false);
     private ApproveResultListener trueApproveResultListener = new ApproveResultListener(true);
     private ApproveResultListener falseApproveResultListener = new ApproveResultListener(false);
+
+    private DismissListener checkinTutorialDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getTutorialHelper().showAddPhotoTutorial(DiveSpotDetailsActivity.this, binding.addPhotosButon, addPhotoDismissListener);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener addPhotoDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            binding.scrollView.fullScroll(View.FOCUS_DOWN);
+            DDScannerApplication.getInstance().getTutorialHelper().showWriteReviewTutorial(DiveSpotDetailsActivity.this, binding.btnShowAllReviews);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<FlagsEntity> flagsResultListener = new DDScannerRestClient.ResultListener<FlagsEntity>() {
         @Override
@@ -218,13 +248,17 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onCreate(savedInstanceState);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
+        binding.scrollView.setNestedScrollingEnabled(false);
         themeNavAndStatusBar();
         binding.setHandlers(this);
         findViews();
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMstToShowDiveSpotTutorial()) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial();
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
+        }
     }
 
     private void findViews() {
@@ -375,6 +409,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.progressBarFull.setVisibility(View.GONE);
         binding.informationLayout.setVisibility(View.VISIBLE);
         binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
+        binding.scrollView.setNestedScrollingEnabled(true);
+        DDScannerApplication.getInstance().getTutorialHelper().showCheckinTutorial(this, binding.fabCheckin, checkinTutorialDismissListener);
     }
 
 

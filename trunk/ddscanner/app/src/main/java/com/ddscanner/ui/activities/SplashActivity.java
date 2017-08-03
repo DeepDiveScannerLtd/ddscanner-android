@@ -56,7 +56,8 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
         //TODO uncomment in future versions
@@ -78,14 +79,15 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 //            showMainActivity();
 //        }
 
-        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustTrackFbEvent()) {
-                DDScannerApplication.getInstance().getSharedPreferenceHelper().setFbTracked();
-                EventsTracker.trackFirstLaunchForFacebookAnalytics();
-            }
-            loadTutorial();
-            SharedPreferenceHelper.setIsNeedToShowTutorial();
-        } else if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustTrackFbEvent()) {
+//                DDScannerApplication.getInstance().getSharedPreferenceHelper().setFbTracked();
+//                EventsTracker.trackFirstLaunchForFacebookAnalytics();
+//            }
+//            loadTutorial();
+//            SharedPreferenceHelper.setIsNeedToShowTutorial();
+//        }
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);

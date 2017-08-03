@@ -94,6 +94,7 @@
             </android.support.design.widget.AppBarLayout>
 
             <com.ddscanner.ui.views.FlingableNestedScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#fbfbfb"
@@ -550,7 +551,10 @@
                             <Button
                                 android:id="@+id/btn_show_all_reviews"
                                 android:layout_width="match_parent"
-                                android:layout_margin="20dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginRight="40dp"
                                 android:layout_gravity="center_horizontal"
                                 style="@style/BlueButton"
                                 android:onClick="@{handlers::writeReviewClicked}"

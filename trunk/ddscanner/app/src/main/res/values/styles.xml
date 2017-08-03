@@ -437,4 +437,9 @@
         <item name="android:textColorHint">#a3a3a3</item>
     </style>
 
+    <style name="TutorialTextStyle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
