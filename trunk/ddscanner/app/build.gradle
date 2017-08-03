@@ -135,7 +135,6 @@ dependencies {
     compile 'com.appsflyer:af-android-sdk:4.7.1@aar'
     compile 'id.zelory:compressor:1.0.4'
     compile 'com.klinkerapps:link_builder:1.6.1'
-    compile 'com.android.support:multidex:1.0.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'cn.gavinliu.android.lib:ShapedImageView:0.8.4'
     compile 'za.co.riggaroo:materialhelptutorial:1.+'
