@@ -115,4 +115,9 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     public DiveCenterProfileFragment getDiveCenterProfileFragment() {
         return diveCenterProfileFragment;
     }
+
+    public MapListFragment getMapListFragment() {
+        return mapListFragment;
+    }
+
 }

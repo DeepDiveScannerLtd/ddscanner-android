@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -21,6 +22,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
@@ -89,6 +91,10 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Arrays;
 
+import me.toptas.fancyshowcase.DismissListener;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+
 public class MainActivity extends BaseAppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, ConfirmationDialogClosedListener{
 
@@ -125,6 +131,31 @@ public class MainActivity extends BaseAppCompatActivity
 
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
+    private DismissListener notificationsTutorialDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getTutorialHelper().showProfileTutorial(MainActivity.this, toolbarTabLayout.getTabAt(2).getCustomView(), profileTutorialDismissListener);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener profileTutorialDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getTutorialHelper().showAddDiveSpotTutorial(MainActivity.this, mainViewPagerAdapter.getMapListFragment().getAddDsFab());
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private View mapTabView;
 
     private SigningUserResultListener signUpResultListener = new SigningUserResultListener(true);
     private SigningUserResultListener signInResultListener = new SigningUserResultListener(false);
@@ -212,19 +243,14 @@ public class MainActivity extends BaseAppCompatActivity
         Log.i(TAG, "onCreate");
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         setContentView(R.layout.activity_main);
-        startActivity();
-        loggedInDuringLastOnStart = SharedPreferenceHelper.getIsUserSignedIn();
-    }
-
-    private void startActivity() {
-//        getWindow().setBackgroundDrawable(null);
         findViews();
         setUi();
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
-        setupTabLayout();
         mainViewPager.setCurrentItem(0);
+        mapTabView = toolbarTabLayout.getTabAt(0).getCustomView();
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+        loggedInDuringLastOnStart = SharedPreferenceHelper.getIsUserSignedIn();
     }
 
     private void initGoogleLoginManager() {
@@ -312,6 +338,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (allNotificationsFragment != null) {
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
         }
+        setupTabLayout();
     }
 
     private void findViews() {
@@ -330,6 +357,14 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
+        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+            SharedPreferenceHelper.setIsNeedToShowTutorial();
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial();
+            new Handler().postDelayed(() -> {
+                DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener);
+            }, 4000);
+            return;
+        }
         getIsHasNewotifications();
     }
 

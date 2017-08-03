@@ -46,6 +46,7 @@ public class SharedPreferenceHelper {
     private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
     private static final String TUTORIAL_STATE = "tutorial_state";
     private static final String IS_MUST_TRACK_FB_EVENT = "fb_event";
+    private static final String IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL = "dive_spot_tutorial";
 
     private static SharedPreferences prefs;
 
@@ -88,6 +89,18 @@ public class SharedPreferenceHelper {
     public boolean getIsMustTrackFbEvent() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getBoolean(IS_MUST_TRACK_FB_EVENT, true);
+    }
+
+    public void setIsMustToShowDiveSpotDetailsTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, true);
+        editor.apply();
+    }
+
+    public boolean getIsMstToShowDiveSpotTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
     }
 
     public void setTutorialState(TutorialState state) {

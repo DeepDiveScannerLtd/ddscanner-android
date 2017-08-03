@@ -124,6 +124,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     // other libraries
+    compile 'com.github.faruktoptas:FancyShowCaseView:0.1.4'
     compile 'com.facebook.android:facebook-android-sdk:4.22.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.parceler:parceler-api:1.0.4'

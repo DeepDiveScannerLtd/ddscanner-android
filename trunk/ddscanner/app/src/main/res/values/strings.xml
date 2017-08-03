@@ -550,4 +550,10 @@
     <string name="tutorial_item_explore_title">Explore</string>
     <string name="tutorial_item_explore">7000 dive spots, 100+ countries gathered in one place</string>
     <string name="delete_this_review">Delete this review?</string>
+    <string name="tutorial_notifications"><![CDATA[Never miss <b>the latest news</b> from our active users]]></string>
+    <string name="tutorial_profile"><![CDATA[See your achievements starting from <b>points</b> to <b>personal titles</b>]]></string>
+    <string name="tutorial_add_spot"><![CDATA[Add more <b>dive spots</b> to the map]]></string>
+    <string name="tutorial_checkin"><![CDATA[<b>Mark</b> the spots you’ve visited]]></string>
+    <string name="tutorial_add_photo"><![CDATA[<b>Upload</b> your underwater photos]]></string>
+    <string name="write_review_tutorial"><![CDATA[<b>Write</b> a few words about you dive]]></string>
 </resources>

@@ -545,6 +545,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public FloatingActionButton getAddDsFab() {
+        return addDsFab;
+    }
+
     @Subscribe
     public void showMap(CloseListEvent event) {
         mapListFAB.performClick();
