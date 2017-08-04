@@ -5,32 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Helpers;
-import com.facebook.CallbackManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class LoginActivity extends BaseAppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-
-    private static final String TAG = "SOCIAL";
-
-    private CallbackManager callbackManager;
-
-    private GoogleApiClient mGoogleApiClient;
-    private MaterialDialog materialDialog;
-    private Toolbar toolbar;
-
-    private Button login;
-    private Button signUp;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -45,9 +30,8 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
     }
 
     private void findViews() {
-        toolbar = findViewById(R.id.toolbar);
-        signUp = findViewById(R.id.sign_up);
-        login = findViewById(R.id.login);
+        Button signUp = findViewById(R.id.sign_up);
+        Button login = findViewById(R.id.login);
 
         signUp.setOnClickListener(this);
         login.setOnClickListener(this);

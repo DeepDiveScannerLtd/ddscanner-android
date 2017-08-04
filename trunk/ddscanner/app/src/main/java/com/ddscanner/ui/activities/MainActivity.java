@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,7 +21,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
-import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
@@ -92,31 +90,23 @@ import com.squareup.otto.Subscribe;
 import java.util.Arrays;
 
 import me.toptas.fancyshowcase.DismissListener;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.FocusShape;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends BaseAppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, ConfirmationDialogClosedListener{
 
     private static final String TAG = MainActivity.class.getName();
-
-    private Uri capturedImageUri;
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
-    private ImageView changeAccountButton;
     private MainActivityPagerAdapter mainViewPagerAdapter;
     private ProfileFragment profileFragment;
     private DiverNotificationsFragment diverNotificationsFragment;
-    private DiveCenterNotificationsFragment diveCenterNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
     private PersonalNotificationsFragment allNotificationsFragment;
-    private DiveCenterProfileFragment diveCenterProfileFragment;
-    private ImageView imageView;
-    private boolean isHasLocation;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private boolean isDiveSpotInfoWindowShown = false;
@@ -154,8 +144,6 @@ public class MainActivity extends BaseAppCompatActivity
 
         }
     };
-
-    private View mapTabView;
 
     private SigningUserResultListener signUpResultListener = new SigningUserResultListener(true);
     private SigningUserResultListener signInResultListener = new SigningUserResultListener(false);
@@ -248,7 +236,6 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         mainViewPager.setCurrentItem(0);
-        mapTabView = toolbarTabLayout.getTabAt(0).getCustomView();
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         loggedInDuringLastOnStart = SharedPreferenceHelper.getIsUserSignedIn();
     }
@@ -349,7 +336,7 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn = findViewById(R.id.search_location_menu_button);
         btnFilter = findViewById(R.id.filter_menu_button);
         acountChangeLayout = findViewById(R.id.account_change_layout);
-        changeAccountButton = findViewById(R.id.change_account);
+        ImageView changeAccountButton = findViewById(R.id.change_account);
         changeAccountButton.setOnClickListener(this);
     }
 
@@ -360,9 +347,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
             SharedPreferenceHelper.setIsNeedToShowTutorial();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial();
-            new Handler().postDelayed(() -> {
-                DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener);
-            }, 4000);
+            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 4000);
             return;
         }
         getIsHasNewotifications();
@@ -522,18 +507,6 @@ public class MainActivity extends BaseAppCompatActivity
                             break;
                     }
                 }
-                if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
-//                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-//                        mainViewPagerAdapter.notifyDataSetChanged();
-//                        mainViewPager.destroyDrawingCache();
-//                        setupTabLayout();
-//                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-//                    } else {
-//                        mainViewPagerAdapter.onLoggedOut();
-//                        changeVisibilityChangeAccountLayout(View.GONE);
-//                    }
-                }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
@@ -646,6 +619,7 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause() {
         super.onPause();
@@ -654,6 +628,7 @@ public class MainActivity extends BaseAppCompatActivity
         DDScannerApplication.activityPaused();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onResume() {
         super.onResume();
@@ -833,16 +808,12 @@ public class MainActivity extends BaseAppCompatActivity
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
         if (mainViewPagerAdapter != null) {
             mainViewPagerAdapter.setDiveCenterProfileFragment(diveCenterProfileFragment);
-        } else {
-            this.diveCenterProfileFragment = diveCenterProfileFragment;
         }
     }
 
     public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
         if (mainViewPagerAdapter != null) {
             mainViewPagerAdapter.setDiveCenterNotificationsFragment(diveCenterNotificationsFragment);
-        } else {
-            this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
         }
     }
 

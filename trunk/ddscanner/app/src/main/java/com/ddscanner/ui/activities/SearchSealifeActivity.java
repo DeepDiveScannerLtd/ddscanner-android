@@ -44,10 +44,8 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
 
     private Toolbar toolbar;
     private RecyclerView sealifeList;
-    private TextView results;
     private RelativeLayout notFoundLayout;
     private TextView addManually;
-    private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
     private MenuItem searchMenuItem;
@@ -147,7 +145,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         searchMenuItem = menu.findItem(R.id.action_search);
         searchMenuItem.setVisible(false);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);

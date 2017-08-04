@@ -48,9 +48,6 @@ import java.util.List;
 
 public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
 
-    private static final String TAG = SearchSpotOrLocationActivity.class.getName();
-
-    private Menu menu;
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -160,7 +157,6 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         MenuItem item = menu.findItem(R.id.action_search);
         item.setVisible(true);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -196,18 +192,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
                                 if (autocompletePredictions.getStatus().isSuccess()) {
                                     for (AutocompletePrediction prediction : autocompletePredictions) {
                                         placeList.add(prediction.getPlaceId());
-                                        Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(places -> {
-                                            if (places.getStatus().isSuccess()) {
-                                                try {
-                                                    Place place = places.get(0);
-                                                    // placeList.add(place);
-                                                } catch (IllegalStateException e) {
 
-                                                }
-                                            }
-                                            places.release();
-                                        });
-                                        // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
                                     }
                                     searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                 }

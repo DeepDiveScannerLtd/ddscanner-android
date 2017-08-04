@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
@@ -35,8 +34,6 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
     private ProgressView progressView;
     private RecyclerView recyclerView;
     private BaseSearchAdapter diveCentersListAdapter;
-    private Menu menu;
-    private MaterialDialog materialDialog;
     private MenuItem searchMenuItem;
 
     private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
@@ -60,7 +57,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
-            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+//            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
@@ -86,7 +83,6 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
 
 
     private void findViews() {
-        materialDialog = Helpers.getMaterialDialog(this);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressView = findViewById(R.id.progress_bar);
@@ -105,7 +101,6 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         searchMenuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setQueryHint(getString(R.string.search));
