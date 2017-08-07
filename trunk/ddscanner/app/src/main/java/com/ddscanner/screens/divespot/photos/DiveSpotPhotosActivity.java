@@ -84,11 +84,11 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
 
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
             }

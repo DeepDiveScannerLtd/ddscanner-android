@@ -202,7 +202,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
                     DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }

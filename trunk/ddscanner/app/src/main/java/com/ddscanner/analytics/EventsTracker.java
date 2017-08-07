@@ -135,6 +135,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_UNKNOWN_SERVER_ERROR = "unknown_error";
     private static final String EVENT_PARAMETER_NAME_ERROR_URL = "url";
     private static final String EVENT_PARAMETER_NAME_ERROR_TEXT = "text";
+    private static final String EVENT_PARAMETER_NAME_RESPONSE_CODE = "response_code";
     private static final String EVENT_PARAMETER_NAME_USER_TYPE = "user_type";
 
     // ----------------------------------------------------
@@ -633,33 +634,12 @@ public class EventsTracker {
 //        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
     }
 
-    public static void trackUnknownServerError(String url, String errorText) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        String userType = DDScannerApplication.getInstance().getActiveUserType();
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
-        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        FlurryAgent.logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_UNKNOWN_SERVER_ERROR, appsflyerParams);
-
-        //Facebook
-        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+    public static void trackUnknownServerError(String url, int errorCode, String errorMessage) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_RESPONSE_CODE, String.valueOf(errorCode));
+        map.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorMessage);
+        map.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
+        trackEventWithParameters(map, EVENT_NAME_UNKNOWN_SERVER_ERROR);
     }
 
     public enum AchievementsViewSource {

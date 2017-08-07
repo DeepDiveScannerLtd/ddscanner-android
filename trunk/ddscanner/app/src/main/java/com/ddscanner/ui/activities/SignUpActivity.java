@@ -483,7 +483,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_email_exist, R.string.message_email_exist, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.error_unexpected_error, false);
                     break;
             }

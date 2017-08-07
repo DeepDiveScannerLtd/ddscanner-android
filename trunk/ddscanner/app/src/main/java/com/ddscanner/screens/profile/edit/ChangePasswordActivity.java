@@ -56,7 +56,6 @@ public class ChangePasswordActivity extends BaseAppCompatActivity implements Vie
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_dialog_titile, R.string.old_password_incorrect, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }

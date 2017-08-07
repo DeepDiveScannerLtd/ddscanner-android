@@ -1,5 +1,6 @@
 package com.ddscanner.rest;
 
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.ValidationError;
@@ -153,9 +154,12 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 // If unexpected error code is received
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
+                    EventsTracker.trackUnknownServerError(call.request().url().toString(), responseCode, generalError.getMessage());
                     resultListener.onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, null, call.request().url().toString(), generalError.getMessage());
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                } catch (NullPointerException ignored) {
+                    
                 }
                 break;
         }
