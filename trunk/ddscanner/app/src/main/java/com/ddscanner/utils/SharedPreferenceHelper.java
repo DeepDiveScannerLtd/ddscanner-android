@@ -91,10 +91,10 @@ public class SharedPreferenceHelper {
         return prefs.getBoolean(IS_MUST_TRACK_FB_EVENT, true);
     }
 
-    public void setIsMustToShowDiveSpotDetailsTutorial() {
+    public void setIsMustToShowDiveSpotDetailsTutorial(boolean value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
-        editor.putBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, true);
+        editor.putBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, value);
         editor.apply();
     }
 
