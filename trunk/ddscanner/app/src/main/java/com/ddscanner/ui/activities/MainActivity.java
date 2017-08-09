@@ -347,7 +347,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
             SharedPreferenceHelper.setIsNeedToShowTutorial();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial();
-            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 4000);
+            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 3000);
             return;
         }
         getIsHasNewotifications();
