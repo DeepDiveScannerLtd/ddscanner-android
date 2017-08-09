@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -343,6 +344,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onConnectionSuspended(int i) {
+                        Toast.makeText(SignUpActivity.this, R.string.cant_connect_to_google, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
