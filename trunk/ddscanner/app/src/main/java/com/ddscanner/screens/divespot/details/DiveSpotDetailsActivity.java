@@ -255,10 +255,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMstToShowDiveSpotTutorial()) {
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(false);
-            DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
-        }
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
 
     private void findViews() {
@@ -410,7 +407,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.informationLayout.setVisibility(View.VISIBLE);
         binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
         binding.scrollView.setNestedScrollingEnabled(true);
-        DDScannerApplication.getInstance().getTutorialHelper().showCheckinTutorial(this, binding.fabCheckin, checkinTutorialDismissListener);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMstToShowDiveSpotTutorial()) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(false);
+            DDScannerApplication.getInstance().getTutorialHelper().showCheckinTutorial(this, binding.fabCheckin, checkinTutorialDismissListener);
+        }
     }
 
 
