@@ -444,8 +444,6 @@ public class DDScannerRestClient {
                 Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
                 }.getType();
                 new UpdateNotifications(resultListener).execute((ArrayList<NotificationEntity>) gson.fromJson(responseString, listType));
-//                validateNotifications(resultListener, gson.fromJson(responseString, listType));
-//                resultListener.onSuccess(notificationEntities);
             }
         });
     }

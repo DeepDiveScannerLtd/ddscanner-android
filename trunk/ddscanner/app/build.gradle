@@ -45,6 +45,7 @@ android {
             resValue "string", "external_path", "Android/data/com.ddscanner.debug/files/Pictures"
             resValue "string", "base_photo_url", "https://dev.ddscanner.xyz/v2_1/image/%1\$s?size=%2\$s"
             resValue "string", "dds_server_id", "416"
+            resValue "string", "google_login_manager_key", "195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com"
         }
         release {
             buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "true"
@@ -57,6 +58,7 @@ android {
             resValue "string", "application_id", "com.ddscanner"
             resValue "string", "external_path", "Android/data/com.ddscanner/files/Pictures"
             resValue "string", "dds_server_id", "416"
+            resValue "string", "google_login_manager_key", "195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

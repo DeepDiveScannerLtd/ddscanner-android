@@ -244,7 +244,7 @@ public class MainActivity extends BaseAppCompatActivity
         needToClearDefaultAccount = true;
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.google_login_manager_key))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)

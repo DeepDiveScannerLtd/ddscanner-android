@@ -323,7 +323,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
         needToClearDefaultAccount = true;
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.google_login_manager_key))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -371,12 +371,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
-                            }
-                        }).executeAsync();
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken())).executeAsync();
                     }
 
                     @Override
