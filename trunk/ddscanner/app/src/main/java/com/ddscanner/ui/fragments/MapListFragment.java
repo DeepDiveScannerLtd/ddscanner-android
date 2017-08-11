@@ -46,6 +46,7 @@ import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.ui.views.DiveSpotMapInfoView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -89,10 +90,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private ProgressBar progressBar;
     private FloatingActionButton mapListFAB;
     private FloatingActionButton addDsFab;
-    private RelativeLayout diveSpotInfo;
-    private TextView diveSpotName;
-    private LinearLayout rating;
-    private TextView diveSpotType;
+    private DiveSpotMapInfoView diveSpotInfo;
     private ImageView zoomIn;
     private ImageView zoomOut;
     private ImageView goToMyLocation;
@@ -104,8 +102,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private boolean isToastMessageVisible;
 
     public BaseAppCompatActivity baseAppCompatActivity;
-
-    private Map<String, Drawable> infoWindowBackgroundImages = new HashMap<>();
 
     // List mode member fields
     private RecyclerView recyclerView;
@@ -186,14 +182,11 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
         // Map mode
         diveSpotInfo = view.findViewById(R.id.dive_spot_info_layout);
-        diveSpotName = view.findViewById(R.id.dive_spot_title);
-        rating = view.findViewById(R.id.rating);
         zoomIn = view.findViewById(R.id.zoom_plus);
         zoomOut = view.findViewById(R.id.zoom_minus);
         goToMyLocation = view.findViewById(R.id.go_to_my_location);
         mapListFAB = view.findViewById(R.id.map_list_fab);
         addDsFab = view.findViewById(R.id.add_ds_fab);
-        diveSpotType = view.findViewById(R.id.object);
         progressBarMyLocation = view.findViewById(R.id.progressBar);
 
         // List mode
@@ -216,20 +209,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("RestrictedApi")
     private void setMapView() {
         MapsInitializer.initialize(getActivity());
-
-        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_WRECK, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_wreck));
-        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_CAVE, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_cave));
-        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_REEF, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_reef));
-        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_OTHER, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_other));
-
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = view.findViewById(R.id.mapView);
-        Log.i(TAG, "mMapView inited");
         mMapView.onCreate(new Bundle());
         mMapView.getMapAsync(googleMap -> {
             Log.i(TAG, "onMapReady, googleMap = " + googleMap);
@@ -331,11 +313,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
                 break;
             case R.id.add_ds_fab:
-//                if (SharedPreferenceHelper.getIsUserSignedIn()) {
-//                    AddDiveSpotActivity.showForResult(getActivity());
-//                } else {
-//                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
-//                }
                 DDScannerApplication.bus.post(new OpenAddDiveSpotActivity());
                 break;
             case R.id.showMapContinue:
@@ -351,34 +328,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapControlLayout.animate().translationY(-diveSpotInfoHeight);
         addDsFab.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
-        diveSpotInfo.animate()
-                .translationY(0)
-                .alpha(1.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        diveSpotInfo.setVisibility(View.VISIBLE);
-                    }
-                });
-        diveSpotName.setText(event.getDiveSpotShort().getName());
-        diveSpotType.setText(event.getDiveSpotShort().getObject());
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpotShort().getObject()));
         lastDiveSpotId = event.getDiveSpotShort().getId();
-        rating.removeAllViews();
-        for (int k = 0; k < Math.round(event.getDiveSpotShort().getRating()); k++) {
-            ImageView iv = new ImageView(getActivity());
-            iv.setImageResource(R.drawable.ic_iw_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Math.round(event.getDiveSpotShort().getRating()); k++) {
-            ImageView iv = new ImageView(getActivity());
-            iv.setImageResource(R.drawable.ic_iw_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
+        diveSpotInfo.show(event.getDiveSpotShort());
     }
 
     @Subscribe
@@ -399,17 +350,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
-        diveSpotInfo.animate()
-                .translationY(diveSpotInfoHeight)
-                .alpha(0.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        diveSpotInfo.setVisibility(View.GONE);
-                    }
-                });
+        diveSpotInfo.hide(diveSpotInfoHeight);
     }
 
     @Subscribe
@@ -431,17 +372,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
-        diveSpotInfo.animate()
-                .translationY(diveSpotInfo.getHeight())
-                .alpha(0.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        diveSpotInfo.setVisibility(View.GONE);
-                    }
-                });
+        diveSpotInfo.hide(diveSpotInfoHeight);
     }
 
     public void fillDiveSpots() {
