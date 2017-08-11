@@ -76,6 +76,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +84,7 @@ import me.toptas.fancyshowcase.DismissListener;
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
 
-public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener, ConfirmationDialogClosedListener {
+public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener, ConfirmationDialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
@@ -457,14 +458,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= 18) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
+            pickPhotosFromGallery();
         }
     }
 
@@ -570,6 +564,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
@@ -607,17 +602,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     refreshActivity();
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
-                if (resultCode == RESULT_OK) {
-                    List<String> urisList;
-                    urisList = Helpers.getPhotosFromIntent(data, this);
-                    if (isMapsShown) {
-                        AddPhotosDoDiveSpotActivity.showForAddPhotos(true, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS);
-                        return;
-                    }
-                    AddPhotosDoDiveSpotActivity.showForAddPhotos(false, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS);
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), diveSpotDetailsResultListener);
@@ -625,7 +609,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
-
+                    pickPhotosFromGallery();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
@@ -683,32 +667,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
                 if (resultCode == RESULT_OK) {
-//                    if (mapsAdapter == null) {
-//                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
-//                        binding.addPhotosLayout.setVisibility(View.GONE);
-//                        binding.mapsRc.setVisibility(View.VISIBLE);
-//                        binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-//                        binding.mapsRc.setAdapter(mapsAdapter);
-//                        return;
-//                    }
-//                    mapsAdapter.addPhotos(data.getStringArrayListExtra("images"));
                     refreshActivity();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
-//                    if (photosAdapter == null) {
-//                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
-//                        binding.addPhotosLayout.setVisibility(View.GONE);
-//                        binding.photosRc.setVisibility(View.VISIBLE);
-//                        binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-//                        binding.photosRc.setAdapter(photosAdapter);
-//                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setPhotos(data.getStringArrayListExtra("images"));
-//                        binding.progressBar.setVisibility(View.VISIBLE);
-//                        binding.getDiveSpotViewModel().loadMainImage(binding.mainPhoto, binding.getDiveSpotViewModel());
-//                        return;
-//                    }
-//                    photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
                     refreshActivity();
                 }
                 break;
@@ -808,13 +771,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     @Override
     public void onStart() {
         super.onStart();
-//        DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        DDScannerApplication.bus.unregister(this);
     }
 
     @Subscribe
@@ -970,6 +931,21 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     public void onPositiveDialogClicked() {
         EventsTracker.trackDiveSpotInvalid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
+    }
+
+    @Override
+    public void onPicturesTaken(ArrayList<String> pictures) {
+        if (isMapsShown) {
+            AddPhotosDoDiveSpotActivity.showForAddPhotos(true, DiveSpotDetailsActivity.this, pictures, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS);
+            return;
+        }
+        AddPhotosDoDiveSpotActivity.showForAddPhotos(false, DiveSpotDetailsActivity.this, pictures, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS);
+
+    }
+
+    @Override
+    public void onPictureFromCameraTaken(File picture) {
+
     }
 
     @Override
