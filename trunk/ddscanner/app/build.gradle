@@ -76,7 +76,7 @@ repositories {
 }
 //TODO def playServicesVersion="9.8.0" def supportVersionVersion="25.0.0"
 def playServicesVersion="11.0.4"
-def supportVersionVersion="26.0.0"
+def supportVersionVersion="26.0.1"
 
 dependencies {
 
