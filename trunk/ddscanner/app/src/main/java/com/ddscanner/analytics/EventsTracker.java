@@ -197,7 +197,11 @@ public class EventsTracker {
         AnalyticsSystemsManager.getLogger().logEvent(eventName, firebaseParams);
         FlurryAgent.logEvent(eventName, params);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, firebaseParams);
+        FirebaseAnalytics firebaseAnalytics = AnalyticsSystemsManager.getFirebaseAnalytics();
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+        firebaseAnalytics.logEvent(eventName, firebaseParams);
     }
 
     private static void trackEventWithoutParameters(String eventName) {
