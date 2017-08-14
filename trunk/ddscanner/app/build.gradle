@@ -12,6 +12,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+
+    lintOptions {
+
+        checkReleaseBuilds false
+
+    }
+
     signingConfigs {
         debug {
             storeFile file('../../../build/debug.keystore')
@@ -22,7 +29,7 @@ android {
     }
     //TODO compileSdkVersion 25 buildToolsVersion "25"
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId "com.ddscanner"
         minSdkVersion 18
