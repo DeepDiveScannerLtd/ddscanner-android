@@ -194,6 +194,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private void setupUi() {
         binding.swiperefresh.setOnRefreshListener(this);
+        binding.achievmentRv.setNestedScrollingEnabled(false);
     }
 
     @Override
