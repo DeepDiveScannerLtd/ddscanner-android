@@ -36,6 +36,7 @@ import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCenterSpotsClusterManager;
+import com.ddscanner.ui.views.DiveSpotMapInfoView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -68,7 +69,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private ProgressBar progressBar;
     private FloatingActionButton mapListFAB;
     private FloatingActionButton addDsFab;
-    private RelativeLayout diveSpotInfo;
+    private DiveSpotMapInfoView diveSpotInfo;
     private TextView diveSpotName;
     private LinearLayout rating;
     private TextView diveSpotType;
@@ -388,35 +389,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
         mapControlLayout.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
-            diveSpotInfo.animate()
-                .translationY(0)
-                .alpha(1.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        diveSpotInfo.setVisibility(View.VISIBLE);
-                    }
-                });
-
-        diveSpotName.setText(diveSpotShort.getName());
-        diveSpotType.setText(diveSpotShort.getObject());
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
+        diveSpotInfo.show(diveSpotShort);
         lastDiveSpotId = diveSpotShort.getId();
-        rating.removeAllViews();
-        for (int k = 0; k < Math.round(diveSpotShort.getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Math.round(diveSpotShort.getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
     }
 
     private void hideDiveSpotInfo() {
@@ -424,17 +398,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             mapControlLayout.animate().translationY(0);
             addDsFab.animate().translationY(0);
             mapListFAB.animate().translationY(0);
-            diveSpotInfo.animate()
-                    .translationY(diveSpotInfoHeight)
-                    .alpha(0.0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            diveSpotInfo.setVisibility(View.GONE);
-                        }
-                    });
+            diveSpotInfo.hide(diveSpotInfoHeight);
             lastClickeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             lastClickeMarker = null;
         }
