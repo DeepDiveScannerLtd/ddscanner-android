@@ -531,4 +531,11 @@ public class Helpers {
         return outputFile;
     }
 
+    public static <T> T checkNotNull(T object) {
+        if (object != null) {
+            return object;
+        }
+        throw new IllegalArgumentException("Argument must not be null");
+    }
+
 }

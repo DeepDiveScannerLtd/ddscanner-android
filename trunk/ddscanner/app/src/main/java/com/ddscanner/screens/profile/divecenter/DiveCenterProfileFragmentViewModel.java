@@ -1,6 +1,7 @@
 package com.ddscanner.screens.profile.divecenter;
 
 import android.databinding.BindingAdapter;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,8 +11,14 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Address;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.utils.EmailIntentBuilder;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.PhoneCallIntentBuilder;
+import com.klinker.android.link_builder.Link;
+import com.klinker.android.link_builder.LinkBuilder;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -95,29 +102,48 @@ public class DiveCenterProfileFragmentViewModel {
     @BindingAdapter({"setEmails"})
     public static void setEmailsFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
         StringBuilder outString = new StringBuilder();
+        ArrayList<Link> links = new ArrayList<>();
         if (viewModel != null && viewModel.getDiveCenterProfile().getEmails() != null) {
             for (String email : viewModel.getDiveCenterProfile().getEmails()) {
                 StringBuilder append = outString.append(email);
+                Link link = new Link(email);
+                link.setUnderlined(false);
+                link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
+                link.setOnClickListener(clickedText -> {
+                    EmailIntentBuilder.from(view.getContext()).to(email).start();
+                });
+                links.add(link);
                 if (viewModel.getDiveCenterProfile().getEmails().indexOf(email) != viewModel.getDiveCenterProfile().getEmails().size() - 1) {
                     append.append(", ");
                 }
             }
         }
         view.setText(outString.toString());
+        LinkBuilder.on(view).addLinks(links).build();
     }
 
     @BindingAdapter({"setPhones"})
     public static void setPhones(TextView view, DiveCenterProfileFragmentViewModel viewModel){
         StringBuilder outString = new StringBuilder();
+        ArrayList<Link> links = new ArrayList<>();
         if (viewModel != null && viewModel.getDiveCenterProfile().getPhones() != null) {
             for (String phone : viewModel.getDiveCenterProfile().getPhones()) {
                 StringBuilder append = outString.append(phone);
+                Link link = new Link(phone);
+                link.setUnderlined(false);
+                link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
+                link.setOnClickListener(clickedText -> {
+                    PhoneCallIntentBuilder.from(view.getContext()).to(phone).start();
+                });
+                links.add(link);
                 if (viewModel.getDiveCenterProfile().getPhones().indexOf(phone) != viewModel.getDiveCenterProfile().getPhones().size() - 1) {
                     append.append(", ");
                 }
             }
         }
+
         view.setText(outString);
+        LinkBuilder.on(view).addLinks(links).build();
     }
 
     @BindingAdapter("arrowVisibilityFrom")
