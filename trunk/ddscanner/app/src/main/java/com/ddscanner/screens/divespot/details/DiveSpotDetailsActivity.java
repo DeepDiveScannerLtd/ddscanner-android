@@ -326,7 +326,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     private void setUi() {
-        if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER && !isCheckedIn) {
             binding.fabCheckin.setVisibility(View.VISIBLE);
         }
         if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER && binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isWorkingHere()) {
@@ -400,8 +400,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         mapFragment.getMapAsync(googleMap -> workWithMap(googleMap));
 
         if (isCheckedIn) {
-            checkInUi();
+            binding.fabCheckin.setVisibility(View.GONE);
+//            checkInUi();
         } else {
+            binding.fabCheckin.setVisibility(View.VISIBLE);
             checkOutUi();
         }
         binding.progressBarFull.setVisibility(View.GONE);
