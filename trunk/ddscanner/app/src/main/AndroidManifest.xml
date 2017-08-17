@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
     <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -271,6 +272,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".services.CheckResentRunService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -281,6 +283,11 @@
             android:name=".screens.profile.edit.divecenter.search.CreateDiveCenterActivity" />
         <activity android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
             android:screenOrientation="portrait" />
+        <receiver android:name=".receivers.DeviceBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

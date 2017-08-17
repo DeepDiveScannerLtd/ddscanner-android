@@ -19,6 +19,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.screens.tutorial.TutorialActivity;
+import com.ddscanner.services.CheckResentRunService;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -94,11 +95,17 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             showMainActivity();
         }
 
-
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isMustToEnableNotification()) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().enableNotification();
+        } else {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().recordRunTime();
+        }
         LinearLayout mainLayout = findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
         mainLayout.startAnimation(fadeInAnimation);
+
+        startService(new Intent(this, CheckResentRunService.class));
 
     }
 
