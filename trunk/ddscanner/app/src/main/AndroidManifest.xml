@@ -290,6 +290,8 @@
             android:name=".screens.profile.edit.divecenter.search.CreateDiveCenterActivity" />
         <activity android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".screens.booking.tickets.TicketsActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

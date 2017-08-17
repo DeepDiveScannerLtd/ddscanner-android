@@ -20,6 +20,7 @@ import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.screens.booking.offers.OffersActivity;
 import com.ddscanner.screens.booking.orders.OrdersActivity;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.screens.booking.tickets.TicketsActivity;
 import com.ddscanner.screens.tutorial.TutorialActivity;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -137,9 +138,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
         showMainActivityRunnable = () -> {
-            MainActivity.show(SplashActivity.this);
+//            MainActivity.show(SplashActivity.this);
 //                MainActivity.show(SplashActivity.this);
-                OffersActivity.show(SplashActivity.this);
+//                OffersActivity.show(SplashActivity.this);
+            TicketsActivity.show(this);
             SplashActivity.this.finish();
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {

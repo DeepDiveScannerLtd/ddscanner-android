@@ -11,4 +11,8 @@
         <attr name="block_subtitle" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="EditTextWithErrorView">
+        <attr name="maxLength" format="integer"/>
+    </declare-styleable>
+
 </resources>
