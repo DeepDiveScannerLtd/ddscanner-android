@@ -65,10 +65,10 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         public EditorsUsersListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
-            userName = (TextView) v.findViewById(R.id.user_name);
-            info = (TextView) v.findViewById(R.id.count);
-            creatorLabel = (ImageView) v.findViewById(R.id.creator_label);
+            userAvatar = v.findViewById(R.id.user_avatar);
+            userName = v.findViewById(R.id.user_name);
+            info = v.findViewById(R.id.count);
+            creatorLabel = v.findViewById(R.id.creator_label);
         }
 
         @Override

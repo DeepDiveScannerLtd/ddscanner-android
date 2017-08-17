@@ -87,4 +87,6 @@
 
     <color name="swipe_refresh_angle_color">#526CAE</color>
 
+    <color name="dive_center_charachteristic_color">#8b8b8b</color>
+
 </resources>

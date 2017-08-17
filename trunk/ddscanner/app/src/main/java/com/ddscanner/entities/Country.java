@@ -37,11 +37,7 @@ public class Country implements Comparable<Country> {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Country) {
-            if (this.type.equalsIgnoreCase(((Country) o).getType())) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.type.equalsIgnoreCase(((Country) o).getType());
         } else {
             return false;
         }

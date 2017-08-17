@@ -11,7 +11,9 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.utils.TutorialHelper;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.applinks.AppLinkData;
 import com.squareup.otto.Bus;
 
@@ -37,6 +39,7 @@ public class DDScannerApplication extends Application {
     private DialogHelpers dialogHelpers;
     private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
     private ArrayList<String> notificationsContainer = new ArrayList<>();
+    private TutorialHelper tutorialHelper;
 
     private static DDScannerApplication instance;
 
@@ -54,26 +57,20 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         AnalyticsSystemsManager.initAnalyticsSystems(this);
-        AppLinkData.fetchDeferredAppLinkData(this, appLinkData -> {});
+//        AppLinkData.fetchDeferredAppLinkData(this, appLinkData -> {});
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
         activeUserType = SharedPreferenceHelper.getActiveUserType().getName();
         tutorialState = sharedPreferenceHelper.getTutorialState();
         dialogHelpers = new DialogHelpers();
+        tutorialHelper = new TutorialHelper();
     }
 
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-    public static void showErrorActivity(Context context) {
-//        Log.i(TAG, "showErrorActivity");
-//        Intent error = new Intent(context, InternetClosedActivity.class);
-//        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(error);
-    }
-
+    
     public DialogHelpers getDialogHelpers() {
         return dialogHelpers;
     }
@@ -129,6 +126,10 @@ public class DDScannerApplication extends Application {
 
     public String getTutorialState() {
         return tutorialState;
+    }
+
+    public TutorialHelper getTutorialHelper() {
+        return tutorialHelper;
     }
 
 }

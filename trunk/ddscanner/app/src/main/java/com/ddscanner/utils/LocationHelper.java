@@ -84,11 +84,7 @@ public class LocationHelper implements LocationListener {
 
     public static boolean isLocationProvidersAvailable(Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
     }
 
     @SuppressLint("MissingPermission")
@@ -135,17 +131,13 @@ public class LocationHelper implements LocationListener {
 
     private void sendUpdateLocationRequest(LatLng latLng) {
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserLocation(latLng);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             DDScannerApplication.getInstance().getDdScannerRestClient(null).postUpdateUserLocation(updateLocationResultListener, new UpdateLocationRequest(FirebaseInstanceId.getInstance().getId(), String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 2));
         }
     }
 
     private boolean isLocationOk(Location lastKnownLocation) {
-        if (lastKnownLocation != null && lastKnownLocation.hasAccuracy() && lastKnownLocation.getAccuracy() <= LOCATION_ACCURACY && (System.currentTimeMillis() - lastKnownLocation.getTime() <= MAX_LOCATION_LIFE_PERIOD)) {
-            return true;
-        } else {
-            return false;
-        }
+        return lastKnownLocation != null && lastKnownLocation.hasAccuracy() && lastKnownLocation.getAccuracy() <= LOCATION_ACCURACY && (System.currentTimeMillis() - lastKnownLocation.getTime() <= MAX_LOCATION_LIFE_PERIOD);
     }
 
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {

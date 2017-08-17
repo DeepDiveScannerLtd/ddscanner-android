@@ -61,7 +61,7 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
         SealifeReviewItemViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            photo = (ImageView) view.findViewById(R.id.photo);
+            photo = view.findViewById(R.id.photo);
         }
 
         @Override

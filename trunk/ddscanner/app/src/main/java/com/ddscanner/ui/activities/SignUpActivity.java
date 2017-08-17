@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -88,11 +89,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (name.getText().length() > 0) {
-                isNameEmpty = false;
-            } else {
-                isNameEmpty = true;
-            }
+            isNameEmpty = name.getText().length() <= 0;
             changeButtonState();
         }
 
@@ -109,11 +106,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (password.getText().length() > 3 && password.getText().length() < 33) {
-                isPasswordEmpty = false;
-            } else {
-                isPasswordEmpty = true;
-            }
+            isPasswordEmpty = !(password.getText().length() > 3 && password.getText().length() < 33);
             changeButtonState();
         }
 
@@ -130,11 +123,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-                isEmailEmpty = false;
-            } else {
-                isEmailEmpty = true;
-            }
+            isEmailEmpty = !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches();
             changeButtonState();
         }
 
@@ -170,16 +159,16 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        fbLogin = (LinearLayout) findViewById(R.id.fb_custom);
-        googleLogin = (LinearLayout) findViewById(R.id.custom_google);
-        buttonSignUp = (Button) findViewById(R.id.btn_login_or_sign_up_via_email);
-        privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
-        forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        name = (EditText) findViewById(R.id.name);
+        toolbar = findViewById(R.id.toolbar);
+        tabLayout = findViewById(R.id.tab_layout);
+        fbLogin = findViewById(R.id.fb_custom);
+        googleLogin = findViewById(R.id.custom_google);
+        buttonSignUp = findViewById(R.id.btn_login_or_sign_up_via_email);
+        privacyPolicy = findViewById(R.id.privacy_policy);
+        forgotPasswordView = findViewById(R.id.forgot_password);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        name = findViewById(R.id.name);
         name.addTextChangedListener(nameTextWatcher);
         password.addTextChangedListener(passwordTextWatcher);
         email.addTextChangedListener(emailTextWatcher);
@@ -335,7 +324,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
         needToClearDefaultAccount = true;
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.google_login_manager_key))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -355,6 +344,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
 
                     @Override
                     public void onConnectionSuspended(int i) {
+                        Toast.makeText(SignUpActivity.this, R.string.cant_connect_to_google, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
@@ -383,12 +373,7 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
-                            }
-                        }).executeAsync();
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken())).executeAsync();
                     }
 
                     @Override
@@ -495,7 +480,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_email_exist, R.string.message_email_exist, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.error_unexpected_error, false);
                     break;
             }

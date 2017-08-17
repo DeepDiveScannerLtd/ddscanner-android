@@ -339,53 +339,53 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void findViewsAndSetupCurrentData(DiveSpotDetailsEntity diveSpot) {
-        isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
-        isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
-        workingLayout = (LinearLayout) findViewById(R.id.working_layout);
-        isEditLayout = (LinearLayout) findViewById(R.id.edit_layout);
-        depth = (EditText) findViewById(R.id.depth);
+        isWorkingSwitch = findViewById(R.id.switch_button_working);
+        isEditSwitch = findViewById(R.id.switch_button_edit);
+        workingLayout = findViewById(R.id.working_layout);
+        isEditLayout = findViewById(R.id.edit_layout);
+        depth = findViewById(R.id.depth);
         depth.setText(diveSpot.getDepth());
-        errorVisibility = (TextView) findViewById(R.id.error_visibility);
-        maxVisibilityHint = (TextView) findViewById(R.id.max_visibility_hint);
-        minVisibilityHint = (TextView) findViewById(R.id.min_visibility_hint);
-        errorCurrent = (TextView) findViewById(R.id.error_current);
-        errorTranslations = (TextView) findViewById(R.id.error_translations);
-        errorLevel = (TextView) findViewById(R.id.error_level);
-        errorObject = (TextView) findViewById(R.id.error_object);
-        errorCountry = (TextView) findViewById(R.id.error_country);
-        btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
-        diveSpotPhotosRecyclrView = (RecyclerView) findViewById(R.id.photos_rc);
-        levelAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
-        objectAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
-        currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
-        pickLocation = (LinearLayout) findViewById(R.id.location_layout);
-        locationTitle = (TextView) findViewById(R.id.location);
-        btnSave = (Button) findViewById(R.id.button_create);
-        sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
-        mainLayout = (ScrollView) findViewById(R.id.main_layout);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        errorDepth = (TextView) findViewById(R.id.error_depth);
-        errorLocation = (TextView) findViewById(R.id.error_location);
-        errorImages = (TextView) findViewById(R.id.error_images);
-        errorSealife = (TextView) findViewById(R.id.error_sealife);
-        errorVisibilityMax = (TextView) findViewById(R.id.error_visibility_max);
-        errorVisibilityMin = (TextView) findViewById(R.id.error_visibility_min);
-        visibilityMax = (EditText) findViewById(R.id.maxVisibility);
+        errorVisibility = findViewById(R.id.error_visibility);
+        maxVisibilityHint = findViewById(R.id.max_visibility_hint);
+        minVisibilityHint = findViewById(R.id.min_visibility_hint);
+        errorCurrent = findViewById(R.id.error_current);
+        errorTranslations = findViewById(R.id.error_translations);
+        errorLevel = findViewById(R.id.error_level);
+        errorObject = findViewById(R.id.error_object);
+        errorCountry = findViewById(R.id.error_country);
+        btnAddSealife = findViewById(R.id.btn_add_sealife);
+        diveSpotPhotosRecyclrView = findViewById(R.id.photos_rc);
+        levelAppCompatSpinner = findViewById(R.id.level_spinner);
+        objectAppCompatSpinner = findViewById(R.id.object_spinner);
+        currentsAppCompatSpinner = findViewById(R.id.currents_spinner);
+        pickLocation = findViewById(R.id.location_layout);
+        locationTitle = findViewById(R.id.location);
+        btnSave = findViewById(R.id.button_create);
+        sealifesRc = findViewById(R.id.sealifes_rc);
+        mainLayout = findViewById(R.id.main_layout);
+        progressView = findViewById(R.id.progressBarFull);
+        errorDepth = findViewById(R.id.error_depth);
+        errorLocation = findViewById(R.id.error_location);
+        errorImages = findViewById(R.id.error_images);
+        errorSealife = findViewById(R.id.error_sealife);
+        errorVisibilityMax = findViewById(R.id.error_visibility_max);
+        errorVisibilityMin = findViewById(R.id.error_visibility_min);
+        visibilityMax = findViewById(R.id.maxVisibility);
         visibilityMax.setText(diveSpot.getVisibilityMax());
-        visibilityMin = (EditText) findViewById(R.id.minVisibility);
+        visibilityMin = findViewById(R.id.minVisibility);
         visibilityMin.setText(diveSpot.getVisibilityMin());
-        photos = (TextView) findViewById(R.id.photos);
-        maps = (TextView) findViewById(R.id.maps);
-        mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
-        LinearLayout countryLayout = (LinearLayout) findViewById(R.id.country_layout);
-        countryTitle = (TextView) findViewById(R.id.country_title);
+        photos = findViewById(R.id.photos);
+        maps = findViewById(R.id.maps);
+        mapsRecyclerView = findViewById(R.id.maps_rc);
+        LinearLayout countryLayout = findViewById(R.id.country_layout);
+        countryTitle = findViewById(R.id.country_title);
         countryLayout.setOnClickListener(this);
-        addTranslationButton = (RelativeLayout) findViewById(R.id.button_add_language);
-        languagesRecyclerView = (RecyclerView) findViewById(R.id.languages_list);
+        addTranslationButton = findViewById(R.id.button_add_language);
+        languagesRecyclerView = findViewById(R.id.languages_list);
     }
 
     private void setUi() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             workingLayout.setVisibility(View.VISIBLE);
             if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
                 isWorkingSwitch.setChecked(true);
@@ -572,7 +572,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             if (isWorkingSwitch.isChecked()) {
                 requestIsWorkingHere = Helpers.createRequestBodyForString("1");
                 if (isEditSwitch.isChecked()) {
@@ -815,9 +815,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Subscribe

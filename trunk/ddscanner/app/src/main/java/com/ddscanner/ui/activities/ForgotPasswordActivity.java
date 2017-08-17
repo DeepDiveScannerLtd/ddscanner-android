@@ -77,9 +77,9 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        email = (EditText) findViewById(R.id.email);
-        buttonSend = (Button) findViewById(R.id.send);
+        toolbar = findViewById(R.id.toolbar);
+        email = findViewById(R.id.email);
+        buttonSend = findViewById(R.id.send);
         buttonSend.setOnClickListener(this);
         setupToolbar(R.string.forgot_password, R.id.toolbar);
     }

@@ -29,6 +29,7 @@ import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -62,7 +63,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
         setupViewPager();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             onLoggedIn();
         } else {
             onLoggedOut();
@@ -117,12 +118,12 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     }
 
     private void findViews(View v) {
-        tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
-        notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
-        loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
-        progressView = (ProgressView) v.findViewById(R.id.progressBarFull);
+        tabLayout = v.findViewById(R.id.notif_tab_layout);
+        notificationsViewPager = v.findViewById(R.id.notif_view_pager);
+        loginView = v.findViewById(R.id.login_view_root);
+        progressView = v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
-        customLoginView = (LoginView) v.findViewById(R.id.login_view);
+        customLoginView = v.findViewById(R.id.login_view);
     }
 
     private void setUpTabLayout() {
@@ -135,6 +136,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         notificationsPagerAdapter.addFragment(personalNotificationsFragment, "Notifications");
         notificationsPagerAdapter.addFragment(activityNotificationsFragment, "Activity");
         notificationsViewPager.setAdapter(notificationsPagerAdapter);
+        notificationsViewPager.setCurrentItem(1);
         setUi();
     }
 
@@ -147,7 +149,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     @Override
     public void onResume() {
         super.onResume();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             onLoggedOut();
         }
     }
@@ -245,7 +247,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
 
     @Subscribe
     public void getNotifications(GetNotificationsEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             getUserNotifications(false);
             if (notificationsViewPager != null) {
                 switch (notificationsViewPager.getCurrentItem()) {

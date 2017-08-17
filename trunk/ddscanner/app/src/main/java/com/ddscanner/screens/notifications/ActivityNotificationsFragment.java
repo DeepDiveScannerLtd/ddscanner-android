@@ -26,6 +26,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         } else {
             initilizeListenerForLowVersions();
         }
-        notificationsListAdapter = new NotificationsListAdapter(getActivity(), false, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType());
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), false, SharedPreferenceHelper.getActiveUserType());
         binding.activityRc.setAdapter(notificationsListAdapter);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         return binding.getRoot();
@@ -201,7 +202,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
                     DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }

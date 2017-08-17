@@ -117,10 +117,7 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
     }
 
     private boolean isDataEntered() {
-        if (!isCountryChosed || !isLocationChosed || binding.addressInput.getText().toString().isEmpty()) {
-            return false;
-        }
-        return true;
+        return !(!isCountryChosed || !isLocationChosed || binding.addressInput.getText().toString().isEmpty());
     }
 
     @Override

@@ -57,13 +57,13 @@ public class AddTranslationDialogFragment extends DialogFragment implements View
         builder.setTitle(null);
         languageCode = getArguments().getString(ARG_LANGUAGE_CODE);
         languageNameText = getArguments().getString(ARG_LANGUAGE);
-        errorName = (TextView) view.findViewById(R.id.error_name);
-        errorDescription = (TextView) view.findViewById(R.id.error_description);
-        languageName = (TextView) view.findViewById(R.id.language_name);
-        name = (AppCompatEditText) view.findViewById(R.id.name);
-        close = (ImageView) view.findViewById(R.id.image_close);
-        description = (AppCompatEditText) view.findViewById(R.id.description);
-        buttonSave = (Button) view.findViewById(R.id.button_save);
+        errorName = view.findViewById(R.id.error_name);
+        errorDescription = view.findViewById(R.id.error_description);
+        languageName = view.findViewById(R.id.language_name);
+        name = view.findViewById(R.id.name);
+        close = view.findViewById(R.id.image_close);
+        description = view.findViewById(R.id.description);
+        buttonSave = view.findViewById(R.id.button_save);
         buttonSave.setOnClickListener(this);
         close.setOnClickListener(this);
         languageName.setText(getArguments().getString(ARG_LANGUAGE));
@@ -131,10 +131,7 @@ public class AddTranslationDialogFragment extends DialogFragment implements View
             isDescriptionBad = true;
         }
 
-        if (isNameBad || isDescriptionBad) {
-            return false;
-        }
-        return true;
+        return !(isNameBad || isDescriptionBad);
     }
 
 }

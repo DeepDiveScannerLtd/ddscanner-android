@@ -50,8 +50,8 @@ public class AboutListAdapter extends RecyclerView.Adapter<AboutListAdapter.Abou
         public AboutListViewholder(View v) {
             super(v);
             v.setOnClickListener(this);
-            title = (TextView) v.findViewById(R.id.title);
-            icon = (ImageView) v.findViewById(R.id.icon);
+            title = v.findViewById(R.id.title);
+            icon = v.findViewById(R.id.icon);
         }
 
         @Override

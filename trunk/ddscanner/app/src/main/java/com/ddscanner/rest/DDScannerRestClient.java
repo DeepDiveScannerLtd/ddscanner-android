@@ -45,6 +45,7 @@ import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -442,10 +443,7 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
                 Type listType = new TypeToken<ArrayList<NotificationEntity>>() {
                 }.getType();
-                ArrayList<NotificationEntity> notificationEntities;
                 new UpdateNotifications(resultListener).execute((ArrayList<NotificationEntity>) gson.fromJson(responseString, listType));
-//                validateNotifications(resultListener, gson.fromJson(responseString, listType));
-//                resultListener.onSuccess(notificationEntities);
             }
         });
     }
@@ -542,23 +540,6 @@ public class DDScannerRestClient {
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddInstructorToDiveCenter(diveCenterId, diveCenterType);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
-    }
-
-    public void getDiveCentersList(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String query) {
-        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
-            resultListener.onInternetConnectionClosed();
-            return;
-        }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersList(query, "10");
-        call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener, context) {
-            @Override
-            void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>() {
-                }.getType();
-                ArrayList<BaseIdNamePhotoEntity> list = gson.fromJson(responseString, listType);
-                resultListener.onSuccess(list);
-            }
-        });
     }
 
     public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, List<MultipartBody.Part> languages, RequestBody... requestBodies) {
@@ -1240,7 +1221,7 @@ public class DDScannerRestClient {
 
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             map.put("social", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             map.put("token", DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
@@ -1250,14 +1231,6 @@ public class DDScannerRestClient {
             return new HashMap<>();
         }
         return map;
-    }
-
-    private RegisterRequest generateRegisterRequest(String appId, String socialNetworkName, String token) {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setAppId(appId);
-        registerRequest.setSocial(socialNetworkName);
-        registerRequest.setToken(token);
-        return registerRequest;
     }
 
     private SignUpRequest getSignUpRequest(String email, String password, String name, String userType, String lat, String lng) {
@@ -1322,71 +1295,6 @@ public class DDScannerRestClient {
 
     public enum ErrorType {
         BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DATA_ALREADY_EXIST_409, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
-    }
-
-    private void validdateNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener, ArrayList<NotificationEntity> notifications) {
-        if (notifications == null || notifications.size() == 0) {
-            resultListener.onSuccess(notifications);
-        }
-        new Handler().post(() -> {
-            ArrayList<NotificationEntity> newList = new ArrayList<>();
-            for (NotificationEntity notificationEntity : notifications) {
-                switch (notificationEntity.getActivityType()) {
-                    case DIVE_SPOT_ADDED:
-                    case DIVE_SPOT_CHANGED:
-                    case DIVE_SPOT_CHECKIN:
-                        if (notificationEntity.getUser() == null || notificationEntity.getDiveSpot() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case DIVE_SPOT_PHOTO_LIKE:
-                        if (notificationEntity.getPhotos() == null || notificationEntity.getUser() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case DIVE_SPOT_REVIEW_ADDED:
-                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case DIVE_SPOT_PHOTOS_ADDED:
-                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getPhotos() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case DIVE_SPOT_MAPS_ADDED:
-                        if (notificationEntity.getDiveSpot() == null || notificationEntity.getUser() == null || notificationEntity.getMaps() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case DIVE_SPOT_REVIEW_LIKE:
-                    case DIVE_SPOT_REVIEW_DISLIKE:
-                        if (notificationEntity.getUser() == null || notificationEntity.getReview() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case ACHIEVEMENT_GETTED:
-                        if (notificationEntity.getAchievement() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    case INSTRUCTOR_LEFT_DIVE_CENTER:
-                    case DIVE_CENTER_INSTRUCTOR_REMOVE:
-                    case DIVE_CENTER_INSTRUCTOR_ADD:
-                        if (notificationEntity.getUser() == null) {
-                            notificationEntity.setType(-1);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                notificationEntity.calculateTime();
-                notificationEntity.buildLinks();
-                newList.add(notificationEntity);
-            }
-            resultListener.onSuccess(newList);
-        });
-
     }
 
     private class UpdateNotifications extends AsyncTask<ArrayList<NotificationEntity>, Void, ArrayList<NotificationEntity>> {

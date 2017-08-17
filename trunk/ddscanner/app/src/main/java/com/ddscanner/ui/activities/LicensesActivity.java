@@ -16,8 +16,8 @@ public class LicensesActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acivity_licenses);
-        WebView webView = (WebView) findViewById(R.id.webview);
-        Toolbar toolbar = (Toolbar)  findViewById(R.id.toolbar);
+        WebView webView = findViewById(R.id.webview);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Licenses");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

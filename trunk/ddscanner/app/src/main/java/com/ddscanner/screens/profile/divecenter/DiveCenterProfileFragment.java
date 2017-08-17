@@ -3,7 +3,9 @@ package com.ddscanner.screens.profile.divecenter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,7 +60,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         @Override
         public void onSuccess(DiveCenterProfile result) {
                     diveCenterProfile = result;
-                    BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
+                    BaseUser baseUser = SharedPreferenceHelper.getActiveUser();
                     baseUser.setName(diveCenterProfile.getName());
                     baseUser.setPhoto(diveCenterProfile.getPhoto());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
@@ -83,7 +85,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                     DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
 //                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }
@@ -118,7 +119,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
             setUi();
         } else {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+            if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                 DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             }
         }
@@ -200,13 +201,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
         }
     }
 
     public void reloadData() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveCenterSelfInformation(userResultListener);
             binding.scrollView.scrollTo(0,0);
         }

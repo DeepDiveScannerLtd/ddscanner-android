@@ -44,10 +44,8 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
 
     private Toolbar toolbar;
     private RecyclerView sealifeList;
-    private TextView results;
     private RelativeLayout notFoundLayout;
     private TextView addManually;
-    private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
     private MenuItem searchMenuItem;
@@ -79,7 +77,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR, false);
         }
 
@@ -95,12 +92,12 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_sealife);
         EventsTracker.trackSearchSeaLife();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        sealifeList = (RecyclerView) findViewById(R.id.recyclerView);
-        notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
-        addManually = (TextView) findViewById(R.id.add_manualy);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        contentLayout = (RelativeLayout) findViewById(R.id.content_layout);
+        toolbar = findViewById(R.id.toolbar);
+        sealifeList = findViewById(R.id.recyclerView);
+        notFoundLayout = findViewById(R.id.not_found_layout);
+        addManually = findViewById(R.id.add_manualy);
+        progressView = findViewById(R.id.progressBarFull);
+        contentLayout = findViewById(R.id.content_layout);
         addManually.setOnClickListener(this);
         if (getIntent().getParcelableExtra(ARG_LOCATION) != null) {
             isHasLocation = true;
@@ -147,7 +144,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         searchMenuItem = menu.findItem(R.id.action_search);
         searchMenuItem.setVisible(false);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
@@ -215,9 +211,6 @@ public class SearchSealifeActivity extends BaseAppCompatActivity implements Sear
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

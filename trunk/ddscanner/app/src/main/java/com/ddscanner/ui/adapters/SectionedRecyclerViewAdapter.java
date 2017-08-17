@@ -67,7 +67,7 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
         public SectionViewHolder(View view, int mTextResourceid) {
             super(view);
-            title = (TextView) view.findViewById(mTextResourceid);
+            title = view.findViewById(mTextResourceid);
         }
     }
 

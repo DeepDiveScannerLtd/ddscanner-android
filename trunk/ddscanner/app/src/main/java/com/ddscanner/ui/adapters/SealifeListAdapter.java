@@ -65,8 +65,8 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
             v.setOnClickListener(this);
             context = itemView.getContext();
 
-            sealifeLogo = (ImageView) v.findViewById(R.id.seaife_logo);
-            sealifeName = (TextView) v.findViewById(R.id.sealife_name);
+            sealifeLogo = v.findViewById(R.id.seaife_logo);
+            sealifeName = v.findViewById(R.id.sealife_name);
         }
 
         @Override

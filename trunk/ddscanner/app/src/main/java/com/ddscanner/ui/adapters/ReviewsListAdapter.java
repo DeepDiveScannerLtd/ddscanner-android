@@ -56,7 +56,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         this.context = context;
         this.commentAuthorId = userId;
         this.userServerId = userServerId;
-        this.userType = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType();
+        this.userType = SharedPreferenceHelper.getActiveUserType();
     }
 
     @Override
@@ -279,18 +279,18 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         public ReviewsListViewHolder(View v) {
             super(v);
-            menu = (ImageView) v.findViewById(R.id.overflow);
-            expand = (TextView) v.findViewById(R.id.button_toggle);
-            date = (TextView) v.findViewById(R.id.date);
-            user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (RatingView) v.findViewById(R.id.stars);
-            user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (TextView) v.findViewById(R.id.review);
-            photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
-            sealifesLayout = (LinearLayout) v.findViewById(R.id.sealifes_layout);
-            sealifesList = (RecyclerView) v.findViewById(R.id.sealifes_list);
-            likeView = (LikeView) v.findViewById(R.id.like_layout);
-            dislikeView = (DislikeView) v.findViewById(R.id.dislike_layout);
+            menu = v.findViewById(R.id.overflow);
+            expand = v.findViewById(R.id.button_toggle);
+            date = v.findViewById(R.id.date);
+            user_avatar = v.findViewById(R.id.user_avatar);
+            rating = v.findViewById(R.id.stars);
+            user_name = v.findViewById(R.id.user_name);
+            user_review = v.findViewById(R.id.review);
+            photos = v.findViewById(R.id.review_photos_rc);
+            sealifesLayout = v.findViewById(R.id.sealifes_layout);
+            sealifesList = v.findViewById(R.id.sealifes_list);
+            likeView = v.findViewById(R.id.like_layout);
+            dislikeView = v.findViewById(R.id.dislike_layout);
             user_avatar.setOnClickListener(this);
 
 

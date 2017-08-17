@@ -29,16 +29,15 @@ public class GuideDescriptionActivity extends BaseAppCompatActivity implements V
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_description);
-        EventsTracker.trackGuideToDDSItemView();
-        title = (TextView) findViewById(R.id.title);
-        description = (TextView) findViewById(R.id.description);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        buttonNo = (ImageView) findViewById(R.id.no);
-        buttonYes = (ImageView) findViewById(R.id.yes);
-        thnaks = (TextView) findViewById(R.id.titleUseful);
+        title = findViewById(R.id.title);
+        description = findViewById(R.id.description);
+        toolbar = findViewById(R.id.toolbar);
+        buttonNo = findViewById(R.id.no);
+        buttonYes = findViewById(R.id.yes);
+        thnaks = findViewById(R.id.titleUseful);
 
         item = (GuideItem) getIntent().getSerializableExtra(Constants.GUIDE_DESCRIPTION_ACTIVITY_INTENT_ITEM);
-
+        EventsTracker.trackGuideToDDSItemView(item.getTitle());
         title.setText(item.getTitle());
         description.setText(item.getDescription());
 

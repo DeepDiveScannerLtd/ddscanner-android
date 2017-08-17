@@ -67,9 +67,9 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         final int callbackType = args.getInt(ARG_CALLBACK_TYPE);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_achievemnt_achieved, null);
-        title = (TextView) view.findViewById(R.id.title);
-        message = (TextView) view.findViewById(R.id.message);
-        button = (Button) view.findViewById(R.id.close_button);
+        title = view.findViewById(R.id.title);
+        message = view.findViewById(R.id.message);
+        button = view.findViewById(R.id.close_button);
         if (getArguments().getString(ARG_TITLE).isEmpty()) {
             title.setVisibility(View.GONE);
         } else {

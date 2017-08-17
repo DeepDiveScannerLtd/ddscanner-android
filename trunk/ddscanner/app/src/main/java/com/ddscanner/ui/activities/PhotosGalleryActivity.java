@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 public class PhotosGalleryActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView photosRecyclerView;
-    private Toolbar toolbar;
     private ProgressView progressView;
     private String loadedInfoId;
     private PhotoOpenedSource source;
@@ -106,9 +104,8 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_photos);
-        photosRecyclerView = (RecyclerView) findViewById(R.id.maps_rv);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        progressView = (ProgressView) findViewById(R.id.progress_view);
+        photosRecyclerView = findViewById(R.id.maps_rv);
+        progressView = findViewById(R.id.progress_view);
         source = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         loadedInfoId = getIntent().getStringExtra("id");
         switch (source) {

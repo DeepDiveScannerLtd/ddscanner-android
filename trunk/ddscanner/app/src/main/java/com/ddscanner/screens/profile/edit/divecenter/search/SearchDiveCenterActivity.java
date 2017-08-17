@@ -103,14 +103,14 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         setupToolbar(R.string.choose_dc, R.id.toolbar);
         searchDiveCenterListAdapter = new SearchDiveCenterListAdapter(diveCenterItemClickListener);
         isForEditProfile = getIntent().getBooleanExtra(ARG_ID_FOR_EDIT, false);
-        recyclerView = (RecyclerView) findViewById(R.id.dive_centers_list);
+        recyclerView = findViewById(R.id.dive_centers_list);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(searchDiveCenterListAdapter);
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
-        noResultsView = (RelativeLayout) findViewById(R.id.no_results);
+        progressView = findViewById(R.id.progress_bar);
+        noResultsView = findViewById(R.id.no_results);
         materialDialog = Helpers.getMaterialDialog(this);
-        TextView addDiveCenter = (TextView) findViewById(R.id.add_spot);
+        TextView addDiveCenter = findViewById(R.id.add_spot);
         addDiveCenter.setOnClickListener(view -> CreateDiveCenterActivity.showForCreateDiveCenter(this, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER));
 //        tryToReloadData("%");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -268,8 +268,19 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_EDIT_CURRENT_LEGACY_DIVE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    if (isForEditProfile) {
+                        setResult(RESULT_OK, data);
+                        finish();
+                    } else {
+                        progressView.setVisibility(View.VISIBLE);
+                        DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddInstructorToDiveCenter(addInstructorToDiveCenter, data.getIntExtra(Constants.ARG_ID, 0), data.getIntExtra(Constants.ARG_DC_TYPE, 0));
+                    }
+                }
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_DIVE_CENTER_ACTIVITY_ADD_NEW_DIVE_CENTER:
                 if (resultCode == RESULT_OK) {
+                    EventsTracker.tracNewDcChosenEvent();
                     if (isForEditProfile) {
                         setResult(RESULT_OK, data);
                         finish();

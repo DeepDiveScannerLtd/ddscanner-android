@@ -6,6 +6,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.utils.Constants;
+import com.facebook.appevents.AppEventsConstants;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -134,6 +135,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_UNKNOWN_SERVER_ERROR = "unknown_error";
     private static final String EVENT_PARAMETER_NAME_ERROR_URL = "url";
     private static final String EVENT_PARAMETER_NAME_ERROR_TEXT = "text";
+    private static final String EVENT_PARAMETER_NAME_RESPONSE_CODE = "response_code";
     private static final String EVENT_PARAMETER_NAME_USER_TYPE = "user_type";
 
     // ----------------------------------------------------
@@ -153,10 +155,21 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_STATE = "tutorial_state";
     private static final String EVENT_PARAMETER_NAME_PLATFORM = "platform";
     private static final String EVENT_PARAMETER_NAME_TUTORIAL_VERSION = "tutorial_version";
+    private static final String EVENT_NAME_DC_SEARCH_NEW_CHOSEN = "dc_search_new_chosen";
 
     // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
+
+    public static void trackFirstLaunchForFacebookAnalytics() {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, "0");
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "0");
+        params.putInt(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, 0);
+        params.putInt(AppEventsConstants.EVENT_PARAM_PAYMENT_INFO_AVAILABLE, 0);
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "0");
+        AnalyticsSystemsManager.getLogger().logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, 0, params);
+    }
 
     private static void trackEventWithParameters(Map<String, String> params, String eventName) {
 
@@ -168,7 +181,7 @@ public class EventsTracker {
 
         String tutorialState = DDScannerApplication.getInstance().getTutorialState();
 
-        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        params.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         params.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
         params.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         params.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
@@ -184,7 +197,11 @@ public class EventsTracker {
         AnalyticsSystemsManager.getLogger().logEvent(eventName, firebaseParams);
         FlurryAgent.logEvent(eventName, params);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, firebaseParams);
+        FirebaseAnalytics firebaseAnalytics = AnalyticsSystemsManager.getFirebaseAnalytics();
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_USER_TYPE, userType);
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
+        firebaseAnalytics.setUserProperty(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
+        firebaseAnalytics.logEvent(eventName, firebaseParams);
     }
 
     private static void trackEventWithoutParameters(String eventName) {
@@ -197,7 +214,7 @@ public class EventsTracker {
         Bundle params = new Bundle();
 
         params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        params.putString(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         params.putString(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         params.putString(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(eventName, params);
@@ -205,7 +222,7 @@ public class EventsTracker {
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         flurryParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         flurryParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         FlurryAgent.logEvent(eventName, flurryParams);
@@ -213,13 +230,17 @@ public class EventsTracker {
         // Appsflyer
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
+//        appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_STATE, tutorialState);
         appsflyerParams.put(EVENT_PARAMETER_NAME_PLATFORM, Constants.PLATFORM);
         appsflyerParams.put(EVENT_PARAMETER_NAME_TUTORIAL_VERSION, Constants.TUTORIAL_VERSION);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), eventName, appsflyerParams);
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void tracNewDcChosenEvent() {
+        trackEventWithoutParameters(EVENT_NAME_DC_SEARCH_NEW_CHOSEN);
     }
 
     public static void diveSpotsToApproveView() {
@@ -258,8 +279,10 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_VIEW);
     }
 
-    public static void trackGuideToDDSItemView() {
-        trackEventWithoutParameters(EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
+    public static void trackGuideToDDSItemView(String question) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        trackEventWithParameters(map, EVENT_NAME_GUIDE_TO_DDS_ITEM_VIEW);
     }
 
     public static void trackReviewView() {
@@ -615,33 +638,12 @@ public class EventsTracker {
 //        trackEventWithoutParameters(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
     }
 
-    public static void trackUnknownServerError(String url, String errorText) {
-        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
-            return;
-        }
-        String userType = DDScannerApplication.getInstance().getActiveUserType();
-        // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        params.putString(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
-
-        // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
-        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        flurryParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        FlurryAgent.logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, flurryParams);
-
-        // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-        appsflyerParams.put(EVENT_PARAMETER_NAME_USER_TYPE, userType);
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_UNKNOWN_SERVER_ERROR, appsflyerParams);
-
-        //Facebook
-        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+    public static void trackUnknownServerError(String url, int errorCode, String errorMessage) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_RESPONSE_CODE, String.valueOf(errorCode));
+        map.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorMessage);
+        map.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
+        trackEventWithParameters(map, EVENT_NAME_UNKNOWN_SERVER_ERROR);
     }
 
     public enum AchievementsViewSource {

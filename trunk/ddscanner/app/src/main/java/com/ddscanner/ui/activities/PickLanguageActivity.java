@@ -31,15 +31,11 @@ import java.util.List;
 
 public class PickLanguageActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
-    private static final String TAG = PickLanguageActivity.class.getSimpleName();
-
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ArrayList<Language> languagesList;
-    private Menu menu;
     private ProgressView progressView;
     private LanguageSearchAdapter languageSearchAdapter;
-    private boolean isPickLanguage;
     private MenuItem searchItem;
 
     private DDScannerRestClient.ResultListener<ArrayList<Language>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
@@ -80,16 +76,15 @@ public class PickLanguageActivity extends BaseAppCompatActivity implements Searc
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotLanguages(resultListener);
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
+        progressView = findViewById(R.id.progress_bar);
         setupToolbar();
     }
 
@@ -115,7 +110,6 @@ public class PickLanguageActivity extends BaseAppCompatActivity implements Searc
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getString(R.string.search));

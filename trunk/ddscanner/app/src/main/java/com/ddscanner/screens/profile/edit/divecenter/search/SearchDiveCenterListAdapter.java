@@ -103,9 +103,9 @@ public class SearchDiveCenterListAdapter extends RecyclerView.Adapter<RecyclerVi
             super(view);
             view.setOnClickListener(this);
             context = view.getContext();
-            name = (TextView) view.findViewById(R.id.dive_center_name);
-            address = (TextView) view.findViewById(R.id.dive_center_address);
-            photo = (ImageView) view.findViewById(R.id.dive_center_photo);
+            name = view.findViewById(R.id.dive_center_name);
+            address = view.findViewById(R.id.dive_center_address);
+            photo = view.findViewById(R.id.dive_center_photo);
         }
 
         @Override

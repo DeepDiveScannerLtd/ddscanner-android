@@ -93,8 +93,8 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
         public SealifeListAddingDivespotViewHolder(View v) {
             super(v);
-            deleteButton = (ImageView) v.findViewById(R.id.delete_item);
-            sealifeName = (TextView) v.findViewById(R.id.sealife_name);
+            deleteButton = v.findViewById(R.id.delete_item);
+            sealifeName = v.findViewById(R.id.sealife_name);
             deleteButton.setOnClickListener(this);
         }
 

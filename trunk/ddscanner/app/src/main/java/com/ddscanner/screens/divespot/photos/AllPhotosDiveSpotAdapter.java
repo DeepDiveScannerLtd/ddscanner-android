@@ -63,7 +63,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         public AllPhotosDIveSpotViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            image = (ImageView) v.findViewById(R.id.image);
+            image = v.findViewById(R.id.image);
         }
 
         @Override

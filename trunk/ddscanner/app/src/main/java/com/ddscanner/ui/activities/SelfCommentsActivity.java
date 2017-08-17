@@ -27,6 +27,7 @@ import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -61,7 +62,6 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
         }
 
@@ -105,11 +105,11 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
     }
 
     private void findViews() {
-        commentsRc = (RecyclerView) findViewById(R.id.reviews_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
+        commentsRc = findViewById(R.id.reviews_rc);
+        toolbar = findViewById(R.id.toolbar);
+        leaveReview = findViewById(R.id.fab_write_review);
         leaveReview.setVisibility(View.GONE);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        progressView = findViewById(R.id.progressBarFull);
         setUi();
     }
     private void setUi() {
@@ -155,7 +155,7 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
-                if (resultCode == RESULT_CANCELED && !DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (resultCode == RESULT_CANCELED && !SharedPreferenceHelper.getIsUserSignedIn()) {
                     finish();
                 }
 
@@ -214,9 +214,6 @@ public class SelfCommentsActivity extends BaseAppCompatActivity implements Dialo
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

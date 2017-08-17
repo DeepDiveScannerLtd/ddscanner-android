@@ -54,7 +54,7 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
         public AddPhotoToDiveSpotViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            image = (ImageView) v.findViewById(R.id.image);
+            image = v.findViewById(R.id.image);
         }
 
         @Override

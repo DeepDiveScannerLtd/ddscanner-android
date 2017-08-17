@@ -105,8 +105,8 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public PhotoListViewHolder(View v) {
             super(v);
-            photo = (ImageView) v.findViewById(R.id.add_ds_photo);
-            icDelete = (ImageView) v.findViewById(R.id.add_ds_photo_delete);
+            photo = v.findViewById(R.id.add_ds_photo);
+            icDelete = v.findViewById(R.id.add_ds_photo_delete);
             icDelete.setOnClickListener(this);
         }
 

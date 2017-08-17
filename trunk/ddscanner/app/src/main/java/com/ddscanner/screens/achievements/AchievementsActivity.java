@@ -112,10 +112,10 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        noAchievementsView = (RelativeLayout) findViewById(R.id.no_achievements_view);
-        recyclerView = (RecyclerView) findViewById(R.id.achievments_rv);
-        progressView = (ProgressView) findViewById(R.id.progressBar);
+        toolbar = findViewById(R.id.toolbar);
+        noAchievementsView = findViewById(R.id.no_achievements_view);
+        recyclerView = findViewById(R.id.achievments_rv);
+        progressView = findViewById(R.id.progressBar);
         setUi();
     }
 

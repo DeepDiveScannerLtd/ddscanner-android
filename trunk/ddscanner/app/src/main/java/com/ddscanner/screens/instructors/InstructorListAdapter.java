@@ -85,10 +85,10 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
 
         InstructorListViewHolder(View view) {
             super(view);
-            isNew = (TextView) view.findViewById(R.id.is_new);
-            avatar = (ImageView) view.findViewById(R.id.avatar);
-            name = (TextView) view.findViewById(R.id.name);
-            removeButton = (ImageView) view.findViewById(R.id.remove);
+            isNew = view.findViewById(R.id.is_new);
+            avatar = view.findViewById(R.id.avatar);
+            name = view.findViewById(R.id.name);
+            removeButton = view.findViewById(R.id.remove);
             removeButton.setOnClickListener(this);
             avatar.setOnClickListener(this);
             name.setOnClickListener(this);

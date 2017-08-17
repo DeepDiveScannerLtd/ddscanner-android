@@ -36,6 +36,7 @@ import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCenterSpotsClusterManager;
+import com.ddscanner.ui.views.DiveSpotMapInfoView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -68,7 +69,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private ProgressBar progressBar;
     private FloatingActionButton mapListFAB;
     private FloatingActionButton addDsFab;
-    private RelativeLayout diveSpotInfo;
+    private DiveSpotMapInfoView diveSpotInfo;
     private TextView diveSpotName;
     private LinearLayout rating;
     private TextView diveSpotType;
@@ -163,30 +164,30 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private void findViews() {
         diveSpotsMapView = findViewById(R.id.map_view);
         diveSpotsListView = findViewById(R.id.list_view);
-        toast = (RelativeLayout) findViewById(R.id.toast);
-        progressBar = (ProgressBar) findViewById(R.id.request_progress);
+        toast = findViewById(R.id.toast);
+        progressBar = findViewById(R.id.request_progress);
 
         // Map mode
-        diveSpotInfo = (RelativeLayout) findViewById(R.id.dive_spot_info_layout);
-        diveSpotName = (TextView) findViewById(R.id.dive_spot_title);
-        rating = (LinearLayout) findViewById(R.id.rating);
-        zoomIn = (ImageView) findViewById(R.id.zoom_plus);
-        zoomOut = (ImageView) findViewById(R.id.zoom_minus);
-        object = (TextView) findViewById(R.id.divespot_type);
-        goToMyLocation = (ImageView) findViewById(R.id.go_to_my_location);
-        mapListFAB = (FloatingActionButton) findViewById(R.id.map_list_fab);
-        addDsFab = (FloatingActionButton) findViewById(R.id.add_ds_fab);
-        mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
-        diveSpotType = (TextView) findViewById(R.id.object);
-        progressBarMyLocation = (ProgressView) findViewById(R.id.progressBar);
+        diveSpotInfo = findViewById(R.id.dive_spot_info_layout);
+        diveSpotName = findViewById(R.id.dive_spot_title);
+        rating = findViewById(R.id.rating);
+        zoomIn = findViewById(R.id.zoom_plus);
+        zoomOut = findViewById(R.id.zoom_minus);
+        object = findViewById(R.id.divespot_type);
+        goToMyLocation = findViewById(R.id.go_to_my_location);
+        mapListFAB = findViewById(R.id.map_list_fab);
+        addDsFab = findViewById(R.id.add_ds_fab);
+        mainLayout = findViewById(R.id.main_layout);
+        diveSpotType = findViewById(R.id.object);
+        progressBarMyLocation = findViewById(R.id.progressBar);
         addDsFab.setVisibility(View.GONE);
         // List mode
-        please = (RelativeLayout) findViewById(R.id.please);
+        please = findViewById(R.id.please);
         please.setVisibility(View.GONE);
-        rc = (RecyclerView) findViewById(R.id.cv);
+        rc = findViewById(R.id.cv);
         rc.setVisibility(View.VISIBLE);
-        mapListFAB = (FloatingActionButton) findViewById(R.id.map_list_fab);
-        addDsFab = (FloatingActionButton) findViewById(R.id.add_ds_fab);
+        mapListFAB = findViewById(R.id.map_list_fab);
+        addDsFab = findViewById(R.id.add_ds_fab);
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         rc.setHasFixedSize(true);
@@ -339,7 +340,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
 
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
         mapView.onCreate(new Bundle());
         mapView.getMapAsync(googleMap -> {
             DiveCenterSpotsActivity.this.googleMap = googleMap;
@@ -360,7 +361,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
         diveSpotInfo.setOnClickListener(this);
-        mapControlLayout = (RelativeLayout) findViewById(R.id.map_control_layout);
+        mapControlLayout = findViewById(R.id.map_control_layout);
     }
 
 
@@ -388,35 +389,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
         mapControlLayout.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
-            diveSpotInfo.animate()
-                .translationY(0)
-                .alpha(1.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        diveSpotInfo.setVisibility(View.VISIBLE);
-                    }
-                });
-
-        diveSpotName.setText(diveSpotShort.getName());
-        diveSpotType.setText(diveSpotShort.getObject());
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
+        diveSpotInfo.show(diveSpotShort);
         lastDiveSpotId = diveSpotShort.getId();
-        rating.removeAllViews();
-        for (int k = 0; k < Math.round(diveSpotShort.getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Math.round(diveSpotShort.getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
     }
 
     private void hideDiveSpotInfo() {
@@ -424,17 +398,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             mapControlLayout.animate().translationY(0);
             addDsFab.animate().translationY(0);
             mapListFAB.animate().translationY(0);
-            diveSpotInfo.animate()
-                    .translationY(diveSpotInfoHeight)
-                    .alpha(0.0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            diveSpotInfo.setVisibility(View.GONE);
-                        }
-                    });
+            diveSpotInfo.hide(diveSpotInfoHeight);
             lastClickeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             lastClickeMarker = null;
         }

@@ -29,7 +29,7 @@ public class ShowDsLocationActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dive_spot_location);
         latLng = getIntent().getParcelableExtra(LATLNG);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -67,8 +67,5 @@ public class ShowDsLocationActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 }

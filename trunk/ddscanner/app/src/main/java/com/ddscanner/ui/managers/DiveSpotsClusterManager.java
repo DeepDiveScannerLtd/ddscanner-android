@@ -189,38 +189,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         }
     }
 
-//    @Override
-//    public void onCameraIdle() {
-//        if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
-//            lastZoom = googleMap.getCameraPosition().zoom;
-//            DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
-//        }
-//        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
-//        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
-//        if (diveSpotsRequestMap.size() == 0) {
-//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-//        }
-//        if (checkArea(southwest, northeast)) {
-//            hideToast();
-//            if (isCanMakeRequest) {
-//                if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
-//                        southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
-//                        northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
-//                        northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-//                    requestDiveSpots(false);
-//                }
-//            } else {
-//                requestDiveSpots(false);
-//            }
-//        } else {
-//            showToast();
-//        }
-//    }
-
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         super.onCameraChange(cameraPosition);
@@ -427,10 +395,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     private boolean isSpotVisibleOnScreen(float lat, float lng) {
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        if (lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude) {
-            return true;
-        }
-        return false;
+        return lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude;
     }
 
     public void mapZoomPlus() {

@@ -48,9 +48,6 @@ import java.util.List;
 
 public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
 
-    private static final String TAG = SearchSpotOrLocationActivity.class.getName();
-
-    private Menu menu;
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -83,7 +80,6 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
 
@@ -110,10 +106,10 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progress_view);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        viewPager = (ViewPager) findViewById(R.id.search_view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.search_tab_layout);
+        progressView = findViewById(R.id.progress_view);
+        toolbar = findViewById(R.id.toolbar);
+        viewPager = findViewById(R.id.search_view_pager);
+        tabLayout = findViewById(R.id.search_tab_layout);
         if (isForDiveCenter) {
             tabLayout.setVisibility(View.GONE);
         }
@@ -160,7 +156,6 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
-        this.menu = menu;
         MenuItem item = menu.findItem(R.id.action_search);
         item.setVisible(true);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -196,18 +191,7 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
                                 if (autocompletePredictions.getStatus().isSuccess()) {
                                     for (AutocompletePrediction prediction : autocompletePredictions) {
                                         placeList.add(prediction.getPlaceId());
-                                        Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(places -> {
-                                            if (places.getStatus().isSuccess()) {
-                                                try {
-                                                    Place place = places.get(0);
-                                                    // placeList.add(place);
-                                                } catch (IllegalStateException e) {
 
-                                                }
-                                            }
-                                            places.release();
-                                        });
-                                        // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
                                     }
                                     searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                 }

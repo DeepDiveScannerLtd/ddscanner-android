@@ -80,10 +80,10 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
 
         public DiveSpotsPhotosAdapterViewHolder(View v) {
             super(v);
-            photo = (ImageView) v.findViewById(R.id.image);
+            photo = v.findViewById(R.id.image);
             photo.setOnClickListener(this);
-            morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            morePhotos = v.findViewById(R.id.number_of_more_images);
+            progressBar = v.findViewById(R.id.progressBar);
         }
 
         @Override

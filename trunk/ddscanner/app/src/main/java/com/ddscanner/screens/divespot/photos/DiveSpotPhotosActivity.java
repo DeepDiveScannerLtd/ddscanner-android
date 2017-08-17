@@ -35,6 +35,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
 import java.io.File;
@@ -83,11 +84,11 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
 
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
             }
@@ -134,12 +135,12 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progressBar);
-        tabLayout = (TabLayout) findViewById(R.id.photos_tab_layout);
-        photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
+        progressView = findViewById(R.id.progressBar);
+        tabLayout = findViewById(R.id.photos_tab_layout);
+        photosViewPager = findViewById(R.id.photos_view_pager);
         photosViewPager.setOnPageChangeListener(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        fabAddPhoto = (FloatingActionButton) findViewById(R.id.fab_add_photo);
+        toolbar = findViewById(R.id.toolbar);
+        fabAddPhoto = findViewById(R.id.fab_add_photo);
         fabAddPhoto.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -183,9 +184,6 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override
@@ -287,7 +285,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void addPhotosToDiveSpot() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+        if (!SharedPreferenceHelper.getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
             Intent intent = new Intent();
@@ -334,10 +332,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

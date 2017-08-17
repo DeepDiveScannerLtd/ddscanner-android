@@ -29,10 +29,10 @@ public class WriteReportReasonDialog extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_report_other, null);
         builder.setTitle(null);
         builder.setView(view);
-        reasonText = (EditText) view.findViewById(R.id.reason_input);
-        errorView = (TextView) view.findViewById(R.id.error_view);
-        sendButton = (TextView) view.findViewById(R.id.send_button);
-        cancelButton = (TextView) view.findViewById(R.id.cancel_button);
+        reasonText = view.findViewById(R.id.reason_input);
+        errorView = view.findViewById(R.id.error_view);
+        sendButton = view.findViewById(R.id.send_button);
+        cancelButton = view.findViewById(R.id.cancel_button);
         sendButton.setOnClickListener(view1 -> {
             if (reasonText.getText().toString().trim().length() > 0) {
                 ReportReasonIsWritenListener reportReasonIsWritenListener;

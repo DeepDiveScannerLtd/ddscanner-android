@@ -17,7 +17,7 @@ import com.ddscanner.ui.adapters.AboutListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
     private List<AboutScreenItem> aboutScreenItems = new ArrayList<>();
@@ -30,13 +30,8 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.about_dds);
+        recyclerView = findViewById(R.id.recyclerView);
+        setupToolbar(R.string.about_dds, R.id.toolbar);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

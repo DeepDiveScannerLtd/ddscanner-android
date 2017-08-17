@@ -197,9 +197,9 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
 
         EditSpotListPhotoViewHolder(View v) {
             super(v);
-            coverLabel = (TextView) v.findViewById(R.id.cover_button);
-            photo = (ImageView) v.findViewById(R.id.add_ds_photo);
-            icDelete = (ImageView) v.findViewById(R.id.add_ds_photo_delete);
+            coverLabel = v.findViewById(R.id.cover_button);
+            photo = v.findViewById(R.id.add_ds_photo);
+            icDelete = v.findViewById(R.id.add_ds_photo_delete);
             icDelete.setOnClickListener(this);
             v.setOnClickListener(this);
         }

@@ -1,5 +1,6 @@
 package com.ddscanner.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -59,39 +60,6 @@ public class Helpers {
 
     }
 
-    /**
-     * Method to get real path of file by URI
-     *
-     * @param context
-     * @param contentUri
-     * @return Path to image
-     * @author Andrei Lashkevich
-     */
-
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    /**
-     * COnverting dp to pixels size
-     *
-     * @param dp
-     * @param context
-     * @return dp value in pixels size
-     * @author Andrei Lashkevich
-     */
-
     public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -103,54 +71,6 @@ public class Helpers {
         return Math.round(convertDpToPixel(dp, context));
     }
 
-    /**
-     * Add path to name of image
-     *
-     * @param images
-     * @param path
-     * @return full URL's array
-     * @author Andrei Lashkevich
-     */
-
-    public static ArrayList<String> appendImagesWithPath(ArrayList<String> images, String path) {
-        if (images == null) {
-            return images;
-        }
-        for (int i = 0; i < images.size(); i++) {
-            images.set(i, path + images.get(i));
-        }
-        return images;
-    }
-
-    public static ArrayList<Image> appendFullImagesWithPath(ArrayList<Image> images, String path) {
-        for (int i = 0; i < images.size(); i++) {
-            images.get(i).setName(path + images.get(i).getName());
-        }
-        return images;
-    }
-
-    /**
-     * Comparing two arrays to third
-     *
-     * @param first
-     * @param second
-     * @return compared array
-     * @author Andrei Lashkevich
-     */
-
-    public static ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
-        ArrayList<String> allPhotos = new ArrayList<>();
-        if (first != null) {
-            allPhotos = (ArrayList<String>) first.clone();
-            for (int i = 0; i < second.size(); i++) {
-                allPhotos.add(second.get(i));
-            }
-            return allPhotos;
-        }
-        allPhotos = (ArrayList<String>) second.clone();
-        return allPhotos;
-    }
-
     public static ArrayList<DiveSpotPhoto> compareObjectsArray(ArrayList<DiveSpotPhoto> first, ArrayList<DiveSpotPhoto> second) {
         ArrayList<DiveSpotPhoto> allPhotos = new ArrayList<>();
         if (first == null && second == null) {
@@ -159,9 +79,7 @@ public class Helpers {
         if (first != null) {
             allPhotos = (ArrayList<DiveSpotPhoto>) first.clone();
             if (second != null) {
-                for (int i = 0; i < second.size(); i++) {
-                    allPhotos.add(second.get(i));
-                }
+                allPhotos.addAll(second);
             }
             return allPhotos;
         }
@@ -171,29 +89,6 @@ public class Helpers {
         return allPhotos;
     }
 
-
-    /**
-     * Change key-value params to value-keys to using this in spinners
-     *
-     * @param map
-     * @return mirror map
-     * @author Andrei Lashkevich
-     */
-
-    public static Map<String, String> getMirrorOfHashMap(Map<String, String> map) {
-        Map<String, String> returnMap = new HashMap<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            returnMap.put(entry.getValue(), entry.getKey());
-        }
-        return returnMap;
-    }
-
-    /**
-     * Handling errors and showing this in textviews
-     *
-     * @param errorsMap
-     * @param validationError
-     */
     public static void errorHandling(Map<String, TextView> errorsMap, String validationError) {
         Map<String, ArrayList<String>> fields = new HashMap<>();
         fields = new Gson().fromJson(validationError, fields.getClass());
@@ -204,14 +99,6 @@ public class Helpers {
             }
         }
     }
-
-    /**
-     * Check if has internet connection
-     *
-     * @param context
-     * @return
-     * @author Andrei Lashkevich
-     */
 
     public static boolean hasConnection(final Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -230,10 +117,7 @@ public class Helpers {
             return false;
         } else {
             NetworkInfo wifiInfo = cm.getActiveNetworkInfo();
-            if (wifiInfo != null) {
-                return true;
-            }
-            return false;
+            return wifiInfo != null;
         }
     }
 
@@ -247,6 +131,7 @@ public class Helpers {
         return materialDialog;
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String getDate(String date) {
         Date date1 = new Date();
         long currentDateInMillis = date1.getTime();
@@ -293,6 +178,7 @@ public class Helpers {
         return returnString;
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String getCommentDate(String date) {
         Date date1 = new Date();
         long currentDateInMillis = date1.getTime();
@@ -362,35 +248,7 @@ public class Helpers {
         return returnString;
     }
 
-    public static boolean comparingTimes(long lastShowingTime, String notificationTime) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
-        try {
-            Date notificationDate = format.parse(notificationTime);
-            if (lastShowingTime < notificationDate.getTime()) {
-                return true;
-            }
-            return false;
-        } catch (ParseException e) {
-            return false;
-        }
-
-    }
-
-    public static String convertDate(String incomingDate) {
-        String returningString = "";
-        SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
-        SimpleDateFormat returnedFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-        try {
-            Date date = serverFormat.parse(incomingDate);
-            returningString = returnedFormat.format(date);
-        } catch (ParseException e) {
-
-        }
-        return returningString;
-    }
-
+    @SuppressLint("SimpleDateFormat")
     public static String convertDateToImageSliderActivity(String incomingDate) {
         String returningString = "";
         SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -399,7 +257,7 @@ public class Helpers {
         try {
             Date date = serverFormat.parse(incomingDate);
             returningString = returnedFormat.format(date);
-        } catch (ParseException e) {
+        } catch (ParseException ignored) {
 
         }
         return returningString;
@@ -445,7 +303,7 @@ public class Helpers {
 
     public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage, int titleResId, int messageResId) {
         // TODO May be should use another tracking mechanism
-        EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
+//        EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
 //        InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
     }
 
@@ -471,13 +329,6 @@ public class Helpers {
         return countries;
     }
 
-    /**
-     * It would be used like this:
-     * getResId("icon", R.drawable.class);
-     * @param resName
-     * @param c
-     * @return
-     */
     public static int getResId(String resName, Class<?> c) {
         try {
             java.lang.reflect.Field idField = c.getDeclaredField(resName);
@@ -678,6 +529,13 @@ public class Helpers {
         Compressor compressor = new Compressor.Builder(context).setMaxHeight(1080).setMaxHeight(1080).build();
         File outputFile = compressor.compressToFile(inputFile);
         return outputFile;
+    }
+
+    public static <T> T checkNotNull(T object) {
+        if (object != null) {
+            return object;
+        }
+        throw new IllegalArgumentException("Argument must not be null");
     }
 
 }

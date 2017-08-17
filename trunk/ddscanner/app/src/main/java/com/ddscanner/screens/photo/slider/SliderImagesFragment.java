@@ -25,8 +25,8 @@ public class SliderImagesFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
-        final ScallingImageView imageView = (ScallingImageView) view.findViewById(R.id.slider_image);
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        final ScallingImageView imageView = view.findViewById(R.id.slider_image);
+        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);

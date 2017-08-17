@@ -314,7 +314,7 @@
                         android:layout_height="50dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingLeft="20dp"
+                        android:paddingLeft="25dp"
                         android:onClick="@{handlers::chooseDiveCenter}">
 
                         <TextView

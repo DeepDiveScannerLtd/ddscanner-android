@@ -17,7 +17,6 @@ import java.util.List;
 public class GuideActivity extends BaseAppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private List<GuideItem> guideItems = new ArrayList<>();
 
     @Override
@@ -29,13 +28,8 @@ public class GuideActivity extends BaseAppCompatActivity {
     }
 
     private void findViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.guide_to_dds);
+        recyclerView = findViewById(R.id.recyclerView);
+        setupToolbar(R.string.guide_to_dds, R.id.toolbar);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

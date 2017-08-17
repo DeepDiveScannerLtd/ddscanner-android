@@ -79,9 +79,9 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
 
         public UserPhotosViewHolder(View v) {
             super(v);
-            photo = (ImageView) v.findViewById(R.id.image);
+            photo = v.findViewById(R.id.image);
             photo.setOnClickListener(this);
-            morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
+            morePhotos = v.findViewById(R.id.number_of_more_images);
         }
 
         @Override

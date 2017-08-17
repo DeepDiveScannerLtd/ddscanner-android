@@ -65,10 +65,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         //TODO uncomment in future versions
         activityShowTimestamp = System.currentTimeMillis();
 
-        progressMessage = (TextView) findViewById(R.id.message);
-        skip = (TextView) findViewById(R.id.skip);
-        loginButton = (Button) findViewById(R.id.login);
-        signUpButton = (Button) findViewById(R.id.sign_up);
+        progressMessage = findViewById(R.id.message);
+        skip = findViewById(R.id.skip);
+        loginButton = findViewById(R.id.login);
+        signUpButton = findViewById(R.id.sign_up);
 
         skip.setOnClickListener(this);
         loginButton.setOnClickListener(this);
@@ -81,10 +81,15 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 //            showMainActivity();
 //        }
 
-        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
-            loadTutorial();
-            SharedPreferenceHelper.setIsNeedToShowTutorial();
-        } else if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustTrackFbEvent()) {
+//                DDScannerApplication.getInstance().getSharedPreferenceHelper().setFbTracked();
+//                EventsTracker.trackFirstLaunchForFacebookAnalytics();
+//            }
+//            loadTutorial();
+//            SharedPreferenceHelper.setIsNeedToShowTutorial();
+//        }
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
@@ -92,7 +97,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         }
 
 
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
+        LinearLayout mainLayout = findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
         mainLayout.startAnimation(fadeInAnimation);
@@ -217,12 +222,13 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                 }
                 break;
             case 15:
-                if (SharedPreferenceHelper.getIsUserSignedIn()) {
-                    skip.setVisibility(View.GONE);
-                    loginButton.setVisibility(View.GONE);
-                    signUpButton.setVisibility(View.GONE);
-                    showMainActivity();
-                }
+                showMainActivity();
+//                if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//                    skip.setVisibility(View.GONE);
+//                    loginButton.setVisibility(View.GONE);
+//                    signUpButton.setVisibility(View.GONE);
+//                    showMainActivity();
+//                }
                 break;
         }
     }

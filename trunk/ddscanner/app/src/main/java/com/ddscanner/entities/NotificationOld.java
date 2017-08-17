@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class NotificationOld implements Serializable {
 
-    public static enum Type{
+    public enum Type{
         @SerializedName("like")
         LIKE,
 
@@ -18,7 +18,8 @@ public class NotificationOld implements Serializable {
 
         @SerializedName("achieve")
         ACHIEVE
-    };
+    }
+
     @SerializedName("type")
     private Type type;
     private String date;

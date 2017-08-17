@@ -81,7 +81,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
                 case 1:
                     user = result;
                     user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-                    BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
+                    BaseUser baseUser = SharedPreferenceHelper.getActiveUser();
                     baseUser.setName(result.getName());
                     baseUser.setPhoto(result.getPhoto());
                     baseUser.setType(result.getType());
@@ -107,7 +107,6 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
                     DDScannerApplication.bus.post(new LogoutEvent());
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }
@@ -146,10 +145,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
             changeUi();
         } else {
             isLogouting = true;
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
+            if (SharedPreferenceHelper.getIsUserSignedIn() && (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
                 getUserDataRequest();
             }
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 onLoggedIn();
             } else {
                 onLoggedOut();
@@ -195,6 +194,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private void setupUi() {
         binding.swiperefresh.setOnRefreshListener(this);
+        binding.achievmentRv.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn())  {
+        if (SharedPreferenceHelper.getIsUserSignedIn())  {
             if (binding != null) {
                 binding.about.scrollTo(0, 0);
             }

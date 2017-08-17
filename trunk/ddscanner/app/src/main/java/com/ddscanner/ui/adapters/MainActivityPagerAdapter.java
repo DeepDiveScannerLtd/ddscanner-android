@@ -14,6 +14,7 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implements LoginView.LoginStateChangeListener {
 
@@ -37,7 +38,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
             case 1:
                 return diverNotificationsFragment;
             case 2:
-                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                switch (SharedPreferenceHelper.getActiveUserType()) {
                     case DIVECENTER:
                         return diveCenterProfileFragment;
                     case DIVER:
@@ -114,4 +115,9 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     public DiveCenterProfileFragment getDiveCenterProfileFragment() {
         return diveCenterProfileFragment;
     }
+
+    public MapListFragment getMapListFragment() {
+        return mapListFragment;
+    }
+
 }

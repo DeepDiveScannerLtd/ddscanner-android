@@ -64,8 +64,8 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
     }
 
     private void findViews() {
-        progressView = (ProgressView) findViewById(R.id.progress_bar);
-        usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
+        progressView = findViewById(R.id.progress_bar);
+        usersRecyclerView = findViewById(R.id.peoples_rc);
     }
 
     private void setUi(ArrayList<User> users) {
@@ -114,9 +114,6 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

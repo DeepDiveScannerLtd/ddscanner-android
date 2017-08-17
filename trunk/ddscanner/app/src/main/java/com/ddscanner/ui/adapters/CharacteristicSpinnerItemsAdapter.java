@@ -14,16 +14,12 @@ import com.ddscanner.R;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
 
-    private Context context;
-    private List<String> values;
-    private Activity activity;
     private ArrayList<String> data;
     public Resources res;
-    LayoutInflater inflater;
+    private LayoutInflater inflater;
     private int padding;
 
     public CharacteristicSpinnerItemsAdapter(Activity activitySpinner, int textViewResourceId, ArrayList<String> objects) {
@@ -35,14 +31,12 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = getRowView(position, parent, false);
-        return view;
+        return getRowView(position, parent, false);
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View view = getRowView(position, parent, true);
-        return view;
+        return getRowView(position, parent, true);
     }
 
     @Override
@@ -52,7 +46,7 @@ public class CharacteristicSpinnerItemsAdapter extends ArrayAdapter<String> {
 
     private View getRowView(int position, ViewGroup parent, boolean isDropDown) {
         View row = inflater.inflate(R.layout.item_language_spinner, parent, false);
-        TextView textView = (TextView) row.findViewById(R.id.spinner_text);
+        TextView textView = row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
         if (!isDropDown) {
             row.setPadding(0, padding, padding, padding);

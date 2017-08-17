@@ -118,7 +118,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
+
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
@@ -143,7 +143,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
+
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
@@ -177,7 +177,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
+
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
@@ -216,7 +216,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.cant_delete_all_photos, false);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
@@ -283,21 +282,21 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     private void findViews() {
-        userDataLayout = (LinearLayout) findViewById(R.id.user_data);
-        bottomLayout = (RelativeLayout) findViewById(R.id.bottom_layout);
-        topLayout = (RelativeLayout) findViewById(R.id.top_layout);
-        title = (TextView) findViewById(R.id.title);
-        photosCount = (TextView) findViewById(R.id.images_count);
-        likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
-        likeIcon = (ImageView) findViewById(R.id.icon);
-        likesCount = (TextView) findViewById(R.id.likes_count);
-        viewPager = (SliderViewPager) findViewById(R.id.image_slider);
-        close = (ImageView) findViewById(R.id.close_btn);
-        baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
-        avatar = (ImageView) findViewById(R.id.user_avatar);
-        date = (TextView) findViewById(R.id.date);
-        userName = (TextView) findViewById(R.id.user_name);
-        options = (ImageView) findViewById(R.id.options);
+        userDataLayout = findViewById(R.id.user_data);
+        bottomLayout = findViewById(R.id.bottom_layout);
+        topLayout = findViewById(R.id.top_layout);
+        title = findViewById(R.id.title);
+        photosCount = findViewById(R.id.images_count);
+        likesLayout = findViewById(R.id.likes_layout);
+        likeIcon = findViewById(R.id.icon);
+        likesCount = findViewById(R.id.likes_count);
+        viewPager = findViewById(R.id.image_slider);
+        close = findViewById(R.id.close_btn);
+        baseLayout = findViewById(R.id.swipe_layout);
+        avatar = findViewById(R.id.user_avatar);
+        date = findViewById(R.id.date);
+        userName = findViewById(R.id.user_name);
+        options = findViewById(R.id.options);
     }
 
     private void setUi() {
@@ -440,9 +439,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override

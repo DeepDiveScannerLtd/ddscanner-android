@@ -71,9 +71,9 @@ public class TranslationsListAdapter extends RecyclerView.Adapter<TranslationsLi
         TranslationListViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            languageName = (TextView) view.findViewById(R.id.language_name);
-            diveSpotName = (TextView) view.findViewById(R.id.name);
-            removeTranslations = (ImageView) view.findViewById(R.id.remove);
+            languageName = view.findViewById(R.id.language_name);
+            diveSpotName = view.findViewById(R.id.name);
+            removeTranslations = view.findViewById(R.id.remove);
             removeTranslations.setOnClickListener(this);
         }
 

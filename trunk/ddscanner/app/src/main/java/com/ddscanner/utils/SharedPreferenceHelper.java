@@ -42,8 +42,11 @@ public class SharedPreferenceHelper {
     private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
     private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
     private static final String DIVECENTER_SEARCH_SOURCE = "dive_center_search_source";
+    //using for fb event, don't delete this
     private static final String IS_NEED_TO_SHOW_TUTORIAL = "show_tutorial";
     private static final String TUTORIAL_STATE = "tutorial_state";
+    private static final String IS_MUST_TRACK_FB_EVENT = "fb_event";
+    private static final String IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL = "dive_spot_tutorial";
 
     private static SharedPreferences prefs;
 
@@ -74,6 +77,30 @@ public class SharedPreferenceHelper {
         public String getState() {
             return state;
         }
+    }
+
+    public void setFbTracked() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_TRACK_FB_EVENT, false);
+        editor.apply();
+    }
+
+    public boolean getIsMustTrackFbEvent() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_TRACK_FB_EVENT, true);
+    }
+
+    public void setIsMustToShowDiveSpotDetailsTutorial(boolean value) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, value);
+        editor.apply();
+    }
+
+    public boolean getIsMstToShowDiveSpotTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
     }
 
     public void setTutorialState(TutorialState state) {
@@ -111,10 +138,7 @@ public class SharedPreferenceHelper {
 
     private boolean isLocationSaved() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        if (prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty()) {
-            return false;
-        }
-        return true;
+        return !(prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty());
     }
 
     public String getUserLattitude() {
@@ -389,10 +413,7 @@ public class SharedPreferenceHelper {
 
     public static boolean getIsUserSignedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        if (prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0) {
-            return false;
-        }
-        return true;
+        return !(prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0);
     }
 
     public void addUserToList(BaseUser baseUser) {

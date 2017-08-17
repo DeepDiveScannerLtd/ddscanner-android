@@ -115,8 +115,8 @@ public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.Di
         DiveCentersViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            textView = (TextView) view.findViewById(R.id.language_name);
-            checkIcon = (ImageView) view.findViewById(R.id.checking_icon);
+            textView = view.findViewById(R.id.language_name);
+            checkIcon = view.findViewById(R.id.checking_icon);
         }
 
         @Override

@@ -78,7 +78,7 @@ public class SealifeSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
         public SectionViewHolder(View view, int mTextResourceid) {
             super(view);
-            title = (TextView) view.findViewById(mTextResourceid);
+            title = view.findViewById(mTextResourceid);
         }
     }
 

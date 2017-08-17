@@ -28,6 +28,7 @@ import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
 public class SealifeDetailsActivity extends BaseAppCompatActivity implements DialogClosedListener {
@@ -112,7 +113,7 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.edit_sealife:
-                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (SharedPreferenceHelper.getIsUserSignedIn()) {
                     AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
                     return true;
                 }

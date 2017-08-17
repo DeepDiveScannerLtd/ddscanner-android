@@ -72,9 +72,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
             super(v);
             v.setOnClickListener(this);
             context = v.getContext();
-            userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
-            userName = (TextView) v.findViewById(R.id.user_name);
-            info = (TextView) v.findViewById(R.id.count);
+            userAvatar = v.findViewById(R.id.user_avatar);
+            userName = v.findViewById(R.id.user_name);
+            info = v.findViewById(R.id.count);
         }
 
         @Override

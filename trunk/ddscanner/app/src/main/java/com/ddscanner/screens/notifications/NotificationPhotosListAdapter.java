@@ -66,8 +66,8 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
         NotificationPhotoViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            photo = (ImageView) view.findViewById(R.id.image);
-            morePhotos = (TextView) view.findViewById(R.id.number_of_more_images);
+            photo = view.findViewById(R.id.image);
+            morePhotos = view.findViewById(R.id.number_of_more_images);
         }
 
         @Override

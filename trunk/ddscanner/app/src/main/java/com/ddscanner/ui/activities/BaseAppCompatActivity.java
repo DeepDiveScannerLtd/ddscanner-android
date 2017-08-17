@@ -78,7 +78,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
      * @param toolbarId toolbar id in layout
      */
     public void setupToolbar(int titleresId, int toolbarId) {
-        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        setSupportActionBar(findViewById(toolbarId));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(titleresId);
@@ -92,7 +92,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
      */
     public void setupToolbar(int titleresId, int toolbarId, int menuResId) {
         this.menuResourceId = menuResId;
-        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        setSupportActionBar(findViewById(toolbarId));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(titleresId);
@@ -120,7 +120,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         if (checkWriteStoragePermission() && checkReadStoragePermission()) {
             dispatchTakePictureIntent();
         } else {
-            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
+            android.support.v13.app.ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_WRITE_STORAGE);
         }
     }
 

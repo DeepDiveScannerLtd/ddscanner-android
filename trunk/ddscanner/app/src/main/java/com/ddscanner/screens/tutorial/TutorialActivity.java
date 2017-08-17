@@ -71,10 +71,10 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
             getActionBar().hide();
         }
         mRootView = findViewById(R.id.activity_help_root);
-        mHelpTutorialViewPager = (ViewPager) findViewById(R.id.activity_help_view_pager);
-        mTextViewSkip = (TextView) findViewById(R.id.activity_help_skip_textview);
-        mNextButton = (Button) findViewById(R.id.activity_next_button);
-        mDoneButton = (Button) findViewById(R.id.activity_tutorial_done);
+        mHelpTutorialViewPager = findViewById(R.id.activity_help_view_pager);
+        mTextViewSkip = findViewById(R.id.activity_help_skip_textview);
+        mNextButton = findViewById(R.id.activity_next_button);
+        mDoneButton = findViewById(R.id.activity_tutorial_done);
 
         mTextViewSkip.setOnClickListener(finishTutorialClickListener);
         mDoneButton.setOnClickListener(finishTutorialClickListener);
@@ -133,7 +133,7 @@ public class TutorialActivity extends AppCompatActivity implements TutorialContr
     @Override
     public void setViewPagerFragments(List<TutorialFragment> materialTutorialFragments) {
         mHelpTutorialViewPager.setAdapter(new TutorialAdapter(getSupportFragmentManager(), materialTutorialFragments));
-        CirclePageIndicator mCirclePageIndicator = (CirclePageIndicator) findViewById(R.id.activity_help_view_page_indicator);
+        CirclePageIndicator mCirclePageIndicator = findViewById(R.id.activity_help_view_page_indicator);
 
         mCirclePageIndicator.setViewPager(mHelpTutorialViewPager);
         mCirclePageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

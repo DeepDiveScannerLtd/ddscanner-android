@@ -247,8 +247,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         TextAndPhotoItemViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
+            userAvatar = view.findViewById(R.id.user_avatar);
+            notificationText = view.findViewById(R.id.notification_text);
 
             userAvatar.setOnClickListener(this);
 
@@ -292,9 +292,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         SinglePhotoItemViewHolder(View view) {
             super(view);
-            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
-            photo = (ImageView) view.findViewById(R.id.added_photo);
+            userAvatar = view.findViewById(R.id.user_avatar);
+            notificationText = view.findViewById(R.id.notification_text);
+            photo = view.findViewById(R.id.added_photo);
 
             photo.setOnClickListener(this);
             userAvatar.setOnClickListener(this);
@@ -343,9 +343,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         PhotosListItemViewHolder(View view) {
             super(view);
-            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
-            photosList = (RecyclerView) view.findViewById(R.id.photos_list);
+            userAvatar = view.findViewById(R.id.user_avatar);
+            notificationText = view.findViewById(R.id.notification_text);
+            photosList = view.findViewById(R.id.photos_list);
             photosList.setLayoutManager(new GridLayoutManager(context, 6));
             photosList.setNestedScrollingEnabled(false);
             photosList.setAdapter(new NotificationPhotosListAdapter(context));

@@ -203,15 +203,16 @@ public class NotificationEntity {
         }
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
-                switch (userType) {
-                    case DIVECENTER:
-                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
-                        return returnedString;
-                    default:
-                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
-                        return returnedString;
-                }
-
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
+//                switch (userType) {
+//                    case DIVECENTER:
+//                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
+//                        return returnedString;
+//                    default:
+//                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
+//                        return returnedString;
+//                }
+                return returnedString;
             case DIVE_CENTER_INSTRUCTOR_ADD:
                 returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
                 return returnedString;

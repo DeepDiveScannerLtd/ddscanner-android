@@ -218,51 +218,51 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void findViews() {
-        isWorkingLayout = (LinearLayout) findViewById(R.id.working_layout);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
+        isWorkingLayout = findViewById(R.id.working_layout);
+        if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             isWorkingLayout.setVisibility(View.VISIBLE);
         }
-        errorVisibility = (TextView) findViewById(R.id.error_visibility);
-        maxVisibilityHint = (TextView) findViewById(R.id.max_visibility_hint);
-        minVisibilityHint = (TextView) findViewById(R.id.min_visibility_hint);
-        isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
-        isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
+        errorVisibility = findViewById(R.id.error_visibility);
+        maxVisibilityHint = findViewById(R.id.max_visibility_hint);
+        minVisibilityHint = findViewById(R.id.min_visibility_hint);
+        isWorkingSwitch = findViewById(R.id.switch_button_working);
+        isEditSwitch = findViewById(R.id.switch_button_edit);
         isEditSwitch.setOnCheckedChangeListener(this);
         isWorkingSwitch.setOnCheckedChangeListener(this);
-        isEditLayout = (LinearLayout) findViewById(R.id.edit_layout);
-        depth = (EditText) findViewById(R.id.depth);
-        btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
-        photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        levelAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
-        objectAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
-        currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
-        pickLocation = (LinearLayout) findViewById(R.id.location_layout);
-        pickCountry = (LinearLayout) findViewById(R.id.country_layout);
-        locationTitle = (TextView) findViewById(R.id.location);
-        btnSave = (Button) findViewById(R.id.button_create);
-        sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
-        mainLayout = (ScrollView) findViewById(R.id.main_layout);
-        progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        errorDepth = (TextView) findViewById(R.id.error_depth);
-        errorCountry = (TextView) findViewById(R.id.error_country);
-        errorLocation = (TextView) findViewById(R.id.error_location);
-        errorImages = (TextView) findViewById(R.id.error_images);
-        errorSealife = (TextView) findViewById(R.id.error_sealife);
-        errorVisibilityMax = (TextView) findViewById(R.id.error_visibility_max);
-        errorVisibilityMin = (TextView) findViewById(R.id.error_visibility_min);
-        errorCurrent = (TextView) findViewById(R.id.error_current);
-        errorTranslations = (TextView) findViewById(R.id.error_translations);
-        errorLevel = (TextView) findViewById(R.id.error_level);
-        errorObject = (TextView) findViewById(R.id.error_object);
-        visibilityMax = (EditText) findViewById(R.id.maxVisibility);
-        visibilityMin = (EditText) findViewById(R.id.minVisibility);
-        photos = (TextView) findViewById(R.id.photos);
-        maps = (TextView) findViewById(R.id.maps);
-        mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
-        countryTitle = (TextView) findViewById(R.id.country_title);
-        addTranslationButton = (RelativeLayout) findViewById(R.id.button_add_language);
-        languagesRecyclerView = (RecyclerView) findViewById(R.id.languages_list);
+        isEditLayout = findViewById(R.id.edit_layout);
+        depth = findViewById(R.id.depth);
+        btnAddSealife = findViewById(R.id.btn_add_sealife);
+        photos_rc = findViewById(R.id.photos_rc);
+        toolbar = findViewById(R.id.toolbar);
+        levelAppCompatSpinner = findViewById(R.id.level_spinner);
+        objectAppCompatSpinner = findViewById(R.id.object_spinner);
+        currentsAppCompatSpinner = findViewById(R.id.currents_spinner);
+        pickLocation = findViewById(R.id.location_layout);
+        pickCountry = findViewById(R.id.country_layout);
+        locationTitle = findViewById(R.id.location);
+        btnSave = findViewById(R.id.button_create);
+        sealifesRc = findViewById(R.id.sealifes_rc);
+        mainLayout = findViewById(R.id.main_layout);
+        progressView = findViewById(R.id.progressBarFull);
+        errorDepth = findViewById(R.id.error_depth);
+        errorCountry = findViewById(R.id.error_country);
+        errorLocation = findViewById(R.id.error_location);
+        errorImages = findViewById(R.id.error_images);
+        errorSealife = findViewById(R.id.error_sealife);
+        errorVisibilityMax = findViewById(R.id.error_visibility_max);
+        errorVisibilityMin = findViewById(R.id.error_visibility_min);
+        errorCurrent = findViewById(R.id.error_current);
+        errorTranslations = findViewById(R.id.error_translations);
+        errorLevel = findViewById(R.id.error_level);
+        errorObject = findViewById(R.id.error_object);
+        visibilityMax = findViewById(R.id.maxVisibility);
+        visibilityMin = findViewById(R.id.minVisibility);
+        photos = findViewById(R.id.photos);
+        maps = findViewById(R.id.maps);
+        mapsRecyclerView = findViewById(R.id.maps_rc);
+        countryTitle = findViewById(R.id.country_title);
+        addTranslationButton = findViewById(R.id.button_add_language);
+        languagesRecyclerView = findViewById(R.id.languages_list);
     }
 
     private void setUi() {
@@ -435,10 +435,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private boolean isSomethingEntered() {
-        if (diveSpotLocation != null || isCountryChosed || !depth.getText().toString().isEmpty() || languagesList.size() > 0 || photosListAdapter.getItemCount() > 1 || mapsListAdapter.getItemCount() > 1 || !visibilityMin.getText().toString().isEmpty() || !visibilityMax.getText().toString().isEmpty() || currentsAppCompatSpinner.getSelectedItemPosition() != 0 || levelAppCompatSpinner.getSelectedItemPosition() != 0 || objectAppCompatSpinner.getSelectedItemPosition() != 0 || sealifes.size() > 0) {
-            return true;
-        }
-        return false;
+        return diveSpotLocation != null || isCountryChosed || !depth.getText().toString().isEmpty() || languagesList.size() > 0 || photosListAdapter.getItemCount() > 1 || mapsListAdapter.getItemCount() > 1 || !visibilityMin.getText().toString().isEmpty() || !visibilityMax.getText().toString().isEmpty() || currentsAppCompatSpinner.getSelectedItemPosition() != 0 || levelAppCompatSpinner.getSelectedItemPosition() != 0 || objectAppCompatSpinner.getSelectedItemPosition() != 0 || sealifes.size() > 0;
     }
 
     private void createRequestBodyies() {
@@ -677,9 +674,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
     @Override
