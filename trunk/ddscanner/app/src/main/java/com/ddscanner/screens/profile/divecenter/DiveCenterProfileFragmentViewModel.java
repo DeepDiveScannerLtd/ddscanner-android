@@ -119,7 +119,9 @@ public class DiveCenterProfileFragmentViewModel {
             }
         }
         view.setText(outString.toString());
-        LinkBuilder.on(view).addLinks(links).build();
+        if (links.size() > 0) {
+            LinkBuilder.on(view).addLinks(links).build();
+        }
     }
 
     @BindingAdapter({"setPhones"})
@@ -143,7 +145,9 @@ public class DiveCenterProfileFragmentViewModel {
         }
 
         view.setText(outString);
-        LinkBuilder.on(view).addLinks(links).build();
+        if (links.size() > 0) {
+            LinkBuilder.on(view).addLinks(links).build();
+        }
     }
 
     @BindingAdapter("arrowVisibilityFrom")
