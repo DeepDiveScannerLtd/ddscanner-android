@@ -2,21 +2,23 @@ package com.ddscanner.ui.views;
 
 
 import android.content.Context;
+import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.interfaces.RemoveLayoutClickListener;
-import com.rey.material.widget.EditText;
 
 public class EmailInputView extends RelativeLayout {
 
     TextView errorView;
     EditText editText;
     RemoveLayoutClickListener removeLayoutClickListener;
+    TextInputLayout textInputLayout;
 
     public EmailInputView(Context context) {
         super(context);
@@ -37,6 +39,7 @@ public class EmailInputView extends RelativeLayout {
         inflate(getContext(), R.layout.edit_dive_center_email_edit_text, this);
         errorView = findViewById(R.id.email_error);
         editText = findViewById(R.id.email);
+        textInputLayout = findViewById(R.id.textInputLayout);
     }
 
     public void setRemoveLayoutClickListener(RemoveLayoutClickListener removeLayoutClickListener) {

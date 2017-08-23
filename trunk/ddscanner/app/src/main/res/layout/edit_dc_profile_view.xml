@@ -78,7 +78,11 @@
                             android:gravity="center"
                             android:orientation="vertical">
 
-                            <com.rey.material.widget.EditText
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            <EditText
                                 style="@style/DiveCenterProfileEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -88,8 +92,9 @@
                                 android:maxLength="31"
                                 android:inputType="text"
                                 android:maxLines="1"
+                                app:backgroundTint="#dedede"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
-
+                            </android.support.design.widget.TextInputLayout>
                             <TextView
                                 android:text="@string/name_is_required_edit_dc"
                                 android:layout_marginLeft="0dp"

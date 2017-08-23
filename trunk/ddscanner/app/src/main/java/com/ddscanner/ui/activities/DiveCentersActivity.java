@@ -369,8 +369,10 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private void drawMarkers() {
         if (diveCentersClusterManager != null) {
             for (DiveCenter diveCenter : diveCenters) {
-                diveCentersClusterManager.addItem(diveCenter);
-                diveCentersMap.put(diveCenter.getPosition(), diveCenter);
+                if (diveCenter.getLat() != null && diveCenter.getLng() != null) {
+                    diveCentersClusterManager.addItem(diveCenter);
+                    diveCentersMap.put(diveCenter.getPosition(), diveCenter);
+                }
             }
             diveCentersClusterManager.cluster();
         } else {

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class PhoneInputView extends RelativeLayout {
     EditText editText;
     TextView textView;
     RemoveLayoutClickListener removeLayoutClickListener;
+    ImageView delete;
 
     public PhoneInputView(Context context) {
         super(context);
@@ -40,15 +42,7 @@ public class PhoneInputView extends RelativeLayout {
     @SuppressLint("ClickableViewAccessibility")
     public void setRemoveLayoutClickListener(RemoveLayoutClickListener removeLayoutClickListener) {
         this.removeLayoutClickListener = removeLayoutClickListener;
-        editText.setOnTouchListener((view, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_UP) {
-                if(event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[2].getBounds().width())) {
-                    this.removeLayoutClickListener.onRemoveClicked(this);
-                    return true;
-                }
-            }
-            return false;
-        });
+        delete.setOnClickListener(view -> this.removeLayoutClickListener.onRemoveClicked(this));
     }
 
     private void init() {
@@ -57,7 +51,7 @@ public class PhoneInputView extends RelativeLayout {
         editText = findViewById(R.id.edit_text);
         textView = findViewById(R.id.phone_error);
         countryCodePicker.registerCarrierNumberEditText(editText);
-//        close = findViewById(R.id.close);
+        delete = findViewById(R.id.ic_delete);
     }
 
     public void setPhone(String phone) {

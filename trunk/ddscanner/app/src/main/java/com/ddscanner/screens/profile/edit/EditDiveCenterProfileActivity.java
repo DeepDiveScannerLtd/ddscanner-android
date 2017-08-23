@@ -543,7 +543,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isDataValid(ArrayList<PhoneInputView> phoneInputViews, ArrayList<EmailInputView> emailInputViews) {
         boolean isDataValid = true;
         for (PhoneInputView phoneInputView : phoneInputViews) {
-            if (!validCellPhone(phoneInputView.getPhoneWithoutPlus().trim()) && !phoneInputView.getPhoneWithoutPlus().trim().isEmpty()) {
+            if (!validCellPhone(phoneInputView.getPhoneWithoutPlus().trim())) {
                 phoneInputView.setError();
                 isDataValid = false;
             } else {
@@ -579,7 +579,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     private boolean validCellPhone(String number) {
-        return Patterns.PHONE.matcher(number).matches();
+        if (number.length() > 7 && number.length() < 17) {
+            return true;
+        }
+        return false;
     }
 
     private boolean validEmail(String email) {
