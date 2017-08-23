@@ -11,7 +11,8 @@
         android:id="@+id/ccp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:gravity="center"
+        app:ccp_defaultNameCode="TH"/>
     <RelativeLayout
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/ccp"
