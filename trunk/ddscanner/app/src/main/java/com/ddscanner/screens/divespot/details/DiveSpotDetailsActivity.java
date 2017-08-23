@@ -152,9 +152,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             changeUiAccordingNewFlags(result);
             if (isClickedEdit) {
                 if (result.isEditable() || (SharedPreferenceHelper.getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
-                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
-                    editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
-                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                    tryToCallEditDiveSpotActivity();
                 }
             }
         }
