@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_marginTop="13dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linearLayout">
+    <com.hbb20.CountryCodePicker
+        android:layout_centerVertical="true"
+        android:id="@+id/ccp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+    <RelativeLayout
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/ccp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <com.rey.material.widget.EditText
+        android:id="@+id/edit_text"
+        android:maxLength="20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        et_labelEnable="false"
+        android:hint="@string/phone"
+        android:inputType="phone"
+        android:background="@null"
+        android:layout_toLeftOf="@+id/ic_delete"
+        android:paddingRight="15dp"
+        android:drawableRight="@drawable/ic_addds_delete"
+        />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dedede"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+    <TextView
+        android:layout_below="@+id/ccp"
+        android:layout_marginLeft="0dp"
+        android:text="@string/enter_a_valid_phone_number"
+        android:id="@+id/phone_error"
+        style="@style/ValidationErrorTextView" />
+</RelativeLayout>

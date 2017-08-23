@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.Language;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.RemoveLayoutClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.ChangeAddressActivity;
@@ -39,6 +39,8 @@ import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.ui.views.EmailInputView;
+import com.ddscanner.ui.views.PhoneInputView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -72,10 +74,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private static final String ARG_COUNTRY = "country";
     private static final String ARG_ADDRESS = "address";
 
-    private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
-    private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
-    private ArrayList<TextView> phonesErrors = new ArrayList<>();
-    private ArrayList<TextView> emailsErrors = new ArrayList<>();
     private List<MultipartBody.Part> emails =  new ArrayList<>();
     private List<MultipartBody.Part> phones = new ArrayList<>();
     private List<MultipartBody.Part> languages = null;
@@ -99,6 +97,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private TextView editAddress;
     private LinearLayoutManager diveSpotsLayoutManager;
     private LinearLayoutManager languagesLayoutManager;
+    private RemoveLayoutClickListener removePhoneLayoutClickListener;
+    private RemoveLayoutClickListener removeEmailLayoutClickListener;
 
     private EditDcProfileViewBinding binding;
 
@@ -221,6 +221,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         diveSpotsLayoutManager = new LinearLayoutManager(this);
         languagesLayoutManager = new LinearLayoutManager(this);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
+        removePhoneLayoutClickListener = view -> binding.phones.removeView(view);
+        removeEmailLayoutClickListener = view -> binding.emails.removeView(view);
         isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_DIVECENTER), DiveCenterProfile.class)));
@@ -238,6 +240,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
 
         setupUi();
+
     }
 
     @Override
@@ -292,45 +295,29 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     public void addEmailClicked(View view) {
-        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
-        EditText editText = linearLayout.findViewById(R.id.email);
-        TextView textView = linearLayout.findViewById(R.id.email_error);
-        emailsErrors.add(textView);
-        editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        emailsEditTexts.add(editText);
-        binding.emails.addView(linearLayout);
+        EmailInputView emailInputView = new EmailInputView(this);
+        emailInputView.setRemoveLayoutClickListener(removeEmailLayoutClickListener);
+        binding.emails.addView(emailInputView);
     }
 
     public void addPhoneClicked(View view) {
-        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
-        EditText editText = linearLayout.findViewById(R.id.phone);
-        TextView textView = linearLayout.findViewById(R.id.phone_error);
-        phonesErrors.add(textView);
-        editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        phonesEditTexts.add(editText);
-        binding.phones.addView(linearLayout);
+        PhoneInputView phoneInputView = new PhoneInputView(this);
+        phoneInputView.setRemoveLayoutClickListener(removePhoneLayoutClickListener);
+        binding.phones.addView(phoneInputView);
     }
 
     private void addEmailView(String text) {
-        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
-        EditText editText = linearLayout.findViewById(R.id.email);
-        TextView textView = linearLayout.findViewById(R.id.email_error);
-        emailsErrors.add(textView);
-        editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        emailsEditTexts.add(editText);
-        editText.setText(text);
-        binding.emails.addView(linearLayout);
+        EmailInputView emailInputView = new EmailInputView(this);
+        emailInputView.setRemoveLayoutClickListener(removeEmailLayoutClickListener);
+        emailInputView.setText(text);
+        binding.emails.addView(emailInputView);
     }
 
     private void addPhoneView(String text) {
-        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
-        EditText editText = linearLayout.findViewById(R.id.phone);
-        TextView textView = linearLayout.findViewById(R.id.phone_error);
-        phonesErrors.add(textView);
-        editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        phonesEditTexts.add(editText);
-        editText.setText(text);
-        binding.phones.addView(linearLayout);
+        PhoneInputView phoneInputView = new PhoneInputView(this);
+        phoneInputView.setRemoveLayoutClickListener(removePhoneLayoutClickListener);
+        phoneInputView.setPhone(text);
+        binding.phones.addView(phoneInputView);
     }
 
     public void addDiveSpotClicked(View view) {
@@ -452,12 +439,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             addressEditText.setEnabled(false);
             editAddress = addressLayout.findViewById(R.id.edit_dive_center_address);
             binding.addresses.addView(addressLayout);
-            editAddress.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chooseAddressClicked(editAddress);
-                }
-            });
+            editAddress.setOnClickListener(view -> chooseAddressClicked(editAddress));
         }
         if (!country.isEmpty()) {
             addressEditText.setText(country + ", " + address);
@@ -470,24 +452,45 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         ChangePasswordActivity.show(this);
     }
 
-    public void saveChangesClicked(View view) {
+    private ArrayList<PhoneInputView> getPhonenputs() {
+        ArrayList<PhoneInputView> phoneInputViews = new ArrayList<>();
+        if (binding.phones.getChildCount() > 0) {
+            for (int i = 0; i < binding.phones.getChildCount(); i++) {
+                phoneInputViews.add((PhoneInputView) binding.phones.getChildAt(i));
+            }
+        }
+        return phoneInputViews;
+    }
 
-        if (!isDataValid()) {
+    private <T> ArrayList<T> getInputViewsList(LinearLayout linearLayout) {
+        ArrayList<T> phoneInputViews = new ArrayList<>();
+        if (linearLayout.getChildCount() > 0) {
+            for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                phoneInputViews.add((T) linearLayout.getChildAt(i));
+            }
+        }
+        return phoneInputViews;
+    }
+
+    public void saveChangesClicked(View view) {
+        ArrayList<PhoneInputView> phoneInputViews = getInputViewsList(binding.phones);
+        ArrayList<EmailInputView> emailInputViews = getInputViewsList(binding.emails);
+        if (!isDataValid(phoneInputViews, emailInputViews)) {
             return;
         }
         if (!binding.name.getText().toString().trim().isEmpty()) {
             nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText().toString().trim());
         }
 
-        for (EditText editText : phonesEditTexts) {
-            if (!editText.getText().toString().trim().isEmpty()) {
-                phones.add(MultipartBody.Part.createFormData("phones[]", editText.getText().toString().trim()));
+        for (PhoneInputView editText : phoneInputViews) {
+            if (!editText.getPhoneWithPlus().trim().isEmpty()) {
+                phones.add(MultipartBody.Part.createFormData("phones[]", editText.getPhoneWithPlus().trim()));
             }
         }
 
-        for (EditText editText : emailsEditTexts) {
-            if (!editText.getText().toString().trim().isEmpty()) {
-                emails.add(MultipartBody.Part.createFormData("emails[]", editText.getText().toString().trim()));
+        for (EmailInputView emailInputView : emailInputViews) {
+            if (!emailInputView.getText().trim().isEmpty()) {
+                emails.add(MultipartBody.Part.createFormData("emails[]", emailInputView.getText().trim()));
             }
         }
 
@@ -537,28 +540,26 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog.show();
     }
 
-    private boolean isDataValid() {
-        for (TextView textView : phonesErrors) {
-            textView.setVisibility(View.GONE);
+    private boolean isDataValid(ArrayList<PhoneInputView> phoneInputViews, ArrayList<EmailInputView> emailInputViews) {
+        boolean isDataValid = true;
+        for (PhoneInputView phoneInputView : phoneInputViews) {
+            if (!validCellPhone(phoneInputView.getPhoneWithoutPlus().trim()) && !phoneInputView.getPhoneWithoutPlus().trim().isEmpty()) {
+                phoneInputView.setError();
+                isDataValid = false;
+            } else {
+                phoneInputView.hideError();
+            }
         }
-        for (TextView textView : emailsErrors) {
-            textView.setVisibility(View.GONE);
+        for (EmailInputView emailInputView : emailInputViews) {
+            if (!validEmail(emailInputView.getText().trim()) && !emailInputView.getText().trim().isEmpty()) {
+                emailInputView.showError();
+                isDataValid = false;
+            } else {
+                emailInputView.hideError();
+            }
         }
         binding.diveSpotError.setVisibility(View.GONE);
         binding.nameError.setVisibility(View.GONE);
-        boolean isDataValid = true;
-        for (EditText editText : phonesEditTexts) {
-            if (!validCellPhone(editText.getText().toString().trim()) && !editText.getText().toString().trim().isEmpty()) {
-                phonesErrors.get(phonesEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
-                isDataValid = false;
-            }
-        }
-        for (EditText editText : emailsEditTexts) {
-            if (!validEmail(editText.getText().toString().trim()) && !editText.getText().toString().trim().isEmpty()) {
-                emailsErrors.get(emailsEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
-                isDataValid = false;
-            }
-        }
 
         if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
             binding.diveSpotError.setVisibility(View.VISIBLE);

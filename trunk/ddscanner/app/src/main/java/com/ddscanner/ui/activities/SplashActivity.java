@@ -1,6 +1,5 @@
 package com.ddscanner.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +22,6 @@ import com.ddscanner.services.CheckResentRunService;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
-import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
@@ -142,6 +140,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
         showMainActivityRunnable = () -> {
+//            ExampleActivityCountry.show(this);
             MainActivity.show(SplashActivity.this);
             SplashActivity.this.finish();
         };

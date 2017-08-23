@@ -283,6 +283,9 @@
             android:name=".screens.profile.edit.divecenter.search.CreateDiveCenterActivity" />
         <activity android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.ExampleActivityCountry"
+            android:screenOrientation="portrait"/>
+
         <receiver android:name=".receivers.DeviceBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

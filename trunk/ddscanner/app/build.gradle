@@ -86,7 +86,7 @@ def playServicesVersion="11.0.4"
 def supportVersionVersion="26.0.1"
 
 dependencies {
-
+    compile project(':ccp')
     // tests
 
     // Required for local unit tests (JUnit 4 framework)
