@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,7 +78,12 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fb);
         videoView.setVideoURI(uri);
         videoView.start();
-
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.setLooping(true);
+            }
+        });
 //        if (SharedPreferenceHelper.getIsUserSignedIn()) {
 //            skip.setVisibility(View.GONE);
 //            loginButton.setVisibility(View.GONE);
