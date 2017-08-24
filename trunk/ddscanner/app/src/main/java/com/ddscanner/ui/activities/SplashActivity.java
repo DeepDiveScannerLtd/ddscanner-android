@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -42,6 +44,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     private TextView skip;
     private Button signUpButton;
     private Button loginButton;
+    VideoView videoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         skip.setOnClickListener(this);
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
+        videoView = findViewById(R.id.surface);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fb);
+        videoView.setVideoURI(uri);
+        videoView.start();
 
 //        if (SharedPreferenceHelper.getIsUserSignedIn()) {
 //            skip.setVisibility(View.GONE);
