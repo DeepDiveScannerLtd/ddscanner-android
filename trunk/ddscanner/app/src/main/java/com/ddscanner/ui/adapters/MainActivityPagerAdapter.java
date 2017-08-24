@@ -13,6 +13,7 @@ import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
+import com.ddscanner.ui.fragments.MapListFragmentNew;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
@@ -24,6 +25,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     private ProfileFragment profileFragment = new ProfileFragment();
     private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
     private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
+    private MapListFragmentNew mapListFragmentNew = new MapListFragmentNew();
 
     public MainActivityPagerAdapter(FragmentManager manager) {
         super(manager);
@@ -34,7 +36,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return mapListFragment;
+                return mapListFragmentNew;
             case 1:
                 return diverNotificationsFragment;
             case 2:
@@ -102,6 +104,14 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
 //        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
+    }
+
+    public MapListFragmentNew getMapListFragmentNew() {
+        return mapListFragmentNew;
+    }
+
+    public void setMapListFragmentNew(MapListFragmentNew mapListFragmentNew) {
+        this.mapListFragmentNew = mapListFragmentNew;
     }
 
     public ProfileFragment getProfileFragment() {

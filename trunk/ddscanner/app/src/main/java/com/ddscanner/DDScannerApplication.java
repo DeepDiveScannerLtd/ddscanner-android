@@ -15,6 +15,7 @@ import com.ddscanner.utils.TutorialHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.applinks.AppLinkData;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class DDScannerApplication extends Application {
 //        }
         FacebookSdk.sdkInitialize(this);
         instance = this;
+        Mapbox.getInstance(getApplicationContext(), "pk.eyJ1IjoibGFzaGtldCIsImEiOiJjajZmMHplaDgyaHR4MzNsN296Nmw5N2xmIn0.CD10cf2ut0X3Uw6p9xUw9Q");
         AnalyticsSystemsManager.initAnalyticsSystems(this);
 //        AppLinkData.fetchDeferredAppLinkData(this, appLinkData -> {});
         ddScannerRestClient = new DDScannerRestClient();

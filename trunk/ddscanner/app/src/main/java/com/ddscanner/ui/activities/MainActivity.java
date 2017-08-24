@@ -64,6 +64,7 @@ import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.ui.fragments.MapListFragmentNew;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
@@ -107,6 +108,7 @@ public class MainActivity extends BaseAppCompatActivity
     private DiverNotificationsFragment diverNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
     private PersonalNotificationsFragment allNotificationsFragment;
+    private MapListFragmentNew mapListFragmentNew;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private boolean isDiveSpotInfoWindowShown = false;
@@ -324,6 +326,9 @@ public class MainActivity extends BaseAppCompatActivity
         }
         if (allNotificationsFragment != null) {
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
+        }
+        if (mapListFragmentNew != null) {
+            mainViewPagerAdapter.setMapListFragmentNew(mapListFragmentNew);
         }
         setupTabLayout();
     }
