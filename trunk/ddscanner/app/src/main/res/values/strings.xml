@@ -556,5 +556,6 @@
     <string name="tutorial_checkin"><![CDATA[<b>Mark</b> the spots you’ve visited]]></string>
     <string name="tutorial_add_photo"><![CDATA[<b>Upload</b> your underwater photos]]></string>
     <string name="write_review_tutorial"><![CDATA[<b>Write</b> a few words about you dive]]></string>
+    <string name="see_list_tutorial"><![CDATA[<b>See</b> all the spots listed for you]]></string>
     <string name="cant_connect_to_google">Can\'t connect to google services. Please, try again</string>
 </resources>
