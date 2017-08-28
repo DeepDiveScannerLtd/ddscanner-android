@@ -64,7 +64,8 @@ import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.fragments.MapListFragmentNew;
+import com.ddscanner.screens.map.MapListFragmentNew;
+import com.ddscanner.ui.views.NonSwipeableViewPager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
@@ -99,7 +100,7 @@ public class MainActivity extends BaseAppCompatActivity
     private static final String TAG = MainActivity.class.getName();
 
     private TabLayout toolbarTabLayout;
-    private ViewPager mainViewPager;
+    private NonSwipeableViewPager mainViewPager;
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;

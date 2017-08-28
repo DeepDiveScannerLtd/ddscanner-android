@@ -26,6 +26,7 @@ public class DiveSpotShort implements Serializable, ClusterItem {
     @SerializedName("is_new")
     private boolean isNew;
     private CountryEntity country;
+    private com.mapbox.mapboxsdk.geometry.LatLng latLngNew;
 
     public CountryEntity getCountry() {
         return country;
@@ -129,6 +130,13 @@ public class DiveSpotShort implements Serializable, ClusterItem {
             latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
         }
         return latLng;
+    }
+
+    public com.mapbox.mapboxsdk.geometry.LatLng getNewPosition() {
+        if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
+            latLngNew = new com.mapbox.mapboxsdk.geometry.LatLng(Double.valueOf(lat), Double.valueOf(lng));
+        }
+        return latLngNew;
     }
 
 }

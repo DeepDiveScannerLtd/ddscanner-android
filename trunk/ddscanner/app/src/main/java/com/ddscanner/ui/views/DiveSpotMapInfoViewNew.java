@@ -4,9 +4,6 @@ package com.ddscanner.ui.views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -15,36 +12,38 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.utils.Constants;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.Marker;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Deprecated
-public class DiveSpotMapInfoView extends RelativeLayout {
-    
+public class DiveSpotMapInfoViewNew extends RelativeLayout {
+
     private TextView diveSpotName;
     private TextView diveSpotType;
     private RatingView ratingView;
     private Map<String, Integer> infoWindowBackgroundImages = new HashMap<>();
-    
-    public DiveSpotMapInfoView(Context context) {
+    private Marker marker;
+
+    public DiveSpotMapInfoViewNew(Context context) {
         super(context);
         init();
     }
 
-    public DiveSpotMapInfoView(Context context, @Nullable AttributeSet attrs) {
+    public DiveSpotMapInfoViewNew(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DiveSpotMapInfoView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public DiveSpotMapInfoViewNew(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
-    
+
     private void init() {
         inflate(getContext(), R.layout.view_dive_spot_map_info, this);
-        
+
         diveSpotName = findViewById(R.id.dive_spot_title);
         diveSpotType = findViewById(R.id.object);
         ratingView = findViewById(R.id.rating_view);
@@ -55,9 +54,14 @@ public class DiveSpotMapInfoView extends RelativeLayout {
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_OTHER, R.drawable.iw_card_other);
 
     }
-    
-    
-    public void show(DiveSpotShort diveSpotShort) {
+
+
+    public void show(DiveSpotShort diveSpotShort, Marker marker) {
+        if (this.marker != null) {
+            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
+        }
+        this.marker = marker;
+        this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds_selected));
         this.animate()
                 .translationY(0)
                 .alpha(1.0f)
@@ -77,17 +81,22 @@ public class DiveSpotMapInfoView extends RelativeLayout {
     }
 
     public void hide(int diveSpotInfoHeight) {
-        this.animate()
-                .translationY(diveSpotInfoHeight)
-                .alpha(0.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        setVisibility(View.GONE);
-                    }
-                });
+        try {
+            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
+            this.animate()
+                    .translationY(diveSpotInfoHeight)
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            setVisibility(View.GONE);
+                        }
+                    });
+        } catch (NullPointerException ignored) {
+
+        }
     }
 
 }
