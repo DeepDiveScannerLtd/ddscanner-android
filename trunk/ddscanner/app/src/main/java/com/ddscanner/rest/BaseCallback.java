@@ -46,6 +46,7 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
             } else if (t instanceof SocketTimeoutException) {
                 resultListenerWeakReference.get().onConnectionFailure();
             } else {
+                EventsTracker.trackUnknownServerError(call.request().url().toString(), -1, t.getMessage());
                 resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, null, call.request().url().toString(), t.getMessage());
             }
         }
@@ -117,6 +118,7 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 // unknown server error
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
+                    EventsTracker.trackUnknownServerError(call.request().url().toString(), responseCode, generalError.getMessage());
                     resultListener.onError(DDScannerRestClient.ErrorType.SERVER_INTERNAL_ERROR_500, generalError, call.request().url().toString(), generalError.getMessage());
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
