@@ -5,14 +5,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
-import com.ddscanner.ui.fragments.MapListFragment;
+import com.ddscanner.screens.map.MapListFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.SharedPreferenceHelper;
 

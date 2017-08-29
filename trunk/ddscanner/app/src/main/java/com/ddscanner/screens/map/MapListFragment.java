@@ -1,38 +1,29 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.map;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
@@ -42,17 +33,14 @@ import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
-import com.ddscanner.interfaces.FirstTimeSpotsLoadedListener;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.DiveSpotMapInfoView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LocationHelper;
-import com.ddscanner.utils.TutorialHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -69,10 +57,9 @@ import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class MapListFragment extends Fragment implements View.OnClickListener {
+public class MapListFragment extends Fragment implements View.OnClickListener, FragmentMapContract {
 
     private static final String TAG = MapListFragment.class.getName();
 
@@ -110,6 +97,38 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout please;
     private DiveSpotsListAdapter diveSpotsListAdapter;
     private int diveSpotInfoHeight;
+
+    private DDScannerRestClient.ResultListener<List<DiveSpotShort>> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
+        @Override
+        public void onSuccess(List<DiveSpotShort> diveSpotShorts) {
+            hideProgressBar();
+            hideMessageToZoom();
+            diveSpotsClusterManager.updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
+            if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsListTutorialWatched()) {
+                showListTutorial();
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsListTutorialWatched();
+            }
+//            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            hideProgressBar();
+            UserActionInfoDialogFragment.show(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed_while_getting_dive_spots, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            hideProgressBar();
+            Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.show(getFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -220,7 +239,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             mGoogleMap = googleMap;
             mGoogleMap.setOnMapLoadedCallback(() -> {
                 Log.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
-                diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
+                diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this, this);
                 mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                 mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
                 DDScannerApplication.bus.post(new MapViewInitializedEvent());
@@ -487,5 +506,52 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @Subscribe
     public void showMap(CloseListEvent event) {
         mapListFAB.performClick();
+    }
+
+    @Override
+    public void showDiveSpotInfo(Marker marker, DiveSpotShort diveSpotShort) {
+        mapControlLayout.animate().translationY(-diveSpotInfoHeight);
+        addDsFab.animate().translationY(-diveSpotInfoHeight);
+        mapListFAB.animate().translationY(-diveSpotInfoHeight);
+        lastDiveSpotId = diveSpotShort.getId();
+        diveSpotInfo.show(diveSpotShort, marker);
+    }
+
+    @Override
+    public void hideDiveSpotInfo() {
+        mapControlLayout.animate().translationY(0);
+        addDsFab.animate().translationY(0);
+        mapListFAB.animate().translationY(0);
+        diveSpotInfo.hide(diveSpotInfoHeight);
+    }
+
+    @Override
+    public void showMessageToZoom() {
+        toast.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideMessageToZoom() {
+        toast.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void loadDiveSpots(ArrayList<String> sealifes, DiveSpotsRequestMap diveSpotsRequestMap) {
+        DDScannerApplication.getInstance().getDdScannerRestClient(getActivity()).getDiveSpotsByArea(sealifes, diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+    }
+
+    @Override
+    public void showTutorialForMapListFab() {
+        DDScannerApplication.getInstance().getTutorialHelper().showListButtonTutorial(getActivity(), mapListFAB);
     }
 }

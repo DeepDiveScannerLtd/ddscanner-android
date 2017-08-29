@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.utils.Constants;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,7 @@ public class DiveSpotMapInfoView extends RelativeLayout {
     private TextView diveSpotType;
     private RatingView ratingView;
     private Map<String, Integer> infoWindowBackgroundImages = new HashMap<>();
+    private Marker marker;
     
     public DiveSpotMapInfoView(Context context) {
         super(context);
@@ -56,7 +59,36 @@ public class DiveSpotMapInfoView extends RelativeLayout {
     }
     
     
+    public void show(DiveSpotShort diveSpotShort, Marker marker) {
+        if (this.marker != null) {
+            try {
+                this.marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            } catch (IllegalArgumentException ignored) {
+
+            }
+        }
+        this.marker = marker;
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
+        this.animate()
+                .translationY(0)
+                .alpha(1.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        setVisibility(View.VISIBLE);
+                    }
+                });
+        ratingView.removeAllViews();
+        diveSpotName.setText(diveSpotShort.getName());
+        diveSpotType.setText(diveSpotShort.getObject());
+        ratingView.setRating(Math.round(diveSpotShort.getRating()), R.drawable.ic_iw_star_full, R.drawable.ic_iw_star_empty);
+        setBackgroundResource(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
+    }
+
     public void show(DiveSpotShort diveSpotShort) {
+//        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         this.animate()
                 .translationY(0)
                 .alpha(1.0f)
@@ -76,6 +108,13 @@ public class DiveSpotMapInfoView extends RelativeLayout {
     }
 
     public void hide(int diveSpotInfoHeight) {
+        if (marker != null) {
+            try {
+                this.marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            } catch (IllegalArgumentException ignored) {
+
+            }
+        }
         this.animate()
                 .translationY(diveSpotInfoHeight)
                 .alpha(0.0f)
