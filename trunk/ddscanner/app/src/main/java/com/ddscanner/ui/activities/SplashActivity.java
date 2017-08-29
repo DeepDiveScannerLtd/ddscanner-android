@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -46,10 +47,15 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     private Button signUpButton;
     private Button loginButton;
     VideoView videoView;
+    RelativeLayout parent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+            showMainActivity();
+            return;
+        }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsFirstLaunch()) {
             DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
@@ -70,7 +76,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         skip = findViewById(R.id.skip);
         loginButton = findViewById(R.id.login);
         signUpButton = findViewById(R.id.sign_up);
-
+        parent = findViewById(R.id.parent);
         skip.setOnClickListener(this);
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
@@ -78,12 +84,9 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fb);
         videoView.setVideoURI(uri);
         videoView.start();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setLooping(true);
-            }
-        });
+        videoView.setOnPreparedListener(mediaPlayer -> mediaPlayer.setLooping(true));
+        parent.invalidate();
+        videoView.getHolder().setSizeFromLayout();
 //        if (SharedPreferenceHelper.getIsUserSignedIn()) {
 //            skip.setVisibility(View.GONE);
 //            loginButton.setVisibility(View.GONE);
