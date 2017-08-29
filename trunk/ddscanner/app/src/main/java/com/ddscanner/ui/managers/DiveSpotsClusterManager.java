@@ -21,6 +21,7 @@ import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.interfaces.FirstTimeSpotsLoadedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
@@ -75,6 +76,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     private boolean isNewDiveSpotMarkerClicked;
     private ArrayList<DiveSpotShort> allDiveSpots = new ArrayList<>();
     private int newDiveSpotId = -1;
+    private FirstTimeSpotsLoadedListener firstTimeSpotsLoadedListener;
 
     private DDScannerRestClient.ResultListener<List<DiveSpotShort>> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
         @Override
@@ -82,6 +84,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
             hideProgressBar();
             updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
             allDiveSpots =(ArrayList<DiveSpotShort>) diveSpotShorts;
+            if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsListTutorialWatched()) {
+                parentFragment.showListTutorial();
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsListTutorialWatched();
+            }
 //            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
         }
 

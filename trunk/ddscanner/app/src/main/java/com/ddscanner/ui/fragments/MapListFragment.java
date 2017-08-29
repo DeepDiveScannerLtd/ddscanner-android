@@ -42,6 +42,7 @@ import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
+import com.ddscanner.interfaces.FirstTimeSpotsLoadedListener;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -51,6 +52,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LocationHelper;
+import com.ddscanner.utils.TutorialHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -237,6 +239,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         goToMyLocation.setOnClickListener(this);
         diveSpotInfo.setOnClickListener(this);
         mapControlLayout = view.findViewById(R.id.map_control_layout);
+    }
+
+    public void showListTutorial() {
+        DDScannerApplication.getInstance().getTutorialHelper().showListButtonTutorial(getActivity(), mapListFAB);
     }
 
     @Override

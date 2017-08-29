@@ -84,7 +84,6 @@ public class TutorialHelper {
     public void showListButtonTutorial(Activity context, View view) {
         new FancyShowCaseView.Builder(context)
                 .focusOn(view)
-                .fitSystemWindows(true)
                 .focusShape(FocusShape.CIRCLE)
                 .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
                 .title(Html.fromHtml(context.getString(R.string.see_list_tutorial)))

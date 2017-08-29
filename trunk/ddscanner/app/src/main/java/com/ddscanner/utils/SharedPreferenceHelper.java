@@ -49,7 +49,7 @@ public class SharedPreferenceHelper {
     private static final String IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL = "dive_spot_tutorial";
     private static final String LAST_APP_RUN = "lastrun";
     private static final String IS_NOTIFICATION_ENABLED = "enabled";
-
+    private static final String IS_LIST_TUTORIAL_WATCHED = "is_list_tutorial_watched";
     private static SharedPreferences prefs;
 
     public enum SearchSourceType {
@@ -79,6 +79,18 @@ public class SharedPreferenceHelper {
         public String getState() {
             return state;
         }
+    }
+
+    public void setIsListTutorialWatched() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_LIST_TUTORIAL_WATCHED, true);
+        editor.apply();
+    }
+
+    public boolean getIsListTutorialWatched() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_LIST_TUTORIAL_WATCHED, false);
     }
 
     public void recordRunTime() {
