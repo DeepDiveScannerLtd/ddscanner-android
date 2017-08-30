@@ -61,7 +61,7 @@ public class UserProfileFragment extends Fragment {
         if (user.getAchievements() != null) {
             binding.achievmentRv.setNestedScrollingEnabled(false);
             binding.achievmentRv.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getActivity()));
+            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getActivity(), false));
         }
         if (user.getPhotos() != null) {
             binding.photosList.setNestedScrollingEnabled(false);

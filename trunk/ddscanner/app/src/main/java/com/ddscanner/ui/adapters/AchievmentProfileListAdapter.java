@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
@@ -25,10 +26,12 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
     private ArrayList<ProfileAchievement> achievmentProfiles;
     private Context context;
     private static final int MAX_FLAGS_COUNT = 6;
+    private boolean isSelf;
 
-    public AchievmentProfileListAdapter(ArrayList<ProfileAchievement> achievmentProfiles, Context context) {
+    public AchievmentProfileListAdapter(ArrayList<ProfileAchievement> achievmentProfiles, Context context, boolean isSelf) {
         this.achievmentProfiles = achievmentProfiles;
         this.context = context;
+        this.isSelf = isSelf;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
         return achievmentProfiles.size();
     }
 
-    class AchievmentProfileListViewHolder extends RecyclerView.ViewHolder {
+    class AchievmentProfileListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected LinearLayout countries;
         protected TextView title;
@@ -88,11 +91,18 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
 
         public AchievmentProfileListViewHolder(View view) {
             super(view);
+            if (isSelf) {
+                view.setOnClickListener(this);
+            }
             countries = view.findViewById(R.id.countries);
             title = view.findViewById(R.id.title);
             moreCount = view.findViewById(R.id.more_count);
         }
 
+        @Override
+        public void onClick(View view) {
+            AchievementsActivity.show(context);
+        }
     }
 
 }

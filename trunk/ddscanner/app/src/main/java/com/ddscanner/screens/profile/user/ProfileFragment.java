@@ -270,7 +270,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
             GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
             binding.achievmentRv.setNestedScrollingEnabled(false);
             binding.achievmentRv.setLayoutManager(linearLayoutManager);
-            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
+            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext(), true));
             binding.noAchievementsView.setVisibility(View.GONE);
             binding.achievmentRv.setVisibility(View.VISIBLE);
         } else {

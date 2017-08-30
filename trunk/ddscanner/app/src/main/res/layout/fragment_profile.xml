@@ -304,7 +304,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:gravity="center"
-                            android:paddingBottom="12dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
                             android:paddingTop="12dp"
@@ -316,45 +315,31 @@
                             android:id="@+id/achievment_rv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="12dp"
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
                             android:paddingTop="12dp"
                             android:visibility="gone" />
 
-                        <ImageView style="@style/DividerStyleFull" />
-
                         <RelativeLayout
                             android:id="@+id/show_achievments_details"
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:gravity="center_vertical"
                             android:onClick="@{handlers::showAchievementsDetails}"
-                            android:paddingLeft="20dp">
-
-                            <ImageView
-                                android:id="@+id/icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_profile_details" />
-
+                            android:paddingHorizontal="20dp"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="20dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="25dp"
-                                android:layout_toRightOf="@+id/icon"
+                                android:textSize="14sp"
                                 android:fontFamily="sans-serif-medium"
-                                android:text="Show details"
-                                android:textColor="@color/black_text"
-                                android:textSize="14sp" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="20dp"
-                                android:src="@drawable/ic_arrow" />
+                                android:textStyle="normal"
+                                android:textColor="#3b518b"
+                                android:lineSpacingExtra="7sp"
+                                android:text="@string/all_details"
+                                />
                         </RelativeLayout>
                     </LinearLayout>
 
