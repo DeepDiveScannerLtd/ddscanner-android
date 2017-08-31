@@ -40,14 +40,14 @@
                 android:layout_marginTop="14dp"
                 android:orientation="vertical">
 
-                <TextView
+                <com.klinker.android.link_builder.LinkConsumableTextView
                     android:id="@+id/text"
                     android:layout_marginRight="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
                     android:textSize="15sp"
-                    app:setTextFrom="@{likeViewModel}"
+                    app:setDislikedTextFrom="@{likeViewModel}"
                     tools:text="Racha Yai Wreck review «Bryce canyon a stunning us travel destination…»" />
 
                 <RelativeLayout
@@ -55,19 +55,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="7dp">
-
-                    <TextView
-                        android:id="@+id/whoDisliked"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#a3a3a3"
-                        android:textSize="13sp"
-                        tools:text="Disliked by Cameron Dias"
-                        android:layout_toLeftOf="@+id/timeAgo"
-                        android:layout_alignParentLeft="true"
-                        android:lines="1"
-                        android:ellipsize="end"
-                        app:dislikedByTextFrom="@{likeViewModel}"/>
 
                     <TextView
                         android:id="@+id/timeAgo"

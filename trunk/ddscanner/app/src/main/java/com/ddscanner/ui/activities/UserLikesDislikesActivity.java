@@ -14,8 +14,11 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.LikeEntity;
+import com.ddscanner.entities.ReviewsOpenedSource;
+import com.ddscanner.events.OpenReviewActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.dislikes.DislikesListAdapter;
 import com.ddscanner.screens.user.likes.LikesListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -24,6 +27,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -184,5 +188,10 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
                 finish();
                 break;
         }
+    }
+
+    @Subscribe
+    public void openReviewActivity(OpenReviewActivityEvent event) {
+        ReviewsActivity.showForResult(this, event.getReviewId(), -1, ReviewsOpenedSource.SINGLE);
     }
 }

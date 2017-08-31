@@ -121,7 +121,8 @@
     <string name="user_dislike_your_review">%1$s disliked your review %2$s</string>
     <string name="user_liked_your_review">%1$s liked your review %2$s</string>
     <string name="your_changes_accepted">You changes on the %1$s have been accepted</string>
-    <string name="foreign_user_likes_main_text">%1$s review «%2$s»</string>
+    <string name="foreign_user_likes_main_text">%1$s liked your review «%2$s»</string>
+    <string name="foreign_user_dislikes_main_text">%1$s disliked your review «%2$s»</string>
     <string name="foreign_user_like_by">Liked by %1$s</string>
     <string name="foreign_user_dislike_by">Disliked by %1$s</string>
     <string name="foreign_user_activity_open_on">Ope on %1$s</string>
@@ -455,7 +456,7 @@
     <string name="name_is_required">Name is required</string>
     <string name="enter_a_valid_phone_number">Enter a valid phone number</string>
     <string name="enter_a_valid_email_address">Enter a valid email address</string>
-    <string name="user_liked_your_photo">%1$s liked you photo %2$s</string>
+    <string name="user_liked_your_photo">%1$s liked you photo on %2$s</string>
     <string name="company">Company</string>
     <string name="reseller">Reseller</string>
     <string name="cover">COVER</string>
