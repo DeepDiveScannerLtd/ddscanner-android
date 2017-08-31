@@ -70,13 +70,6 @@ public class LikeReviewViewModel {
         }
     }
 
-    @BindingAdapter("likedTextFrom")
-    public static void setLikedText(TextView view, LikeReviewViewModel viewModel) {
-        if (viewModel != null) {
-            view.setText(DDScannerApplication.getInstance().getString(R.string.foreign_user_like_by, viewModel.getLikeEntity().getUser().getName()));
-        }
-    }
-
     public static String reformatString(String firstString) {
         firstString = firstString.substring(0, 27);
         firstString = firstString + "...";

@@ -21,13 +21,6 @@ public class DislikeReviewItemViewModel extends LikeReviewViewModel{
         super(likeEntity);
     }
 
-    @BindingAdapter("dislikedByTextFrom")
-    public static void loadDislikeText(TextView view, DislikeReviewItemViewModel viewModel) {
-        if (viewModel != null) {
-//            view.setText(DDScannerApplication.getInstance().getString(R.string.foreign_user_dislike_by, viewModel.getLikeEntity().getUser().getName()));
-        }
-    }
-
     @BindingAdapter("setDislikedTextFrom")
     public static void setMainText(LinkConsumableTextView view, LikeReviewViewModel viewModel) {
         if (viewModel != null) {
