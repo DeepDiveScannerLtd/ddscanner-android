@@ -26,7 +26,7 @@ public class NotificationHelper {
         Intent intent = new Intent(context, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastRunTime(), AlarmManager.INTERVAL_DAY * 10, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastRunTime() + AlarmManager.INTERVAL_DAY * 10, AlarmManager.INTERVAL_DAY * 10, pendingIntent);
     }
 
     public static Notification getNotification(Context context, PendingIntent pendingIntent) {
