@@ -61,7 +61,7 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             EditDiveCenterProfileActivity.showForResult(this, new Gson().toJson(SharedPreferenceHelper.getActiveUser()), ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN, false);
             return;
         }
-        LoginActivity.showForResult(this, -1);
+        LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP);
 //        getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 //                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

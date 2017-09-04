@@ -172,6 +172,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             materialDialog.dismiss();
             setResult(RESULT_OK);
             EventsTracker.trackProfileEdited();
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsNeedContinueRegistration(false);
             finish();
         }
 
