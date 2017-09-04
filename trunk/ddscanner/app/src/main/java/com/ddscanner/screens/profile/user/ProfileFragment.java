@@ -27,7 +27,6 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
-import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
@@ -208,11 +207,6 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     @Subscribe
-    public void changeLoginView(ChangeLoginViewEvent event) {
-        binding.loginView.changeViewToStart();
-    }
-
-    @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (SharedPreferenceHelper.getIsUserSignedIn())  {
             if (binding != null) {
@@ -286,21 +280,12 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Override
     public void onLoggedIn() {
-        Log.i(TAG, "ProfileFragment onLoggedIn, this = " + this);
-        if (binding != null && binding.loginView != null && binding.about != null) {
-            binding.loginView.setVisibility(View.GONE);
-            binding.swiperefresh.setEnabled(true);
-            binding.about.setVisibility(View.VISIBLE);
-        }
+
     }
 
     @Override
     public void onLoggedOut() {
-        if (binding != null && binding.loginView != null && binding.about != null) {
-            binding.swiperefresh.setEnabled(false);
-            binding.loginView.setVisibility(View.VISIBLE);
-            binding.about.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
+        if (binding != null) {
             binding.setProfileFragmentViewModel(null);
         }
     }

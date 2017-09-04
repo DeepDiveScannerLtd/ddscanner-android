@@ -37,12 +37,15 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
         login.setOnClickListener(this);
 
         setupToolbar(R.string.login_high, R.id.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
 
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -61,9 +64,7 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
 
     @Override
     public void onBackPressed() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
+
     }
 
 
@@ -102,13 +103,4 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

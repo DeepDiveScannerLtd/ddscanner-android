@@ -36,6 +36,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY = 1314;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR = 1315;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_FILTERS = 1316;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS = 1317;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;

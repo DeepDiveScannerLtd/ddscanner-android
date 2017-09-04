@@ -68,6 +68,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.NotificationHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -229,6 +230,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        NotificationHelper.setupAlarmManager(this);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         setContentView(R.layout.activity_main);
         findViews();
@@ -577,6 +579,14 @@ public class MainActivity extends BaseAppCompatActivity
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR:
                 if (resultCode == RESULT_OK) {
                     mainViewPagerAdapter.getProfileFragment().reloadData();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS:
+                if (resultCode == RESULT_OK) {
+                    if (mainViewPager != null && mainViewPagerAdapter != null) {
+                        mainViewPagerAdapter.notifyDataSetChanged();
+                        setupTabLayout();
+                    }
                 }
                 break;
             default:
@@ -940,14 +950,7 @@ public class MainActivity extends BaseAppCompatActivity
             setupTabLayout();
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         } else {
-            mainViewPagerAdapter.onLoggedOut();
-            if (currentUserType == SharedPreferenceHelper.UserType.DIVECENTER) {
-                mainViewPagerAdapter.notifyDataSetChanged();
-                mainViewPager.destroyDrawingCache();
-                setupTabLayout();
-            } else {
-                getIsHasNewotifications();
-            }
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS);
             changeVisibilityChangeAccountLayout(View.GONE);
         }
     }

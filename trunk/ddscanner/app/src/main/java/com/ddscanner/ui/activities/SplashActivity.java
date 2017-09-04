@@ -51,26 +51,31 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
         }
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-
-        setContentView(R.layout.activity_splash);
-        //TODO uncomment in future versions
-        activityShowTimestamp = System.currentTimeMillis();
-
-        progressMessage = findViewById(R.id.message);
-        skip = findViewById(R.id.skip);
-        loginButton = findViewById(R.id.login);
-        signUpButton = findViewById(R.id.sign_up);
-
-        skip.setOnClickListener(this);
-        loginButton.setOnClickListener(this);
-        signUpButton.setOnClickListener(this);
+        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+            showMainActivity();
+            return;
+        }
+        LoginActivity.showForResult(this, -1);
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+//
+//        setContentView(R.layout.activity_splash);
+//        //TODO uncomment in future versions
+//        activityShowTimestamp = System.currentTimeMillis();
+//
+//        progressMessage = findViewById(R.id.message);
+//        skip = findViewById(R.id.skip);
+//        loginButton = findViewById(R.id.login);
+//        signUpButton = findViewById(R.id.sign_up);
+//
+//        skip.setOnClickListener(this);
+//        loginButton.setOnClickListener(this);
+//        signUpButton.setOnClickListener(this);
 
 //        if (SharedPreferenceHelper.getIsUserSignedIn()) {
 //            skip.setVisibility(View.GONE);
@@ -87,22 +92,22 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 //            loadTutorial();
 //            SharedPreferenceHelper.setIsNeedToShowTutorial();
 //        }
-        if (SharedPreferenceHelper.getIsUserSignedIn()) {
-            skip.setVisibility(View.GONE);
-            loginButton.setVisibility(View.GONE);
-            signUpButton.setVisibility(View.GONE);
-            showMainActivity();
-        }
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().recordRunTime();
+//        if (SharedPreferenceHelper.getIsUserSignedIn()) {
+//            showMainActivity();
+////            skip.setVisibility(View.GONE);
+////            loginButton.setVisibility(View.GONE);
+////            signUpButton.setVisibility(View.GONE);
+////            showMainActivity();
+//        }
+//        DDScannerApplication.getInstance().getSharedPreferenceHelper().recordRunTime();
 //        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isMustToEnableNotification()) {
 //            DDScannerApplication.getInstance().getSharedPreferenceHelper().enableNotification();
 //        } else {
 //            DDScannerApplication.getInstance().getSharedPreferenceHelper().recordRunTime();
 //        }
-        LinearLayout mainLayout = findViewById(R.id.main);
-        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
-        NotificationHelper.setupAlarmManager(this);
-        mainLayout.startAnimation(fadeInAnimation);
+//        LinearLayout mainLayout = findViewById(R.id.main);
+//        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+//        mainLayout.startAnimation(fadeInAnimation);
 
 //        startService(new Intent(this, CheckResentRunService.class));
 

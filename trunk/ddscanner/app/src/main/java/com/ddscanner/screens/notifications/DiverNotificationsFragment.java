@@ -45,7 +45,6 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     private Notifications notifications = new Notifications();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
-    private RelativeLayout loginView;
     private ProgressView progressView;
     private LoginView customLoginView;
     private PersonalNotificationsFragment personalNotificationsFragment = new PersonalNotificationsFragment();
@@ -120,7 +119,6 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
     private void findViews(View v) {
         tabLayout = v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = v.findViewById(R.id.notif_view_pager);
-        loginView = v.findViewById(R.id.login_view_root);
         progressView = v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
         customLoginView = v.findViewById(R.id.login_view);
@@ -220,21 +218,14 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
 
     @Override
     public void onLoggedIn() {
-        if (loginView != null && notificationsViewPager != null) {
-            loginView.setVisibility(View.GONE);
-            notificationsViewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
+        if (notificationsViewPager != null) {
             getUserNotifications(true);
         }
     }
 
     @Override
     public void onLoggedOut() {
-        if (loginView != null && notificationsViewPager != null) {
-            loginView.setVisibility(View.VISIBLE);
-            notificationsViewPager.setVisibility(View.GONE);
-            tabLayout.setVisibility(View.GONE);
-        }
+
     }
 
     public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
@@ -272,11 +263,6 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
                 DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                 break;
         }
-    }
-
-    @Subscribe
-    public void changeLoginView(ChangeLoginViewEvent event) {
-        customLoginView.changeViewToStart();
     }
 
 }
