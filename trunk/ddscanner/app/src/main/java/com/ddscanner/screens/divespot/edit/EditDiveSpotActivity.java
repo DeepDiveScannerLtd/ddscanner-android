@@ -203,7 +203,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(diveSpotPhoto.getAuthor().getId())) {
                         userPhotosIds.add(0, photo);
                     } else {
-                        userPhotosIds.add(photo);
+//                        userPhotosIds.add(photo);
                     }
 
                 }
