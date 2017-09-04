@@ -50,6 +50,7 @@ public class SharedPreferenceHelper {
     private static final String LAST_APP_RUN = "lastrun";
     private static final String IS_NOTIFICATION_ENABLED = "enabled";
     private static final String IS_LIST_TUTORIAL_WATCHED = "is_list_tutorial_watched";
+    private static final String IS_NEDD_TO_CONTINUE_SIGN_UP = "is_need_to_continue_registration";
     private static SharedPreferences prefs;
 
     public enum SearchSourceType {
@@ -79,6 +80,19 @@ public class SharedPreferenceHelper {
         public String getState() {
             return state;
         }
+    }
+
+    public boolean getIsNeedToContinueRegistration() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_NEDD_TO_CONTINUE_SIGN_UP, false);
+    }
+
+    public void setIsNeedContinueRegistration(boolean value) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_NEDD_TO_CONTINUE_SIGN_UP, value);
+        editor.apply();
+
     }
 
     public void setIsListTutorialWatched() {

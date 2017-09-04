@@ -210,6 +210,7 @@ public class ActivitiesRequestCodes {
 
     //SignUpActivity
     public static final int REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER = 4801;
+    public static final int REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN = 4802;
 
     //ChangeAddressActivity
     public static final int REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP = 4901;

@@ -35,6 +35,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -55,6 +56,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -400,6 +402,11 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN:
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsNeedContinueRegistration(false);
+                setResult(RESULT_OK);
+                finish();
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER:
                 setResult(RESULT_OK);
                 finish();
@@ -453,10 +460,16 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
             baseUser.setType(result.getType());
             baseUser.setToken(result.getToken());
             baseUser.setId(result.getId());
+            baseUser.setName(name.getText().toString());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
             EventsTracker.trackRegistration(result.getType());
             if (isSignUp && result.getType() != 0) {
                 DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
+                return;
+            }
+            if (isSignUp && result.getType() == 0) {
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsNeedContinueRegistration(true);
+                EditDiveCenterProfileActivity.showForResult(SignUpActivity.this, new Gson().toJson(baseUser), ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN, false);
                 return;
             }
             setResult(RESULT_OK);

@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.screens.tutorial.TutorialActivity;
 import com.ddscanner.services.CheckResentRunService;
 import com.ddscanner.ui.views.DDProgressBarView;
@@ -24,6 +25,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.NotificationHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -52,7 +54,11 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
         }
         if (SharedPreferenceHelper.getIsUserSignedIn()) {
-            showMainActivity();
+            if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsNeedToContinueRegistration()) {
+                showMainActivity();
+                return;
+            }
+            EditDiveCenterProfileActivity.showForResult(this, new Gson().toJson(SharedPreferenceHelper.getActiveUser()), ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN, false);
             return;
         }
         LoginActivity.showForResult(this, -1);
@@ -228,6 +234,9 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
                 if (resultCode == RESULT_OK) {
                     showMainActivity();
                 }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN:
+                showMainActivity();
                 break;
             case 15:
                 showMainActivity();

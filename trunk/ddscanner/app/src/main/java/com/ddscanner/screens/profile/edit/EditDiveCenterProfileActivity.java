@@ -238,7 +238,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 }
         );
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
-
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsNeedToContinueRegistration()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         setupUi();
 
     }
