@@ -79,15 +79,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    DDScannerApplication.bus.post(new LogoutEvent());
-                    break;
-                default:
-//                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
-                    break;
-            }
+
         }
 
         @Override

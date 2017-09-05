@@ -25,9 +25,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class LoginActivity extends BaseAppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     VideoView videoView;
+    boolean isForAddAccount;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void showFromApplication(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -35,7 +42,8 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_to_continue);
-//        themeNavAndStatusBar();
+        isForAddAccount = getIntent().getBooleanExtra("add", false);
+        themeNavAndStatusBar();
         findViews();
     }
 
@@ -79,9 +87,13 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
             case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN:
             case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_UP:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    setResult(RESULT_OK);
-                    finish();
+                    if (isForAddAccount) {
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                        setResult(RESULT_OK);
+                        finish();
+                        return;
+                    }
+                    MainActivity.show(this);
                 }
                 break;
         }
@@ -105,8 +117,16 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
         videoView.start();
     }
 
+    public static void showForResult(Activity context, int code, boolean isForAddAccount) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("add", isForAddAccount);
+        context.startActivityForResult(intent, code);
+    }
+
     public static void showForResult(Activity context, int code) {
         Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivityForResult(intent, code);
     }
 

@@ -81,13 +81,8 @@ public class AchievementsActivity extends BaseAppCompatActivity implements Dialo
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    LoginActivity.showForResult(AchievementsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS);
-                    break;
-                default:
-                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR, false);
-                    break;
+            if (errorType != DDScannerRestClient.ErrorType.UNAUTHORIZED_401) {
+                UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR, false);
             }
         }
 

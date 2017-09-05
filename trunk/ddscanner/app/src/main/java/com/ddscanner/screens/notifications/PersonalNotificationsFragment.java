@@ -68,15 +68,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LogoutEvent());
-                    break;
-                default:
-
-                    UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
-                    break;
-            }
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
         @Override
@@ -277,15 +269,6 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
                 notificationsListAdapter.dataLoaded();
             }
             binding.swipeRefreshLayout.setRefreshing(false);
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LogoutEvent());
-                    break;
-                default:
-
-//                    UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
-                    break;
-            }
         }
 
         @Override

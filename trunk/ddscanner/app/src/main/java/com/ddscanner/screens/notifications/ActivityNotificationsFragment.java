@@ -197,15 +197,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
             if (binding != null) {
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.bus.post(new LogoutEvent());
-                    break;
-                default:
-
-                    UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
-                    break;
-            }
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
         @Override

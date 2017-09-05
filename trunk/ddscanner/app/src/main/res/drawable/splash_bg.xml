@@ -3,10 +3,9 @@
 
     <item android:drawable="@drawable/bg_photo"/>
 
-    <item
-        android:top="100dp">
+    <item>
         <bitmap
-            android:gravity="top|center_horizontal"
+            android:gravity="center"
             android:src="@drawable/splash_logo" />
     </item>
 

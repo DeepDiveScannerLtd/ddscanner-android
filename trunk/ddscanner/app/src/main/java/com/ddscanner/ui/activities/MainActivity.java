@@ -845,8 +845,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void showLoginActivtyToAddUser(ShowLoginActivityForAddAccount event) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT);
+        LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT, true);
     }
 
     @Subscribe

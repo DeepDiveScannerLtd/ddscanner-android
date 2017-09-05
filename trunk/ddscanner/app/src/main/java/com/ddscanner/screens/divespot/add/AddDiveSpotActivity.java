@@ -175,14 +175,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
             switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
-                    break;
                 case BAD_REQUEST_ERROR_400:
                     Helpers.errorHandling(errorsMap, errorMessage);
                     break;
-                case SERVER_INTERNAL_ERROR_500:
                 default:
                     UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);

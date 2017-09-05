@@ -171,16 +171,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
-                    break;
-                default:
-
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
-                    break;
-            }
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
         }
 
         @Override
@@ -208,10 +199,6 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
-                    break;
                 case DATA_ALREADY_EXIST_409:
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.cant_delete_all_photos, false);
                     break;
@@ -747,14 +734,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             } else {
                 likeUi();
             }
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE);
-                    break;
-                default:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
-                    break;
-            }
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
             likesLayout.setOnClickListener(ImageSliderActivity.this::onClick);
         }
 

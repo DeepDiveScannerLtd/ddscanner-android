@@ -75,10 +75,6 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
             switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
-                    break;
                 case BAD_REQUEST_ERROR_400:
                     Helpers.errorHandling(errorsMap, errorMessage);
                     break;
@@ -114,10 +110,6 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
             switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutFromAllAccounts();
-                    LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
-                    break;
                 case BAD_REQUEST_ERROR_400:
                     Helpers.errorHandling(errorsMap, errorMessage);
                     break;

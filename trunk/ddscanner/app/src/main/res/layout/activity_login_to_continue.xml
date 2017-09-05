@@ -1,64 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:orientation="vertical"
-    android:fitsSystemWindows="true"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <VideoView
-        android:fitsSystemWindows="true"
-        android:foreground="#80000000"
-        android:id="@+id/video_view"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"/>
-    <RelativeLayout
-        android:id="@+id/login_view_first"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_nologin" />
+        android:fitsSystemWindows="true">
 
-        <TextView
-            android:id="@+id/need_to_login_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/login_to_continue"
-            android:textColor="@color/black_text"
-            android:textSize="20sp" />
-
-        <Button
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:text="@string/sign_up"
-            android:id="@+id/sign_up"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_below="@+id/need_to_login_message"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="133dp"
-            style="@style/OrangeButtons" />
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="false">
 
-        <Button
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/sign_up"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="13dp"
-            android:text="@string/login"
-            style="@style/BlueButton" />
-    </RelativeLayout>
-</RelativeLayout>
+            <VideoView
+                android:id="@+id/video_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                android:foreground="#641b294b" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="100dp"
+                    android:src="@drawable/splash_logo"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/logo"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/deep_dive_scanner"
+                        android:textColor="@color/white"
+                        android:textSize="26sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/your_personal_dive_guide"
+                        android:textColor="#f6f6f6"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/sign_up"
+                    style="@style/OrangeButtons"
+                    android:layout_width="match_parent"
+                    android:layout_above="@+id/login"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="165dp"
+                    android:text="@string/sign_up" />
+
+                <Button
+                    android:id="@+id/login"
+                    style="@style/BlueButton"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="83dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/login" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>

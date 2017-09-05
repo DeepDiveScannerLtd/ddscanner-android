@@ -117,15 +117,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
-                    break;
-                default:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-                    break;
-            }
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
 
         @Override

@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -130,6 +131,10 @@ public class DDScannerApplication extends Application {
 
     public TutorialHelper getTutorialHelper() {
         return tutorialHelper;
+    }
+
+    public static void showLoginActivity() {
+        LoginActivity.showFromApplication(getInstance());
     }
 
 }
