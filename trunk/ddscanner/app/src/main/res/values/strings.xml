@@ -561,4 +561,5 @@
     <string name="cant_connect_to_google">Can\'t connect to google services. Please, try again</string>
     <string name="all_details">All details</string>
     <string name="vido_resource_pattern">android.resource://%s/%d</string>
+    <string name="address_is_required">Address is required</string>
 </resources>

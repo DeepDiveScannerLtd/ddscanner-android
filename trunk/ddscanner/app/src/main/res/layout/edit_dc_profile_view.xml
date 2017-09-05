@@ -174,6 +174,12 @@
                         android:textSize="12sp"
                         android:textColor="#bbbbbb"
                         android:layout_marginLeft="20dp"/>
+                    <TextView
+                        android:id="@+id/address_error"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/address_is_required"
+                        android:layout_marginLeft="20dp"
+                        android:visibility="gone"/>
                     <ImageView
                         android:layout_marginTop="12dp"
                         style="@style/DividerStyleFull" />

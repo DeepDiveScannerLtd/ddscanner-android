@@ -412,6 +412,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     locationLatitude = address.getLat().toString();
                     locationLongitude = address.getLng().toString();
                     addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
+                    binding.pickAddressButton.setVisibility(View.GONE);
                 }
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE:
@@ -563,6 +564,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         }
         binding.diveSpotError.setVisibility(View.GONE);
         binding.nameError.setVisibility(View.GONE);
+        binding.addressError.setVisibility(View.GONE);
 
         if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
             binding.diveSpotError.setVisibility(View.VISIBLE);
@@ -576,6 +578,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
         if (!isDataValid) {
             binding.mainLayout.scrollTo(0,0);
+        }
+
+        if (locationLatitude == null || locationLongitude == null || addressEditText == null || addressEditText.getText().toString().isEmpty()) {
+            binding.addressError.setVisibility(View.VISIBLE);
+            isDataValid = false;
         }
 
         return isDataValid;
