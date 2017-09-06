@@ -80,7 +80,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId, 1);
         call.enqueue(new ResponseEntityCallback<DiveSpotDetailsEntity>(gson, resultListener, context) {
             @Override
             void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> resultListener, String responseString) {

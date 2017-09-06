@@ -1,5 +1,6 @@
 package com.ddscanner.screens.divespot.details;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,20 +12,23 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAdapter.DiveSpotsPhotosAdapterViewHolder>{
 
-    public ArrayList<String> photos;
+    public ArrayList<DiveSpotPhoto> photos;
     public String path;
-    public Context context;
+    public Activity context;
     private int photoSize;
     private int photosCount;
 
-    public DiveSpotPhotosAdapter(ArrayList<String> photos, Context context, int photosCount) {
+    public DiveSpotPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, int photosCount) {
         this.photos = photos;
         this.context = context;
         photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
@@ -43,14 +47,14 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photosCount > 8 && position == 7) {
             Picasso.with(context)
-                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
-                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
         }
@@ -65,11 +69,6 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
             return 8;
         }
         return photos.size();
-    }
-
-    public void addPhotos(ArrayList<String> newPhotos) {
-        photos.addAll(newPhotos);
-        notifyDataSetChanged();
     }
 
     class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -89,7 +88,11 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
         @Override
         public void onClick(View v) {
 //            DiveSpotPhotosActivity.showForResult(context, photos, path, reviewsImages);
-            DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+            if (getAdapterPosition() == 7 && photosCount > 8) {
+                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+                return;
+            }
+            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.DIVESPOT, "-1");
         }
     }
 

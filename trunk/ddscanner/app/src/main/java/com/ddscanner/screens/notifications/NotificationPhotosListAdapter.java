@@ -72,12 +72,12 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
 
         @Override
         public void onClick(View view) {
-            if (MAX_PHOTOS >= photosCount) {
-                DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(photos);
-                ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.NOTIFICATION, sourceId);
+            if (MAX_PHOTOS <= photosCount && getAdapterPosition() == MAX_PHOTOS - 1) {
+                PhotosGalleryActivity.show(sourceId, context, PhotoOpenedSource.NOTIFICATION, null);
                 return;
             }
-            PhotosGalleryActivity.show(sourceId, context, PhotoOpenedSource.NOTIFICATION, null);
+            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(photos);
+            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.NOTIFICATION, sourceId);
         }
     }
 

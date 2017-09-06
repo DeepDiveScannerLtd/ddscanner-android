@@ -3,12 +3,13 @@ package com.ddscanner.entities;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     private String description;
-    private List<String> photos;
+    private ArrayList<DiveSpotPhoto> photos;
     private int visibility;
     @SerializedName("visibility_min")
     private String visibilityMin;
@@ -27,7 +28,7 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     @SerializedName("checkins_count")
     private int checkinCount;
     private List<SealifeShort> sealifes;
-    private List<String> maps;
+    private ArrayList<DiveSpotPhoto> maps;
     @SerializedName("photos_count")
     private int photosCount;
     @SerializedName("maps_count")
@@ -71,11 +72,11 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
         this.photosCount = photosCount;
     }
 
-    public List<String> getMaps() {
+    public ArrayList<DiveSpotPhoto> getMaps() {
         return maps;
     }
 
-    public void setMaps(List<String> maps) {
+    public void setMaps(ArrayList<DiveSpotPhoto> maps) {
         this.maps = maps;
     }
 
@@ -107,11 +108,11 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
         this.description = description;
     }
 
-    public List<String> getPhotos() {
+    public ArrayList<DiveSpotPhoto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<String> photos) {
+    public void setPhotos(ArrayList<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
 

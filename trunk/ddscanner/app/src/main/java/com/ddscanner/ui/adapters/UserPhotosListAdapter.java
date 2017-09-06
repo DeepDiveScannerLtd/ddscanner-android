@@ -86,7 +86,7 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
 
         @Override
         public void onClick(View view) {
-            if (photosCount > 4) {
+            if (photosCount > 4 && getAdapterPosition() == 3) {
                 DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
                 return;
             }

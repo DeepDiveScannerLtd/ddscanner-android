@@ -91,7 +91,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         @Override
         public void onClick(View v) {
           // ReviewImageSliderActivity.showForResult(context, photos, getAdapterPosition());
-            if (photosCount > 5) {
+            if (photosCount > 5 && getAdapterPosition() == 5) {
                 PhotosGalleryActivity.showForResult(commentId, context, PhotoOpenedSource.REVIEW, null, -1);
             } else {
                 DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition(), commentPosition));
