@@ -31,9 +31,11 @@ import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.PhotoItemCLickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
@@ -42,6 +44,7 @@ import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
+import com.ddscanner.ui.adapters.PhotosGridListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -246,10 +249,19 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
             return;
         }
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
+            PhotoItemCLickListener photoItemCLickListener = (isNeedToOpenGallery, position) -> {
+                if (isNeedToOpenGallery) {
+                    PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+                    return;
+                }
+                DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(binding.getProfileFragmentViewModel().getUser().getPhotos());
+                ImageSliderActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getPhotos(), position, ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS, PhotoOpenedSource.PROFILE, binding.getProfileFragmentViewModel().getUser().getId());
+
+            };
             binding.noPhotosView.setVisibility(View.GONE);
             binding.photosList.setNestedScrollingEnabled(false);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
+            binding.photosList.setAdapter(new PhotosGridListAdapter(R.layout.dive_spot_photos_list_item,(ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), 4, photoItemCLickListener));
             binding.photosList.setVisibility(View.VISIBLE);
         }
         ArrayList<ProfileAchievement> achievmentProfiles;
@@ -374,7 +386,6 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
     public void showDiveCenter(View view) {

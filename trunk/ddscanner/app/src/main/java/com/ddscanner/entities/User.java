@@ -4,6 +4,7 @@ import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
@@ -12,7 +13,7 @@ public class User implements Serializable {
     private String photo;
     private ProfileCounters counters;
     private List<ProfileAchievement> achievements;
-    private List<DiveSpotPhoto> photos;
+    private ArrayList<DiveSpotPhoto> photos;
     private int type;
     private String token;
     @SerializedName("diving_skill")
@@ -134,7 +135,7 @@ public class User implements Serializable {
         this.type = type;
     }
 
-    public List<DiveSpotPhoto> getPhotos() {
+    public ArrayList<DiveSpotPhoto> getPhotos() {
         if (photos != null) {
             for (DiveSpotPhoto diveSpotPhoto : photos) {
                 PhotoAuthor photoAuthor = new PhotoAuthor(id, name, photo, type);
@@ -158,7 +159,7 @@ public class User implements Serializable {
         }
     }
 
-    public void setPhotos(List<DiveSpotPhoto> photos) {
+    public void setPhotos(ArrayList<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
 
