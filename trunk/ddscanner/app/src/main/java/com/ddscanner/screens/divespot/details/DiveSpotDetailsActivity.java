@@ -787,15 +787,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onStop();
     }
 
-    @Subscribe
-    public void openImagesActivity(OpenPhotosActivityEvent event) {
-        if (!isMapsShown) {
-            DiveSpotPhotosActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
-            return;
-        }
-        PhotosGalleryActivity.showForResult(diveSpotId, this, PhotoOpenedSource.MAPS, null, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
-    }
-
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
@@ -810,11 +801,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         binding.switchWorkingButton.setClickable(false);
         if (!isWorkingHere) {
-//            updateMenuItems(menu, false, true);
             DDScannerApplication.getInstance().getDdScannerRestClient(this).postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
             return;
         }
-//        updateMenuItems(menu, false, false);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postRemoveDiveSpotToDiveCenter(diveSpotId, removeWorkngResultListener);
     }
 
@@ -1201,7 +1190,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             if (isValid) {
 //                EventsTracker.trackDiveSpotValid();
             } else {
-//                EventsTracker.trackDiveSpotInvalid();
             }
             if (isValid) {
                 binding.approveLayout.setVisibility(View.GONE);
@@ -1222,14 +1210,12 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             materialDialog.dismiss();
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    // This is unexpected so track it
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case BAD_REQUEST_ERROR_400:
                     if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
                         menu.findItem(R.id.edit_dive_spot).setVisible(false);
                     }
-//                    isInfoValidLayout.setVisibility(View.GONE);
                     UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_validated_dive_spot_data, false);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
