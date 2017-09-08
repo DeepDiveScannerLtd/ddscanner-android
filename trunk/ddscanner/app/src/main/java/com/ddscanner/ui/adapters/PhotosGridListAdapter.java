@@ -53,7 +53,7 @@ public class PhotosGridListAdapter extends RecyclerView.Adapter<PhotosGridListAd
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0, RoundedCornersTransformation.CornerType.ALL))
                     .into(holder.photo);
-            holder.morePhotos.setText(String.format("+%s", String.valueOf(photosCount - maxPhotosCount - 1)));
+            holder.morePhotos.setText(String.format("+%s", String.valueOf(photosCount - maxPhotosCount + 1)));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
