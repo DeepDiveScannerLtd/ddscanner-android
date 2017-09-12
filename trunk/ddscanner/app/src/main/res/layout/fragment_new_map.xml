@@ -18,4 +18,36 @@
         android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
+    <ProgressBar
+        android:id="@+id/request_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:indeterminateOnly="true"
+        android:indeterminateTint="@color/primary"
+        android:indeterminateTintMode="src_in"
+        android:progressTint="@color/primary"
+        android:visibility="gone" />
+    <RelativeLayout
+        android:id="@+id/toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="@string/please_zoom_in_to_request_dive_spots"
+            android:textSize="16sp" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -60,13 +60,13 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         mapboxMap.setOnCameraIdleListener(this);
         mapboxMap.setOnMarkerClickListener(this);
         mapboxMap.setOnMapClickListener(this);
-        addClusteredGeoJsonSource();
     }
 
 
 
     @Override
     public void onCameraIdle() {
+        updateSpots();
         LatLng southWest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
         LatLng northEast = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getNorthEast();
         if (diveSpotsRequestMap.size() == 0) {
@@ -82,11 +82,50 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
                     northEast.getLongitude() >= diveSpotsRequestMap.getNorthEastLng()) {
 //                sendRequest(diveSpotsRequestMap);
                 requestDiveSpots();
+                this.diveSpotShorts = getVisibleSpotsList(this.diveSpotShorts);
             }
-        } else {
-            contract.showErrorMessage();
         }
     }
+
+    private void updateSpots() {
+        mapboxMap.clear();
+        markersMap.clear();
+        if (mapboxMap.getCameraPosition().zoom < 7) {
+            contract.showErrorMessage();
+            return;
+        }
+        ArrayList<DiveSpotShort> visibleSpots = new ArrayList<>();
+        ArrayList<DiveSpotShort> spotsOnScreen = getVisibleSpotsList(diveSpotShorts);
+        if (spotsOnScreen.size() > 50) {
+            for (int i = 0; i < 50; i++) {
+                visibleSpots.add(spotsOnScreen.get(i));
+                contract.showErrorMessage();
+            }
+        } else {
+            contract.hideErrorMessage();
+            visibleSpots = new ArrayList<>(spotsOnScreen);
+        }
+        for (DiveSpotShort diveSpotShort : visibleSpots) {
+            addNewDiveSpot(diveSpotShort);
+        }
+    }
+
+    private ArrayList<DiveSpotShort> getVisibleSpotsList(ArrayList<DiveSpotShort> diveSpotShorts) {
+        ArrayList<DiveSpotShort> newList = new ArrayList<>();
+        for (DiveSpotShort diveSpotShort : diveSpotShorts) {
+            if (isSpotVisibleOnScreen(Float.valueOf(diveSpotShort.getLat()), Float.valueOf(diveSpotShort.getLng()))) {
+                newList.add(diveSpotShort);
+            }
+        }
+        return newList;
+    }
+
+    private boolean isSpotVisibleOnScreen(float lat, float lng) {
+        LatLng southwest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
+        LatLng northeast = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getNorthEast();
+        return lat < northeast.getLatitude() && lat > southwest.getLatitude() && lng < northeast.getLongitude() && lng > southwest.getLongitude();
+    }
+
     private void requestDiveSpots() {
         diveSpotsRequestMap.clear();
         LatLng southwest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
@@ -118,20 +157,19 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             }
         }
         contract.loadData(diveSpotsRequestMap, sealifesIds);
+        contract.showPogressView();
     }
 
     void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
         this.diveSpotShorts.addAll(diveSpotShorts);
-        for (DiveSpotShort diveSpotShort : diveSpotShorts) {
-            addNewDiveSpot(diveSpotShort);
-        }
+        contract.hidePogressView();
+        updateSpots();
     }
 
     private void addNewDiveSpot(DiveSpotShort diveSpotShort) {
         if (diveSpotShort.getPosition() == null) {
             return;
         }
-//        addItem(diveSpotShort);
         if (markersMap.get(diveSpotShort.getNewPosition()) == null) {
             markersMap.put(diveSpotShort.getNewPosition(), diveSpotShort);
             diveSpotShorts.add(diveSpotShort);
@@ -152,67 +190,6 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     private boolean checkArea(LatLng southWest, LatLng northEast) {
         return !(Math.abs(northEast.getLongitude() - southWest.getLongitude()) > 8 || Math.abs(northEast.getLatitude() - southWest.getLatitude()) > 8);
-    }
-
-    private void addClusteredGeoJsonSource() {
-
-        // Add a new source from the GeoJSON data and set the 'cluster' option to true.
-        try {
-            mapboxMap.addSource(
-                    // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes from
-                    // 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-                    new GeoJsonSource("earthquakes",
-                            new URL("https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"),
-                            new GeoJsonOptions()
-                                    .withCluster(true)
-                                    .withClusterMaxZoom(14)
-                                    .withClusterRadius(50)
-                    )
-            );
-        } catch (MalformedURLException malformedUrlException) {
-            Log.e("dataClusterActivity", "Check the URL " + malformedUrlException.getMessage());
-        }
-
-
-        // Use the earthquakes GeoJSON source to create three layers: One layer for each cluster category.
-        // Each point range gets a different fill color.
-        int[][] layers = new int[][] {
-                new int[] {150, ContextCompat.getColor(DDScannerApplication.getInstance(), R.color.tw__composer_red)},
-                new int[] {20, ContextCompat.getColor(DDScannerApplication.getInstance(), R.color.orange)},
-                new int[] {0, ContextCompat.getColor(DDScannerApplication.getInstance(), R.color.mapbox_blue)}
-        };
-
-        //Creating a marker layer for single data points
-        SymbolLayer unclustered = new SymbolLayer("unclustered-points", "earthquakes");
-        unclustered.setProperties(iconImage("marker-15"));
-        mapboxMap.addLayer(unclustered);
-
-        for (int i = 0; i < layers.length; i++) {
-            //Add clusters' circles
-            CircleLayer circles = new CircleLayer("cluster-" + i, "earthquakes");
-            circles.setProperties(
-                    circleColor(layers[i][1]),
-                    circleRadius(18f)
-            );
-
-            // Add a filter to the cluster layer that hides the circles based on "point_count"
-            circles.setFilter(
-                    i == 0
-                            ? gte("point_count", layers[i][0]) :
-                            all(gte("point_count", layers[i][0]), lt("point_count", layers[i - 1][0]))
-            );
-            mapboxMap.addLayer(circles);
-        }
-
-        //Add the count labels
-        SymbolLayer count = new SymbolLayer("count", "earthquakes");
-        count.setProperties(
-                textField("{point_count}"),
-                textSize(12f),
-                textColor(Color.WHITE)
-        );
-        mapboxMap.addLayer(count);
-
     }
 
 }

@@ -16,6 +16,8 @@ public interface MapFragmentContract {
         void hideDiveSpotInfo();
         void showErrorMessage();
         void hideErrorMessage();
+        void showPogressView();
+        void hidePogressView();
     }
 
 }

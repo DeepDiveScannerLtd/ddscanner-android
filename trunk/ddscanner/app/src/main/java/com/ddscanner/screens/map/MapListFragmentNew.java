@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -54,6 +56,8 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     DiveSpotMapInfoViewNew diveSpotMapInfoView;
     MapFragmentManager mapFragmentManager;
     private int diveSpotInfoHeight;
+    ProgressBar progressBar;
+    RelativeLayout message;
 
     @Nullable
     @Override
@@ -61,6 +65,8 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         View view = inflater.inflate(R.layout.fragment_new_map, container, false);
         mapView = view.findViewById(R.id.map_view);
         diveSpotMapInfoView = view.findViewById(R.id.dive_spot_map_info);
+        progressBar = view.findViewById(R.id.request_progress);
+        message = view.findViewById(R.id.toast);
         diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this::setupMap);
@@ -88,12 +94,22 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
 
     @Override
     public void showErrorMessage() {
-
+        message.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorMessage() {
+        message.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void showPogressView() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hidePogressView() {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
