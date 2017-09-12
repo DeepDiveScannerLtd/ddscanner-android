@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +23,9 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityEditProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.interfaces.PhotUriTakenListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.photo.crop.CropImageActivity;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
@@ -45,7 +48,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
-public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
+public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener, PhotUriTakenListener {
 
     private static final String ARG_ISLOGOUT = "IS_LOGOUT";
     private static final String ARG_USER = "USER";
@@ -288,6 +291,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     public void onPicturesTaken(ArrayList<String> pictures) {
         this.cameraPhotoToUpload = null;
         pathToUploadedPhoto = pictures.get(0);
+//        CropImageActivity.showForResult(this, pathToUploadedPhoto, -1, CropImageActivity.CropImageSource.USER_PROFILE);
         Picasso.with(this).load("file://" + pictures.get(0))
                 .resize(Math.round(Helpers.convertDpToPixel(80, this)),
                         Math.round(Helpers.convertDpToPixel(80, this))).centerCrop()
@@ -332,4 +336,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         ChangePasswordActivity.show(this);
     }
 
+    @Override
+    public void onUriTaken(Uri uri) {
+//        CropImageActivity.showForResult(this, uri, -1, CropImageActivity.CropImageSource.USER_PROFILE);
+    }
 }

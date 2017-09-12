@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.interfaces.PhotUriTakenListener;
 import com.ddscanner.interfaces.ShowPopupLstener;
 import com.ddscanner.screens.dialogs.popup.AchievementPopupDialogFrament;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -46,6 +47,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     private HashSet<Integer> requestCodes = new HashSet<>();
     private int menuResourceId = -1;
     private PictureTakenListener takedListener;
+    private PhotUriTakenListener photUriTakenListener;
     private File tempFile;
     public boolean isPopupShown = false;
     private boolean isCloseActivityAfterPopupClosed = false;
@@ -168,8 +170,16 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
                 break;
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY:
                 if (resultCode == RESULT_OK) {
+                    ArrayList<String> imagePaths = new ArrayList<>();
+                    imagePaths = Helpers.getPhotosFromIntent(data, this);
+                    photUriTakenListener = (PhotUriTakenListener) this;
+                    if (photUriTakenListener != null && imagePaths.size() == 1) {
+                        photUriTakenListener.onUriTaken(data.getData());
+                        return;
+                    }
                     takedListener = (PictureTakenListener) this;
-                    takedListener.onPicturesTaken(Helpers.getPhotosFromIntent(data, this));
+                    takedListener.onPicturesTaken(imagePaths);
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS:
