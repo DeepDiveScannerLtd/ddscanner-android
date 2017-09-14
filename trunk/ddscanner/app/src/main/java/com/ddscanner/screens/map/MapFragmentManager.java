@@ -1,7 +1,11 @@
 package com.ddscanner.screens.map;
 
 
+import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -18,14 +22,21 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
+import com.mapbox.services.commons.geojson.Feature;
+import com.mapbox.services.commons.geojson.FeatureCollection;
+import com.mapbox.services.commons.geojson.Point;
+import com.mapbox.services.commons.models.Position;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mapbox.mapboxsdk.style.layers.Filter.all;
@@ -47,10 +58,14 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     private Map<LatLng, DiveSpotShort> markersMap = new HashMap<>();
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private ArrayList<DiveSpotShort> diveSpotShorts = new ArrayList<>();
+    private Bitmap icon;
+    List<Feature> markerCoordinates = new ArrayList<>();
+    private boolean markerSelected = false;
 
     public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract) {
         this.contract = contract;
         this.mapboxMap = mapboxMap;
+        icon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds);
         initMap();
     }
 
@@ -59,8 +74,24 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
         mapboxMap.setOnCameraIdleListener(this);
         mapboxMap.setOnMarkerClickListener(this);
+
+        FeatureCollection featureCollection = FeatureCollection.fromFeatures(markerCoordinates);
+        Source geoJsonSource = new GeoJsonSource("marker-source", featureCollection);
+        mapboxMap.addSource(geoJsonSource);
+
+        mapboxMap.addImage("my-marker-image", icon);
+
+        SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source").withProperties(PropertyFactory.iconImage("my-marker-image"));
+        mapboxMap.addLayer(markers);
+        FeatureCollection emptySource = FeatureCollection.fromFeatures(new Feature[]{});
+        Source selectedMarkerSource = new GeoJsonSource("selected-marker", emptySource);
+        mapboxMap.addSource(selectedMarkerSource);
+
+        SymbolLayer selectedMarker = new SymbolLayer("selected-marker-layer", "selected-marker").withProperties(PropertyFactory.iconImage("my-marker-image"));
+        mapboxMap.addLayer(selectedMarker);
         mapboxMap.setOnMapClickListener(this);
-        addClusteredGeoJsonSource();
+
+//        addClusteredGeoJsonSource();
     }
 
 
@@ -123,6 +154,10 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
         this.diveSpotShorts.addAll(diveSpotShorts);
         for (DiveSpotShort diveSpotShort : diveSpotShorts) {
+            markerCoordinates = new ArrayList<>();
+            markerCoordinates.add(Feature.fromGeometry(
+                    Point.fromCoordinates(Position.fromCoordinates(diveSpotShort.getPosition().latitude, diveSpotShort.getPosition().longitude))) // Boston Common Park
+            );
             addNewDiveSpot(diveSpotShort);
         }
     }
@@ -135,7 +170,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         if (markersMap.get(diveSpotShort.getNewPosition()) == null) {
             markersMap.put(diveSpotShort.getNewPosition(), diveSpotShort);
             diveSpotShorts.add(diveSpotShort);
-            mapboxMap.addMarker(new MarkerOptions().position(diveSpotShort.getNewPosition()).icon(IconFactory.getInstance(DDScannerApplication.getInstance()).fromResource(R.drawable.ic_ds)));
+//            mapboxMap.addMarker(new MarkerOptions().position(diveSpotShort.getNewPosition()).icon(IconFactory.getInstance(DDScannerApplication.getInstance()).fromResource(R.drawable.ic_ds)));
         }
     }
 
@@ -147,7 +182,71 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-        contract.hideDiveSpotInfo();
+//        contract.hideDiveSpotInfo();
+        final SymbolLayer marker = (SymbolLayer) mapboxMap.getLayer("selected-marker-layer");
+
+        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel, "marker-layer");
+        List<Feature> selectedFeature = mapboxMap.queryRenderedFeatures(pixel, "selected-marker-layer");
+
+        if (selectedFeature.size() > 0 && markerSelected) {
+            return;
+        }
+
+        if (features.isEmpty()) {
+            if (markerSelected) {
+                deselectMarker(marker);
+            }
+            return;
+        }
+
+        FeatureCollection featureCollection = FeatureCollection.fromFeatures(
+                new Feature[]{Feature.fromGeometry(features.get(0).getGeometry())});
+        GeoJsonSource source = mapboxMap.getSourceAs("selected-marker");
+        if (source != null) {
+            source.setGeoJson(featureCollection);
+        }
+
+        if (markerSelected) {
+            deselectMarker(marker);
+        }
+        if (features.size() > 0) {
+            selectMarker(marker);
+        }
+    }
+
+    private void selectMarker(final SymbolLayer marker) {
+        ValueAnimator markerAnimator = new ValueAnimator();
+        markerAnimator.setObjectValues(1f, 2f);
+        markerAnimator.setDuration(300);
+        markerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                marker.setProperties(
+                        PropertyFactory.iconSize((float) animator.getAnimatedValue())
+                );
+            }
+        });
+        markerAnimator.start();
+        markerSelected = true;
+    }
+
+    private void deselectMarker(final SymbolLayer marker) {
+        ValueAnimator markerAnimator = new ValueAnimator();
+        markerAnimator.setObjectValues(2f, 1f);
+        markerAnimator.setDuration(300);
+        markerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                marker.setProperties(
+                        PropertyFactory.iconSize((float) animator.getAnimatedValue())
+                );
+            }
+        });
+        markerAnimator.start();
+        markerSelected = false;
     }
 
     private boolean checkArea(LatLng southWest, LatLng northEast) {
@@ -155,22 +254,26 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     private void addClusteredGeoJsonSource() {
+        try {
+            mapboxMap.removeSource("earthquakes");
+        } catch (Exception ignored) {
 
+        }
         // Add a new source from the GeoJSON data and set the 'cluster' option to true.
         try {
             mapboxMap.addSource(
                     // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes from
                     // 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
                     new GeoJsonSource("earthquakes",
-                            new URL("https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"),
+                            FeatureCollection.fromFeatures(markerCoordinates),
                             new GeoJsonOptions()
                                     .withCluster(true)
                                     .withClusterMaxZoom(14)
                                     .withClusterRadius(50)
                     )
             );
-        } catch (MalformedURLException malformedUrlException) {
-            Log.e("dataClusterActivity", "Check the URL " + malformedUrlException.getMessage());
+        } catch (Exception ignored) {
+
         }
 
 
