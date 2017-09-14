@@ -22,13 +22,13 @@ import java.util.ArrayList;
 
 public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAdapter.DiveSpotsPhotosAdapterViewHolder>{
 
-    public ArrayList<DiveSpotPhoto> photos;
+    public ArrayList<String> photos;
     public String path;
     public Activity context;
     private int photoSize;
     private int photosCount;
 
-    public DiveSpotPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, int photosCount) {
+    public DiveSpotPhotosAdapter(ArrayList<String> photos, Activity context, int photosCount) {
         this.photos = photos;
         this.context = context;
         photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
@@ -47,14 +47,14 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photosCount > 8 && position == 7) {
             Picasso.with(context)
-                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
-                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
         }
@@ -87,13 +87,15 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
 
         @Override
         public void onClick(View v) {
-//            DiveSpotPhotosActivity.showForResult(context, photos, path, reviewsImages);
-            if (getAdapterPosition() == 7 && photosCount > 8) {
-                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
-                return;
-            }
-            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.DIVESPOT, "-1");
+            DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
         }
+////            DiveSpotPhotosActivity.showForResult(context, photos, path, reviewsImages);
+//            if (getAdapterPosition() == 7 && photosCount > 8) {
+//                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+//                return;
+//            }
+//            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), -1, PhotoOpenedSource.DIVESPOT, "-1");
+//        }
     }
 
 }

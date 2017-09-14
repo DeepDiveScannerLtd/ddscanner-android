@@ -56,7 +56,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map, @Query(value = "sealifes[]", encoded = true) List<String> s);
 
     @GET("v2_1/divespot.get")
-    Call<ResponseBody> getDiveSpotDetails(@Query("id") String id, @Query("include_photo_details") int value);
+    Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
 
     @Multipart
     @POST("v2_1/divespot.maps.add")
