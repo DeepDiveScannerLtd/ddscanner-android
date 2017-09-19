@@ -48,7 +48,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
-public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener, PhotUriTakenListener {
+public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
     private static final String ARG_ISLOGOUT = "IS_LOGOUT";
     private static final String ARG_USER = "USER";
@@ -335,9 +335,5 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     public void changePassword(View view) {
         ChangePasswordActivity.show(this);
     }
-
-    @Override
-    public void onUriTaken(Uri uri) {
-//        CropImageActivity.showForResult(this, uri, -1, CropImageActivity.CropImageSource.USER_PROFILE);
-    }
+    
 }

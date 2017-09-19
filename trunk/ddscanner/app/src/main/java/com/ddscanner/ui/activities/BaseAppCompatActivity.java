@@ -47,7 +47,6 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     private HashSet<Integer> requestCodes = new HashSet<>();
     private int menuResourceId = -1;
     private PictureTakenListener takedListener;
-    private PhotUriTakenListener photUriTakenListener;
     private File tempFile;
     public boolean isPopupShown = false;
     private boolean isCloseActivityAfterPopupClosed = false;
@@ -172,14 +171,8 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
                 if (resultCode == RESULT_OK) {
                     ArrayList<String> imagePaths = new ArrayList<>();
                     imagePaths = Helpers.getPhotosFromIntent(data, this);
-                    photUriTakenListener = (PhotUriTakenListener) this;
-                    if (photUriTakenListener != null && imagePaths.size() == 1) {
-                        photUriTakenListener.onUriTaken(data.getData());
-                        return;
-                    }
                     takedListener = (PictureTakenListener) this;
                     takedListener.onPicturesTaken(imagePaths);
-
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS:
