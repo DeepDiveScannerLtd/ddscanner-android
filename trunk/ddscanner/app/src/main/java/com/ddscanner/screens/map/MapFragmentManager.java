@@ -1,7 +1,11 @@
 package com.ddscanner.screens.map;
 
 
+import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -12,20 +16,28 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
+import com.mapbox.services.commons.geojson.Feature;
+import com.mapbox.services.commons.geojson.FeatureCollection;
+import com.mapbox.services.commons.geojson.Point;
+import com.mapbox.services.commons.models.Position;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mapbox.mapboxsdk.style.layers.Filter.all;
@@ -40,13 +52,15 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textSize;
 
-public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, MapboxMap.OnMarkerClickListener, MapboxMap.OnMapClickListener {
+public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, MapboxMap.OnMapClickListener {
 
     private MapFragmentContract.View contract;
     private MapboxMap mapboxMap;
     private Map<LatLng, DiveSpotShort> markersMap = new HashMap<>();
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private ArrayList<DiveSpotShort> diveSpotShorts = new ArrayList<>();
+    private boolean markerSelected = false;
+    private Gson gson = new Gson();
 
     public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract) {
         this.contract = contract;
@@ -58,7 +72,6 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         mapboxMap.setMyLocationEnabled(true);
         mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
         mapboxMap.setOnCameraIdleListener(this);
-        mapboxMap.setOnMarkerClickListener(this);
         mapboxMap.setOnMapClickListener(this);
     }
 
@@ -66,7 +79,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     @Override
     public void onCameraIdle() {
-        updateSpots();
+//        updateSpots();
         LatLng southWest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
         LatLng northEast = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getNorthEast();
         if (diveSpotsRequestMap.size() == 0) {
@@ -161,9 +174,46 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
-        this.diveSpotShorts.addAll(diveSpotShorts);
-        contract.hidePogressView();
-        updateSpots();
+            this.diveSpotShorts.addAll(diveSpotShorts);
+            mapboxMap.removeLayer("marker-layer");
+            mapboxMap.removeLayer("selected-marker-layer");
+            mapboxMap.removeSource("selected-marker");
+            mapboxMap.removeSource("selected-marker");
+            mapboxMap.removeSource("marker-source");
+
+            contract.hidePogressView();
+            markersMap.clear();
+            List<Feature> features = new ArrayList<>();
+            for (DiveSpotShort diveSpotShort : diveSpotShorts) {
+                markersMap.put(diveSpotShort.getNewPosition(), diveSpotShort);
+                Feature feature = Feature.fromGeometry(Point.fromCoordinates(Position.fromCoordinates(diveSpotShort.getDoubleLng(), diveSpotShort.getDoubleLat())));
+                feature.addStringProperty("divespot", gson.toJson(diveSpotShort));
+                features.add(feature);
+            }
+            FeatureCollection featureCollection = FeatureCollection.fromFeatures(features);
+            Source geoJsonSource = new GeoJsonSource("marker-source", featureCollection);
+            mapboxMap.addSource(geoJsonSource);
+
+            Bitmap icon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds);
+            Bitmap iconSelected = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds_selected);
+
+            // Add the marker image to map
+            mapboxMap.addImage("my-marker-image", icon);
+            mapboxMap.addImage("my-marker-image-selected", iconSelected);
+
+            SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source")
+                    .withProperties(PropertyFactory.iconImage("my-marker-image"));
+            mapboxMap.addLayer(markers);
+
+            // Add the selected marker source and layer
+            FeatureCollection emptySource = FeatureCollection.fromFeatures(new Feature[]{});
+            Source selectedMarkerSource = new GeoJsonSource("selected-marker", emptySource);
+            mapboxMap.addSource(selectedMarkerSource);
+
+            SymbolLayer selectedMarker = new SymbolLayer("selected-marker-layer", "selected-marker")
+                    .withProperties(PropertyFactory.iconImage("my-marker-image-selected"));
+            mapboxMap.addLayer(selectedMarker);
+//        updateSpots();
     }
 
     private void addNewDiveSpot(DiveSpotShort diveSpotShort) {
@@ -173,19 +223,53 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         if (markersMap.get(diveSpotShort.getNewPosition()) == null) {
             markersMap.put(diveSpotShort.getNewPosition(), diveSpotShort);
             diveSpotShorts.add(diveSpotShort);
-            mapboxMap.addMarker(new MarkerOptions().position(diveSpotShort.getNewPosition()).icon(IconFactory.getInstance(DDScannerApplication.getInstance()).fromResource(R.drawable.ic_ds)));
+//            mapboxMap.addMarker(new MarkerOptions().position(diveSpotShort.getNewPosition()).icon(IconFactory.getInstance(DDScannerApplication.getInstance()).fromResource(R.drawable.ic_ds)));
         }
     }
 
     @Override
-    public boolean onMarkerClick(@NonNull Marker marker) {
-        contract.markerClicked(marker, markersMap.get(marker.getPosition()));
-        return true;
+    public void onMapClick(@NonNull LatLng point) {
+
+        final SymbolLayer marker = (SymbolLayer) mapboxMap.getLayer("selected-marker-layer");
+
+        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel, "marker-layer");
+        List<Feature> selectedFeature = mapboxMap.queryRenderedFeatures(pixel, "selected-marker-layer");
+        if (selectedFeature.size() > 0 && markerSelected) {
+            return;
+        }
+
+        if (features.isEmpty()) {
+            if (markerSelected) {
+                deselectMarker(marker);
+            }
+            return;
+        }
+
+        FeatureCollection featureCollection = FeatureCollection.fromFeatures(
+                new Feature[]{Feature.fromGeometry(features.get(0).getGeometry())});
+        GeoJsonSource source = mapboxMap.getSourceAs("selected-marker");
+        if (source != null) {
+            source.setGeoJson(featureCollection);
+        }
+
+        if (markerSelected) {
+            deselectMarker(marker);
+        }
+        if (features.size() > 0) {
+            selectMarker(marker, features.get(0));
+        }
     }
 
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
+    private void selectMarker(final SymbolLayer marker, Feature feature) {
+        String diveSpot = feature.getStringProperty("divespot");
+        contract.markerClicked(gson.fromJson(diveSpot, DiveSpotShort.class));
+        markerSelected = true;
+    }
+
+    private void deselectMarker(final SymbolLayer marker) {
         contract.hideDiveSpotInfo();
+        markerSelected = false;
     }
 
     private boolean checkArea(LatLng southWest, LatLng northEast) {

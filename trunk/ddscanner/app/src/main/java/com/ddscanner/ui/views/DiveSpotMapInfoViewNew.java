@@ -56,12 +56,12 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
     }
 
 
-    public void show(DiveSpotShort diveSpotShort, Marker marker) {
-        if (this.marker != null) {
-            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
-        }
-        this.marker = marker;
-        this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds_selected));
+    public void show(DiveSpotShort diveSpotShort) {
+//        if (this.marker != null) {
+//            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
+//        }
+//        this.marker = marker;
+//        this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds_selected));
         this.animate()
                 .translationY(0)
                 .alpha(1.0f)
@@ -82,7 +82,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
 
     public void hide(int diveSpotInfoHeight) {
         try {
-            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
+//            this.marker.setIcon(IconFactory.getInstance(getContext()).fromResource(R.drawable.ic_ds));
             this.animate()
                     .translationY(diveSpotInfoHeight)
                     .alpha(0.0f)

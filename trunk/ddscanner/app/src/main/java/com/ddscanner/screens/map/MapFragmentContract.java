@@ -12,7 +12,7 @@ public interface MapFragmentContract {
 
     interface View {
         void loadData(DiveSpotsRequestMap diveSpotsRequestMap, ArrayList<String> sealifes);
-        void markerClicked(Marker marker, DiveSpotShort diveSpotShort);
+        void markerClicked(DiveSpotShort diveSpotShort);
         void hideDiveSpotInfo();
         void showErrorMessage();
         void hideErrorMessage();

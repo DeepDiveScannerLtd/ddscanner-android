@@ -78,8 +78,8 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     }
 
     @Override
-    public void markerClicked(Marker marker, DiveSpotShort diveSpotShort) {
-        diveSpotMapInfoView.show(diveSpotShort, marker);
+    public void markerClicked(DiveSpotShort diveSpotShort) {
+        diveSpotMapInfoView.show(diveSpotShort);
     }
 
     @Override

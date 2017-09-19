@@ -139,4 +139,12 @@ public class DiveSpotShort implements Serializable, ClusterItem {
         return latLngNew;
     }
 
+    public double getDoubleLat() {
+        return Double.valueOf(lat);
+    }
+
+    public double getDoubleLng() {
+        return Double.valueOf(lng);
+    }
+
 }
