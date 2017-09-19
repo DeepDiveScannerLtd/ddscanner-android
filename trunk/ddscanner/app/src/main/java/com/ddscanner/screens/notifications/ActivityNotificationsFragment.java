@@ -159,7 +159,9 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         public void onSuccess(ArrayList<NotificationEntity> result) {
             isLoading = false;
             activities = result;
-            binding.swipeRefreshLayout.setRefreshing(false);
+            if (binding.swipeRefreshLayout != null) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
             if (binding != null) {
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
