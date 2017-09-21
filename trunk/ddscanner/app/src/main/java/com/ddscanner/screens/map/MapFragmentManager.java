@@ -66,6 +66,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract) {
         this.contract = contract;
         this.mapboxMap = mapboxMap;
+        contract.showErrorMessage();
         initMap();
     }
 
@@ -81,7 +82,11 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     @Override
     public void onCameraIdle() {
 //        updateSpots();
-
+        if (mapboxMap.getCameraPosition().zoom < 12) {
+            contract.showErrorMessage();
+        } else {
+            contract.hideErrorMessage();
+        }
         LatLng southWest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
         LatLng northEast = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getNorthEast();
 //        if (diveSpotsRequestMap.size() == 0) {
@@ -209,6 +214,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
             SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source")
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
+            markers.setMinZoom(4);
             mapboxMap.addLayer(markers);
 
             // Add the selected marker source and layer

@@ -212,6 +212,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     }
 
     private void showMapView() {
+        mapListFab.setVisibility(View.VISIBLE);
         mapListFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_acb_list));
         if (diveSpotMapInfoView.isShown()) {
             mapListFab.setTranslationY(-diveSpotInfoHeight);
