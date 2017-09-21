@@ -80,4 +80,8 @@ public class PhoneInputView extends RelativeLayout {
         textView.setVisibility(GONE);
     }
 
+    public String getCountryName() {
+        return countryCodePicker.getSelectedCountryNameCode();
+    }
+
 }

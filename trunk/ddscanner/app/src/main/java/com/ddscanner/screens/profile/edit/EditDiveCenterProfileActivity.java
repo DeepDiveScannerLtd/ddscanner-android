@@ -50,6 +50,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
@@ -547,7 +549,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isDataValid(ArrayList<PhoneInputView> phoneInputViews, ArrayList<EmailInputView> emailInputViews) {
         boolean isDataValid = true;
         for (PhoneInputView phoneInputView : phoneInputViews) {
-            if (!validCellPhone(phoneInputView.getPhoneWithoutPlus().trim())) {
+            if (!validCellPhone(phoneInputView.getPhoneWithPlus().trim(), phoneInputView.getCountryName())) {
                 phoneInputView.setError();
                 isDataValid = false;
             } else {
@@ -588,11 +590,17 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         return isDataValid;
     }
 
-    private boolean validCellPhone(String number) {
-        if (number.length() > 7 && number.length() < 17) {
-            return true;
+    private boolean validCellPhone(String number, String coutryCode) {
+        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+        try {
+            return util.isValidNumber(util.parse(number, coutryCode));
+        } catch (NumberParseException exception) {
+            return false;
         }
-        return false;
+//        if (number.length() > 7 && number.length() < 17) {
+//            return true;
+//        }
+//        return false;
     }
 
     private boolean validEmail(String email) {
