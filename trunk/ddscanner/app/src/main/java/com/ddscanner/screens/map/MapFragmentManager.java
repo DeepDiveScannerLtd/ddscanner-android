@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
@@ -80,22 +81,28 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     @Override
     public void onCameraIdle() {
 //        updateSpots();
+
         LatLng southWest = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getSouthWest();
         LatLng northEast = mapboxMap.getProjection().getVisibleRegion().latLngBounds.getNorthEast();
-        if (diveSpotsRequestMap.size() == 0) {
-            diveSpotsRequestMap.putSouthWestLat(southWest.getLatitude() - Math.abs(northEast.getLatitude() - southWest.getLatitude()));
-            diveSpotsRequestMap.putSouthWestLng(southWest.getLongitude() - Math.abs(northEast.getLongitude() - southWest.getLongitude()));
-            diveSpotsRequestMap.putNorthEastLat(northEast.getLatitude() + Math.abs(northEast.getLatitude() - southWest.getLatitude()));
-            diveSpotsRequestMap.putNorthEastLng(northEast.getLongitude() + Math.abs(northEast.getLongitude() - southWest.getLongitude()));
-        }
+//        if (diveSpotsRequestMap.size() == 0) {
+//            diveSpotsRequestMap.putSouthWestLat(southWest.getLatitude() - Math.abs(northEast.getLatitude() - southWest.getLatitude()));
+//            diveSpotsRequestMap.putSouthWestLng(southWest.getLongitude() - Math.abs(northEast.getLongitude() - southWest.getLongitude()));
+//            diveSpotsRequestMap.putNorthEastLat(northEast.getLatitude() + Math.abs(northEast.getLatitude() - southWest.getLatitude()));
+//            diveSpotsRequestMap.putNorthEastLng(northEast.getLongitude() + Math.abs(northEast.getLongitude() - southWest.getLongitude()));
+//        }
         if (checkArea(southWest, northEast)) {
-            if (southWest.getLatitude() <= diveSpotsRequestMap.getSouthWestLat() ||
+            if (diveSpotsRequestMap.size() == 0 || southWest.getLatitude() <= diveSpotsRequestMap.getSouthWestLat() ||
                     southWest.getLongitude() <= diveSpotsRequestMap.getSouthWestLng() ||
                     northEast.getLatitude() >= diveSpotsRequestMap.getNorthEastLat() ||
                     northEast.getLongitude() >= diveSpotsRequestMap.getNorthEastLng()) {
 //                sendRequest(diveSpotsRequestMap);
                 requestDiveSpots();
-                this.diveSpotShorts = getVisibleSpotsList(this.diveSpotShorts);
+//                this.diveSpotShorts = getVisibleSpotsList(this.diveSpotShorts);
+            } else {
+//                diveSpotsRequestMap.putSouthWestLat(southWest.getLatitude() - Math.abs(northEast.getLatitude() - southWest.getLatitude()));
+//                diveSpotsRequestMap.putSouthWestLng(southWest.getLongitude() - Math.abs(northEast.getLongitude() - southWest.getLongitude()));
+//                diveSpotsRequestMap.putNorthEastLat(northEast.getLatitude() + Math.abs(northEast.getLatitude() - southWest.getLatitude()));
+//                diveSpotsRequestMap.putNorthEastLng(northEast.getLongitude() + Math.abs(northEast.getLongitude() - southWest.getLongitude()));
             }
         }
     }
@@ -108,7 +115,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             return;
         }
         ArrayList<DiveSpotShort> visibleSpots = new ArrayList<>();
-        ArrayList<DiveSpotShort> spotsOnScreen = getVisibleSpotsList(diveSpotShorts);
+        ArrayList<DiveSpotShort> spotsOnScreen = getVisibleSpotsList();
         if (spotsOnScreen.size() > 50) {
             for (int i = 0; i < 50; i++) {
                 visibleSpots.add(spotsOnScreen.get(i));
@@ -123,7 +130,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         }
     }
 
-    private ArrayList<DiveSpotShort> getVisibleSpotsList(ArrayList<DiveSpotShort> diveSpotShorts) {
+    public ArrayList<DiveSpotShort> getVisibleSpotsList() {
         ArrayList<DiveSpotShort> newList = new ArrayList<>();
         for (DiveSpotShort diveSpotShort : diveSpotShorts) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpotShort.getLat()), Float.valueOf(diveSpotShort.getLng()))) {
@@ -193,7 +200,6 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             FeatureCollection featureCollection = FeatureCollection.fromFeatures(features);
             Source geoJsonSource = new GeoJsonSource("marker-source", featureCollection);
             mapboxMap.addSource(geoJsonSource);
-
             Bitmap icon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds);
             Bitmap iconSelected = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds_selected);
 
@@ -274,6 +280,18 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     private boolean checkArea(LatLng southWest, LatLng northEast) {
         return !(Math.abs(northEast.getLongitude() - southWest.getLongitude()) > 8 || Math.abs(northEast.getLatitude() - southWest.getLatitude()) > 8);
+    }
+
+    public void zoomIn() {
+
+    }
+
+    public void goToMyLocation() {
+        if(mapboxMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+            mapboxMap.setCameraPosition(new CameraPosition.Builder()
+                    .target(new LatLng(mapboxMap.getMyLocation().getLatitude(), mapboxMap.getMyLocation().getLongitude()))
+            .zoom(7.0).build());
+        }
     }
 
 }

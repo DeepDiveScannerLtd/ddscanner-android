@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map_view_relative">
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        mapbox:mapbox_cameraTargetLat="40.73581"
-        mapbox:mapbox_cameraTargetLng="-73.99155"
         mapbox:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"
-        mapbox:mapbox_cameraZoom="11" />
+        mapbox:mapbox_cameraZoom="1" />
     <com.ddscanner.ui.views.DiveSpotMapInfoViewNew
         android:id="@+id/dive_spot_map_info"
         android:layout_width="match_parent"
@@ -22,13 +28,12 @@
         android:id="@+id/request_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:indeterminateOnly="true"
-        android:indeterminateTint="@color/primary"
+        android:indeterminateTint="@color/accent"
         android:indeterminateTintMode="src_in"
-        android:progressTint="@color/primary"
+        android:progressTint="@color/accent"
         android:visibility="gone" />
     <RelativeLayout
         android:id="@+id/toast"
@@ -50,4 +55,82 @@
             android:text="@string/please_zoom_in_to_request_dive_spots"
             android:textSize="16sp" />
     </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dive_spots_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/please"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/sad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_nospots" />
+
+            <TextView
+                android:id="@+id/text"
+                style="@style/ErrorsViewTitleStyle"
+                android:layout_below="@+id/sad"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/there_are_no_dive_spots_here" />
+
+            <TextView
+                android:id="@+id/subtext"
+                style="@style/ErrorsViewSubTitleStyle"
+                android:layout_below="@+id/text"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/please_choose_another_location" />
+
+            <Button
+                android:id="@+id/showMapContinue"
+                style="@style/OrangeButtons"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/subtext"
+                android:layout_marginTop="174dp"
+                android:text="@string/continue_search"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_list_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="14dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_acb_list"
+        app:backgroundTint="@color/white" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_ds_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="14dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_acb_plus"
+        app:backgroundTint="@color/orange" />
 </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

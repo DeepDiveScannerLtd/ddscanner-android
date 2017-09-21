@@ -25,6 +25,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
     private RatingView ratingView;
     private Map<String, Integer> infoWindowBackgroundImages = new HashMap<>();
     private Marker marker;
+    private boolean isShown = false;
 
     public DiveSpotMapInfoViewNew(Context context) {
         super(context);
@@ -78,6 +79,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
         diveSpotType.setText(diveSpotShort.getObject());
         ratingView.setRating(Math.round(diveSpotShort.getRating()), R.drawable.ic_iw_star_full, R.drawable.ic_iw_star_empty);
         setBackgroundResource(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
+        isShown = true;
     }
 
     public void hide(int diveSpotInfoHeight) {
@@ -94,9 +96,14 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
                             setVisibility(View.GONE);
                         }
                     });
+            isShown = false;
         } catch (NullPointerException ignored) {
 
         }
+    }
+
+    public boolean isShown() {
+        return isShown;
     }
 
 }
