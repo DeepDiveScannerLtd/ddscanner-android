@@ -557,4 +557,5 @@
     <string name="tutorial_add_photo"><![CDATA[<b>Upload</b> your underwater photos]]></string>
     <string name="write_review_tutorial"><![CDATA[<b>Write</b> a few words about you dive]]></string>
     <string name="cant_connect_to_google">Can\'t connect to google services. Please, try again</string>
+    <string name="mapbox_server_api_url">https://api.mapbox.com/</string>
 </resources>

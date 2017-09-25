@@ -20,7 +20,40 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public abstract class RestClient {
 
     private static DDScannerRestService ddscannerServiceInstance;
+    private static MapboxGeocodingApiRestService mapboxGeocodingApiRestService;
     private static GoogleMapsApiRestService googleMapsApiServiceInstance;
+
+    public static MapboxGeocodingApiRestService getMapboxGeocodingApiRestService() {
+        if (mapboxGeocodingApiRestService == null) {
+            Interceptor interceptor = chain -> {
+                Request request = chain.request();
+                request = request.newBuilder().build();
+                Response response = chain.proceed(request);
+                return response;
+            };
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.interceptors().add(interceptor);
+            builder.retryOnConnectionFailure(true);
+            builder.connectTimeout(30, TimeUnit.SECONDS);
+            builder.readTimeout(30, TimeUnit.SECONDS);
+            builder.writeTimeout(1, TimeUnit.MINUTES);
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(DDScannerApplication.getInstance().getString(R.string.mapbox_server_api_url))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            mapboxGeocodingApiRestService = retrofit.create(MapboxGeocodingApiRestService.class);
+        }
+        return mapboxGeocodingApiRestService;
+    }
 
     public static DDScannerRestService getDdscannerServiceInstance() {
         if (ddscannerServiceInstance == null) {

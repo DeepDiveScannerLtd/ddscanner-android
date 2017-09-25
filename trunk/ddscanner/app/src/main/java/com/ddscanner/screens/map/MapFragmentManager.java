@@ -206,11 +206,9 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             Source geoJsonSource = new GeoJsonSource("marker-source", featureCollection);
             mapboxMap.addSource(geoJsonSource);
             Bitmap icon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds);
-            Bitmap iconSelected = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds_selected);
 
             // Add the marker image to map
             mapboxMap.addImage("my-marker-image", icon);
-            mapboxMap.addImage("my-marker-image-selected", iconSelected);
 
             SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source")
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
@@ -223,7 +221,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             mapboxMap.addSource(selectedMarkerSource);
 
             SymbolLayer selectedMarker = new SymbolLayer("selected-marker-layer", "selected-marker")
-                    .withProperties(PropertyFactory.iconImage("my-marker-image-selected"));
+                    .withProperties(PropertyFactory.iconImage("my-marker-image"));
             mapboxMap.addLayer(selectedMarker);
 //        updateSpots();
     }

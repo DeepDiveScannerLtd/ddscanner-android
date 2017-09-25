@@ -9,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotChosedFromSearch;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.entities.FeatureSearchResponseEntity;
+import com.ddscanner.entities.SearchFeature;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
@@ -64,6 +67,32 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
     private boolean isForDiveCenter;
 
     private ProgressView progressView;
+
+    private DDScannerRestClient.ResultListener<FeatureSearchResponseEntity> mapboxSearchResultListener = new DDScannerRestClient.ResultListener<FeatureSearchResponseEntity>() {
+        @Override
+        public void onSuccess(FeatureSearchResponseEntity result) {
+            searchLocationFragment.setList(result.getFeatures());
+            Log.i("success", "123");
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            Log.i("success", "123");
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            Log.i("success", "123");
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            Log.i("success", "123");
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -185,17 +214,18 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
                 progressView.setVisibility(View.VISIBLE);
                 DDScannerApplication.getInstance().getDdScannerRestClient(SearchSpotOrLocationActivity.this).getDivespotsByName(newText, divespotsWrapperResultListener);
                 if (!isForDiveCenter) {
-                    placeList = new ArrayList<String>();
-                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
-                            autocompletePredictions -> {
-                                if (autocompletePredictions.getStatus().isSuccess()) {
-                                    for (AutocompletePrediction prediction : autocompletePredictions) {
-                                        placeList.add(prediction.getPlaceId());
-
-                                    }
-                                    searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
-                                }
-                            });
+                    DDScannerApplication.getInstance().getMapboxRestClient().getArrayListOfFeatures(mapboxSearchResultListener, newText);
+//                    placeList = new ArrayList<String>();
+//                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
+//                            autocompletePredictions -> {
+//                                if (autocompletePredictions.getStatus().isSuccess()) {
+//                                    for (AutocompletePrediction prediction : autocompletePredictions) {
+//                                        placeList.add(prediction.getPlaceId());
+//
+//                                    }
+//                                    searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+//                                }
+//                            });
                 }
             }
         };

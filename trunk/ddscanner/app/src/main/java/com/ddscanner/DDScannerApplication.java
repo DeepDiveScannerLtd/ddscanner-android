@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.rest.MapboxRestClient;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -36,6 +37,7 @@ public class DDScannerApplication extends Application {
 
     // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
     private DDScannerRestClient ddScannerRestClient;
+    private MapboxRestClient mapboxRestClient;
     private SharedPreferenceHelper sharedPreferenceHelper;
     private DialogHelpers dialogHelpers;
     private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
@@ -57,11 +59,12 @@ public class DDScannerApplication extends Application {
 //        }
         FacebookSdk.sdkInitialize(this);
         instance = this;
-        Mapbox.getInstance(getApplicationContext(), "pk.eyJ1IjoibGFzaGtldCIsImEiOiJjajZmMHplaDgyaHR4MzNsN296Nmw5N2xmIn0.CD10cf2ut0X3Uw6p9xUw9Q");
+        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_api_key));
         AnalyticsSystemsManager.initAnalyticsSystems(this);
 //        AppLinkData.fetchDeferredAppLinkData(this, appLinkData -> {});
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
+        mapboxRestClient = new MapboxRestClient();
         activeUserType = SharedPreferenceHelper.getActiveUserType().getName();
         tutorialState = sharedPreferenceHelper.getTutorialState();
         dialogHelpers = new DialogHelpers();
@@ -134,4 +137,7 @@ public class DDScannerApplication extends Application {
         return tutorialHelper;
     }
 
+    public MapboxRestClient getMapboxRestClient() {
+        return mapboxRestClient;
+    }
 }

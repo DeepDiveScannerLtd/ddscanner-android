@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.SearchFeature;
 import com.ddscanner.events.LocationChosedEvent;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
@@ -18,11 +19,9 @@ import java.util.ArrayList;
 
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.PlacesListViewHolder>{
 
-    private ArrayList<String> places;
-    private GoogleApiClient googleApiClient;
+    private ArrayList<SearchFeature> places;
 
-    public PlacesListAdapter(ArrayList<String> places, GoogleApiClient googleApiClient) {
-        this.googleApiClient = googleApiClient;
+    public PlacesListAdapter(ArrayList<SearchFeature> places) {
         this.places = places;
     }
 
@@ -34,17 +33,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
     @Override
     public void onBindViewHolder(final PlacesListViewHolder holder, int position) {
-        Places.GeoDataApi.getPlaceById(googleApiClient, places.get(position)).setResultCallback(places -> {
-            if (places.getStatus().isSuccess()) {
-                try {
-                    Place place = places.get(0);
-                    holder.placeName.setText(place.getName());
-                } catch (IllegalStateException ignored) {
-
-                }
-            }
-            places.release();
-        });
+        holder.placeName.setText(places.get(position).getPlaceName());
     }
 
     @Override
@@ -57,10 +46,10 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
     public class PlacesListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        protected TextView placeName;
-        private Context context;
+        TextView placeName;
+        Context context;
 
-        public PlacesListViewHolder(View v) {
+        PlacesListViewHolder(View v) {
             super(v);
             context = v.getContext();
             v.setOnClickListener(this);
@@ -69,7 +58,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new LocationChosedEvent(places.get(getAdapterPosition())));
+//            DDScannerApplication.bus.post(new LocationChosedEvent(places.get(getAdapterPosition())));
         }
     }
 }

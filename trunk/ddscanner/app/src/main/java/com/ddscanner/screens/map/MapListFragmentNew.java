@@ -22,6 +22,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.views.DiveSpotMapInfoViewNew;
@@ -98,6 +99,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         continueShowMap.setOnClickListener(view1 -> showMapView());
         diveSpotsList.setLayoutManager(new LinearLayoutManager(getContext()));
         diveSpotsListAdapter = new DiveSpotsListAdapter(getActivity());
+        addDiveSpotFab.setOnClickListener(view1 -> DDScannerApplication.bus.post(new OpenAddDiveSpotActivity()));
         diveSpotsList.setAdapter(diveSpotsListAdapter);
         return view;
     }
