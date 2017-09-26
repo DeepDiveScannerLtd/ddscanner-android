@@ -86,7 +86,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.squareup.otto.Subscribe;
 
 import java.util.Arrays;
@@ -489,7 +489,6 @@ public class MainActivity extends BaseAppCompatActivity
                 switch (resultCode) {
                     case RESULT_OK:
                         final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
                         break;
                     case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");

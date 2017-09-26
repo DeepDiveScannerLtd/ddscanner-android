@@ -1,5 +1,6 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,18 +12,22 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.SearchFeature;
 import com.ddscanner.events.LocationChosedEvent;
+import com.ddscanner.interfaces.ListItemClickListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.PlacesListViewHolder>{
 
     private ArrayList<SearchFeature> places;
+    ListItemClickListener<LatLngBounds> listItemClickListener;
 
-    public PlacesListAdapter(ArrayList<SearchFeature> places) {
+    public PlacesListAdapter(ArrayList<SearchFeature> places, Activity activity) {
         this.places = places;
+        this.listItemClickListener = (ListItemClickListener<LatLngBounds>) activity;
     }
 
     @Override
@@ -58,6 +63,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
         @Override
         public void onClick(View v) {
+            listItemClickListener.onItemClick(places.get(getAdapterPosition()).getBounds());
 //            DDScannerApplication.bus.post(new LocationChosedEvent(places.get(getAdapterPosition())));
         }
     }

@@ -15,8 +15,10 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.SearchFeature;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
+import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 
@@ -63,7 +65,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         } else {
             noResultsView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
-            locationRecyclerView.setAdapter(new PlacesListAdapter(places));
+            locationRecyclerView.setAdapter(new PlacesListAdapter(places, getActivity()));
         }
     }
 

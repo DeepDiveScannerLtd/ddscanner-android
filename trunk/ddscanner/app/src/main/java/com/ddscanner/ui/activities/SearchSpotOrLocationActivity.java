@@ -25,6 +25,7 @@ import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
@@ -42,14 +43,14 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
+public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener, ListItemClickListener<LatLngBounds> {
 
     private Toolbar toolbar;
     private ViewPager viewPager;
@@ -194,6 +195,11 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
         return true;
     }
 
+    @Override
+    public void onItemClick(LatLngBounds item) {
+        setResultOfActivity(item);
+    }
+
     public static void showForResult(Activity activity, int requestCode, boolean isForDiveCenter) {
         Intent intent = new Intent(activity, SearchSpotOrLocationActivity.class);
         intent.putExtra("isfordivecenter", isForDiveCenter);
@@ -293,26 +299,26 @@ public class SearchSpotOrLocationActivity extends BaseAppCompatActivity implemen
 
     @Subscribe
     public void locationChosed(LocationChosedEvent event) {
-        Places.GeoDataApi.getPlaceById(googleApiClient, event.getLatLngBounds()).setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(PlaceBuffer places) {
-                if (places.getStatus().isSuccess()) {
-                    try {
-                        Place place = places.get(0);
-                        if (place.getViewport() != null) {
-                            setResultOfActivity(place.getViewport());
-                        } else {
-                            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
-                            setResultOfActivity(latLngBounds);
-                        }
-                        // placeList.add(place);
-                    } catch (IllegalStateException ignored) {
-
-                    }
-                }
-                places.release();
-            }
-        });
+//        Places.GeoDataApi.getPlaceById(googleApiClient, event.getLatLngBounds()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+//            @Override
+//            public void onResult(PlaceBuffer places) {
+//                if (places.getStatus().isSuccess()) {
+//                    try {
+//                        Place place = places.get(0);
+//                        if (place.getViewport() != null) {
+//                            setResultOfActivity(place.getViewport());
+//                        } else {
+//                            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+//                            setResultOfActivity(latLngBounds);
+//                        }
+//                        // placeList.add(place);
+//                    } catch (IllegalStateException ignored) {
+//
+//                    }
+//                }
+//                places.release();
+//            }
+//        });
     }
 
     @Subscribe
