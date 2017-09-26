@@ -489,6 +489,7 @@ public class MainActivity extends BaseAppCompatActivity
                 switch (resultCode) {
                     case RESULT_OK:
                         final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
+                        mainViewPagerAdapter.moveMapToLocation(place);
                         break;
                     case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");
@@ -680,13 +681,13 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
         Log.i(TAG, "location check: onLocationReady request codes = " + event.getRequestCodes());
-        for (Integer code : event.getRequestCodes()) {
-            switch (code) {
-                case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION:
-                    DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
-                    break;
-            }
-        }
+//        for (Integer code : event.getRequestCodes()) {
+//            switch (code) {
+//                case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION:
+//                    DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
+//                    break;
+//            }
+//        }
     }
 
     @Subscribe

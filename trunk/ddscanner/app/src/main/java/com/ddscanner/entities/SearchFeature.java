@@ -8,7 +8,7 @@ public class SearchFeature {
 
     @SerializedName("place_name")
     private String placeName;
-    @SerializedName("bbb")
+    @SerializedName("bbox")
     private double[] coordiates;
 
     public double[] getCoordiates() {
@@ -28,7 +28,7 @@ public class SearchFeature {
     }
 
     public LatLngBounds getBounds() {
-        LatLngBounds latLngBounds = LatLngBounds.from(coordiates[4], coordiates[3], coordiates[2], coordiates[1]);
+        LatLngBounds latLngBounds = LatLngBounds.from(coordiates[3], coordiates[2], coordiates[1], coordiates[0]);
         return latLngBounds;
     }
 

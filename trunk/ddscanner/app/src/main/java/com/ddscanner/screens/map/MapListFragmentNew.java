@@ -29,6 +29,7 @@ import com.ddscanner.ui.views.DiveSpotMapInfoViewNew;
 import com.ddscanner.utils.Helpers;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -222,6 +223,11 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         relativeMapView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         addDiveSpotFab.setVisibility(View.VISIBLE);
+    }
+
+
+    public void moveCameraToBounds(LatLngBounds latLngBounds) {
+        mapFragmentManager.moveCameraToPosition(latLngBounds);
     }
 
 }
