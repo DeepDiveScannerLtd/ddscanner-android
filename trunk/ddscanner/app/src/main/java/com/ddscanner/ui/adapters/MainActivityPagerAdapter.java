@@ -15,6 +15,7 @@ import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.screens.map.MapListFragmentNew;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 
 public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implements LoginView.LoginStateChangeListener {
@@ -132,6 +133,10 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     public void moveMapToLocation(LatLngBounds latLngBounds) {
         mapListFragmentNew.moveCameraToBounds(latLngBounds);
+    }
+
+    public void maplisFragmentDiveSpotAdded(LatLng latLng) {
+        mapListFragmentNew.diveSpotAdded(latLng);
     }
 
 }

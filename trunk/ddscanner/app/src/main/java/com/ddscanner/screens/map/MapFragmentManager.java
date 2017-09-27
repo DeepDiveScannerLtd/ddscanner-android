@@ -65,6 +65,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     private ArrayList<DiveSpotShort> diveSpotShorts = new ArrayList<>();
     private boolean markerSelected = false;
     private Gson gson = new Gson();
+    private LatLng createdSpotLocation = null;
 
     public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract) {
         this.contract = contract;
@@ -106,35 +107,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 //                sendRequest(diveSpotsRequestMap);
                 requestDiveSpots();
 //                this.diveSpotShorts = getVisibleSpotsList(this.diveSpotShorts);
-            } else {
-//                diveSpotsRequestMap.putSouthWestLat(southWest.getLatitude() - Math.abs(northEast.getLatitude() - southWest.getLatitude()));
-//                diveSpotsRequestMap.putSouthWestLng(southWest.getLongitude() - Math.abs(northEast.getLongitude() - southWest.getLongitude()));
-//                diveSpotsRequestMap.putNorthEastLat(northEast.getLatitude() + Math.abs(northEast.getLatitude() - southWest.getLatitude()));
-//                diveSpotsRequestMap.putNorthEastLng(northEast.getLongitude() + Math.abs(northEast.getLongitude() - southWest.getLongitude()));
             }
-        }
-    }
-
-    private void updateSpots() {
-        mapboxMap.clear();
-        markersMap.clear();
-        if (mapboxMap.getCameraPosition().zoom < 7) {
-            contract.showErrorMessage();
-            return;
-        }
-        ArrayList<DiveSpotShort> visibleSpots = new ArrayList<>();
-        ArrayList<DiveSpotShort> spotsOnScreen = getVisibleSpotsList();
-        if (spotsOnScreen.size() > 50) {
-            for (int i = 0; i < 50; i++) {
-                visibleSpots.add(spotsOnScreen.get(i));
-                contract.showErrorMessage();
-            }
-        } else {
-            contract.hideErrorMessage();
-            visibleSpots = new ArrayList<>(spotsOnScreen);
-        }
-        for (DiveSpotShort diveSpotShort : visibleSpots) {
-            addNewDiveSpot(diveSpotShort);
         }
     }
 
@@ -226,6 +199,10 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
             SymbolLayer selectedMarker = new SymbolLayer("selected-marker-layer", "selected-marker")
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
             mapboxMap.addLayer(selectedMarker);
+            if (createdSpotLocation != null) {
+                onMapClick(createdSpotLocation);
+                createdSpotLocation = null;
+            }
 //        updateSpots();
     }
 
@@ -303,6 +280,15 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     public void moveCameraToPosition(LatLngBounds latLngBounds) {
         mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+    }
+
+    public void diveSpotAdded(LatLng latLng) {
+        createdSpotLocation = latLng;
+        LatLngBounds latLngBounds = LatLngBounds.from(latLng.getLatitude() + 0.01, latLng.getLongitude() + 0.01, latLng.getLatitude() - 0.01, latLng.getLongitude() - 0.01);
+        mapboxMap.setOnCameraIdleListener(null);
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+        mapboxMap.setOnCameraIdleListener(this);
+        requestDiveSpots();
     }
 
 }

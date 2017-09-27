@@ -85,9 +85,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.gms.maps.MapView
+            <com.mapbox.mapboxsdk.maps.MapView
                 android:id="@+id/map_fragment"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+                app:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"
+                app:mapbox_cameraZoom="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

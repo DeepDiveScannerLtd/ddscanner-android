@@ -522,7 +522,8 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
+                //TODO update
+                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION, null);
                 break;
             case R.id.btn_add_sealife:
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);

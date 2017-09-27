@@ -230,4 +230,8 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         mapFragmentManager.moveCameraToPosition(latLngBounds);
     }
 
+    public void diveSpotAdded(LatLng latLng) {
+        mapFragmentManager.diveSpotAdded(latLng);
+    }
+
 }

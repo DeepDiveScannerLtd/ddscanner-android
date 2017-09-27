@@ -59,11 +59,9 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -360,17 +358,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(this, data);
-                    diveSpotLocation = place.getLatLng();
-                    diveSpotLatLngBounds = place.getViewport();
-                    if (place.getAddress() != null) {
-                        locationTitle.setText(place.getAddress().toString());
-                    }
-                    locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-                }
-                break;
         }
     }
 
@@ -392,10 +379,12 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
+                //TODO update
                 PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
-                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
+                //TODO update
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, null);
                 break;
             case R.id.button_create:
 //                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
@@ -447,9 +436,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
             requestLat = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    String.valueOf(diveSpotLocation.latitude));
+                    String.valueOf(diveSpotLocation.getLatitude()));
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    String.valueOf(diveSpotLocation.longitude));
+                    String.valueOf(diveSpotLocation.getLongitude()));
         }
         if (isWorkingSwitch.isChecked()) {
             requestIsWorkingHere = Helpers.createRequestBodyForString("1");
@@ -695,7 +684,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             finish();
         } else {
             Intent intent = new Intent();
-            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+            LatLng latLng = new LatLng(diveSpotLocation.getLatitude(), diveSpotLocation.getLongitude());
             intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
             intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, createdSpotId);
             setResult(RESULT_OK, intent);

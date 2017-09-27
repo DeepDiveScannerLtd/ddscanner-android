@@ -80,7 +80,8 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
     }
 
     public void openMapClicked(View view) {
-        PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP, location);
+        //TODO update
+        PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP, null);
     }
 
     public void pickCountryClicked(View view) {

@@ -12,18 +12,17 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityPickLocationBinding;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
-public class PickLocationActivity extends BaseAppCompatActivity implements TextView.OnEditorActionListener, OnMapReadyCallback, GoogleMap.OnMapLoadedCallback, GoogleMap.OnCameraIdleListener {
+public class PickLocationActivity extends BaseAppCompatActivity implements TextView.OnEditorActionListener, MapboxMap.OnCameraIdleListener {
 
     private ActivityPickLocationBinding binding;
-    private GoogleMap googleMap;
     private boolean isNeedToRewrite = true;
     private static final String ARG_LOCATION = "location";
     private LatLng location;
+    private MapboxMap mapboxMap;
 
     public static void showForResult(Activity context, int requestCode, LatLng latLng) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -42,31 +41,50 @@ public class PickLocationActivity extends BaseAppCompatActivity implements TextV
         if (getIntent().getParcelableExtra(ARG_LOCATION) != null) {
             location = getIntent().getParcelableExtra(ARG_LOCATION);
         }
-        binding.mapFragment.onCreate(null);
-        binding.mapFragment.getMapAsync(this);
+        binding.mapFragment.onCreate(savedInstanceState);
+        binding.mapFragment.getMapAsync(this::initMap);
         binding.longitude.setOnEditorActionListener(this);
         binding.latitude.setOnEditorActionListener(this);
     }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        this.googleMap.setOnMapLoadedCallback(this);
-    }
-
-    @Override
-    public void onMapLoaded() {
-        this.googleMap.setOnCameraIdleListener(this);
+    
+    private void initMap(MapboxMap mapboxMap) {
+        this.mapboxMap = mapboxMap;
+        this.mapboxMap.setOnCameraIdleListener(this);
         if (location != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            this.mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         }
     }
+    
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        this.googleMap = googleMap;
+//        this.googleMap.setOnMapLoadedCallback(this);
+//    }
+//
+//    @Override
+//    public void onMapLoaded() {
+//        this.googleMap.setOnCameraIdleListener(this);
+//        if (location != null) {
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+//        }
+//    }
+//
+//    @Override
+//    public void onCameraIdle() {
+//        if (isNeedToRewrite) {
+//            binding.latitude.setText(String.valueOf(googleMap.getCameraPosition().target.latitude));
+//            binding.longitude.setText(String.valueOf(googleMap.getCameraPosition().target.longitude));
+//            return;
+//        }
+//        isNeedToRewrite = !isNeedToRewrite;
+//    }
+
 
     @Override
     public void onCameraIdle() {
         if (isNeedToRewrite) {
-            binding.latitude.setText(String.valueOf(googleMap.getCameraPosition().target.latitude));
-            binding.longitude.setText(String.valueOf(googleMap.getCameraPosition().target.longitude));
+            binding.latitude.setText(String.valueOf(mapboxMap.getCameraPosition().target.getLatitude()));
+            binding.longitude.setText(String.valueOf(mapboxMap.getCameraPosition().target.getLongitude()));
             return;
         }
         isNeedToRewrite = !isNeedToRewrite;
@@ -90,14 +108,14 @@ public class PickLocationActivity extends BaseAppCompatActivity implements TextV
         }
         if ((latitude >= -180 && latitude <= 180) && (longitude >= -180 && longitude <= 180)) {
             isNeedToRewrite = false;
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+            mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
         }
         return true;
     }
 
     public void saveLocationClicked(View view) {
         Intent returningIntent = new Intent();
-        returningIntent.putExtra(ARG_LOCATION, googleMap.getCameraPosition().target);
+        returningIntent.putExtra(ARG_LOCATION, mapboxMap.getCameraPosition().target);
         setResult(RESULT_OK, returningIntent);
         finish();
     }
@@ -112,4 +130,38 @@ public class PickLocationActivity extends BaseAppCompatActivity implements TextV
                 return true;
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.mapFragment.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        binding.mapFragment.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+
+        binding.mapFragment.onLowMemory();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        binding.mapFragment.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        binding.mapFragment.onSaveInstanceState(outState);
+    }
+    
 }

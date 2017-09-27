@@ -85,7 +85,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.squareup.otto.Subscribe;
 
@@ -598,7 +598,8 @@ public class MainActivity extends BaseAppCompatActivity
         LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
         String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
         if (latLng != null) {
-            DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
+            mainViewPagerAdapter.maplisFragmentDiveSpotAdded(latLng);
+//            DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
         }
     }
 
