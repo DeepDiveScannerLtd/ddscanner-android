@@ -2,10 +2,12 @@ package com.ddscanner.screens.map;
 
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -66,10 +68,14 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     private boolean markerSelected = false;
     private Gson gson = new Gson();
     private LatLng createdSpotLocation = null;
+    private Context context;
+    private FeatureCollection featureCollection;
+    private ArrayList<String> clusterLayersIds = new ArrayList<>();
 
-    public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract) {
+    public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract, Context context) {
         this.contract = contract;
         this.mapboxMap = mapboxMap;
+        this.context = context;
         contract.showErrorMessage();
         initMap();
     }
@@ -179,12 +185,14 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
                 features.add(feature);
             }
             FeatureCollection featureCollection = FeatureCollection.fromFeatures(features);
+            this.featureCollection = featureCollection;
             Source geoJsonSource = new GeoJsonSource("marker-source", featureCollection);
             mapboxMap.addSource(geoJsonSource);
             Bitmap icon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds);
-
+            Bitmap selectedMarkerIcon = BitmapFactory.decodeResource(DDScannerApplication.getInstance().getResources(), R.drawable.ic_ds_selected);
             // Add the marker image to map
             mapboxMap.addImage("my-marker-image", icon);
+            mapboxMap.addImage("selected-marker", selectedMarkerIcon);
 
             SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source")
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
@@ -200,9 +208,12 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
             mapboxMap.addLayer(selectedMarker);
             if (createdSpotLocation != null) {
-                onMapClick(createdSpotLocation);
-                createdSpotLocation = null;
+                new Handler().postDelayed(() -> {
+                    onMapClick(createdSpotLocation);
+                    createdSpotLocation = null;
+                }, 4000);
             }
+//            addClusteredGeoJsonSource();
 //        updateSpots();
     }
 
@@ -252,12 +263,14 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     private void selectMarker(final SymbolLayer marker, Feature feature) {
+        marker.setProperties(PropertyFactory.iconImage("selected-marker"));
         String diveSpot = feature.getStringProperty("divespot");
         contract.markerClicked(gson.fromJson(diveSpot, DiveSpotShort.class));
         markerSelected = true;
     }
 
     private void deselectMarker(final SymbolLayer marker) {
+        marker.setProperties(PropertyFactory.iconImage("my-marker-image"));
         contract.hideDiveSpotInfo();
         markerSelected = false;
     }
@@ -283,12 +296,79 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     public void diveSpotAdded(LatLng latLng) {
-        createdSpotLocation = latLng;
+        createdSpotLocation = new LatLng(latLng.getLatitude() + 0.0005, latLng.getLongitude());
         LatLngBounds latLngBounds = LatLngBounds.from(latLng.getLatitude() + 0.01, latLng.getLongitude() + 0.01, latLng.getLatitude() - 0.01, latLng.getLongitude() - 0.01);
         mapboxMap.setOnCameraIdleListener(null);
         mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
         mapboxMap.setOnCameraIdleListener(this);
         requestDiveSpots();
+    }
+
+    private void addClusteredGeoJsonSource() {
+        mapboxMap.removeSource("earthquakes");
+        mapboxMap.removeLayer("count");
+        mapboxMap.removeLayer("unclustered-points");
+        for (String layerId : clusterLayersIds) {
+            mapboxMap.removeLayer(layerId);
+        }
+        clusterLayersIds = new ArrayList<>();
+        // Add a new source from the GeoJSON data and set the 'cluster' option to true.
+        try {
+            mapboxMap.addSource(
+                    // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes from
+                    // 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+                    new GeoJsonSource("earthquakes",
+                            featureCollection,
+                            new GeoJsonOptions()
+                                    .withCluster(true)
+                                    .withClusterMaxZoom(14)
+                                    .withClusterRadius(50)
+                    )
+            );
+        } catch (Exception ignored) {
+
+        }
+
+
+        // Use the earthquakes GeoJSON source to create three layers: One layer for each cluster category.
+        // Each point range gets a different fill color.
+        int[][] layers = new int[][] {
+                new int[] {150, ContextCompat.getColor(context, R.color.tw__composer_red)},
+                new int[] {20, ContextCompat.getColor(context, R.color.green_100)},
+                new int[] {0, ContextCompat.getColor(context, R.color.mapbox_blue)}
+        };
+
+        //Creating a marker layer for single data points
+        SymbolLayer unclustered = new SymbolLayer("unclustered-points", "earthquakes");
+        unclustered.setProperties(iconImage("marker-15"));
+        mapboxMap.addLayer(unclustered);
+
+        for (int i = 0; i < layers.length; i++) {
+            //Add clusters' circles
+            CircleLayer circles = new CircleLayer("cluster-" + i, "earthquakes");
+            circles.setProperties(
+                    circleColor(layers[i][1]),
+                    circleRadius(18f)
+            );
+            clusterLayersIds.add("cluster-" + i);
+            // Add a filter to the cluster layer that hides the circles based on "point_count"
+            circles.setFilter(
+                    i == 0
+                            ? gte("point_count", layers[i][0]) :
+                            all(gte("point_count", layers[i][0]), lt("point_count", layers[i - 1][0]))
+            );
+            mapboxMap.addLayer(circles);
+        }
+
+        //Add the count labels
+        SymbolLayer count = new SymbolLayer("count", "earthquakes");
+        count.setProperties(
+                textField("{point_count}"),
+                textSize(12f),
+                textColor(Color.WHITE)
+        );
+        mapboxMap.addLayer(count);
+
     }
 
 }

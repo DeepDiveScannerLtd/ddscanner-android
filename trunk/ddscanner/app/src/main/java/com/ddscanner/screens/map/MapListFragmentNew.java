@@ -106,7 +106,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     }
 
     private void setupMap(MapboxMap mapboxMapNew) {
-        mapFragmentManager = new MapFragmentManager(mapboxMapNew, this);
+        mapFragmentManager = new MapFragmentManager(mapboxMapNew, this, getContext());
     }
 
     @Override
