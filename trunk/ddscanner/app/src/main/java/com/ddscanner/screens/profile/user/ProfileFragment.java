@@ -50,6 +50,7 @@ import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.ShareAppIntentBuilder;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
@@ -398,6 +399,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void logout(View view) {
         DDScannerApplication.bus.post(new LogoutEvent());
+    }
+
+    public void shareApp(View view) {
+        ShareAppIntentBuilder.from(getContext()).share();
     }
 
 }
