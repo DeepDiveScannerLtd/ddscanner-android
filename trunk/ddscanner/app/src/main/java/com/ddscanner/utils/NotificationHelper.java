@@ -26,7 +26,7 @@ public class NotificationHelper {
         Intent intent = new Intent(context, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastRunTime() + AlarmManager.INTERVAL_DAY * 10, AlarmManager.INTERVAL_DAY * 10, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastRunTime() + Constants.NOTIFICATION_SHOWING_INTERVAL, Constants.NOTIFICATION_SHOWING_INTERVAL, pendingIntent);
     }
 
     public static Notification getNotification(Context context, PendingIntent pendingIntent) {
@@ -39,6 +39,7 @@ public class NotificationHelper {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setWhen(System.currentTimeMillis())
+                .setStyle(new Notification.BigTextStyle().bigText("We haven’t seen you for long. Let’s see what you’ve missed!"))
                 .build();
         return noti;
     }

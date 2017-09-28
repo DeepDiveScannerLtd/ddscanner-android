@@ -2,6 +2,8 @@ package com.ddscanner.utils;
 
 public class Constants {
 
+    public static final long NOTIFICATION_SHOWING_INTERVAL = 60000 * 5;
+
     public static final String ANALYTIC_VERSION = "v1_1";
     public static final String PLATFORM = "android";
     public static final String TUTORIAL_VERSION = "onboarding_1";

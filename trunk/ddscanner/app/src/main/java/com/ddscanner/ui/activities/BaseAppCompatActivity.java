@@ -26,6 +26,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LocationHelper;
+import com.ddscanner.utils.NotificationHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -258,6 +259,8 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     protected void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().recordRunTime();
+        NotificationHelper.setupAlarmManager(this);
     }
 
     @Override

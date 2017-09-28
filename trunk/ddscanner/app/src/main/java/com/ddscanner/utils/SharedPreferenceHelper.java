@@ -47,7 +47,8 @@ public class SharedPreferenceHelper {
     private static final String TUTORIAL_STATE = "tutorial_state";
     private static final String IS_MUST_TRACK_FB_EVENT = "fb_event";
     private static final String IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL = "dive_spot_tutorial";
-    private static final String LAST_APP_RUN = "lastrun";
+    private static final String LAST_APP_RUN = "last_app_run";
+    private static final String LAST_NOTIFICATION_SHOWING_TIME = "last_notification_showing_time";
     private static final String IS_NOTIFICATION_ENABLED = "enabled";
     private static final String IS_LIST_TUTORIAL_WATCHED = "is_list_tutorial_watched";
     private static final String IS_NEDD_TO_CONTINUE_SIGN_UP = "is_need_to_continue_registration";
@@ -114,27 +115,11 @@ public class SharedPreferenceHelper {
         editor.apply();
     }
 
-    public void enableNotification() {
+    public void recordLastShowingNotificationTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
-        editor.putLong(LAST_APP_RUN, System.currentTimeMillis());
-        editor.putBoolean(IS_NOTIFICATION_ENABLED, true);
+        editor.putLong(LAST_NOTIFICATION_SHOWING_TIME, System.currentTimeMillis());
         editor.apply();
-    }
-
-    public void disableNotification() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putBoolean(IS_NOTIFICATION_ENABLED, false);
-        editor.apply();
-    }
-
-    public boolean isMustToEnableNotification() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        if (!prefs.contains(LAST_APP_RUN)) {
-            return true;
-        }
-        return false;
     }
 
     public boolean getIsNotificationEnabled() {
@@ -145,6 +130,11 @@ public class SharedPreferenceHelper {
     public long getLastRunTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getLong(LAST_APP_RUN, Long.MAX_VALUE);
+    }
+
+    public long getLastNotifcationShowingTime() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getLong(LAST_NOTIFICATION_SHOWING_TIME, Long.MAX_VALUE);
     }
 
     public void setFbTracked() {
