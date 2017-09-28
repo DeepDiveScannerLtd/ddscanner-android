@@ -65,15 +65,15 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -105,7 +105,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     private int lastChosedRating;
 
     /*Ui*/
-    private MapFragment mapFragment;
     private Menu menu;
 
     private MaterialDialog materialDialog;
@@ -247,18 +246,14 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         super.onCreate(savedInstanceState);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
+        binding.mapView.onCreate(savedInstanceState);
         binding.scrollView.setNestedScrollingEnabled(false);
         themeNavAndStatusBar();
         binding.setHandlers(this);
-        findViews();
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
-    }
-
-    private void findViews() {
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.google_map_fragment);
     }
 
     private void toolbarSettings() {
@@ -395,7 +390,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.sealifeRc.setHasFixedSize(false);
         binding.sealifeRc.setLayoutManager(layoutManager);
         binding.sealifeRc.setAdapter(new SealifeListAdapter((ArrayList<SealifeShort>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getSealifes(), this));
-        mapFragment.getMapAsync(googleMap -> workWithMap(googleMap));
+        binding.mapView.getMapAsync(this::workWithMap);
 
         if (isCheckedIn) {
             binding.fabCheckin.setVisibility(View.GONE);
@@ -415,22 +410,20 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
 
-    private void workWithMap(GoogleMap googleMap) {
-//        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
-//                .position(diveSpotCoordinates));
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_ds)))
-                .position(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition()));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), 7.0f));
-        googleMap.getUiSettings().setAllGesturesEnabled(false);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-        googleMap.setOnMapClickListener(latLng -> {
+    private void workWithMap(MapboxMap mapboxMap) {
+        IconFactory iconFactory = IconFactory.getInstance(this);
+        Icon icon = iconFactory.fromResource(R.drawable.ic_ds);
+        mapboxMap.addMarker(new MarkerViewOptions().icon(icon).position(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition()));
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition(), 7.0f));
+        mapboxMap.getUiSettings().setAllGesturesEnabled(false);
+        mapboxMap.setOnMapClickListener(latLng -> {
             Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition());
             startActivity(intent);
         });
-        googleMap.setOnMarkerClickListener(marker -> {
+        mapboxMap.setOnMarkerClickListener(marker -> {
             Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+            intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition());
             startActivity(intent);
             return false;
         });
@@ -742,15 +735,25 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     @Override
     protected void onPause() {
         super.onPause();
-
+        binding.mapView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustRefreshDiveSpotActivity()) {
-            reloadFlags();
-        }
+        binding.mapView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding.mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.mapView.onLowMemory();
     }
 
     private void reloadFlags() {
@@ -771,6 +774,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     @Override
     public void onStart() {
         super.onStart();
+        binding.mapView.onStart();
     }
 
     @Override
@@ -960,17 +964,17 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     private void tryingToShowLeaveReviewActivity(int rating, boolean isFromRatingBar) {
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
             if (SharedPreferenceHelper.getIsUserSignedIn()) {
-                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), EventsTracker.SendReviewSource.WRITE_REVIEW_BUTTON);
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition(), EventsTracker.SendReviewSource.WRITE_REVIEW_BUTTON);
             } else {
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
             }
         } else {
             EventsTracker.trackReviewShowAll();
             if (isFromRatingBar) {
-                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), EventsTracker.SendReviewSource.FROM_RATING_BAR);
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition(), EventsTracker.SendReviewSource.FROM_RATING_BAR);
                 return;
             }
-            ReviewsActivity.showForDiveSpot(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+            ReviewsActivity.showForDiveSpot(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition());
         }
     }
 
@@ -1079,7 +1083,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() + 1);
                 DiveSpotDetailsActivityViewModel.setCheckinsCount(binding.numberOfCheckingPeople, binding.getDiveSpotViewModel());
                 EventsTracker.trackCheckIn();
-                checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(),DiveSpotDetailsActivity.this);
+                checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition(),DiveSpotDetailsActivity.this);
                 if (!isPopupShown) {
                     checkedInDialogFragment.show(getSupportFragmentManager(), "");
                 }

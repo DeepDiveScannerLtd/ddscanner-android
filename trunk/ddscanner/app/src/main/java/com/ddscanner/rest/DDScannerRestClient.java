@@ -46,10 +46,10 @@ import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONException;
 
@@ -847,7 +847,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getAllSealifesByLocation(latLng.latitude, latLng.longitude);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getAllSealifesByLocation(latLng.getLatitude(), latLng.getLongitude());
         call.enqueue(new ResponseEntityCallback<SealifeListResponseEntity>(gson, resultListener, context) {
             @Override
             void handleResponseString(ResultListener<SealifeListResponseEntity> resultListener, String responseString) throws JSONException {
@@ -1208,15 +1208,6 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(photos);
             }
         });
-    }
-
-    private Map<String, String> getDivecentersRequestmap(LatLng latLng) {
-        Map<String, String> map = new HashMap<>();
-        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
-        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
-        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
-        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
-        return map;
     }
 
     private Map<String, String> getUserQueryMapRequest() {

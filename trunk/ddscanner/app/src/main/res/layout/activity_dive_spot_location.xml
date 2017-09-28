@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/view_toolbar" />
-    <fragment
+    <com.mapbox.mapboxsdk.maps.MapView
         android:clickable="false"
-        android:id="@+id/google_map_fragment"
-        class="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"/>
 </LinearLayout>

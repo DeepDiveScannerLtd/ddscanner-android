@@ -23,7 +23,7 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.utils.EmailIntentBuilder;
 import com.ddscanner.utils.PhoneCallIntentBuilder;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class UserDiveCenterProfileFragment extends Fragment {
 
@@ -66,7 +66,8 @@ public class UserDiveCenterProfileFragment extends Fragment {
     }
 
     public void showDiveSpots(View view) {
-        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
+        //TODO change
+//        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
     }
 
     public void showCreated(View view) {

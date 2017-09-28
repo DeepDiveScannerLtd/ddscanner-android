@@ -379,11 +379,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                //TODO update
                 PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
-                //TODO update
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, null);
                 break;
             case R.id.button_create:

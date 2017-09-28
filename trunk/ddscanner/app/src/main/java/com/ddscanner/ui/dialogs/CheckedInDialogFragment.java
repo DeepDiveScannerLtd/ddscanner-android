@@ -14,7 +14,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class CheckedInDialogFragment extends DialogFragment implements View.OnClickListener {
 

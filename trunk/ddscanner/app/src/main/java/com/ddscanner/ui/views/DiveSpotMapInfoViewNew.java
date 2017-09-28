@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.utils.Constants;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
@@ -18,7 +20,7 @@ import com.mapbox.mapboxsdk.annotations.Marker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiveSpotMapInfoViewNew extends RelativeLayout {
+public class DiveSpotMapInfoViewNew extends RelativeLayout implements View.OnClickListener {
 
     private TextView diveSpotName;
     private TextView diveSpotType;
@@ -26,6 +28,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
     private Map<String, Integer> infoWindowBackgroundImages = new HashMap<>();
     private Marker marker;
     private boolean isShown = false;
+    private String diveSpotId;
 
     public DiveSpotMapInfoViewNew(Context context) {
         super(context);
@@ -44,7 +47,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
 
     private void init() {
         inflate(getContext(), R.layout.view_dive_spot_map_info, this);
-
+        setOnClickListener(this);
         diveSpotName = findViewById(R.id.dive_spot_title);
         diveSpotType = findViewById(R.id.object);
         ratingView = findViewById(R.id.rating_view);
@@ -79,6 +82,7 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
         diveSpotType.setText(diveSpotShort.getObject());
         ratingView.setRating(Math.round(diveSpotShort.getRating()), R.drawable.ic_iw_star_full, R.drawable.ic_iw_star_empty);
         setBackgroundResource(infoWindowBackgroundImages.get(diveSpotShort.getObject()));
+        diveSpotId = String.valueOf(diveSpotShort.getId());
         isShown = true;
     }
 
@@ -106,4 +110,8 @@ public class DiveSpotMapInfoViewNew extends RelativeLayout {
         return isShown;
     }
 
+    @Override
+    public void onClick(View view) {
+        DiveSpotDetailsActivity.show(getContext(), diveSpotId, EventsTracker.SpotViewSource.FROM_MAP);
+    }
 }

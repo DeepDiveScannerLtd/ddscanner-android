@@ -19,6 +19,7 @@
         mapbox:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"
         mapbox:mapbox_cameraZoom="1" />
     <com.ddscanner.ui.views.DiveSpotMapInfoViewNew
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/dive_spot_map_info"
         android:layout_width="match_parent"
         android:visibility="gone"

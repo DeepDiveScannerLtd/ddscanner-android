@@ -30,8 +30,7 @@ import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
-import com.ddscanner.utils.Helpers;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 

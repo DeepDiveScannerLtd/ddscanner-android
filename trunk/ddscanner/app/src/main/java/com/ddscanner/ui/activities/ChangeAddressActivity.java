@@ -18,8 +18,8 @@ import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class ChangeAddressActivity extends BaseAppCompatActivity {
 
@@ -80,8 +80,7 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
     }
 
     public void openMapClicked(View view) {
-        //TODO update
-        PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP, null);
+        PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP, location);
     }
 
     public void pickCountryClicked(View view) {
@@ -109,7 +108,7 @@ public class ChangeAddressActivity extends BaseAppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     LatLng location;
                     location = data.getParcelableExtra(ARG_LOCATION);
-                    address = new Address(binding.addressInput.getText().toString(), location.latitude, location.longitude);
+                    address = new Address(binding.addressInput.getText().toString(), location.getLatitude(), location.getLongitude());
                     setUi();
                     isLocationChosed = true;
                 }

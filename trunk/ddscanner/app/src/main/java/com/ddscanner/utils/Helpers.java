@@ -302,9 +302,7 @@ public class Helpers {
     }
 
     public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage, int titleResId, int messageResId) {
-        // TODO May be should use another tracking mechanism
-//        EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
-//        InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
+
     }
 
     public static Countries getCountries() {

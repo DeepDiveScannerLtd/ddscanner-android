@@ -64,8 +64,8 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -332,7 +332,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void init() {
-        diveSpotLocation = diveSpotDetailsEntity.getPosition();
+        diveSpotLocation = diveSpotDetailsEntity.getNewPosition();
         if (diveSpotDetailsEntity.getSealifes() != null) {
             sealifes = (ArrayList<SealifeShort>) diveSpotDetailsEntity.getSealifes();
         }
@@ -483,15 +483,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                     AddTranslationDialogFragment.show(getSupportFragmentManager(), language.getCode(), language.getName(), "", "");
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(this, data);
-                    diveSpotLocation = place.getLatLng();
-                    if (place.getAddress() != null) {
-                        locationTitle.setText(place.getAddress());
-                    }
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:
                 if (resultCode == RESULT_OK) {
                     countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
@@ -522,7 +513,6 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                //TODO update
                 PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION, null);
                 break;
             case R.id.btn_add_sealife:
@@ -569,9 +559,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
             requestLat = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    String.valueOf(diveSpotLocation.latitude));
+                    String.valueOf(diveSpotLocation.getLatitude()));
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    String.valueOf(diveSpotLocation.longitude));
+                    String.valueOf(diveSpotLocation.getLongitude()));
         }
         if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             if (isWorkingSwitch.isChecked()) {

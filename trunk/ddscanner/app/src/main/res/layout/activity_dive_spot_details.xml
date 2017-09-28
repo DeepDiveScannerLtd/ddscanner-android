@@ -581,13 +581,13 @@
                                 android:layout_height="wrap_content"
                                 android:onClick="@{handlers::openMapActivityClicked}">
 
-                                <fragment
-                                    android:id="@+id/google_map_fragment"
-                                    class="com.google.android.gms.maps.MapFragment"
+                                <com.mapbox.mapboxsdk.maps.MapView
+                                    android:id="@+id/map_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="150dp"
                                     android:clickable="false"
-                                    tools:clickable="false" />
+                                    tools:clickable="false"
+                                    tools:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"/>
                             </LinearLayout>
 
                             <Button

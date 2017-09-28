@@ -1,7 +1,7 @@
 package com.ddscanner.entities;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.io.Serializable;
 

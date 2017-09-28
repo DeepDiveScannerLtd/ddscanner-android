@@ -44,8 +44,8 @@ import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.squareup.otto.Subscribe;
 
 public class DiveCenterProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, DialogClosedListener {
@@ -238,10 +238,11 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     public void showDiveSpots(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
             if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses() == null || binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0) == null) {
-                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
+                //TODO change
+//                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
                 return;
             }
-            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
+//            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
         }
     }
 

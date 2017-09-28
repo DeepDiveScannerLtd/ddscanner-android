@@ -8,20 +8,20 @@ import android.view.MenuItem;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.utils.Helpers;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 public class ShowDsLocationActivity extends BaseAppCompatActivity {
 
     public static final String LATLNG = "LATLNG";
 
     private Toolbar toolbar;
-    private MapFragment mapFragment;
+    private MapView mapView;
     private LatLng latLng;
 
     @Override
@@ -34,14 +34,11 @@ public class ShowDsLocationActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(getResources().getString(R.string.diveSpot));
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.google_map_fragment);
-
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).position(latLng));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
-            }
+        mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(mapboxMap -> {
+            mapboxMap.addMarker(new MarkerViewOptions().icon(IconFactory.getInstance(ShowDsLocationActivity.this).fromResource(R.drawable.ic_ds)).position(latLng));
+            mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
         });
 
     }
@@ -60,12 +57,30 @@ public class ShowDsLocationActivity extends BaseAppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        DDScannerApplication.activityPaused();
+        mapView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        DDScannerApplication.activityResumed();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
     }
 }
