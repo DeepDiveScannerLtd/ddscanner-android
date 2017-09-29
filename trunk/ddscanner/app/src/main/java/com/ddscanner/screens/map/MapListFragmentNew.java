@@ -62,7 +62,6 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     };
 
     MapView mapView;
-    MapboxMap mapboxMap;
     DiveSpotMapInfoViewNew diveSpotMapInfoView;
     MapFragmentManager mapFragmentManager;
     private int diveSpotInfoHeight;
@@ -106,7 +105,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     }
 
     private void setupMap(MapboxMap mapboxMapNew) {
-        mapFragmentManager = new MapFragmentManager(mapboxMapNew, this, getContext());
+        mapFragmentManager = new MapFragmentManager(mapboxMapNew, this, getContext(), true);
     }
 
     @Override

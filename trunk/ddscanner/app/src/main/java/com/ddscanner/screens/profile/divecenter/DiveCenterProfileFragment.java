@@ -32,6 +32,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
+import com.ddscanner.screens.divecenter.spots.DCSpotsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
@@ -239,10 +240,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
             if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses() == null || binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0) == null) {
                 //TODO change
-//                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
+                DCSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
                 return;
             }
-//            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
+            DCSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
         }
     }
 

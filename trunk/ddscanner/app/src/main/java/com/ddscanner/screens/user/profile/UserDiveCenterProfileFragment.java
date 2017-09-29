@@ -16,6 +16,7 @@ import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
+import com.ddscanner.screens.divecenter.spots.DCSpotsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
@@ -67,7 +68,7 @@ public class UserDiveCenterProfileFragment extends Fragment {
 
     public void showDiveSpots(View view) {
         //TODO change
-//        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
+        DCSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
     }
 
     public void showCreated(View view) {

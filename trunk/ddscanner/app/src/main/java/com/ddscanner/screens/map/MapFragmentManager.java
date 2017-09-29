@@ -71,11 +71,13 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     private Context context;
     private FeatureCollection featureCollection;
     private ArrayList<String> clusterLayersIds = new ArrayList<>();
+    private boolean isNeedToLoadNewSpots;
 
-    public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract, Context context) {
+    public MapFragmentManager(MapboxMap mapboxMap, MapFragmentContract.View contract, Context context, boolean isNeedToLoadNewSpots) {
         this.contract = contract;
         this.mapboxMap = mapboxMap;
         this.context = context;
+        this.isNeedToLoadNewSpots = isNeedToLoadNewSpots;
         contract.showErrorMessage();
         initMap();
     }
@@ -83,7 +85,9 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     private void initMap() {
         mapboxMap.setMyLocationEnabled(true);
         mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
-        mapboxMap.setOnCameraIdleListener(this);
+        if (isNeedToLoadNewSpots) {
+            mapboxMap.setOnCameraIdleListener(this);
+        }
         mapboxMap.setOnMapClickListener(this);
     }
 
@@ -167,7 +171,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         contract.showPogressView();
     }
 
-    void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
+    public void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
             this.diveSpotShorts.addAll(diveSpotShorts);
             mapboxMap.removeLayer("marker-layer");
             mapboxMap.removeLayer("selected-marker-layer");
@@ -370,5 +374,7 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         mapboxMap.addLayer(count);
 
     }
+
+
 
 }
