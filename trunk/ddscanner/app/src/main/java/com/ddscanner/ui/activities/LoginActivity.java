@@ -119,14 +119,14 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
 
     public static void showForResult(Activity context, int code, boolean isForAddAccount) {
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("add", isForAddAccount);
         context.startActivityForResult(intent, code);
     }
 
     public static void showForResult(Activity context, int code) {
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivityForResult(intent, code);
     }
 

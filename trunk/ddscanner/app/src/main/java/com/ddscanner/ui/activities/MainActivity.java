@@ -951,6 +951,9 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS);
             changeVisibilityChangeAccountLayout(View.GONE);
+            mainViewPagerAdapter.notifyDataSetChanged();
+            mainViewPager.destroyDrawingCache();
+            setupTabLayout();
         }
     }
 
