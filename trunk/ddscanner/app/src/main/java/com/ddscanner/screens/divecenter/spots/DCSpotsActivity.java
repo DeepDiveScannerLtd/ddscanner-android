@@ -141,6 +141,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
 
     @Override
     public void hideDiveSpotInfo() {
+        mapListFab.animate().translationY(0);
         diveSpotMapInfoView.hide(diveSpotInfoHeight);
     }
 
@@ -166,6 +167,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
 
     @Override
     public void markerClicked(DiveSpotShort diveSpotShort) {
+        mapListFab.animate().translationY(-diveSpotInfoHeight);
         diveSpotMapInfoView.show(diveSpotShort);
     }
 
