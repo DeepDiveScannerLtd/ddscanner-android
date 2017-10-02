@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -49,6 +50,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT < 19) {
+            UpdateOSActivity.show(this);
+            return;
+        }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsFirstLaunch()) {
             DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);

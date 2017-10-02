@@ -286,6 +286,7 @@
         <activity android:name=".ui.activities.ExampleActivityCountry"
             android:screenOrientation="portrait"/>
         <activity android:name=".screens.photo.crop.CropImageActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.UpdateOSActivity" android:screenOrientation="portrait" />
         <receiver android:name=".receivers.DeviceBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
