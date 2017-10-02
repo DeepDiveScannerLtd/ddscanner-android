@@ -102,7 +102,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     private boolean isClickedCkeckin = false;
     private boolean isClickedFavorite = false;
     private boolean isCheckedInRequestStarted = false;
-    private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
+    private PhotosGridListAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
     private boolean isClickedEdit = false;
     private int lastChosedRating;
@@ -375,10 +375,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     DiveSpotPhotosActivity.showForResult(DiveSpotDetailsActivity.this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
                     return;
                 }
-//                ImageSliderActivity.showForResult(DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), position, -1, PhotoOpenedSource.DIVESPOT, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+                ImageSliderActivity.showForResult(DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), position, -1, PhotoOpenedSource.DIVESPOT, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
             };
-//            photosAdapter = new PhotosGridListAdapter(R.layout.dive_spot_photos_list_item, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount(), 8, photoItemCLickListener);
-            photosAdapter = new DiveSpotPhotosAdapter(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
+            photosAdapter = new PhotosGridListAdapter(R.layout.dive_spot_photos_list_item, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount(), 8, photoItemCLickListener);
+//            photosAdapter = new DiveSpotPhotosAdapter(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
@@ -391,10 +391,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                     PhotosGalleryActivity.showForResult(diveSpotId, DiveSpotDetailsActivity.this, PhotoOpenedSource.MAPS, null, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
                     return;
                 }
-//                ImageSliderActivity.showForResult(DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), position, -1, PhotoOpenedSource.MAPS, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+                ImageSliderActivity.showForResult(DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), position, -1, PhotoOpenedSource.MAPS, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
             };
-            mapsAdapter = new DiveSpotPhotosAdapter(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
-//            mapsAdapter = new PhotosGridListAdapter(R.layout.dive_spot_photos_list_item, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount(), 8, mapsItemCLickListener);
+//            mapsAdapter = new DiveSpotPhotosAdapter(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
+            mapsAdapter = new PhotosGridListAdapter(R.layout.dive_spot_photos_list_item, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount(), 8, mapsItemCLickListener);
             binding.mapsRc.setAdapter(mapsAdapter);
             binding.addPhotosLayout.setVisibility(View.GONE);
         }
