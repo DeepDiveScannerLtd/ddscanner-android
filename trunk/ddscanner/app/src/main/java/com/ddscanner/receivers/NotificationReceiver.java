@@ -19,9 +19,9 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (System.currentTimeMillis() - DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastRunTime() >= Constants.NOTIFICATION_SHOWING_INTERVAL) {
             Intent oututIntent = new Intent(context, MainActivity.class);
             oututIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, NotificationHelper.REQUEST_CODE, oututIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            Notification notification = NotificationHelper.getNotification(context, pendingIntent);
-            NotificationHelper.getNotificationManager(context).notify(NotificationHelper.REQUEST_CODE, notification);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(context, NotificationHelper.REQUEST_CODE, oututIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            Notification notification = NotificationHelper.getNotification(context, pendingIntent);
+//            NotificationHelper.getNotificationManager(context).notify(NotificationHelper.REQUEST_CODE, notification);
         }
     }
 }
