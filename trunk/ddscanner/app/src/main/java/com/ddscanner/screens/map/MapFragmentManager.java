@@ -200,7 +200,6 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
             SymbolLayer markers = new SymbolLayer("marker-layer", "marker-source")
                     .withProperties(PropertyFactory.iconImage("my-marker-image"));
-            markers.setMinZoom(4);
             mapboxMap.addLayer(markers);
 
             // Add the selected marker source and layer

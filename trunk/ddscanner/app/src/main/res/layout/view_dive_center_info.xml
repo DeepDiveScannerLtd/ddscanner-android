@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="bottom"
+    android:id="@+id/dive_spot_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:background="@drawable/iw_card_divecenter"
+    android:orientation="vertical"
+    android:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/dive_center_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:ellipsize="end"
+        android:lines="1"
+        tools:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <com.ddscanner.ui.views.RatingView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dive_center_name"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal" />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_iw_arrow" />
+
+</RelativeLayout>

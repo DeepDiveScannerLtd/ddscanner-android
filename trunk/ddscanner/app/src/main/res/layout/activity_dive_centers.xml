@@ -22,9 +22,13 @@
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:mapbox_cameraZoom="1"
+            app:mapbox_styleUrl="mapbox://styles/lashket/cj6ncymbk0n4k2rn2737xijrb"
+            />
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/map_control_layout"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
@@ -81,56 +85,14 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <com.ddscanner.ui.views.DiveCenterInfoView
             android:layout_gravity="bottom"
             android:id="@+id/dive_spot_info_layout"
             android:layout_width="match_parent"
             android:layout_height="110dp"
-            android:background="@drawable/iw_card_divecenter"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/dive_spot_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="22dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="20dp"
-                android:ellipsize="end"
-                android:lines="1"
-                tools:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
-                android:textColor="@color/white"
-                android:textSize="22sp" />
-
-            <LinearLayout
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/dive_spot_title"
-                android:layout_marginLeft="22dp"
-                android:layout_marginTop="3dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:orientation="horizontal" />
-
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/rating"
-                android:layout_marginLeft="22dp"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/white" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_iw_arrow" />
-
-        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

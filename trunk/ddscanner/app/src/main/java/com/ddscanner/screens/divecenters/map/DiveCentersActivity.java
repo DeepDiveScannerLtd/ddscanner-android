@@ -1,10 +1,9 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.divecenters.map;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.constraint.ConstraintLayout;
@@ -26,19 +25,21 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
-import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
+import com.ddscanner.ui.views.DiveCenterInfoView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, DiveCentersMapContract {
     private static final String TAG = "DiveCentersActivity";
     private String diveSpotId;
     private LatLng diveSpotLatLng;
@@ -59,15 +60,11 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private MapboxMap mapboxMap;
 
     private FloatingActionButton mapListFAB;
-    private RelativeLayout diveCenterInfo;
-    private TextView diveCenterName;
-    private LinearLayout rating;
-    private TextView diveCenterAddress;
+    private DiveCenterInfoView diveCenterInfoView;
     private ImageView zoomIn;
     private ImageView zoomOut;
     private ImageView goToMyLocation;
     private RelativeLayout mapControlLayout;
-    private Marker myLocationMarker;
     private DiveCenter diveCenter;
     private ProgressView progressBar;
 
@@ -79,21 +76,19 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     // List mode member fields
     private RecyclerView rc;
     private DiveCentersListAdapter diveCentersListAdapter;
-    private DiveCentersClusterManager diveCentersClusterManager;
-
-    private HashMap<LatLng, DiveCenter> diveCentersMap = new HashMap<>();
     private ArrayList<DiveCenter> diveCenters;
-    private Marker lastClickedMarker;
-    private Marker diveSpotMarker;
     private int infoWindowHeight;
     private RelativeLayout mainLayout;
     private ConstraintLayout no_dive_centers_layout;
+    DiveCentersMapManager diveCentersMapManager;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveCenter>> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveCenter>>() {
         @Override
         public void onSuccess(ArrayList<DiveCenter> result) {
             diveCenters = result;
-            drawMarkers();
+            if (diveCentersMapManager != null && !diveCentersMapManager.isDiveCentersDrawed) {
+                diveCentersMapManager.drawMarkers(result);
+            }
             fillDiveSpotsList();
         }
 
@@ -122,9 +117,9 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         findViews();
         if (!getIntent().getBooleanExtra("is_someone_working_here", false)) {
             no_dive_centers_layout.setVisibility(View.VISIBLE);
-        } else {
-            mainLayout.setVisibility(View.VISIBLE);
+            return;
         }
+        mainLayout.setVisibility(View.VISIBLE);
         setMapView();
         EventsTracker.trackDiveCentersMapView();
         diveSpotId = getIntent().getStringExtra("id");
@@ -148,15 +143,12 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         // Map mode
         no_dive_centers_layout = findViewById(R.id.no_contacts_layout);
         mainLayout = findViewById(R.id.main_layout_view);
-        diveCenterInfo = findViewById(R.id.dive_spot_info_layout);
-        diveCenterInfo.animate().translationY(infoWindowHeight);
-        diveCenterName = findViewById(R.id.dive_spot_title);
-        rating = findViewById(R.id.rating);
+        diveCenterInfoView = findViewById(R.id.dive_spot_info_layout);
+        diveCenterInfoView.hide(infoWindowHeight);
         zoomIn = findViewById(R.id.zoom_plus);
         zoomOut = findViewById(R.id.zoom_minus);
         goToMyLocation = findViewById(R.id.go_to_my_location);
         mapListFAB = findViewById(R.id.map_list_fab);
-        diveCenterAddress = findViewById(R.id.address);
         progressBar = findViewById(R.id.progressBar);
 
         // List mode
@@ -243,17 +235,11 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     private void toggleMapListView() {
         if (isMapShown) {
-            if (diveCenterInfo.getVisibility() == View.VISIBLE) {
-                mapListFAB.setY(mapListFAB.getY() + diveCenterInfo.getHeight());
-            }
             EventsTracker.trackDiveCentersListView();
             diveSpotsMapView.setVisibility(View.GONE);
             diveSpotsListView.setVisibility(View.VISIBLE);
             mapListFAB.setImageResource(R.drawable.ic_acb_map);
         } else {
-            if (diveCenterInfo.getVisibility() == View.VISIBLE) {
-                mapListFAB.setY(mapListFAB.getY() - diveCenterInfo.getHeight());
-            }
             EventsTracker.trackDiveCentersMapView();
             diveSpotsMapView.setVisibility(View.VISIBLE);
             diveSpotsListView.setVisibility(View.GONE);
@@ -296,12 +282,15 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
-        diveCenterInfo.setOnClickListener(this);
         mapControlLayout = findViewById(R.id.map_control_layout);
     }
 
     private void initMap(MapboxMap mapboxMap) {
-
+        diveCentersMapManager = new DiveCentersMapManager(mapboxMap, this, this);
+        if (diveCenters != null && !diveCentersMapManager.isDiveCentersDrawed) {
+            diveCentersMapManager.drawMarkers(diveCenters);
+        }
+        mapboxMap.addMarker(new MarkerViewOptions().icon(IconFactory.getInstance(this).fromResource(R.drawable.ic_ds)).position(diveSpotLatLng));
     }
 
     private void drawMarkers() {
@@ -323,71 +312,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     }
 
-    @Subscribe
-    public void hideDiveCenterInfo(OnMapClickEvent event) {
-        if (event.getMarker() != null) {
-            try {
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
-            } catch (NullPointerException e) {
-
-            } catch (IllegalArgumentException e) {
-
-            }
-        }
-        mapControlLayout.animate().translationY(0);
-        mapListFAB.animate().translationY(0);
-        diveCenterInfo.animate()
-                .translationY(infoWindowHeight)
-                .alpha(0.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        diveCenterInfo.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-    @UiThread
-    @Subscribe
-    public void getdiveCenterInfow(DiveCenterMarkerClickEvent event) {
-        diveCenter = event.getDiveCenter();
-        mapControlLayout.animate().translationY(-infoWindowHeight);
-        mapListFAB.animate().translationY(-infoWindowHeight);
-        diveCenterInfo.animate()
-                .translationY(0)
-                .alpha(1.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        diveCenterInfo.setVisibility(View.VISIBLE);
-                    }
-                });
-        diveCenterName.setText(event.getDiveCenter().getName());
-        if (event.getDiveCenter().getAddress() != null && !event.getDiveCenter().getAddress().equals("")) {
-            diveCenterAddress.setVisibility(View.VISIBLE);
-            diveCenterAddress.setText(event.getDiveCenter().getAddress());
-        } else {
-            diveCenterAddress.setVisibility(View.GONE);
-        }
-        rating.removeAllViews();
-        for (int k = 0; k < Math.round(event.getDiveCenter().getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Math.round(event.getDiveCenter().getRating()); k++) {
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_iw_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            rating.addView(iv);
-        }
-    }
-
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
@@ -397,4 +321,17 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 break;
         }
     }
+
+    @Override
+    public void showInfoWindow(DiveCenter diveCenter) {
+        mapListFAB.animate().translationY(-infoWindowHeight);
+        diveCenterInfoView.show(diveCenter);
+    }
+
+    @Override
+    public void hideInfoWindow() {
+        mapListFAB.animate().translationY(0);
+        diveCenterInfoView.hide(infoWindowHeight);
+    }
+
 }

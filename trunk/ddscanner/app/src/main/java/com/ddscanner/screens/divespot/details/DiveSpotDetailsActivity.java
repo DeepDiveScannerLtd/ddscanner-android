@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -52,7 +50,7 @@ import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.CheckInPeoplesActivity;
-import com.ddscanner.ui.activities.DiveCentersActivity;
+import com.ddscanner.screens.divecenters.map.DiveCentersActivity;
 import com.ddscanner.ui.activities.EditorsListActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
@@ -65,24 +63,18 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import me.toptas.fancyshowcase.DismissListener;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.FocusShape;
 
 public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener, ConfirmationDialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
 
@@ -897,7 +889,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public void showDiveCentersButtonClicked(View view) {
         EventsTracker.trackContactDiveCenter();
-        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere());
+        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getNewPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere());
     }
 
     private void changeViewState(TextView activeTextView, TextView disableTextView) {

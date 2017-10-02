@@ -147,4 +147,13 @@ public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCente
     public int compareTo(DiveCenter diveCenter) {
         return name.compareTo(diveCenter.getName());
     }
+
+    public double getDoubleLat() {
+        return Double.parseDouble(lat);
+    }
+
+    public double getDoubleLng() {
+        return Double.parseDouble(lng);
+    }
+
 }
