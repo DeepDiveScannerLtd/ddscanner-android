@@ -670,9 +670,6 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/share_app"
                                 />
-                            <ImageView
-                                android:layout_alignParentBottom="true"
-                                style="@style/DividerStyle" />
                         </LinearLayout>
                     </LinearLayout>
                     <ImageView
