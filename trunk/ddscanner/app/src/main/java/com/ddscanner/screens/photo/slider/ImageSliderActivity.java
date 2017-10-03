@@ -403,6 +403,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     public static void showForResult(Activity context, ArrayList<DiveSpotPhoto> images, int position, int requestCode, PhotoOpenedSource photoOpenedSource, String sourceId) {
+        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
