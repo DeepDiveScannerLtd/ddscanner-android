@@ -110,6 +110,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
         listView = findViewById(R.id.list_view);
         mapListFab = findViewById(R.id.map_list_fab);
         addDiveSpotFab = findViewById(R.id.add_ds_fab);
+        addDiveSpotFab.setVisibility(View.GONE);
         diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, this));
         diveSpotMapInfoView.hide(diveSpotInfoHeight);
         pleaseContinueMap = findViewById(R.id.please);
