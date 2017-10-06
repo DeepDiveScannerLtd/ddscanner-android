@@ -46,6 +46,20 @@ public class ConfirmationDialogFragment extends DialogFragment {
         fragmentTransaction.commitNowAllowingStateLoss();
     }
 
+    private static void show(FragmentManager fragmentManager, int titleRes, String messageRes, int positiveRes, int negativeRes, CallbackType callbackType) {
+        ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_MESSAGE, messageRes);
+        args.putString(ARG_TITLE, DDScannerApplication.getInstance().getString(titleRes));
+        args.putString(ARG_POSITIVE, DDScannerApplication.getInstance().getString(positiveRes));
+        args.putString(ARG_NEGATIVE, DDScannerApplication.getInstance().getString(negativeRes));
+        args.putSerializable(ARG_CALLBACK_TYPE, callbackType);
+        confirmationDialogFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(confirmationDialogFragment, null);
+        fragmentTransaction.commitNowAllowingStateLoss();
+    }
+
     public ConfirmationDialogFragment() {
     }
 
@@ -123,6 +137,10 @@ public class ConfirmationDialogFragment extends DialogFragment {
     }
 
     public static void showForActivity(FragmentManager fragmentManager, int titleRes, int messageRes, int positiveRes, int negativeRes) {
+        ConfirmationDialogFragment.show(fragmentManager, titleRes, messageRes, positiveRes, negativeRes, CallbackType.ACTIVITY);
+    }
+
+    public static void showForActivity(FragmentManager fragmentManager, int titleRes, String messageRes, int positiveRes, int negativeRes) {
         ConfirmationDialogFragment.show(fragmentManager, titleRes, messageRes, positiveRes, negativeRes, CallbackType.ACTIVITY);
     }
 

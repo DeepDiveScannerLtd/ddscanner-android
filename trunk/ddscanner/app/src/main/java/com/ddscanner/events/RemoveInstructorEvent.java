@@ -4,10 +4,12 @@ public class RemoveInstructorEvent {
 
     private String id;
     private int position;
+    private String name;
 
-    public RemoveInstructorEvent(String id, int position) {
+    public RemoveInstructorEvent(String id, int position, String name) {
         this.id = id;
         this.position = position;
+        this.name = name;
     }
 
     public String getId() {
@@ -16,5 +18,9 @@ public class RemoveInstructorEvent {
 
     public int getPosition() {
         return position;
+    }
+
+    public String getName() {
+        return name;
     }
 }

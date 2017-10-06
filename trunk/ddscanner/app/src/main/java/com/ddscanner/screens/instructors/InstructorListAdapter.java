@@ -102,7 +102,7 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
                     UserProfileActivity.show(context, instructors.get(getAdapterPosition()).getId(), instructors.get(getAdapterPosition()).getType());
                     break;
                 case R.id.remove:
-                    DDScannerApplication.bus.post(new RemoveInstructorEvent(instructors.get(getAdapterPosition()).getId(), getAdapterPosition()));
+                    DDScannerApplication.bus.post(new RemoveInstructorEvent(instructors.get(getAdapterPosition()).getId(), getAdapterPosition(), instructors.get(getAdapterPosition()).getName()));
                     break;
             }
         }

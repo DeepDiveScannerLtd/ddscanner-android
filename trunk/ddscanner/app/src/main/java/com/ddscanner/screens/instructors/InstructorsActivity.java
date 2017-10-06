@@ -154,7 +154,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     public void removeInstructorClicked(RemoveInstructorEvent event) {
         removedInstructorId = event.getPosition();
         instructorForRemoveId = event.getId();
-        ConfirmationDialogFragment.showForActivity(getSupportFragmentManager(), R.string.empty_string, R.string.remove_instructor_confriamtion, R.string.yes, R.string.no);
+        ConfirmationDialogFragment.showForActivity(getSupportFragmentManager(), R.string.empty_string, getString(R.string.remove_instructor_confriamtion, event.getName()), R.string.yes, R.string.no);
     }
 
     @Override
