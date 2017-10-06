@@ -57,9 +57,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
+import com.klinker.android.link_builder.Link;
+import com.klinker.android.link_builder.LinkBuilder;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SignUpActivity extends BaseAppCompatActivity implements ConfirmationDialogClosedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -199,23 +202,20 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
     }
 
     private void setPrivacyPolicyText() {
-        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
-        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                TermsOfServiceActivity.show(SignUpActivity.this);
-            }
-        }, 32, 48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                PrivacyPolicyActivity.show(SignUpActivity.this);
-                tv.invalidate();
-            }
-        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-        privacyPolicy.setText(spannableString);
+        ArrayList<Link> links = new ArrayList<>();
+        Link tosLink = new Link("Terms of Service");
+        tosLink.setOnClickListener(clickedText -> {
+            TermsOfServiceActivity.show(this);
+        });
+        tosLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
+        tosLink.setUnderlined(false);
+        Link ppLink = new Link("Privacy Policy");
+        ppLink.setOnClickListener(clickedText -> PrivacyPolicyActivity.show(this));
+        ppLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
+        ppLink.setUnderlined(false);
+        links.add(tosLink);
+        links.add(ppLink);
+        LinkBuilder.on(privacyPolicy).addLinks(links).build();
     }
 
     private void changeUiAccordingRegister() {
@@ -301,25 +301,6 @@ public class SignUpActivity extends BaseAppCompatActivity implements Confirmatio
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    class MyClickableSpan extends ClickableSpan {
-
-        String clicked;
-
-        public MyClickableSpan(String string) {
-            super();
-            clicked = string;
-        }
-
-        public void onClick(View tv) {
-
-        }
-
-        public void updateDrawState(TextPaint ds) {
-            ds.setColor(Color.parseColor("#a3a3a3"));
-            ds.setUnderlineText(false);
-        }
     }
 
     private void initGoogleLoginManager() {
