@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
     android:background="?attr/selectableItemBackground">
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        android:layout_centerVertical="true"
         android:src="@drawable/avatar_changeacc"/>
     <LinearLayout
         android:gravity="center"
