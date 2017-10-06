@@ -34,7 +34,6 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
 
     public static void showFromApplication(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -101,7 +100,9 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
 
     @Override
     public void onBackPressed() {
-
+        if (isForAddAccount) {
+            finish();
+        }
     }
 
 
