@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityPickLocationBinding;
+import com.ddscanner.ui.views.MapControlView;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -23,6 +24,7 @@ public class PickLocationActivity extends BaseAppCompatActivity implements TextV
     private static final String ARG_LOCATION = "location";
     private LatLng location;
     private MapboxMap mapboxMap;
+    private MapControlView mapControlView;
 
     public static void showForResult(Activity context, int requestCode, LatLng latLng) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -53,6 +55,7 @@ public class PickLocationActivity extends BaseAppCompatActivity implements TextV
         if (location != null) {
             this.mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         }
+        binding.mapControlLayout.appendWithMap(this.mapboxMap);
     }
     
 //    @Override

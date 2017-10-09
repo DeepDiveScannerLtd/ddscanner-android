@@ -29,19 +29,14 @@
         android:padding="10dp"
         android:src="@drawable/ic_zoom_minus" />
 
-    <RelativeLayout
+    <ImageView
+        android:src="@drawable/ic_my_location"
+        android:visibility="gone"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/zoom_minus"
         android:layout_marginTop="23dp"
-        android:background="@drawable/background_map_tools">
-
-        <ImageView
-            android:id="@+id/go_to_my_location"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:src="@drawable/ic_my_location" />
-    </RelativeLayout>
+        android:padding="10dp"
+        android:background="@drawable/background_map_tools"/>
 </RelativeLayout>

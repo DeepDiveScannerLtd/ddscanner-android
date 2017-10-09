@@ -132,4 +132,8 @@ public class DiveCentersMapManager implements MapboxMap.OnMapClickListener {
         markerSelected = false;
     }
 
+    public MapboxMap getMapboxMap() {
+        return this.mapboxMap;
+    }
+
 }

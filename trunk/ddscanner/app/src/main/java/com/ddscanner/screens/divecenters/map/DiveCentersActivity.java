@@ -34,6 +34,7 @@ import com.ddscanner.ui.adapters.DiveCentersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.ui.views.DiveCenterInfoView;
+import com.ddscanner.ui.views.MapControlView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -61,12 +62,9 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     private FloatingActionButton mapListFAB;
     private DiveCenterInfoView diveCenterInfoView;
-    private ImageView zoomIn;
-    private ImageView zoomOut;
-    private ImageView goToMyLocation;
-    private RelativeLayout mapControlLayout;
     private DiveCenter diveCenter;
     private ProgressView progressBar;
+    MapControlView mapControlView;
 
     private View diveSpotsMapView;
     private View diveSpotsListView;
@@ -145,11 +143,9 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         mainLayout = findViewById(R.id.main_layout_view);
         diveCenterInfoView = findViewById(R.id.dive_spot_info_layout);
         diveCenterInfoView.hide(infoWindowHeight);
-        zoomIn = findViewById(R.id.zoom_plus);
-        zoomOut = findViewById(R.id.zoom_minus);
-        goToMyLocation = findViewById(R.id.go_to_my_location);
         mapListFAB = findViewById(R.id.map_list_fab);
         progressBar = findViewById(R.id.progressBar);
+        mapControlView = findViewById(R.id.map_control_layout);
 
         // List mode
         rc = findViewById(R.id.cv);
@@ -213,20 +209,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
             case R.id.map_list_fab:
                 toggleMapListView();
                 break;
-            case R.id.zoom_plus:
-                mapboxMap.animateCamera(CameraUpdateFactory.zoomIn());
-                break;
-            case R.id.zoom_minus:
-                mapboxMap.animateCamera(CameraUpdateFactory.zoomOut());
-                break;
-            case R.id.go_to_my_location:
-                goToMyLocation.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "DiveCentersActivity getLocation");
-                this.getLocation(ActivitiesRequestCodes.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION);
-                // baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
-                //  baseAppCompatActivity.getLocation();
-                break;
             case R.id.dive_spot_info_layout:
                 UserProfileActivity.show(this, diveCenter.getId(), 0);
                 break;
@@ -279,10 +261,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         Log.i(TAG, "mMapView inited");
         mMapView.onCreate(null);
         mMapView.getMapAsync(this::initMap);
-        zoomIn.setOnClickListener(this);
-        zoomOut.setOnClickListener(this);
-        goToMyLocation.setOnClickListener(this);
-        mapControlLayout = findViewById(R.id.map_control_layout);
     }
 
     private void initMap(MapboxMap mapboxMap) {
@@ -291,6 +269,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
             diveCentersMapManager.drawMarkers(diveCenters);
         }
         mapboxMap.addMarker(new MarkerViewOptions().icon(IconFactory.getInstance(this).fromResource(R.drawable.ic_ds)).position(diveSpotLatLng));
+        mapControlView.appendWithMap(diveCentersMapManager.getMapboxMap());
     }
 
     private void drawMarkers() {

@@ -46,6 +46,10 @@ public class MapControlView extends RelativeLayout implements View.OnClickListen
         btnZoomMinus.setOnClickListener(this);
     }
 
+    public void enableMyLocation() {
+        btnGoToMyLocation.setVisibility(VISIBLE);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

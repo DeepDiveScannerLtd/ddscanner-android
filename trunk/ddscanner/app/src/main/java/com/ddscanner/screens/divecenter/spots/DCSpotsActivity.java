@@ -29,6 +29,7 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.DiveSpotMapInfoViewNew;
+import com.ddscanner.ui.views.MapControlView;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
@@ -57,6 +58,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
     MaterialDialog materialDialog;
     LatLng diveCenterLocation;
     String diveSpotId;
+    MapControlView mapControlView;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -116,6 +118,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
         pleaseContinueMap = findViewById(R.id.please);
         diveSpotsList = findViewById(R.id.dive_spots_list);
         continueShowMap = findViewById(R.id.showMapContinue);
+        mapControlView = findViewById(R.id.map_control_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this::setupMap);
         mapListFab.setOnClickListener(this::updateViewState);
@@ -133,6 +136,7 @@ public class DCSpotsActivity extends BaseAppCompatActivity implements MapFragmen
         mapboxMapNew.addMarker(new MarkerViewOptions().icon(IconFactory.getInstance(this).fromResource(R.drawable.ic_dc)).position(diveCenterLocation));
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterDiveSpotsList(diveSpotsResultListener, diveSpotId);
         mapboxMapNew.moveCamera(CameraUpdateFactory.newLatLngZoom(diveCenterLocation, 7));
+        mapControlView.appendWithMap(mapFragmentManager.getMapboxMap());
     }
 
     @Override
