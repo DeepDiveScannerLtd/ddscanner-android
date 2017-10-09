@@ -25,6 +25,12 @@
         android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
+        <com.ddscanner.ui.views.MapControlView
+            android:id="@+id/map_control_view"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     <ProgressBar
         android:id="@+id/request_progress"
         style="?android:attr/progressBarStyleHorizontal"

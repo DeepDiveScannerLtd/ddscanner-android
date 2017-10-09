@@ -374,6 +374,8 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
 
     }
 
-
+    public MapboxMap getMapboxMap() {
+        return this.mapboxMap;
+    }
 
 }

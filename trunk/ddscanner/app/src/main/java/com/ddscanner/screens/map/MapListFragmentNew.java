@@ -26,6 +26,7 @@ import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.views.DiveSpotMapInfoViewNew;
+import com.ddscanner.ui.views.MapControlView;
 import com.ddscanner.utils.Helpers;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -75,6 +76,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     Button continueShowMap;
     RelativeLayout pleaseContinueMap;
     DiveSpotsListAdapter diveSpotsListAdapter;
+    MapControlView mapControlView;
 
     @Nullable
     @Override
@@ -93,6 +95,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         pleaseContinueMap = view.findViewById(R.id.please);
         diveSpotsList = view.findViewById(R.id.dive_spots_list);
         continueShowMap = view.findViewById(R.id.showMapContinue);
+        mapControlView = view.findViewById(R.id.map_control_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this::setupMap);
         mapListFab.setOnClickListener(this::updateViewState);
@@ -106,6 +109,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
 
     private void setupMap(MapboxMap mapboxMapNew) {
         mapFragmentManager = new MapFragmentManager(mapboxMapNew, this, getContext(), true);
+        mapControlView.appendWithMap(mapFragmentManager.getMapboxMap());
     }
 
     @Override
@@ -113,6 +117,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         diveSpotMapInfoView.show(diveSpotShort);
         mapListFab.animate().translationY(-diveSpotInfoHeight);
         addDiveSpotFab.animate().translationY(-diveSpotInfoHeight);
+        mapControlView.animate().translationY(-diveSpotInfoHeight);
     }
 
     @Override
@@ -125,6 +130,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         diveSpotMapInfoView.hide(diveSpotInfoHeight);
         mapListFab.animate().translationY(0);
         addDiveSpotFab.animate().translationY(0);
+        mapControlView.animate().translationY(0);
     }
 
     @Override
