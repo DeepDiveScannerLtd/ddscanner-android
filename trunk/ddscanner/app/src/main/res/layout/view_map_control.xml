@@ -31,6 +31,7 @@
 
     <ImageView
         android:src="@drawable/ic_my_location"
+        android:id="@+id/go_to_my_location"
         android:visibility="gone"
         android:layout_width="38dp"
         android:layout_height="38dp"

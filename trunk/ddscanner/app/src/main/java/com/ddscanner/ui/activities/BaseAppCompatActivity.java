@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.interfaces.PermissionsGrantedListener;
 import com.ddscanner.interfaces.ShowPopupLstener;
 import com.ddscanner.screens.dialogs.popup.AchievementPopupDialogFrament;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -41,7 +42,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     public static final int RESULT_CODE_DIVE_SPOT_REMOVED = 1012;
     public static final int RESULT_CODE_DIVE_SPOT_ADDED = 1013;
 
-
+    private PermissionsGrantedListener permissionsGrantedListener;
     private LocationHelper locationHelper;
     private HashSet<Integer> requestCodes = new HashSet<>();
     private int menuResourceId = -1;
@@ -70,6 +71,20 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         } catch (LocationHelper.LocationPPermissionsNotGrantedException e) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION);
         }
+    }
+
+    public void grandLocationPermission(PermissionsGrantedListener listener) {
+        if (Build.VERSION.SDK_INT < 23 || android.support.v13.app.ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (Helpers.isLocatinEnabled(this)) {
+                listener.onPermissionGrated();
+                return;
+            }
+            this.permissionsGrantedListener = listener;
+            DialogHelpers.showDialogForEnableLocationProviders(this);
+            return;
+        }
+        this.permissionsGrantedListener = listener;
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION);
     }
 
     /**
@@ -174,7 +189,8 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS:
                 if (resultCode == RESULT_OK) {
-                    getLocation(-1);
+                    permissionsGrantedListener.onPermissionGrated();
+//                    getLocation(-1);
                 }
                 break;
         }
@@ -186,7 +202,12 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION:
                 Log.i(TAG, "onRequestPermissionsResult grantResults = " + grantResults[0] + " " + grantResults[1]);
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation(-1);
+//                    getLocation(-1);
+                    if (Helpers.isLocatinEnabled(this)) {
+                        permissionsGrantedListener.onPermissionGrated();
+                    } else {
+                        DialogHelpers.showDialogForEnableLocationProviders(this);
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE:

@@ -23,8 +23,11 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
+import com.ddscanner.interfaces.MyLocationClickListener;
+import com.ddscanner.interfaces.PermissionsGrantedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
+import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.DiveSpotMapInfoViewNew;
 import com.ddscanner.ui.views.MapControlView;
 import com.ddscanner.utils.Helpers;
@@ -38,7 +41,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapListFragmentNew extends Fragment implements MapFragmentContract.View {
+public class MapListFragmentNew extends BaseFragment implements MapFragmentContract.View, MyLocationClickListener, PermissionsGrantedListener {
 
     private DDScannerRestClient.ResultListener<List<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
         @Override
@@ -110,6 +113,7 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
     private void setupMap(MapboxMap mapboxMapNew) {
         mapFragmentManager = new MapFragmentManager(mapboxMapNew, this, getContext(), true);
         mapControlView.appendWithMap(mapFragmentManager.getMapboxMap());
+        mapControlView.enableMyLocation(this);
     }
 
     @Override
@@ -239,4 +243,13 @@ public class MapListFragmentNew extends Fragment implements MapFragmentContract.
         mapFragmentManager.diveSpotAdded(latLng);
     }
 
+    @Override
+    public void onMyLocationClicked() {
+        getLocation(this);
+    }
+
+    @Override
+    public void onPermissionGrated() {
+        mapFragmentManager.goToMyLocation();
+    }
 }

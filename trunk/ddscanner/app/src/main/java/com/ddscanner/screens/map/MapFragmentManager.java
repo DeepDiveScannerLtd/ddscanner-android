@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,15 +85,12 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     private void initMap() {
-        mapboxMap.setMyLocationEnabled(true);
         mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
         if (isNeedToLoadNewSpots) {
             mapboxMap.setOnCameraIdleListener(this);
         }
         mapboxMap.setOnMapClickListener(this);
     }
-
-
 
     @Override
     public void onCameraIdle() {
@@ -292,6 +291,13 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
                     .target(new LatLng(mapboxMap.getMyLocation().getLatitude(), mapboxMap.getMyLocation().getLongitude()))
             .zoom(7.0).build());
         }
+
+
+        mapboxMap.setMyLocationEnabled(true);
+        if(mapboxMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapboxMap.getMyLocation().getLatitude(), mapboxMap.getMyLocation().getLongitude()), 7.0));
+        }
+//        mapboxMap.setOnMyLocationChangeListener(this);
     }
 
     public void moveCameraToPosition(LatLngBounds latLngBounds) {
@@ -305,73 +311,6 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
         mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
         mapboxMap.setOnCameraIdleListener(this);
         requestDiveSpots();
-    }
-
-    private void addClusteredGeoJsonSource() {
-        mapboxMap.removeSource("earthquakes");
-        mapboxMap.removeLayer("count");
-        mapboxMap.removeLayer("unclustered-points");
-        for (String layerId : clusterLayersIds) {
-            mapboxMap.removeLayer(layerId);
-        }
-        clusterLayersIds = new ArrayList<>();
-        // Add a new source from the GeoJSON data and set the 'cluster' option to true.
-        try {
-            mapboxMap.addSource(
-                    // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes from
-                    // 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-                    new GeoJsonSource("earthquakes",
-                            featureCollection,
-                            new GeoJsonOptions()
-                                    .withCluster(true)
-                                    .withClusterMaxZoom(14)
-                                    .withClusterRadius(50)
-                    )
-            );
-        } catch (Exception ignored) {
-
-        }
-
-
-        // Use the earthquakes GeoJSON source to create three layers: One layer for each cluster category.
-        // Each point range gets a different fill color.
-        int[][] layers = new int[][] {
-                new int[] {150, ContextCompat.getColor(context, R.color.tw__composer_red)},
-                new int[] {20, ContextCompat.getColor(context, R.color.green_100)},
-                new int[] {0, ContextCompat.getColor(context, R.color.mapbox_blue)}
-        };
-
-        //Creating a marker layer for single data points
-        SymbolLayer unclustered = new SymbolLayer("unclustered-points", "earthquakes");
-        unclustered.setProperties(iconImage("marker-15"));
-        mapboxMap.addLayer(unclustered);
-
-        for (int i = 0; i < layers.length; i++) {
-            //Add clusters' circles
-            CircleLayer circles = new CircleLayer("cluster-" + i, "earthquakes");
-            circles.setProperties(
-                    circleColor(layers[i][1]),
-                    circleRadius(18f)
-            );
-            clusterLayersIds.add("cluster-" + i);
-            // Add a filter to the cluster layer that hides the circles based on "point_count"
-            circles.setFilter(
-                    i == 0
-                            ? gte("point_count", layers[i][0]) :
-                            all(gte("point_count", layers[i][0]), lt("point_count", layers[i - 1][0]))
-            );
-            mapboxMap.addLayer(circles);
-        }
-
-        //Add the count labels
-        SymbolLayer count = new SymbolLayer("count", "earthquakes");
-        count.setProperties(
-                textField("{point_count}"),
-                textSize(12f),
-                textColor(Color.WHITE)
-        );
-        mapboxMap.addLayer(count);
-
     }
 
     public MapboxMap getMapboxMap() {

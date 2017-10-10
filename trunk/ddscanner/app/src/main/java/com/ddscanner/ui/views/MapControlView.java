@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.ddscanner.R;
+import com.ddscanner.interfaces.MyLocationClickListener;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -17,6 +18,7 @@ public class MapControlView extends RelativeLayout implements View.OnClickListen
     ImageView btnZoomMinus;
     ImageView btnGoToMyLocation;
     MapboxMap mapboxMap;
+    MyLocationClickListener myLocationClickListener;
 
     public MapControlView(Context context) {
         super(context);
@@ -46,8 +48,10 @@ public class MapControlView extends RelativeLayout implements View.OnClickListen
         btnZoomMinus.setOnClickListener(this);
     }
 
-    public void enableMyLocation() {
+    public void enableMyLocation(MyLocationClickListener myLocationClickListener) {
         btnGoToMyLocation.setVisibility(VISIBLE);
+        btnGoToMyLocation.setOnClickListener(this);
+        this.myLocationClickListener = myLocationClickListener;
     }
 
     @Override
@@ -58,6 +62,9 @@ public class MapControlView extends RelativeLayout implements View.OnClickListen
                 break;
             case R.id.zoom_plus:
                 mapboxMap.animateCamera(CameraUpdateFactory.zoomIn());
+                break;
+            case R.id.go_to_my_location:
+                myLocationClickListener.onMyLocationClicked();
                 break;
         }
     }
