@@ -286,18 +286,10 @@ public class MapFragmentManager implements MapboxMap.OnCameraIdleListener, Mapbo
     }
 
     public void goToMyLocation() {
-        if(mapboxMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
-            mapboxMap.setCameraPosition(new CameraPosition.Builder()
-                    .target(new LatLng(mapboxMap.getMyLocation().getLatitude(), mapboxMap.getMyLocation().getLongitude()))
-            .zoom(7.0).build());
-        }
-
-
         mapboxMap.setMyLocationEnabled(true);
-        if(mapboxMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+        if(mapboxMap.getMyLocation() != null) {
             mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapboxMap.getMyLocation().getLatitude(), mapboxMap.getMyLocation().getLongitude()), 7.0));
         }
-//        mapboxMap.setOnMyLocationChangeListener(this);
     }
 
     public void moveCameraToPosition(LatLngBounds latLngBounds) {
