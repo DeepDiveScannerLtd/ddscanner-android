@@ -46,6 +46,7 @@ import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.PhotoItemCLickListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.diecenters.list.DiveCentersActivityNew;
 import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
 import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
@@ -892,7 +893,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public void showDiveCentersButtonClicked(View view) {
         EventsTracker.trackContactDiveCenter();
-        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere());
+        DiveCentersActivityNew.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+//        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere());
     }
 
     private void changeViewState(TextView activeTextView, TextView disableTextView) {

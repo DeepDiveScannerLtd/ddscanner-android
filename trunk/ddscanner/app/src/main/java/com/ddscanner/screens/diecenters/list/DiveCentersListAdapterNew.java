@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.interfaces.ListItemClickListener;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,8 +22,10 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
 
     Context context;
     ArrayList<DiveCenter> diveCenters = new ArrayList<>();
+    ListItemClickListener<DiveCenter> listItemClickListener;
 
-    public DiveCentersListAdapterNew() {
+    public DiveCentersListAdapterNew(ListItemClickListener<DiveCenter> listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
     }
 
     @Override
@@ -46,7 +50,11 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
         notifyDataSetChanged();
     }
 
-    class DiveCentersListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void setListItemClickListener(ListItemClickListener<DiveCenter> listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
+    }
+
+    class DiveCentersListViewHolder extends RecyclerView.ViewHolder {
 
         ImageView logo;
         TextView diveCenterName;
@@ -54,16 +62,14 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
 
         public DiveCentersListViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(view -> listItemClickListener.onItemClick(diveCenters.get(getAdapterPosition())));
             context = itemView.getContext();
             logo = itemView.findViewById(R.id.logo);
             diveCenterName = itemView.findViewById(R.id.dc_name);
             showDiveCenter = itemView.findViewById(R.id.show_dc);
+            showDiveCenter.setOnClickListener(view -> UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0));
         }
 
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 
 }

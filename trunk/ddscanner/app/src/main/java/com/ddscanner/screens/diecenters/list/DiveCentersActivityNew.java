@@ -12,7 +12,9 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divecenter.request.SendRequestActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -53,6 +55,7 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
     private RecyclerView diveCentersList;
     private String diveSpotId;
     private DiveCentersListAdapterNew diveCentersListAdapterNew;
+    private ListItemClickListener<DiveCenter> listItemClickListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,10 +63,14 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
         setContentView(R.layout.activity_dve_centers_new);
         setupToolbar(R.string.dive_centers, R.id.toolbar);
         diveSpotId = getIntent().getStringExtra("id");
+        listItemClickListener = item -> {
+            SendRequestActivity.show(this, diveSpotId, item.getId());
+        };
+        diveCentersListAdapterNew = new DiveCentersListAdapterNew(listItemClickListener);
         diveCentersList = findViewById(R.id.dive_centers_list);
         diveCentersList.setLayoutManager(new LinearLayoutManager(this));
-        diveCentersListAdapterNew = new DiveCentersListAdapterNew();
         diveCentersList.setAdapter(diveCentersListAdapterNew);
+//        diveCentersListAdapterNew.setListItemClickListener(listItemClickListener);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
     }
 

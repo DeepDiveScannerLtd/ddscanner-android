@@ -53,7 +53,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:layout_centerVertical="true"/>
-        <view
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider_color"
