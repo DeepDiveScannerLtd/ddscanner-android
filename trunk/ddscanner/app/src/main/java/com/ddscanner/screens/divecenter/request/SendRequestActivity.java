@@ -1,6 +1,8 @@
 package com.ddscanner.screens.divecenter.request;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
@@ -17,6 +19,15 @@ public class SendRequestActivity extends BaseAppCompatActivity {
     DiveCenterRequestInputView emailInputView;
     DiveCenterRequestInputView messageInputView;
     PhoneInputView phoneInputView;
+    String diveSpotId;
+    String diveCenterId;
+
+    public static void show(Context context, String diveSpotId, String diveCenterId) {
+        Intent intent = new Intent(context, SendRequestActivity.class);
+        intent.putExtra("dc_id", diveCenterId);
+        intent.putExtra("ds_id", diveSpotId);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +39,8 @@ public class SendRequestActivity extends BaseAppCompatActivity {
         emailInputView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         messageInputView = findViewById(R.id.message_input);
         phoneInputView = findViewById(R.id.phone_input);
+        diveCenterId = getIntent().getStringExtra("dc_id");
+        diveSpotId = getIntent().getStringExtra("ds_id");
     }
 
     @Override

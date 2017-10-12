@@ -188,7 +188,7 @@
     <string name="user_dislikes">Dislikes</string>
     <string name="user_likes">Likes</string>
     <string name="google_analytics_trackingId">UA-75833949-1</string>
-    <string name="dive_centers">Dive Centers</string>
+    <string name="dive_centers">Choose dive center</string>
     <string name="dive_spos">" dive spots"</string>
 
     <string name="unknown_error">Unknown error occurred. A bug report was captured. Please try again later.</string>
@@ -574,4 +574,5 @@
     <string name="send_request_menu">SEND</string>
     <string name="email_is_required">Email is required</string>
     <string name="message_is_required">Message is required</string>
+    <string name="view_profile">View profile</string>
 </resources>

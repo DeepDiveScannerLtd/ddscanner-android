@@ -267,6 +267,9 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".screens.diecenters.list.DiveCentersActivityNew"
+            android:screenOrientation="portrait" />
+
         <service android:name=".services.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
