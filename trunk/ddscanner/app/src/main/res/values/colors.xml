@@ -89,4 +89,8 @@
 
     <color name="dive_center_charachteristic_color">#8b8b8b</color>
 
+    <color name="divider_color">#f0f0f0</color>
+
+    <color name="divider_error_color">#e74b1a</color>
+
 </resources>

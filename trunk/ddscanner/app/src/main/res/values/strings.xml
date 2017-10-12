@@ -563,4 +563,15 @@
     <string name="vido_resource_pattern">android.resource://%s/%d</string>
     <string name="share_app">Share app</string>
     <string name="your_android_version_is_not_supported_n_please_update_to_4_4_or_later">Your Android version is not supported.\nPlease update to 4.4 or later</string>
+    <string name="input_name_hint">John Doe</string>
+    <string name="your_name">Your name</string>
+    <string name="your_email">Your email</string>
+    <string name="email_example_hint">example@gmail.com</string>
+    <string name="your_phone_number">Your phone number</string>
+    <string name="message">Message</string>
+    <string name="message_input_example_hnt">I want to book a dive trip to Racha Islands on 7 November for me and my friend.</string>
+    <string name="send_request">Send request</string>
+    <string name="send_request_menu">SEND</string>
+    <string name="email_is_required">Email is required</string>
+    <string name="message_is_required">Message is required</string>
 </resources>

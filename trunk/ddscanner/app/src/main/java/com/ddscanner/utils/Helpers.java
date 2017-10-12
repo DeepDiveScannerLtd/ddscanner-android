@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +31,8 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.SealifeShort;
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -546,5 +549,23 @@ public class Helpers {
         }
         throw new IllegalArgumentException("Argument must not be null");
     }
+
+    public static boolean checkEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static boolean validCellPhone(String number, String coutryCode) {
+        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+        try {
+            return util.isValidNumber(util.parse(number, coutryCode));
+        } catch (NumberParseException exception) {
+            return false;
+        }
+//        if (number.length() > 7 && number.length() < 17) {
+//            return true;
+//        }
+//        return false;
+    }
+
 
 }

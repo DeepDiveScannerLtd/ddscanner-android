@@ -262,6 +262,11 @@
             android:name=".ui.activities.ChangeAddressActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".screens.divecenter.request.SendRequestActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
         <service android:name=".services.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

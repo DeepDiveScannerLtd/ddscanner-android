@@ -11,4 +11,12 @@
         <attr name="block_subtitle" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="DiveCenterRequestInputView">
+        <attr name="title_name" format="string" />
+        <attr name="input_hint" format="string" />
+        <attr name="error_text" format="string" />
+        <attr name="length" format="integer" />
+        <attr name="lines" format="integer" />
+    </declare-styleable>
+
 </resources>
