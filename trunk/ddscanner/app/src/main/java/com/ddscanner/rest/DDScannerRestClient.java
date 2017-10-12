@@ -34,6 +34,7 @@ import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.ChangePasswordRequest;
 import com.ddscanner.entities.request.DeleteImageRequest;
+import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.NotificationsReadRequest;
@@ -1107,6 +1108,15 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(sealife);
             }
         });
+    }
+
+    public void requestBooking(DiveCenterRequestBookingRequest request, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRequestBooking(request);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener, context));
     }
 
     public void getNewNotificationsCount(ResultListener<NotificationsCountEntity> resultListener) {

@@ -8,12 +8,43 @@ import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
+import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.PhoneInputView;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
-public class SendRequestActivity extends BaseAppCompatActivity {
+public class SendRequestActivity extends BaseAppCompatActivity implements DialogClosedListener {
+
+    DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.success_booking_dialog_title, R.string.success_booking_dialog_text, 1, false);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+    };
 
     DiveCenterRequestInputView nameInputView;
     DiveCenterRequestInputView emailInputView;
@@ -21,6 +52,7 @@ public class SendRequestActivity extends BaseAppCompatActivity {
     PhoneInputView phoneInputView;
     String diveSpotId;
     String diveCenterId;
+    MaterialDialog materialDialog;
 
     public static void show(Context context, String diveSpotId, String diveCenterId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
@@ -41,6 +73,7 @@ public class SendRequestActivity extends BaseAppCompatActivity {
         phoneInputView = findViewById(R.id.phone_input);
         diveCenterId = getIntent().getStringExtra("dc_id");
         diveSpotId = getIntent().getStringExtra("ds_id");
+        materialDialog = Helpers.getMaterialDialog(this);
     }
 
     @Override
@@ -58,8 +91,21 @@ public class SendRequestActivity extends BaseAppCompatActivity {
 
     private void sendRequest() {
         if (isDataValid()) {
-
+            materialDialog.show();
+            DDScannerApplication.getInstance().getDdScannerRestClient(this).requestBooking(centerRequestBookingRequest(), resultListener);
         }
+    }
+
+    private DiveCenterRequestBookingRequest centerRequestBookingRequest() {
+        DiveCenterRequestBookingRequest diveCenterRequestBookingRequest = new DiveCenterRequestBookingRequest();
+        diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
+        diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
+        diveCenterRequestBookingRequest.setName(nameInputView.getInputText());
+        diveCenterRequestBookingRequest.setPhone(phoneInputView.getPhoneWithPlus());
+        diveCenterRequestBookingRequest.setEmail(emailInputView.getInputText());
+        diveCenterRequestBookingRequest.setMessage(messageInputView.getInputText());
+        diveCenterRequestBookingRequest.setUserId(SharedPreferenceHelper.getActiveUser().getId());
+        return diveCenterRequestBookingRequest;
     }
 
     private boolean isDataValid() {
@@ -92,4 +138,8 @@ public class SendRequestActivity extends BaseAppCompatActivity {
         return isDataValid;
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+
+    }
 }

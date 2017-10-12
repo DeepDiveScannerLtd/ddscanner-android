@@ -6,6 +6,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.ChangePasswordRequest;
 import com.ddscanner.entities.request.DeleteImageRequest;
+import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.NotificationsReadRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
@@ -365,5 +366,8 @@ public interface DDScannerRestService {
             @Part("dive_center_type") RequestBody diveCenterType,
             @Part("diving_skill") RequestBody skill
     );
+
+    @POST("v2_2/divecenter.request_booking")
+    Call<ResponseBody> postRequestBooking(@Body DiveCenterRequestBookingRequest request);
 
 }

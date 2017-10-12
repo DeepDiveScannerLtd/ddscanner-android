@@ -137,7 +137,7 @@
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>
     <string name="grant_permission">GRANT PERMISSION</string>
-    <string name="contact_dive_centers">Contact dive centers</string>
+    <string name="contact_dive_centers">Book a dive</string>
     <string name="dive_center">Dive Center</string>
     <string name="you_must_login_to_add_divespot">You must login to add divespot</string>
     <string name="login_or_sign_up">Login or Sign Up</string>
@@ -575,4 +575,6 @@
     <string name="email_is_required">Email is required</string>
     <string name="message_is_required">Message is required</string>
     <string name="view_profile">View profile</string>
+    <string name="success_booking_dialog_title">Gongrats</string>
+    <string name="success_booking_dialog_text">booking successful</string>
 </resources>

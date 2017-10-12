@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -18,6 +19,7 @@ import com.ddscanner.screens.divecenter.request.SendRequestActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,8 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
         @Override
         public void onSuccess(ArrayList<DiveCenter> result) {
             diveCentersListAdapterNew.setData(result);
+            progressView.setVisibility(View.GONE);
+            diveCentersList.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -56,12 +60,14 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
     private String diveSpotId;
     private DiveCentersListAdapterNew diveCentersListAdapterNew;
     private ListItemClickListener<DiveCenter> listItemClickListener;
+    private ProgressView progressView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dve_centers_new);
         setupToolbar(R.string.dive_centers, R.id.toolbar);
+        progressView = findViewById(R.id.progress_view);
         diveSpotId = getIntent().getStringExtra("id");
         listItemClickListener = item -> {
             SendRequestActivity.show(this, diveSpotId, item.getId());
