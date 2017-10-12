@@ -135,6 +135,10 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
             isDataValid = false;
             phoneInputView.setError();
         }
+        if (messageInputView.getInputText().length() < 10) {
+            isDataValid = false;
+            messageInputView.showError(R.string.message_error_length);
+        }
         return isDataValid;
     }
 
