@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.views.ScallingImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +26,7 @@ public class SliderImagesFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
-        final ScallingImageView imageView = view.findViewById(R.id.slider_image);
+        final PhotoView imageView = view.findViewById(R.id.slider_image);
         final ProgressBar progressBar = view.findViewById(R.id.progressBar);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
