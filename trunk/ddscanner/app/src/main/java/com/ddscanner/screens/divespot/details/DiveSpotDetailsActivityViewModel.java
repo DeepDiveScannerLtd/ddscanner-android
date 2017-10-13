@@ -1,6 +1,7 @@
 package com.ddscanner.screens.divespot.details;
 
 import android.databinding.BindingAdapter;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -144,7 +145,7 @@ public class DiveSpotDetailsActivityViewModel {
     public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
             if (!viewModel.getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
-                view.setVisibility(View.GONE);
+                view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.text_inactive_button));
             }
         }
     }

@@ -93,4 +93,6 @@
 
     <color name="divider_error_color">#e74b1a</color>
 
+    <color name="text_inactive_button">#80202020</color>
+
 </resources>

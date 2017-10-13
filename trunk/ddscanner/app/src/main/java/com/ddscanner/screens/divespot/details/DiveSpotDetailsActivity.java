@@ -893,7 +893,11 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public void showDiveCentersButtonClicked(View view) {
         EventsTracker.trackContactDiveCenter();
-        DiveCentersActivityNew.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
+            DiveCentersActivityNew.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+            return;
+        }
+        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.no_dive_centers, R.string.booking_will_be_soon, false);
 //        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere());
     }
 
