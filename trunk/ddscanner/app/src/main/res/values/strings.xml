@@ -575,7 +575,7 @@
     <string name="email_is_required">Email is required</string>
     <string name="message_is_required">Message is required</string>
     <string name="view_profile">View profile</string>
-    <string name="success_booking_dialog_title">Gongrats</string>
-    <string name="success_booking_dialog_text">booking successful</string>
-    <string name="message_error_length">Message should be at least 10 characters</string>
+    <string name="success_booking_dialog_title">Thanks, buddy!</string>
+    <string name="success_booking_dialog_text">Your message has been sent. Have a nice dive and don’t forget to drop a line about your experience!</string>
+    <string name="message_error_length">Message should contain more that 10 characters</string>
 </resources>

@@ -15,6 +15,7 @@ import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.PhoneInputView;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -144,6 +145,8 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
 
     @Override
     public void onDialogClosed(int requestCode) {
-
+        Intent intent  = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
