@@ -79,4 +79,7 @@ public class DiveCenterRequestInputView extends LinearLayout {
         input.setInputType(inputType);
     }
 
+    public void setText(String text) {
+        input.setText(text);
+    }
 }

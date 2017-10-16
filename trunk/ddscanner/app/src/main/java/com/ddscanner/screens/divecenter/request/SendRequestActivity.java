@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -23,6 +24,29 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class SendRequestActivity extends BaseAppCompatActivity implements DialogClosedListener {
+
+    DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+            materialDialog.dismiss();
+            nameInputView.setText(result.getName());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
+        }
+    };
 
     DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -75,6 +99,8 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
         diveCenterId = getIntent().getStringExtra("dc_id");
         diveSpotId = getIntent().getStringExtra("ds_id");
         materialDialog = Helpers.getMaterialDialog(this);
+        materialDialog.show();
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserSelfInformation(userResultListener);
     }
 
     @Override
