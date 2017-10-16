@@ -24,7 +24,7 @@
         <attr name="edit_text_text" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="ContentBlockLayout">
+    <declare-styleable name="ContentBlockLinearLayout">
         <attr name="top_divider" format="boolean" />
         <attr name="bottom_divider" format="boolean" />
 

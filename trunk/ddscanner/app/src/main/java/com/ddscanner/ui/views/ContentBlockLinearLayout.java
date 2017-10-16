@@ -13,24 +13,24 @@ import android.widget.LinearLayout;
 import com.ddscanner.R;
 import com.ddscanner.utils.Helpers;
 
-public class ContentBlockLayout extends LinearLayout {
+public class ContentBlockLinearLayout extends LinearLayout {
 
     private Paint paint;
     private boolean isNeedToDrawTopDivider;
     private boolean isNeedToDrawBottomDivider;
     private Bitmap lineBitmap;
 
-    public ContentBlockLayout(Context context) {
+    public ContentBlockLinearLayout(Context context) {
         super(context);
         init(context, null);
     }
 
-    public ContentBlockLayout(Context context, AttributeSet attrs) {
+    public ContentBlockLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public ContentBlockLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ContentBlockLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -44,9 +44,9 @@ public class ContentBlockLayout extends LinearLayout {
         paint.setColor(ContextCompat.getColor(context,R.color.divider_color));
         paint.setStrokeWidth(Helpers.convertDpToIntPixels(1, getContext()));
         if (attributeSet != null) {
-            TypedArray arr = getContext().obtainStyledAttributes(attributeSet, R.styleable.ContentBlockLayout);
-            isNeedToDrawBottomDivider = arr.getBoolean(R.styleable.ContentBlockLayout_bottom_divider, true);
-            isNeedToDrawTopDivider = arr.getBoolean(R.styleable.ContentBlockLayout_top_divider, true);
+            TypedArray arr = getContext().obtainStyledAttributes(attributeSet, R.styleable.ContentBlockLinearLayout);
+            isNeedToDrawBottomDivider = arr.getBoolean(R.styleable.ContentBlockLinearLayout_bottom_divider, true);
+            isNeedToDrawTopDivider = arr.getBoolean(R.styleable.ContentBlockLinearLayout_top_divider, true);
             arr.recycle();
             invalidate();
         }

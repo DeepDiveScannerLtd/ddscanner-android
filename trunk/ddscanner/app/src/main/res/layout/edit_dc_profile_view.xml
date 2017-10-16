@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/logo_block"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
@@ -65,9 +65,9 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         android:onClick="@{handlers::changePhotoButtonCLicked}"/>
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/general_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,9 +167,9 @@
                         android:textSize="12sp"
                         android:textStyle="normal"
                         android:text="Provide your address to be shown on the map" />
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/account_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -219,9 +219,9 @@
                         android:textSize="16sp"
                         android:textStyle="normal"
                         android:theme="@style/checkBoxComponent"/>
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/dive_spots_block"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -262,9 +262,9 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         android:onClick="@{handlers::addDiveSpotClicked}"/>
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/languages_block"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -304,9 +304,9 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         android:onClick="@{handlers::addLanguageClicked}"/>
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/associations_block"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -346,9 +346,9 @@
                         android:textColor="#3b518b"
                         android:textSize="14sp"
                         android:textStyle="normal" />
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:id="@+id/brands_block"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -388,9 +388,9 @@
                         android:textColor="#3b518b"
                         android:textSize="14sp"
                         android:textStyle="normal" />
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-                <com.ddscanner.ui.views.ContentBlockLayout
+                <com.ddscanner.ui.views.ContentBlockLinearLayout
                     android:layout_marginBottom="10dp"
                     android:onClick="@{handlers::changePassword}"
                     android:id="@+id/change_password_block"
@@ -415,7 +415,7 @@
                         android:textStyle="normal"
                         android:textAllCaps="true"
                         android:text="@string/change_password_edit" />
-                </com.ddscanner.ui.views.ContentBlockLayout>
+                </com.ddscanner.ui.views.ContentBlockLinearLayout>
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
