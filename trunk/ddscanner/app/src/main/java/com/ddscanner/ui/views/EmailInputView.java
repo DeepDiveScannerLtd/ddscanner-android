@@ -15,7 +15,6 @@ import com.ddscanner.interfaces.RemoveLayoutClickListener;
 
 public class EmailInputView extends RelativeLayout {
 
-    TextView errorView;
     EditText editText;
     RemoveLayoutClickListener removeLayoutClickListener;
     TextInputLayout textInputLayout;
@@ -37,7 +36,6 @@ public class EmailInputView extends RelativeLayout {
 
     private void init() {
         inflate(getContext(), R.layout.edit_dive_center_email_edit_text, this);
-        errorView = findViewById(R.id.email_error);
         editText = findViewById(R.id.email);
         textInputLayout = findViewById(R.id.textInputLayout);
     }
@@ -61,11 +59,11 @@ public class EmailInputView extends RelativeLayout {
     }
 
     public void showError() {
-        errorView.setVisibility(VISIBLE);
+        textInputLayout.setError(getContext().getString(R.string.email_incorrect));
     }
 
     public void hideError() {
-        errorView.setVisibility(GONE);
+        textInputLayout.setErrorEnabled(false);
     }
 
     public String getText() {

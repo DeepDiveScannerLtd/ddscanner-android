@@ -292,6 +292,12 @@
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
+    <style name="checkBoxComponent" parent="AppTheme">
+        //Checked color
+        <item name="colorAccent">@color/primary</item>
+        //Checkbox border color
+    </style>
+
     <style name="ErrorsViewTitleStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

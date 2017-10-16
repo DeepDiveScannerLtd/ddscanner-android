@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/logo_block"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/avatar_dc_profile_def" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.02"
+                    android:paddingLeft="14dp"
+                    android:text="@string/change_logo"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/general_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logo_block"
+                app:top_divider="true">
+
+                <com.ddscanner.ui.views.BaseTextInput
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="16dp"
+                    app:edit_text_hint="Name" />
+
+                <com.ddscanner.ui.views.BaseTextInput
+                    android:id="@+id/bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="16dp"
+                    app:edit_text_hint="Bio" />
+
+                <LinearLayout
+                    android:id="@+id/phones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/add_phone_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingLeft="16dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/add_phone"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <LinearLayout
+                    android:id="@+id/emails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/add_email_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingLeft="16dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/add_e_mail"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/divider_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.02"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/chose_address"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="16dp"
+                    android:textColor="#a3a3a3"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="Provide your address to be shown on the map" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/account_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/general_info_layout"
+                app:top_divider="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/account_type"
+                    android:textColor="#303030"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="8sp"
+                    android:paddingLeft="38dp"
+                    android:text="@string/dive_center_checkbox"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="8sp"
+                    android:paddingLeft="38dp"
+                    android:text="@string/dive_shop"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/dive_spots_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/account_type"
+                app:top_divider="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/dive_spots_edit_dc"
+                    android:textColor="#303030"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/dive_spots_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingVertical="16dp"
+                    android:text="@string/add_dive_spot"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/languages_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dive_spots_block"
+                app:top_divider="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/languages"
+                    android:textColor="#303030"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/languages_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingVertical="16dp"
+                    android:text="@string/add_language"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/associations_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/languages_block"
+                app:top_divider="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/associations"
+                    android:textColor="#303030"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/associations_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingVertical="16dp"
+                    android:text="@string/add_asociation"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/brands_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/associations_block"
+                app:top_divider="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/brands"
+                    android:textColor="#303030"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/brands_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="5sp"
+                    android:paddingVertical="16dp"
+                    android:text="@string/add_brand"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+
+            <com.ddscanner.ui.views.ContentBlockLayout
+                android:id="@+id/change_password_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:bottom_divider="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/brands_block"
+                app:top_divider="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.02"
+                    android:paddingLeft="16dp"
+                    android:paddingVertical="20dp"
+                    android:textColor="#3b518b"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:textAllCaps="true"
+                    android:text="@string/change_password_edit" />
+            </com.ddscanner.ui.views.ContentBlockLayout>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>

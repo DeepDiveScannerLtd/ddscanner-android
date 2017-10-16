@@ -240,10 +240,25 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         , ContextCompat.getColor(this, R.color.radio_button_fill),
                 }
         );
-        setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
+        binding.name.setText(binding.getDcViewModel().getDiveCenterProfile().getName());
+        setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsNeedToContinueRegistration()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        binding.diveCenterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.associationsBlock.setVisibility(View.VISIBLE);
+            } else {
+                binding.associationsBlock.setVisibility(View.GONE);
+            }
+        });
+        binding.diveShopCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.brandsBlock.setVisibility(View.VISIBLE);
+            } else {
+                binding.brandsBlock.setVisibility(View.GONE);
+            }
+        });
         setupUi();
 
     }
@@ -255,7 +270,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     private void setupUi() {
-        binding.name.setInputType(InputType.TYPE_CLASS_TEXT);
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         if (isHaveSpots) {
@@ -264,11 +278,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             isDiveSpotsDownloaded = true;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
-        binding.diveSpotList.setLayoutManager(diveSpotsLayoutManager);
-        binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
+        binding.diveSpotsList.setLayoutManager(diveSpotsLayoutManager);
+        binding.diveSpotsList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(languagesLayoutManager);
         binding.languagesList.setAdapter(languagesListAdapter);
-        binding.diveSpotList.setNestedScrollingEnabled(false);
+        binding.diveSpotsList.setNestedScrollingEnabled(false);
         binding.languagesList.setNestedScrollingEnabled(false);
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
             diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
@@ -295,7 +309,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             } else {
                 addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), "");
             }
-            binding.pickAddressButton.setVisibility(View.GONE);
+            binding.chooseAddress.setVisibility(View.GONE);
         }
     }
 
@@ -358,7 +372,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
         this.imagePath = pictures.get(0);
-        Picasso.with(this).load("file://" + pictures.get(0)).resize(Math.round(Helpers.convertDpToPixel(65, this)),Math.round(Helpers.convertDpToPixel(65, this))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, this)),0, RoundedCornersTransformation.CornerType.ALL)).into(binding.pickPhotos);
+        Picasso.with(this).load("file://" + pictures.get(0)).resize(Math.round(Helpers.convertDpToPixel(65, this)),Math.round(Helpers.convertDpToPixel(65, this))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, this)),0, RoundedCornersTransformation.CornerType.ALL)).into(binding.logo);
     }
 
     @Override
@@ -414,7 +428,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     locationLatitude = address.getLat().toString();
                     locationLongitude = address.getLng().toString();
                     addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
-                    binding.pickAddressButton.setVisibility(View.GONE);
+                    binding.chooseAddress.setVisibility(View.GONE);
                 }
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE:
@@ -438,13 +452,15 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE);
     }
 
+
+
     private void addAddressesView(String address, String country) {
         if (addressEditText == null) {
             LinearLayout addressLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.edit_dive_center_address_edit_text, null);
             addressEditText  = addressLayout.findViewById(R.id.address);
             addressEditText.setEnabled(false);
             editAddress = addressLayout.findViewById(R.id.edit_dive_center_address);
-            binding.addresses.addView(addressLayout);
+//            binding.addresses.addView(addressLayout);
             editAddress.setOnClickListener(view -> chooseAddressClicked(editAddress));
         }
         if (!country.isEmpty()) {
@@ -484,8 +500,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (!isDataValid(phoneInputViews, emailInputViews)) {
             return;
         }
-        if (!binding.name.getText().toString().trim().isEmpty()) {
-            nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText().toString().trim());
+        if (!binding.name.getText().isEmpty()) {
+            nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText());
         }
 
         for (PhoneInputView editText : phoneInputViews) {
@@ -531,63 +547,64 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
-
+        //TODO uncomment
         RequestBody serviceRequest = null;
-        switch (binding.radioGroup.getCheckedRadioButtonId()) {
-            case R.id.company_radio:
-                serviceRequest = Helpers.createRequestBodyForString("1");
-                break;
-            case R.id.reseller_radio:
-                serviceRequest = Helpers.createRequestBodyForString("2");
-                break;
-        }
+//        switch (binding.radioGroup.getCheckedRadioButtonId()) {
+//            case R.id.company_radio:
+//                serviceRequest = Helpers.createRequestBodyForString("1");
+//                break;
+//            case R.id.reseller_radio:
+//                serviceRequest = Helpers.createRequestBodyForString("2");
+//                break;
+//        }
 
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, serviceRequest);
         materialDialog.show();
     }
 
     private boolean isDataValid(ArrayList<PhoneInputView> phoneInputViews, ArrayList<EmailInputView> emailInputViews) {
-        boolean isDataValid = true;
-        for (PhoneInputView phoneInputView : phoneInputViews) {
-            if (!validCellPhone(phoneInputView.getPhoneWithPlus().trim(), phoneInputView.getCountryName())) {
-                phoneInputView.setError();
-                isDataValid = false;
-            } else {
-                phoneInputView.hideError();
-            }
-        }
-        for (EmailInputView emailInputView : emailInputViews) {
-            if (!validEmail(emailInputView.getText().trim()) && !emailInputView.getText().trim().isEmpty()) {
-                emailInputView.showError();
-                isDataValid = false;
-            } else {
-                emailInputView.hideError();
-            }
-        }
-        binding.diveSpotError.setVisibility(View.GONE);
-        binding.nameError.setVisibility(View.GONE);
-        binding.addressError.setVisibility(View.GONE);
-
-        if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
-            binding.diveSpotError.setVisibility(View.VISIBLE);
-            isDataValid = false;
-        }
-
-        if (binding.name.getText().toString().trim().isEmpty()) {
-            binding.nameError.setVisibility(View.VISIBLE);
-            isDataValid = false;
-        }
-
-        if (!isDataValid) {
-            binding.mainLayout.scrollTo(0,0);
-        }
-
-        if (locationLatitude == null || locationLongitude == null || addressEditText == null || addressEditText.getText().toString().isEmpty()) {
-            binding.addressError.setVisibility(View.VISIBLE);
-            isDataValid = false;
-        }
-
-        return isDataValid;
+//        boolean isDataValid = true;
+//        for (PhoneInputView phoneInputView : phoneInputViews) {
+//            if (!validCellPhone(phoneInputView.getPhoneWithPlus().trim(), phoneInputView.getCountryName())) {
+//                phoneInputView.setError();
+//                isDataValid = false;
+//            } else {
+//                phoneInputView.hideError();
+//            }
+//        }
+//        for (EmailInputView emailInputView : emailInputViews) {
+//            if (!validEmail(emailInputView.getText().trim()) && !emailInputView.getText().trim().isEmpty()) {
+//                emailInputView.showError();
+//                isDataValid = false;
+//            } else {
+//                emailInputView.hideError();
+//            }
+//        }
+//        binding.diveSpotError.setVisibility(View.GONE);
+//        binding.nameError.setVisibility(View.GONE);
+//        binding.addressError.setVisibility(View.GONE);
+//
+//        if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
+//            binding.diveSpotError.setVisibility(View.VISIBLE);
+//            isDataValid = false;
+//        }
+//
+//        if (binding.name.getText().toString().trim().isEmpty()) {
+//            binding.nameError.setVisibility(View.VISIBLE);
+//            isDataValid = false;
+//        }
+//
+//        if (!isDataValid) {
+//            binding.mainLayout.scrollTo(0,0);
+//        }
+//
+//        if (locationLatitude == null || locationLongitude == null || addressEditText == null || addressEditText.getText().toString().isEmpty()) {
+//            binding.addressError.setVisibility(View.VISIBLE);
+//            isDataValid = false;
+//        }
+//
+//        return isDataValid;
+        return false;
     }
 
     private boolean validCellPhone(String number, String coutryCode) {
@@ -612,6 +629,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         switch (item.getItemId()) {
             case android.R.id.home:
                 DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                return true;
+            case R.id.save_profile:
+                saveChangesClicked(null);
                 return true;
         }
         return super.onOptionsItemSelected(item);

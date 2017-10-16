@@ -19,4 +19,15 @@
         <attr name="lines" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="BaseTextInput">
+        <attr name="edit_text_hint" format="string" />
+        <attr name="edit_text_text" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="ContentBlockLayout">
+        <attr name="top_divider" format="boolean" />
+        <attr name="bottom_divider" format="boolean" />
+
+    </declare-styleable>
+
 </resources>

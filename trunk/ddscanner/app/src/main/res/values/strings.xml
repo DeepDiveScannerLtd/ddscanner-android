@@ -580,4 +580,16 @@
     <string name="message_error_length">Message should contain more that 10 characters</string>
     <string name="no_dive_centers">No dive centers</string>
     <string name="booking_will_be_soon">Booking will be available as soon as any dive center claim to operate here</string>
+    <string name="change_logo">Change logo</string>
+    <string name="chose_address">Choose address</string>
+    <string name="dive_center_checkbox">Dive center</string>
+    <string name="dive_shop">Dive shop</string>
+    <string name="account_type">Account type</string>
+    <string name="dive_spots_edit_dc">Dive spots</string>
+    <string name="add_dive_spot">+ Add dive spot</string>
+    <string name="add_language">+ Add language</string>
+    <string name="associations">Associations</string>
+    <string name="add_asociation">+ Add association</string>
+    <string name="brands">Brands</string>
+    <string name="add_brand">+ Add brand</string>
 </resources>

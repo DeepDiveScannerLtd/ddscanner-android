@@ -295,6 +295,12 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".screens.photo.crop.CropImageActivity" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.UpdateOSActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.TestActivity" >
+        </activity>
+        <activity android:name=".screens.divecenter.edit.DiveCenterEditActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
         <receiver android:name=".receivers.DeviceBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
