@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
@@ -83,5 +84,16 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
     @Override
     public void onDialogClosed(int requestCode) {
         onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return true;
+        }
     }
 }
