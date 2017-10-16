@@ -160,6 +160,7 @@ dependencies {
     compile 'com.steelkiwi:cropiwa:1.0.3'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'

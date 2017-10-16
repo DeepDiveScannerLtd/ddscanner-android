@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -38,6 +39,7 @@ import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
+import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -131,6 +133,12 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
             binding.scrollView.scrollTo(0,0);
         }
+        TagsAdapter tagsAdapter = new TagsAdapter();
+        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(getContext())
+                .setOrientation(ChipsLayoutManager.HORIZONTAL)
+                .build();
+        binding.tags.setLayoutManager(chipsLayoutManager);
+        binding.tags.setAdapter(tagsAdapter);
     }
 
     @TargetApi(23)

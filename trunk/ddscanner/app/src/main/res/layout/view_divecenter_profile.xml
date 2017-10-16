@@ -72,7 +72,13 @@
                         android:textColor="@color/black_text"
                         android:textSize="18sp" />
                 </LinearLayout>
-
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="13dp"
+                    android:paddingBottom="13dp"
+                    android:background="@color/white"/>
                 <ImageView style="@style/DividerStyleFull" />
 
 
