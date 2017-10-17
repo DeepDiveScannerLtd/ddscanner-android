@@ -29,7 +29,7 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
 
     @Override
     public LanguageSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.item_list_language, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_list_search_base, parent, false);
         return new LanguageSearchViewHolder(view);
     }
 

@@ -592,4 +592,5 @@
     <string name="add_asociation">+ Add association</string>
     <string name="brands">Brands</string>
     <string name="add_brand">+ Add brand</string>
+    <string name="toolbar_choose_association">Choose association</string>
 </resources>

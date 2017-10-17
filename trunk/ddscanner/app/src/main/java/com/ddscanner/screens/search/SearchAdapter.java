@@ -1,4 +1,5 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.search;
+
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,54 +8,57 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.events.ObjectChosedEvent;
+import com.ddscanner.interfaces.ListItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.DiveCentersViewHolder> {
-    
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
+
     private ArrayList<BaseIdNamePhotoEntity> objectsList = new ArrayList<>();
-    private boolean isCheckable;
-    private int lastCheckedPosition = -1;
+    private ListItemClickListener<BaseIdNamePhotoEntity> listItemClickListener;
+    private ArrayList<BaseIdNamePhotoEntity> checkdObjectsList = new ArrayList<>();
 
-    public BaseSearchAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList, boolean isCheckable) {
-        this.isCheckable = isCheckable;
-        this.objectsList = new ArrayList<>(objectsList);
+    public SearchAdapter(ListItemClickListener<BaseIdNamePhotoEntity> listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
+    }
+
+    public void setObjectsList(ArrayList<BaseIdNamePhotoEntity> baseIdNamePhotoEntities) {
+        this.objectsList = baseIdNamePhotoEntities;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(DiveCentersViewHolder holder, int position) {
-        holder.textView.setText(objectsList.get(position).getName());
-        if (objectsList.get(position).isActive()) {
-            lastCheckedPosition = position;
-            holder.checkIcon.setVisibility(View.VISIBLE);
-        } else {
-            holder.checkIcon.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public DiveCentersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_search_base, parent, false);
-        return new DiveCentersViewHolder(view);
+        return new SearchViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(SearchViewHolder holder, int position) {
+        holder.name.setText(objectsList.get(position).getName());
+        if (objectsList.get(position).isActive()) {
+            holder.checkingIcon.setVisibility(View.VISIBLE);
+        } else {
+            holder.checkingIcon.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (objectsList == null) {
-            return 0;
-        }
         return objectsList.size();
     }
 
+    public ArrayList<BaseIdNamePhotoEntity> getCheckdObjectsList() {
+        return this.checkdObjectsList;
+    }
+
     public void animateTo(List<BaseIdNamePhotoEntity> models) {
-//        this.objectsList = new ArrayList<>();
-//        this.objectsList.addAll(models);
-//        notifyDataSetChanged();
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
@@ -89,52 +93,48 @@ public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.Di
         }
     }
 
-    public BaseIdNamePhotoEntity removeItem(int position) {
+    private BaseIdNamePhotoEntity removeItem(int position) {
         final BaseIdNamePhotoEntity model = objectsList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, BaseIdNamePhotoEntity model) {
+    private void addItem(int position, BaseIdNamePhotoEntity model) {
         objectsList.add(position, model);
         notifyItemInserted(position);
     }
 
-    public void moveItem(int fromPosition, int toPosition) {
+    private void moveItem(int fromPosition, int toPosition) {
         final BaseIdNamePhotoEntity model = objectsList.remove(fromPosition);
         objectsList.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
 
+    class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    class DiveCentersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        @BindView(R.id.language_name)
+        TextView name;
+        @BindView(R.id.checking_icon)
+        ImageView checkingIcon;
 
-        private TextView textView;
-        private ImageView checkIcon;
 
-        DiveCentersViewHolder(View view) {
-            super(view);
-            view.setOnClickListener(this);
-            textView = view.findViewById(R.id.language_name);
-            checkIcon = view.findViewById(R.id.checking_icon);
+        SearchViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override
-        public void onClick(View view) {
-            DDScannerApplication.bus.post(new ObjectChosedEvent(objectsList.get(getAdapterPosition())));
-            if (lastCheckedPosition != -1) {
-                objectsList.get(lastCheckedPosition).setActive(false);
-                notifyItemChanged(lastCheckedPosition);
+        public void onClick(View v) {
+            if (objectsList.get(getAdapterPosition()).isActive()) {
+                objectsList.get(getAdapterPosition()).setActive(false);
+                notifyItemChanged(getAdapterPosition());
+                checkdObjectsList.remove(objectsList.get(getAdapterPosition()));
+                return;
             }
             objectsList.get(getAdapterPosition()).setActive(true);
             notifyItemChanged(getAdapterPosition());
-
+            checkdObjectsList.add(objectsList.get(getAdapterPosition()));
         }
-
-        public void bind(BaseIdNamePhotoEntity entity) {
-            textView.setText(entity.getName());
-        }
-
     }
 
 }
