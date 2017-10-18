@@ -191,7 +191,8 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> languages,
             @Part List<MultipartBody.Part> emails,
             @Part List<MultipartBody.Part> phones,
-            @Part List<MultipartBody.Part> divespots
+            @Part List<MultipartBody.Part> divespots,
+            @Part List<MultipartBody.Part> associations
     );
 
     @GET("v2_1/countries.get")

@@ -194,20 +194,6 @@
                         android:textStyle="normal" />
 
                     <android.support.v7.widget.AppCompatCheckBox
-                        android:id="@+id/dive_center_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:fontFamily="sans-serif"
-                        android:lineSpacingExtra="8sp"
-                        android:paddingLeft="38dp"
-                        android:text="@string/dive_center_checkbox"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        android:theme="@style/checkBoxComponent"/>
-
-                    <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/dive_shop_check_box"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -318,7 +304,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/languages_block"
                     app:top_divider="false"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -334,7 +320,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -345,7 +331,8 @@
                         android:text="@string/add_asociation"
                         android:textColor="#3b518b"
                         android:textSize="14sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:onClick="@{handlers::addAssociationClicked}"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
                 <com.ddscanner.ui.views.ContentBlockLinearLayout

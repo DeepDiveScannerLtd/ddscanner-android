@@ -30,6 +30,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     public void setObjectsList(ArrayList<BaseIdNamePhotoEntity> baseIdNamePhotoEntities) {
         this.objectsList = baseIdNamePhotoEntities;
+        for (BaseIdNamePhotoEntity baseIdNamePhotoEntity : objectsList)
+            if (baseIdNamePhotoEntity.isActive()) {
+                checkdObjectsList.add(baseIdNamePhotoEntity);
+            }
         notifyDataSetChanged();
     }
 
@@ -121,6 +125,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         SearchViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         @Override

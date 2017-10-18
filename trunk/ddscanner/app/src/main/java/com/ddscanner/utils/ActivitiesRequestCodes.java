@@ -188,6 +188,7 @@ public class ActivitiesRequestCodes {
     public static final int EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION = 4202;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE = 4203;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS = 4204;
+    public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_ASSOCIATION = 4205;
 
     //Edit profile activity
     public static final int REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER = 4301;

@@ -26,6 +26,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.Association;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.Countries;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
@@ -418,6 +420,31 @@ public class Helpers {
         currents.add("Moderate - Strong");
         currents.add("Strong");
         return currents;
+    }
+
+    public static ArrayList<BaseIdNamePhotoEntity> getAssociationsList() {
+        ArrayList<BaseIdNamePhotoEntity> associations = new ArrayList<>();
+        associations.add(new BaseIdNamePhotoEntity("1", "PADI"));
+        associations.add(new BaseIdNamePhotoEntity("2", "CMAS"));
+        associations.add(new BaseIdNamePhotoEntity("3", "SSI"));
+        associations.add(new BaseIdNamePhotoEntity("4", "IANTD"));
+        associations.add(new BaseIdNamePhotoEntity("5", "TDI"));
+        associations.add(new BaseIdNamePhotoEntity("6", "SDI"));
+        associations.add(new BaseIdNamePhotoEntity("7", "NDL"));
+        associations.add(new BaseIdNamePhotoEntity("8", "IDD"));
+        associations.add(new BaseIdNamePhotoEntity("9", "IDEA"));
+        associations.add(new BaseIdNamePhotoEntity("10", "NAUI"));
+        associations.add(new BaseIdNamePhotoEntity("11", "PSA"));
+        associations.add(new BaseIdNamePhotoEntity("12", "BSAC"));
+        associations.add(new BaseIdNamePhotoEntity("13", "DAN"));
+        return associations;
+    }
+
+    public static BaseIdNamePhotoEntity getAssociationByCode(int code) {
+        if (getAssociationsList().get(code - 1) == null) {
+            return null;
+        }
+        return getAssociationsList().get(code - 1);
     }
 
     public static String getDiveSpotType(int position) {

@@ -24,6 +24,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotShort;
@@ -33,9 +34,11 @@ import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.RemoveLayoutClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.BaseSearchActivity;
 import com.ddscanner.ui.activities.ChangeAddressActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
+import com.ddscanner.ui.adapters.BaseAdapterForEditProfile;
 import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -50,12 +53,14 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -90,6 +95,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private RequestBody countryRequestBody = null, addressRequestBody = null, nameRequestBody = null;
     private DiveSpotsListForEditDcAdapter diveSpotsListForEditDcAdapter = new DiveSpotsListForEditDcAdapter();
     private DiveCenterLanguagesListAdapter languagesListAdapter = new DiveCenterLanguagesListAdapter();
+    private BaseAdapterForEditProfile associationsListAdapter = new BaseAdapterForEditProfile();
     private String country;
     private MaterialDialog materialDialog;
     private boolean isHaveSpots;
@@ -99,10 +105,12 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private TextView editAddress;
     private LinearLayoutManager diveSpotsLayoutManager;
     private LinearLayoutManager languagesLayoutManager;
+    private LinearLayoutManager associationsLayoutManager;
     private RemoveLayoutClickListener removePhoneLayoutClickListener;
     private RemoveLayoutClickListener removeEmailLayoutClickListener;
 
     private EditDcProfileViewBinding binding;
+    private Gson gson = new Gson();
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -223,6 +231,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         diveSpotsLayoutManager = new LinearLayoutManager(this);
         languagesLayoutManager = new LinearLayoutManager(this);
+        associationsLayoutManager = new LinearLayoutManager(this);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
         removePhoneLayoutClickListener = view -> binding.phones.removeView(view);
         removeEmailLayoutClickListener = view -> binding.emails.removeView(view);
@@ -245,13 +254,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsNeedToContinueRegistration()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-        binding.diveCenterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                binding.associationsBlock.setVisibility(View.VISIBLE);
-            } else {
-                binding.associationsBlock.setVisibility(View.GONE);
-            }
-        });
         binding.diveShopCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 binding.brandsBlock.setVisibility(View.VISIBLE);
@@ -281,9 +283,12 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         binding.diveSpotsList.setLayoutManager(diveSpotsLayoutManager);
         binding.diveSpotsList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(languagesLayoutManager);
+        binding.associationsList.setLayoutManager(associationsLayoutManager);
+        binding.associationsList.setAdapter(associationsListAdapter);
         binding.languagesList.setAdapter(languagesListAdapter);
         binding.diveSpotsList.setNestedScrollingEnabled(false);
         binding.languagesList.setNestedScrollingEnabled(false);
+        binding.associationsList.setNestedScrollingEnabled(false);
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
             diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
         }
@@ -442,6 +447,14 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         }
                     }
                     languagesListAdapter.addLanguage(language);
+                }
+                break;
+            case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_ASSOCIATION:
+                if (resultCode == RESULT_OK) {
+                    String listString = data.getStringExtra("objects");
+                    Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>(){}.getType();
+                    ArrayList<BaseIdNamePhotoEntity> baseIdNamePhotoEntities = new Gson().fromJson(listString, listType);
+                    associationsListAdapter.updateData(baseIdNamePhotoEntities);
                 }
                 break;
 
@@ -659,6 +672,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         finish();
     }
 
-
+    public void addAssociationClicked(View view) {
+        BaseSearchActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_ASSOCIATION, BaseSearchActivity.SearchSource.ASSOCIATION, gson.toJson(associationsListAdapter.getOjects()));
+    }
 
 }

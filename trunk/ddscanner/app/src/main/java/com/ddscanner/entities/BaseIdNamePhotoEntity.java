@@ -10,6 +10,11 @@ public class BaseIdNamePhotoEntity implements Serializable{
     private String code;
     private boolean isActive = false;
 
+    public BaseIdNamePhotoEntity(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public boolean isActive() {
         return isActive;
     }

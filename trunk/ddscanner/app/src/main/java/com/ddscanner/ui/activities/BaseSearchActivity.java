@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ddscanner.R;
@@ -14,6 +16,7 @@ import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.search.SearchAdapter;
+import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.rey.material.widget.ProgressView;
@@ -103,7 +106,10 @@ public class BaseSearchActivity extends BaseAppCompatActivity implements ListIte
 
                 break;
             case ASSOCIATION:
+                entities = Helpers.getAssociationsList();
                 setupToolbar(R.string.toolbar_choose_association, R.id.toolbar);
+                updateAssociatioList();
+                invalidateOptionsMenu();
                 break;
         }
     }
@@ -120,4 +126,38 @@ public class BaseSearchActivity extends BaseAppCompatActivity implements ListIte
     public void onItemClick(BaseIdNamePhotoEntity item) {
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.save:
+                Intent intent = new Intent();
+                intent.putExtra("objects", gson.toJson(searchAdapter.getCheckdObjectsList()));
+                setResult(RESULT_OK, intent);
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateAssociatioList() {
+        if (currentData.size() > 0) {
+            for (BaseIdNamePhotoEntity oldEntity : currentData) {
+                for (BaseIdNamePhotoEntity newEntity : entities) {
+                    if (oldEntity.getName().equals(newEntity.getName())) {
+                        entities.get(entities.indexOf(newEntity)).setActive(true);
+                    }
+                }
+            }
+        }
+        searchList.setLayoutManager(new LinearLayoutManager(this));
+        searchList.setAdapter(searchAdapter);
+        searchAdapter.setObjectsList(entities);
+        searchList.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.GONE);
+    }
+
 }
