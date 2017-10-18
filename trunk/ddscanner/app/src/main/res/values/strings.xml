@@ -375,7 +375,7 @@
     <string name="add_phone">+ Add phone</string>
     <string name="add_e_mail">+ Add e-mail</string>
     <string name="add_account">+ Add account</string>
-    <string name="dive_center_spots_count">My dive spots (%1$s)</string>
+    <string name="dive_center_spots_count">MY DIVE SPOTS (%1$s)</string>
     <string name="dive_center_spots_count_foreign">Dive spots (%1$s)</string>
     <string name="i_am_working_here">I am working here</string>
     <string name="new_language">New language</string>
@@ -593,4 +593,7 @@
     <string name="brands">Brands</string>
     <string name="add_brand">+ Add brand</string>
     <string name="toolbar_choose_association">Choose association</string>
+    <string name="divecenter_type_dc">Dive center</string>
+    <string name="divecenter_type_dive_shop">Dive center / Dive shop</string>
+    <string name="al_brands_pattern">SHOW ALL BRANDS (%1$s)</string>
 </resources>

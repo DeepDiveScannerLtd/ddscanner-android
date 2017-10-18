@@ -1,5 +1,6 @@
 package com.ddscanner.entities;
 
+import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -14,7 +15,6 @@ public class DiveCenterProfile implements Serializable{
     private Integer id;
     private String name;
     private String photo;
-    private String about;
     private int type;
     @SerializedName("country_name")
     private String countryName;
@@ -45,6 +45,65 @@ public class DiveCenterProfile implements Serializable{
     private Integer serviceType;
     @SerializedName("provider_type")
     private Integer providerType;
+    @SerializedName("bio")
+    private String about;
+    private ArrayList<Brand> brands;
+    private ArrayList<Integer> associations;
+    @SerializedName("is_dive_shop")
+    private int isDiveShop;
+    @SerializedName("brands_count")
+    private String brandsCount;
+
+    public String getBrandsCount() {
+        return brandsCount;
+    }
+
+    public void setBrandsCount(String brandsCount) {
+        this.brandsCount = brandsCount;
+    }
+
+    public boolean isDiveShop() {
+        if (isDiveShop == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setDiveShop(int diveShop) {
+        isDiveShop = diveShop;
+    }
+
+    public ArrayList<Brand> getBrands() {
+        return brands;
+    }
+
+    public ArrayList<BaseIdNamePhotoEntity> getBrandsForEditProfile() {
+        ArrayList<BaseIdNamePhotoEntity> list = new ArrayList<>();
+        for (Brand brand : brands) {
+            list.add(new BaseIdNamePhotoEntity(brand.getId(), brand.getName()));
+        }
+        return list;
+    }
+
+    public ArrayList<BaseIdNamePhotoEntity> getAssociatinsForEditProfile() {
+        ArrayList<BaseIdNamePhotoEntity> list = new ArrayList<>();
+        for (Integer integer : associations) {
+            list.add(new BaseIdNamePhotoEntity(Helpers.getAssociationByCode(integer).getId(), Helpers.getAssociationByCode(integer).getName()));
+        }
+        return list;
+    }
+
+    public void setBrands(ArrayList<Brand> brands) {
+        this.brands = brands;
+    }
+
+    public ArrayList<Integer> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(ArrayList<Integer> associations) {
+        this.associations = associations;
+    }
 
     public Integer getProviderType() {
         return providerType;

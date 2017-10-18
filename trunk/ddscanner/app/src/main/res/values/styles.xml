@@ -452,7 +452,7 @@
         <!-- Hint color and label color in FALSE state -->
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">#f0f0f0</item>
-        <item name="colorControlActivated">#f0f0f0</item>
+        <item name="colorControlActivated">#bbbbbb</item>
     </style>
 
 </resources>

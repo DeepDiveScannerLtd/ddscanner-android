@@ -180,6 +180,13 @@
                         android:textSize="12sp"
                         android:textStyle="normal"
                         android:text="Provide your address to be shown on the map" />
+                    <TextView
+                        android:id="@+id/address_error"
+                        android:layout_marginTop="10dp"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/address_is_required"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginBottom="10dp"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
                 <com.ddscanner.ui.views.ContentBlockLinearLayout
@@ -261,6 +268,13 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         android:onClick="@{handlers::addDiveSpotClicked}"/>
+                    <TextView
+                        android:id="@+id/dive_spot_error"
+                        android:layout_marginTop="10dp"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/dive_spot_is_required"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginBottom="10dp"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
                 <com.ddscanner.ui.views.ContentBlockLinearLayout

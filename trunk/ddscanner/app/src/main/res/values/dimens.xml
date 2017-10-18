@@ -33,4 +33,6 @@
     <dimen name="button_height">50dp</dimen>
     <dimen name="photos_radius">2dp</dimen>
     <dimen name="line_spacing">5sp</dimen>
+
+    <dimen name="tag_apdding">8dp</dimen>
 </resources>

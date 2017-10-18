@@ -84,4 +84,8 @@ public class PhoneInputView extends RelativeLayout {
         return countryCodePicker.getSelectedCountryNameCode();
     }
 
+    public void showDeleteButon() {
+        delete.setVisibility(VISIBLE);
+    }
+
 }

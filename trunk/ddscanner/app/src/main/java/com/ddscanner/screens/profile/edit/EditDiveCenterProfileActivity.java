@@ -295,6 +295,15 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
             diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
         }
+        if (binding.getDcViewModel().getDiveCenterProfile().getAbout() != null) {
+            binding.bio.setText(binding.getDcViewModel().getDiveCenterProfile().getAbout());
+        }
+        if (binding.getDcViewModel().getDiveCenterProfile().getAssociations() != null) {
+            associationsListAdapter.addAllobjects(binding.getDcViewModel().getDiveCenterProfile().getAssociatinsForEditProfile());
+        }
+        if (binding.getDcViewModel().getDiveCenterProfile().getBrands() != null) {
+            brandsListAdapter.addAllobjects(binding.getDcViewModel().getDiveCenterProfile().getBrandsForEditProfile());
+        }
         if (binding.getDcViewModel().getDiveCenterProfile().getPhones() == null) {
             addPhoneClicked(null);
         } else {
@@ -319,6 +328,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
             binding.chooseAddress.setText(R.string.edit);
         }
+        binding.diveShopCheckBox.setChecked(binding.getDcViewModel().getDiveCenterProfile().isDiveShop());
     }
 
     public void addEmailClicked(View view) {
@@ -329,6 +339,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     public void addPhoneClicked(View view) {
         PhoneInputView phoneInputView = new PhoneInputView(this);
+        phoneInputView.showDeleteButon();
         phoneInputView.setRemoveLayoutClickListener(removePhoneLayoutClickListener);
         binding.phones.addView(phoneInputView);
     }
@@ -342,6 +353,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private void addPhoneView(String text) {
         PhoneInputView phoneInputView = new PhoneInputView(this);
+        phoneInputView.showDeleteButon();
         phoneInputView.setRemoveLayoutClickListener(removePhoneLayoutClickListener);
         phoneInputView.setPhone(text);
         binding.phones.addView(phoneInputView);
@@ -531,8 +543,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
         }
 
-        if (locationLatitude != null && locationLongitude != null && addressEditText != null && !addressEditText.getText().toString().isEmpty()) {
-            com.ddscanner.entities.Address address = new com.ddscanner.entities.Address(addressEditText.getText().toString(), Double.valueOf(locationLatitude), Double.valueOf(locationLongitude));
+        if (locationLatitude != null && locationLongitude != null) {
+            com.ddscanner.entities.Address address = new com.ddscanner.entities.Address(binding.addressInput.getText(), Double.valueOf(locationLatitude), Double.valueOf(locationLongitude));
             ArrayList<com.ddscanner.entities.Address> addresses = new ArrayList<>();
             addresses.add(address);
             addressRequestBody = Helpers.createRequestBodyForString(new Gson().toJson(addresses));
@@ -571,6 +583,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     brands.add(MultipartBody.Part.createFormData("brands[]", baseIdNamePhotoEntity.getId()));
                 }
             }
+        } else {
+            isDiveShopRequestBody = Helpers.createRequestBodyForString("0");
         }
 
         if (associationsListAdapter.getItemCount() > 0) {
@@ -590,6 +604,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private boolean isDataValid(ArrayList<PhoneInputView> phoneInputViews, ArrayList<EmailInputView> emailInputViews) {
         boolean isDataValid = true;
+        binding.name.hideError();
+        binding.diveSpotError.setVisibility(View.GONE);
+        binding.addressError.setVisibility(View.GONE);
         for (PhoneInputView phoneInputView : phoneInputViews) {
             if (!validCellPhone(phoneInputView.getPhoneWithPlus().trim(), phoneInputView.getCountryName())) {
                 phoneInputView.setError();
@@ -612,9 +629,21 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             isDataValid = false;
         }
 
+        if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
+            isDataValid = false;
+            binding.diveSpotError.setVisibility(View.VISIBLE);
+        }
+
+        if (locationLatitude == null || locationLongitude == null) {
+            binding.addressError.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+
         if (!isDataValid) {
             binding.mainLayout.scrollTo(0,0);
         }
+
+
 
         return isDataValid;
     }

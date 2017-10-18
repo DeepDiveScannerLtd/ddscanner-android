@@ -59,6 +59,10 @@ public class BaseTextInput extends RelativeLayout {
         textInputLayout.setError(text);
     }
 
+    public void hideError() {
+        textInputLayout.setErrorEnabled(false);
+    }
+
     public void disable() {
         editText.setEnabled(false);
         editText.setClickable(false);

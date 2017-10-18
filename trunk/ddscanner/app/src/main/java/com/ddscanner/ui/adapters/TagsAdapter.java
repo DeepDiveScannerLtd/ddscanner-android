@@ -18,10 +18,9 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
 
     private ArrayList<String> strings = new ArrayList<>();
 
-    public TagsAdapter() {
-        strings.add("one");
-        strings.add("four");
-        strings.add("mnogogogog");
+    public void setStrings(ArrayList<String> strings) {
+        this.strings = strings;
+        notifyDataSetChanged();
     }
 
     @Override

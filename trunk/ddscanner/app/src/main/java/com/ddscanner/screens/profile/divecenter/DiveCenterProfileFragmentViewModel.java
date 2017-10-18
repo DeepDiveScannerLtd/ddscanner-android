@@ -68,7 +68,7 @@ public class DiveCenterProfileFragmentViewModel {
     }
 
     @BindingAdapter({"myDiveSpotsCount"})
-    public static void mySpotsCount(Button view, DiveCenterProfileFragmentViewModel diveCenterProfileFragmentViewModel) {
+    public static void mySpotsCount(TextView view, DiveCenterProfileFragmentViewModel diveCenterProfileFragmentViewModel) {
         if (diveCenterProfileFragmentViewModel !=null) {
             if (diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount() > 0) {
                 view.setVisibility(View.VISIBLE);
@@ -97,6 +97,13 @@ public class DiveCenterProfileFragmentViewModel {
             }
         }
         view.setText(outString);
+    }
+
+    @BindingAdapter({"loadAllBrandsText"})
+    public static void setBrandsText(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setText(view.getContext().getString(R.string.al_brands_pattern, viewModel.getDiveCenterProfile().getBrandsCount()));
+        }
     }
 
     @BindingAdapter({"setEmails"})
