@@ -181,18 +181,20 @@ public interface DDScannerRestService {
     Call<ResponseBody> postForgotPassword(@Query("email") String email);
 
     @Multipart
-    @POST("v2_1/user.divecenter.profile.update")
+    @POST("v2_2/user.divecenter.profile.update")
     Call<ResponseBody> postUpdateDiveCenterProfile(
             @Part MultipartBody.Part image,
             @Part("name") RequestBody name,
             @Part("country") RequestBody country,
             @Part("addresses") RequestBody adresses,
-            @Part("service") RequestBody service,
+            @Part("is_dive_shop") RequestBody service,
+            @Part("about") RequestBody about,
             @Part List<MultipartBody.Part> languages,
             @Part List<MultipartBody.Part> emails,
             @Part List<MultipartBody.Part> phones,
             @Part List<MultipartBody.Part> divespots,
-            @Part List<MultipartBody.Part> associations
+            @Part List<MultipartBody.Part> associations,
+            @Part List<MultipartBody.Part> brands
     );
 
     @GET("v2_1/countries.get")
@@ -370,5 +372,8 @@ public interface DDScannerRestService {
 
     @POST("v2_2/divecenter.request_booking")
     Call<ResponseBody> postRequestBooking(@Body DiveCenterRequestBookingRequest request);
+
+    @GET("v2_2/brands.get")
+    Call<ResponseBody> getBrands();
 
 }

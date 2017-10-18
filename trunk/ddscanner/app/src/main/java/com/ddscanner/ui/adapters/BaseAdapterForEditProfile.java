@@ -41,7 +41,7 @@ public class BaseAdapterForEditProfile extends RecyclerView.Adapter<BaseAdapterF
         notifyDataSetChanged();
     }
 
-    public void addLanguage(BaseIdNamePhotoEntity object) {
+    public void addObject(BaseIdNamePhotoEntity object) {
         this.objects.add(object);
         notifyDataSetChanged();
     }

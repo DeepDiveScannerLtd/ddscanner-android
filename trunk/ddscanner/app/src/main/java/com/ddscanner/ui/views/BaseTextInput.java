@@ -4,6 +4,7 @@ package com.ddscanner.ui.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.design.widget.TextInputLayout;
+import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -38,8 +39,10 @@ public class BaseTextInput extends RelativeLayout {
             TypedArray arr = getContext().obtainStyledAttributes(attributeSet, R.styleable.BaseTextInput);
             CharSequence hint = arr.getString(R.styleable.BaseTextInput_edit_text_hint);
             CharSequence text = arr.getString(R.styleable.BaseTextInput_edit_text_text);
+            int length = arr.getInteger(R.styleable.BaseTextInput_edit_text_length, 255);
             editText.setText(text);
             textInputLayout.setHint(hint);
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
             arr.recycle();
         }
     }
@@ -50,6 +53,15 @@ public class BaseTextInput extends RelativeLayout {
 
     public void setText(String text) {
         editText.setText(text);
+    }
+
+    public void setError(String text) {
+        textInputLayout.setError(text);
+    }
+
+    public void disable() {
+        editText.setEnabled(false);
+        editText.setClickable(false);
     }
 
 }

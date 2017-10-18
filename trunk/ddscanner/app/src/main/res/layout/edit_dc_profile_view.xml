@@ -85,7 +85,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="16dp"
-                        app:edit_text_hint="Name"/>
+                        app:edit_text_hint="Name"
+                        app:edit_text_length="32"/>
 
                     <com.ddscanner.ui.views.BaseTextInput
                         android:id="@+id/bio"
@@ -93,7 +94,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="16dp"
-                        app:edit_text_hint="Bio" />
+                        app:edit_text_hint="Bio"
+                        app:edit_text_length="255"/>
 
                     <LinearLayout
                         android:id="@+id/phones"
@@ -143,6 +145,16 @@
                         android:layout_marginTop="16dp"
                         android:background="@color/divider_color" />
 
+                    <com.ddscanner.ui.views.BaseTextInput
+                        android:layout_marginTop="16dp"
+                        android:clickable="false"
+                        android:id="@+id/address_input"
+                        android:layout_marginLeft="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:edit_text_hint="Address"
+                        android:visibility="gone"/>
+
                     <TextView
                         android:id="@+id/choose_address"
                         android:layout_width="match_parent"
@@ -151,11 +163,12 @@
                         android:letterSpacing="0.02"
                         android:paddingBottom="12dp"
                         android:paddingLeft="16dp"
-                        android:paddingTop="16dp"
+                        android:paddingTop="9dp"
                         android:text="@string/chose_address"
                         android:textColor="#3b518b"
                         android:textSize="14sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:onClick="@{handlers::chooseAddressClicked}"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -363,7 +376,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -374,7 +387,8 @@
                         android:text="@string/add_brand"
                         android:textColor="#3b518b"
                         android:textSize="14sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:onClick="@{handlers::addBrandClicked}"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
                 <com.ddscanner.ui.views.ContentBlockLinearLayout

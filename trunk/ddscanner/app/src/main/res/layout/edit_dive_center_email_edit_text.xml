@@ -7,9 +7,9 @@
 <android.support.design.widget.TextInputLayout
     android:id="@+id/textInputLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/TextLabel">
 <EditText android:id="@+id/email"
-    style="@style/DiveCenterProfileEditText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
@@ -21,12 +21,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawableRight="@drawable/ic_addds_delete"
     android:paddingRight="15dp"
+    android:textSize="15sp"
     />
 </android.support.design.widget.TextInputLayout>
-    <TextView
-        android:layout_marginLeft="0dp"
-        android:layout_below="@+id/textInputLayout"
-        android:text="@string/enter_a_valid_email_address"
-        android:id="@+id/email_error"
-        style="@style/ValidationErrorTextView" />
 </RelativeLayout>

@@ -300,7 +300,7 @@
         <activity android:name=".screens.divecenter.edit.DiveCenterEditActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".screens.associations.AssociationsActivity" />
+        <activity android:name=".screens.brands.BrandsActivity" />
         <activity android:name=".ui.activities.BaseSearchActivity" />
 
         <receiver android:name=".receivers.DeviceBootReceiver">
