@@ -165,6 +165,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         }
 
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getBrands() != null) {
+            binding.brandsList.setNestedScrollingEnabled(false);
             binding.brandsList.setLayoutManager(new GridLayoutManager(getContext(), 6));
             BrandsGridListAdapter brandsGridListAdapter = new BrandsGridListAdapter();
             binding.brandsList.setAdapter(brandsGridListAdapter);
