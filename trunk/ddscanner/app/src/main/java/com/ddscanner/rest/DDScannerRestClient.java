@@ -1127,6 +1127,22 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getDiveCenterBrands(ResultListener<ArrayList<Brand>> resultListener, String diveCenterId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterBrands(diveCenterId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<Brand>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<Brand>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<Brand>>(){}.getType();
+                ArrayList<Brand> brands = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(brands);
+            }
+        });
+    }
+
     public void requestBooking(DiveCenterRequestBookingRequest request, ResultListener<Void> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

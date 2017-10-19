@@ -70,7 +70,9 @@ public class BrandsAdapter extends RecyclerView.Adapter<BrandsAdapter.BrandViewH
 
         @Override
         public void onClick(View v) {
-            listItemClickListener.onItemClick(brands.get(getAdapterPosition()));
+            if (listItemClickListener != null) {
+                listItemClickListener.onItemClick(brands.get(getAdapterPosition()));
+            }
         }
     }
 

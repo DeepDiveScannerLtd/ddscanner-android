@@ -33,6 +33,7 @@ import com.ddscanner.events.LogoutEvent;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.brands.BrandsActivity;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
@@ -322,7 +323,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     }
 
     public void showAllBrands(View view) {
-
+        BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
     }
 
 }
