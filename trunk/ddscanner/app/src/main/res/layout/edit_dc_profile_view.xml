@@ -233,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="12dp"
                     android:paddingTop="16dp"
                     app:bottom_divider="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -242,6 +242,7 @@
                     app:top_divider="true">
 
                     <TextView
+                        android:paddingLeft="4dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
@@ -258,6 +259,7 @@
                         android:visibility="visible" />
 
                     <TextView
+                        android:paddingLeft="4dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
@@ -282,7 +284,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="12dp"
                     android:paddingTop="16dp"
                     app:bottom_divider="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -291,6 +293,7 @@
                     app:top_divider="false">
 
                     <TextView
+                        android:paddingLeft="4dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
@@ -316,6 +319,7 @@
                         android:textColor="#3b518b"
                         android:textSize="14sp"
                         android:textStyle="normal"
+                        android:paddingLeft="4dp"
                         android:onClick="@{handlers::addLanguageClicked}"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
@@ -324,7 +328,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="12dp"
                     android:paddingTop="16dp"
                     app:bottom_divider="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -334,6 +338,7 @@
                     android:visibility="visible">
 
                     <TextView
+                        android:paddingLeft="4dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
@@ -359,6 +364,7 @@
                         android:textColor="#3b518b"
                         android:textSize="14sp"
                         android:textStyle="normal"
+                        android:paddingLeft="4dp"
                         android:onClick="@{handlers::addAssociationClicked}"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
@@ -367,7 +373,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="12dp"
                     android:paddingTop="16dp"
                     app:bottom_divider="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -383,6 +389,7 @@
                         android:text="@string/brands"
                         android:textColor="#303030"
                         android:textSize="15sp"
+                        android:paddingLeft="4dp"
                         android:textStyle="normal" />
 
                     <android.support.v7.widget.RecyclerView
@@ -402,6 +409,7 @@
                         android:textColor="#3b518b"
                         android:textSize="14sp"
                         android:textStyle="normal"
+                        android:paddingLeft="4dp"
                         android:onClick="@{handlers::addBrandClicked}"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 

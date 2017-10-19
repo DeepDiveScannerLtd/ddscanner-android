@@ -22,7 +22,7 @@ public class BaseAdapterForEditProfile extends RecyclerView.Adapter<BaseAdapterF
 
     @Override
     public BaseRemovableItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dive_spot_dc_profile, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_removable_tag, parent, false);
         return new BaseRemovableItemViewHolder(view);
     }
 

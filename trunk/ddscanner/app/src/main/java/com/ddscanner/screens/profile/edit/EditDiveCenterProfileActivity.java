@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -49,6 +51,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.ItemDecoration;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -108,10 +111,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isDiveSpotsDownloaded = false;
     private ColorStateList colorStateList;
     private TextView editAddress;
-    private LinearLayoutManager diveSpotsLayoutManager;
-    private LinearLayoutManager languagesLayoutManager;
-    private LinearLayoutManager associationsLayoutManager;
-    private LinearLayoutManager brandsLayoutManager;
+    private ChipsLayoutManager diveSpotsLayoutManager;
+    private ChipsLayoutManager languagesLayoutManager;
+    private ChipsLayoutManager associationsLayoutManager;
+    private ChipsLayoutManager brandsLayoutManager;
     private RemoveLayoutClickListener removePhoneLayoutClickListener;
     private RemoveLayoutClickListener removeEmailLayoutClickListener;
 
@@ -235,23 +238,24 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-        diveSpotsLayoutManager = new LinearLayoutManager(this);
-        languagesLayoutManager = new LinearLayoutManager(this);
-        associationsLayoutManager = new LinearLayoutManager(this);
-        brandsLayoutManager = new LinearLayoutManager(this);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
-        removePhoneLayoutClickListener = view -> binding.phones.removeView(view);
-        removeEmailLayoutClickListener = view -> binding.emails.removeView(view);
-        isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_DIVECENTER), DiveCenterProfile.class)));
+        initLayoutManagers();
+        initCheckbox();
+        initListeners();
+        isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
         countryCode = binding.getDcViewModel().getDiveCenterProfile().getCountryCode();
         binding.name.setText(binding.getDcViewModel().getDiveCenterProfile().getName());
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.menu_search_save);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsNeedToContinueRegistration()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        setupUi();
+
+    }
+
+    private void initCheckbox() {
         binding.diveShopCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 binding.brandsBlock.setVisibility(View.VISIBLE);
@@ -259,8 +263,43 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 binding.brandsBlock.setVisibility(View.GONE);
             }
         });
-        setupUi();
+    }
 
+    private void initListeners() {
+        removePhoneLayoutClickListener = view -> binding.phones.removeView(view);
+        removeEmailLayoutClickListener = view -> binding.emails.removeView(view);
+    }
+
+    private void initLayoutManagers() {
+        diveSpotsLayoutManager = ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build();
+        languagesLayoutManager = ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build();
+        associationsLayoutManager = ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build();
+        brandsLayoutManager = ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build();
+    }
+
+    private void initLists() {
+        SpacingItemDecoration itemDecoration = new SpacingItemDecoration(Helpers.convertDpToIntPixels(4, this), Helpers.convertDpToIntPixels(4, this));
+
+        binding.diveSpotsList.setLayoutManager(diveSpotsLayoutManager);
+        binding.diveSpotsList.setAdapter(diveSpotsListForEditDcAdapter);
+        binding.diveSpotsList.addItemDecoration(itemDecoration);
+
+        binding.languagesList.setLayoutManager(languagesLayoutManager);
+        binding.languagesList.setAdapter(languagesListAdapter);
+        binding.languagesList.addItemDecoration(itemDecoration);
+
+        binding.associationsList.setLayoutManager(associationsLayoutManager);
+        binding.associationsList.setAdapter(associationsListAdapter);
+        binding.associationsList.addItemDecoration(itemDecoration);
+
+        binding.brandsList.setLayoutManager(brandsLayoutManager);
+        binding.brandsList.setAdapter(brandsListAdapter);
+        binding.brandsList.addItemDecoration(itemDecoration);
+
+        binding.diveSpotsList.setNestedScrollingEnabled(false);
+        binding.languagesList.setNestedScrollingEnabled(false);
+        binding.associationsList.setNestedScrollingEnabled(false);
+        binding.brandsList.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -280,18 +319,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
             DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
         }
-        binding.diveSpotsList.setLayoutManager(diveSpotsLayoutManager);
-        binding.diveSpotsList.setAdapter(diveSpotsListForEditDcAdapter);
-        binding.languagesList.setLayoutManager(languagesLayoutManager);
-        binding.brandsList.setLayoutManager(brandsLayoutManager);
-        binding.associationsList.setLayoutManager(associationsLayoutManager);
-        binding.associationsList.setAdapter(associationsListAdapter);
-        binding.languagesList.setAdapter(languagesListAdapter);
-        binding.brandsList.setAdapter(brandsListAdapter);
-        binding.diveSpotsList.setNestedScrollingEnabled(false);
-        binding.languagesList.setNestedScrollingEnabled(false);
-        binding.associationsList.setNestedScrollingEnabled(false);
-        binding.brandsList.setNestedScrollingEnabled(false);
+        initLists();
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
             diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
         }
@@ -501,16 +529,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         ChangePasswordActivity.show(this);
     }
 
-    private ArrayList<PhoneInputView> getPhonenputs() {
-        ArrayList<PhoneInputView> phoneInputViews = new ArrayList<>();
-        if (binding.phones.getChildCount() > 0) {
-            for (int i = 0; i < binding.phones.getChildCount(); i++) {
-                phoneInputViews.add((PhoneInputView) binding.phones.getChildAt(i));
-            }
-        }
-        return phoneInputViews;
-    }
-
     private <T> ArrayList<T> getInputViewsList(LinearLayout linearLayout) {
         ArrayList<T> phoneInputViews = new ArrayList<>();
         if (linearLayout.getChildCount() > 0) {
@@ -655,10 +673,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         } catch (NumberParseException exception) {
             return false;
         }
-//        if (number.length() > 7 && number.length() < 17) {
-//            return true;
-//        }
-//        return false;
     }
 
     private boolean validEmail(String email) {

@@ -18,7 +18,7 @@ public class DiveCenterLanguagesListAdapter extends RecyclerView.Adapter<DiveCen
 
     @Override
     public LanguagesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dive_spot_dc_profile, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_removable_tag, parent, false);
         return new LanguagesViewHolder(view);
     }
 

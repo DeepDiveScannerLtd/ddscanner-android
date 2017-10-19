@@ -18,7 +18,7 @@ public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpot
 
     @Override
     public DiveSpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dive_spot_dc_profile, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_removable_tag, parent, false);
         return new DiveSpotViewHolder(view);
     }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal"
+    android:background="@drawable/removable_tag_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="7dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/dive_spot_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#616161"
+        android:letterSpacing="0.01"
+        tools:text="Shark point"
+        />
+
+    <ImageView
+        android:id="@+id/ic_delete"
+        android:layout_marginLeft="8dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_addds_delete"/>
+
+</LinearLayout>
