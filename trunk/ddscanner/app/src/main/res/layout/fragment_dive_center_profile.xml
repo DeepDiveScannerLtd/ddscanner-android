@@ -64,16 +64,42 @@
                         tools:text="aquacenter thailand" />
 
                     <TextView
-                        app:loadServiceTypeFrom="@{diveCenterViewModel}"
+                        android:id="@+id/type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:textColor="#a3a3a3"
                         android:textSize="13sp"
-                        tools:text="Company" />
+                        android:fontFamily="sans-serif"
+                        android:textStyle="normal"
+                        android:textColor="#a3a3a3"
+                        android:letterSpacing="0.02"
+                        android:lineSpacingExtra="6sp"
+                        tools:text="Dive center / Dive shop"
+                        />
                 </LinearLayout>
-            </LinearLayout>
 
+            </LinearLayout>
+            <TextView
+                android:id="@+id/about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#616161"
+                android:letterSpacing="0.02"
+                android:lineSpacingExtra="6sp"
+                android:paddingHorizontal="13dp"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                tools:text="Don’t leave your shopping to the last minute. The more time you have to shop around, the you can."
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="9dp"
+                android:paddingBottom="13dp"
+                android:background="@color/white"/>
             <ImageView style="@style/DividerStyleFull" />
 
             <LinearLayout
@@ -282,6 +308,50 @@
 
             <ImageView style="@style/DividerStyleFull" />
 
+            <com.ddscanner.ui.views.ContentBlockLinearLayout
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:top_divider="true"
+                app:bottom_divider="true"
+                android:visibility="@{diveCenterViewModel.diveCenterProfile.brands != null ? View.VISIBLE : View.GONE}">
+                <TextView
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:textColor="#313131"
+                    android:text="Brands"
+                    android:layout_marginBottom="2dp"
+                    />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/brands_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_marginBottom="15dp"/>
+                <ImageView style="@style/DividerStyleFull" />
+                <TextView
+                    android:onClick="@{handlers::showAllBrands}"
+                    android:paddingLeft="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="normal"
+                    android:textColor="#3b528b"
+                    android:letterSpacing="0.02"
+                    tools:text="Show all brands (20)"
+                    app:loadAllBrandsText="@{diveCenterViewModel}"
+                    />
+            </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
             <LinearLayout
                 android:layout_marginTop="@dimen/base_block_margin_top"
                 android:layout_width="match_parent"
@@ -406,14 +476,19 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-                <Button
-                    android:onClick="@{handlers::showDiveSpots}"
+                <ImageView style="@style/DividerStyleFull" />
+                <TextView
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_height="58dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:textStyle="normal"
+                    android:textColor="#3b528b"
+                    android:letterSpacing="0.02"
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:onClick="@{handlers::showDiveSpots}"
                     android:textAllCaps="false"
-                    style="@style/BlueButton"
                     android:visibility="gone"
                     app:myDiveSpotsCount="@{diveCenterViewModel}" />
             </LinearLayout>

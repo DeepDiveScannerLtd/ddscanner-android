@@ -11,19 +11,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
+import com.ddscanner.screens.brands.BrandsActivity;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
+import com.ddscanner.screens.profile.divecenter.BrandsGridListAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.utils.EmailIntentBuilder;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.PhoneCallIntentBuilder;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 public class UserDiveCenterProfileFragment extends Fragment {
 
@@ -63,6 +71,40 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
         }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAbout() != null) {
+            binding.about.setText(binding.getDiveCenterViewModel().getDiveCenterProfile().getAbout());
+            binding.about.setVisibility(View.VISIBLE);
+        } else {
+            binding.about.setVisibility(View.GONE);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAssociations() != null) {
+            ArrayList<String> tags = new ArrayList<>();
+            for (Integer integer : binding.getDiveCenterViewModel().getDiveCenterProfile().getAssociations()) {
+                tags.add(Helpers.getAssociationByCode(integer).getName());
+            }
+            TagsAdapter tagsAdapter = new TagsAdapter();
+            tagsAdapter.setStrings(tags);
+            ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(getContext())
+                    .setOrientation(ChipsLayoutManager.HORIZONTAL)
+                    .build();
+            binding.tags.addItemDecoration(new SpacingItemDecoration(Helpers.convertDpToIntPixels(2, getContext()), Helpers.convertDpToIntPixels(2, getContext())));
+            binding.tags.setLayoutManager(chipsLayoutManager);
+            binding.tags.setAdapter(tagsAdapter);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().isDiveShop()) {
+            binding.type.setText(R.string.divecenter_type_dive_shop);
+        } else {
+            binding.type.setText(R.string.divecenter_type_dc);
+        }
+
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getBrands() != null) {
+            binding.brandsList.setNestedScrollingEnabled(false);
+            binding.brandsList.setLayoutManager(new GridLayoutManager(getContext(), 6));
+            BrandsGridListAdapter brandsGridListAdapter = new BrandsGridListAdapter();
+            binding.brandsList.setAdapter(brandsGridListAdapter);
+            brandsGridListAdapter.setBrands(binding.getDiveCenterViewModel().getDiveCenterProfile().getBrands());
+        }
+
     }
 
     public void showDiveSpots(View view) {
@@ -91,6 +133,10 @@ public class UserDiveCenterProfileFragment extends Fragment {
         if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0 && diveCenterType == 1) {
             InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
+    }
+
+    public void showAllBrands(View view) {
+        BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
     }
 
 }
