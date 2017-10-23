@@ -25,6 +25,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -261,6 +263,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void setUi() {
+        SpacingItemDecoration itemDecoration = new SpacingItemDecoration(Helpers.convertDpToIntPixels(4, this), Helpers.convertDpToIntPixels(4, this));
         progressDialogUpload = Helpers.getMaterialDialog(this);
         pickCountry.setOnClickListener(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
@@ -288,12 +291,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         mapsRecyclerView.setAdapter(mapsListAdapter);
 
         /* Recycler view with sealifes settings*/
-        LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(
-                AddDiveSpotActivity.this);
-        sealifeLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         sealifesRc.setNestedScrollingEnabled(false);
-        sealifesRc.setHasFixedSize(false);
-        sealifesRc.setLayoutManager(sealifeLayoutManager);
+        sealifesRc.addItemDecoration(itemDecoration);
+        sealifesRc.setLayoutManager(ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build());
 
         /*Toolbar settings*/
         setSupportActionBar(toolbar);

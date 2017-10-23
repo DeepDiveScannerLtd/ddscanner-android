@@ -32,7 +32,7 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     public SealifeListAddingDivespotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.item_added_sealife_list, parent, false);
+                inflate(R.layout.item_removable_tag, parent, false);
         return new SealifeListAddingDivespotViewHolder(itemView);
     }
 
@@ -93,8 +93,8 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
         public SealifeListAddingDivespotViewHolder(View v) {
             super(v);
-            deleteButton = v.findViewById(R.id.delete_item);
-            sealifeName = v.findViewById(R.id.sealife_name);
+            deleteButton = v.findViewById(R.id.ic_delete);
+            sealifeName = v.findViewById(R.id.dive_spot_name);
             deleteButton.setOnClickListener(this);
         }
 

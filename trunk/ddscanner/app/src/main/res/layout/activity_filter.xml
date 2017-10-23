@@ -67,7 +67,7 @@
             android:textColor="@color/black_text"
             android:text="@string/sealfe_low"/>
         <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="18dp"
             android:id="@+id/sealife_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

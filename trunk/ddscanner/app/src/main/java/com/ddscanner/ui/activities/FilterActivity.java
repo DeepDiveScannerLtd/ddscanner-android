@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -69,6 +71,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void findViews() {
+        SpacingItemDecoration itemDecoration = new SpacingItemDecoration(Helpers.convertDpToIntPixels(4, this), Helpers.convertDpToIntPixels(4, this));
         materialDialog = Helpers.getMaterialDialog(this);
         progressView = findViewById(R.id.progressBar);
         mainLayout = findViewById(R.id.main_layout);
@@ -79,7 +82,8 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         addSealifeButton = findViewById(R.id.btn_add_sealife);
         sealifesRecyclerView = findViewById(R.id.sealife_recycler_view);
         sealifesRecyclerView.setAdapter(sealifeListAddingDiveSpotAdapter);
-        sealifesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sealifesRecyclerView.addItemDecoration(itemDecoration);
+        sealifesRecyclerView.setLayoutManager(ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build());
         save.setOnClickListener(this);
         addSealifeButton.setOnClickListener(this);
         save.setVisibility(View.GONE);

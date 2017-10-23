@@ -453,7 +453,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/sealife_title"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="18dp"
                     android:visibility="visible" />
                 <LinearLayout
                     style="@style/AddSealifeButtonStyle"

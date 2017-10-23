@@ -23,6 +23,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -381,6 +383,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void setUi() {
+        SpacingItemDecoration itemDecoration = new SpacingItemDecoration(Helpers.convertDpToIntPixels(4, this), Helpers.convertDpToIntPixels(4, this));
         if (SharedPreferenceHelper.getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             workingLayout.setVisibility(View.VISIBLE);
             if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
@@ -426,11 +429,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         mapsRecyclerView.setAdapter(mapsListAdapter);
 
         /* Recycler view with sealifes settings*/
-        LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(EditDiveSpotActivity.this);
-        sealifeLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        sealifesRc.addItemDecoration(itemDecoration);
         sealifesRc.setNestedScrollingEnabled(false);
-        sealifesRc.setHasFixedSize(false);
-        sealifesRc.setLayoutManager(sealifeLayoutManager);
+        sealifesRc.setLayoutManager(ChipsLayoutManager.newBuilder(this).setOrientation(ChipsLayoutManager.HORIZONTAL).build());
         sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(sealifes, this);
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
 
