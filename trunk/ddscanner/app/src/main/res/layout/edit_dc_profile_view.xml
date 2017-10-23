@@ -195,7 +195,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical"
-                    android:paddingBottom="20dp"
                     android:paddingLeft="16dp"
                     app:bottom_divider="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -203,28 +202,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/general_info_layout"
                     app:top_divider="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="sans-serif"
-                        android:text="@string/account_type"
-                        android:textColor="#303030"
-                        android:textSize="15sp"
-                        android:textStyle="normal" />
-
-                    <android.support.v7.widget.AppCompatCheckBox
+                    <android.support.v7.widget.SwitchCompat
                         android:id="@+id/dive_shop_check_box"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
-                        android:lineSpacingExtra="8sp"
-                        android:paddingLeft="38dp"
+                        android:textSize="15sp"
+                        android:layout_height="56dp"
                         android:text="@string/dive_shop"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        android:theme="@style/checkBoxComponent"/>
+                        android:paddingRight="20dp"
+                        android:fontFamily="sans-serif"
+                        app:theme="@style/ColorSwitchStyle"
+                        />
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
                 <com.ddscanner.ui.views.ContentBlockLinearLayout
