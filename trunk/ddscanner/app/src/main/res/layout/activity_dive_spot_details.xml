@@ -18,12 +18,15 @@
     </data>
 
 
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <android.support.design.widget.CoordinatorLayout
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/button_show_divecenters">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar_layout"
@@ -92,7 +95,6 @@
                 </android.support.design.widget.CollapsingToolbarLayout>
 
             </android.support.design.widget.AppBarLayout>
-
             <com.ddscanner.ui.views.FlingableNestedScrollView
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
@@ -589,17 +591,6 @@
                                     android:clickable="false"
                                     tools:clickable="false" />
                             </LinearLayout>
-
-                            <Button
-                                android:id="@+id/button_show_divecenters"
-                                android:layout_width="match_parent"
-                                android:layout_height="45dp"
-                                android:background="@drawable/contact_dive_center_background"
-                                android:onClick="@{handlers::showDiveCentersButtonClicked}"
-                                android:text="@string/contact_dive_centers"
-                                android:visibility="visible"
-                                app:visibilityForBookButtonFrom="@{diveSpotViewModel}" />
-
                             <RelativeLayout
                                 android:id="@+id/approve_layout"
                                 android:layout_width="match_parent"
@@ -658,5 +649,16 @@
                 android:scaleType="center"/>
 
         </android.support.design.widget.CoordinatorLayout>
+            <Button
+                android:layout_alignParentBottom="true"
+                android:id="@+id/button_show_divecenters"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/contact_dive_center_background"
+                android:onClick="@{handlers::showDiveCentersButtonClicked}"
+                android:text="@string/contact_dive_centers"
+                android:visibility="visible"
+                app:visibilityForBookButtonFrom="@{diveSpotViewModel}" />
 
+        </RelativeLayout>
 </layout>
