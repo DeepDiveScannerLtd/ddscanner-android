@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.ListItemClickListener;
@@ -55,6 +56,7 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
     public static void show(Context context, String diveSpotId) {
         Intent intent = new Intent(context, DiveCentersActivityNew.class);
         intent.putExtra("id", diveSpotId);
+        EventsTracker.trackBookingDcListView();
         context.startActivity(intent);
     }
 
@@ -93,6 +95,7 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                EventsTracker.trackBookingCancelled();
                 return true;
             default:
                 return true;

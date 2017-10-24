@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
 import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
@@ -60,6 +61,7 @@ public class UserDiveCenterProfileFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dive_center_profile, container, false);
         diveCenterProfile = (DiveCenterProfile) getArguments().getSerializable(ARG_USER);
         if (getArguments().getString(ARG_DIVE_SPOT_ID) != null) {
+            EventsTracker.trackBookingDcProfileView();
             diveCenterProfile.setForBooking(true);
             diveCenterProfile.setDiveSpotBookingId(getArguments().getString(ARG_DIVE_SPOT_ID));
         }

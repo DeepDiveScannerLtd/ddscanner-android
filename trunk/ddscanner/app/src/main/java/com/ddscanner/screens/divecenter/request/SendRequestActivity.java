@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DiveCenterRequestBookingRequest;
 import com.ddscanner.interfaces.DialogClosedListener;
@@ -52,6 +53,7 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
         @Override
         public void onSuccess(Void result) {
             materialDialog.dismiss();
+            EventsTracker.trackBookingRequestSent();
             UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.success_booking_dialog_title, R.string.success_booking_dialog_text, 1, false);
         }
 
@@ -83,6 +85,7 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
         Intent intent = new Intent(context, SendRequestActivity.class);
         intent.putExtra("dc_id", String.valueOf(diveCenterId));
         intent.putExtra("ds_id", diveSpotId);
+        EventsTracker.trackBookingRequestView();
         context.startActivity(intent);
     }
 

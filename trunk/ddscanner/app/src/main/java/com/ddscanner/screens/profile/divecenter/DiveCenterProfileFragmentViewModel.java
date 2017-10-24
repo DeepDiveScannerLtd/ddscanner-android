@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Address;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.screens.divecenter.request.SendRequestActivity;
@@ -119,6 +120,7 @@ public class DiveCenterProfileFragmentViewModel {
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
                 link.setOnClickListener(clickedText -> {
                     if (viewModel.getDiveCenterProfile().isForBooking()) {
+                        EventsTracker.trackBookingDcProfileEmailClick();
                         SendRequestActivity.show(view.getContext(), viewModel.getDiveCenterProfile().getDiveSpotBookingId(), viewModel.getDiveCenterProfile().getId());
                         return;
                     }
@@ -147,6 +149,9 @@ public class DiveCenterProfileFragmentViewModel {
                 link.setUnderlined(false);
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
                 link.setOnClickListener(clickedText -> {
+                    if (viewModel.getDiveCenterProfile().isForBooking()) {
+                        EventsTracker.trackBookingDcProfilePhoneClick();
+                    }
                     PhoneCallIntentBuilder.from(view.getContext()).to(phone).start();
                 });
                 links.add(link);

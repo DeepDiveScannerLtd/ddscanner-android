@@ -158,6 +158,16 @@ public class EventsTracker {
     private static final String EVENT_NAME_DC_SEARCH_NEW_CHOSEN = "dc_search_new_chosen";
 
     // ----------------------------------------------------
+    // Booking
+    // ----------------------------------------------------
+    private static final String EVENT_NAME_BOOKING_DC_LIST_VIEW  = "booking_dcs_list_view";
+    private static final String EVENT_NAME_BOOKING_REQUEST_VIEW = "booking_request_view";
+    private static final String EVENT_NAME_BOOKING_DC_PROFILE_VIEW = "booking_dc_profile_view";
+    private static final String EVENT_NAME_BOOKING_DC_PROFILE_PHONE_CLICK = "booking_dc_profile_phone_click";
+    private static final String EVENT_NAME_BOOKING_DC_PROFILE_EMAIL_CLICK = "booking_dc_profile_email_click";
+    private static final String EVENT_NAME_BOOKING_REQUEST_SENT = "booking_request_sent";
+    private static final String EVENT_NAME_BOOKING_CANCELLED = "booking_cancelled";
+    // ----------------------------------------------------
     // ----------------------------------------------------
     // ----------------------------------------------------
 
@@ -237,6 +247,34 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
+    }
+
+    public static void trackBookingDcListView() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_LIST_VIEW);
+    }
+
+    public static void trackBookingRequestView() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_REQUEST_VIEW);
+    }
+
+    public static void trackBookingDcProfileView() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_PROFILE_VIEW);
+    }
+
+    public static void trackBookingDcProfilePhoneClick() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_PROFILE_PHONE_CLICK);
+    }
+
+    public static void trackBookingDcProfileEmailClick() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_PROFILE_EMAIL_CLICK);
+    }
+
+    public static void trackBookingRequestSent() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_REQUEST_SENT);
+    }
+
+    public static void trackBookingCancelled() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_CANCELLED);
     }
 
     public static void tracNewDcChosenEvent() {
