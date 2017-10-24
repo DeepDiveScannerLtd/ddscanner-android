@@ -892,7 +892,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void showDiveCentersButtonClicked(View view) {
-        EventsTracker.trackContactDiveCenter();
+//        EventsTracker.trackContactDiveCenter();
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
             DiveCentersActivityNew.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
             return;
