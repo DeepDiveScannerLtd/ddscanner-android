@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -135,7 +136,7 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     }
 
     private void setupRecyclerView() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, getSpanCount());
         photosRecyclerView.setLayoutManager(gridLayoutManager);
     }
 
@@ -147,6 +148,23 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
                 return true;
         }
         return true;
+    }
+
+    private int getSpanCount() {
+        int spanCount = 3;
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int widthPixels = metrics.widthPixels;
+        int heightPixels = metrics.heightPixels;
+        float widthDpi = metrics.xdpi;
+        float heightDpi = metrics.ydpi;
+        float widthInches = widthPixels / widthDpi;
+        float heightInches = heightPixels / heightDpi;
+        double diagonalInches = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
+        if (diagonalInches > 5.5) {
+            spanCount = 4;
+        }
+        return spanCount;
     }
 
     @Override
