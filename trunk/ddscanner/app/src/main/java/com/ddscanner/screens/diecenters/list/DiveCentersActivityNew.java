@@ -17,6 +17,7 @@ import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divecenter.request.SendRequestActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -71,7 +72,8 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
         progressView = findViewById(R.id.progress_view);
         diveSpotId = getIntent().getStringExtra("id");
         listItemClickListener = item -> {
-            SendRequestActivity.show(this, diveSpotId, item.getId());
+            UserProfileActivity.showForBooking(this, item.getId(), 0, diveSpotId);
+//            SendRequestActivity.show(this, diveSpotId, item.getId());
         };
         diveCentersListAdapterNew = new DiveCentersListAdapterNew(listItemClickListener);
         diveCentersList = findViewById(R.id.dive_centers_list);

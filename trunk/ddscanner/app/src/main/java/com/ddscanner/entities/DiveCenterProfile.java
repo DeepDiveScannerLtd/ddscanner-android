@@ -53,6 +53,24 @@ public class DiveCenterProfile implements Serializable{
     private int isDiveShop;
     @SerializedName("brands_count")
     private String brandsCount;
+    private boolean isForBooking = false;
+    private String diveSpotBookingId;
+
+    public boolean isForBooking() {
+        return isForBooking;
+    }
+
+    public void setForBooking(boolean forBooking) {
+        isForBooking = forBooking;
+    }
+
+    public String getDiveSpotBookingId() {
+        return diveSpotBookingId;
+    }
+
+    public void setDiveSpotBookingId(String diveSpotBookingId) {
+        this.diveSpotBookingId = diveSpotBookingId;
+    }
 
     public String getBrandsCount() {
         return brandsCount;

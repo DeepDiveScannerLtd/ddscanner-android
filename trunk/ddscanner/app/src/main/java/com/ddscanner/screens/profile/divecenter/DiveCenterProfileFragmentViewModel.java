@@ -11,6 +11,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Address;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.screens.divecenter.request.SendRequestActivity;
 import com.ddscanner.utils.EmailIntentBuilder;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.PhoneCallIntentBuilder;
@@ -117,6 +118,10 @@ public class DiveCenterProfileFragmentViewModel {
                 link.setUnderlined(false);
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
                 link.setOnClickListener(clickedText -> {
+                    if (viewModel.getDiveCenterProfile().isForBooking()) {
+                        SendRequestActivity.show(view.getContext(), viewModel.getDiveCenterProfile().getDiveSpotBookingId(), viewModel.getDiveCenterProfile().getId());
+                        return;
+                    }
                     EmailIntentBuilder.from(view.getContext()).to(email).start();
                 });
                 links.add(link);

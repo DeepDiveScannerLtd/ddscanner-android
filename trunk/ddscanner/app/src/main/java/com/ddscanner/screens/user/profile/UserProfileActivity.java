@@ -48,6 +48,10 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     private int userType;
     private ProfileFragment profileFragment;
     private boolean isDiveCenterLegacy = false;
+    private static final String ARG_DIVE_SPOT_ID = "divespot_id";
+    private static final String ARG_TYPE = "type";
+    private static final String ARG_USER_ID = "user_id";
+
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -98,11 +102,26 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
 
     };
 
+    public static void show(Context context, String userId, int userType) {
+        Intent intent = new Intent(context, UserProfileActivity.class);
+        intent.putExtra(ARG_USER_ID, userId);
+        intent.putExtra(ARG_TYPE, userType);
+        context.startActivity(intent);
+    }
+
+    public static void showForBooking(Context context, String userId, int userType, String diveSpotId) {
+        Intent intent = new Intent(context, UserProfileActivity.class);
+        intent.putExtra(ARG_USER_ID, userId);
+        intent.putExtra(ARG_TYPE, userType);
+        intent.putExtra(ARG_DIVE_SPOT_ID, diveSpotId);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userId = getIntent().getStringExtra("id");
-        userType = getIntent().getIntExtra("type", 0);
+        userId = getIntent().getStringExtra(ARG_USER_ID);
+        userType = getIntent().getIntExtra(ARG_TYPE, 0);
         setContentView(R.layout.activity_user_profile);
         progressView = findViewById(R.id.progress_view);
         setupToolbar(R.string.profile, R.id.toolbar);
@@ -124,13 +143,6 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         }
     }
 
-    public static void show(Context context, String userId, int userType) {
-        Intent intent = new Intent(context, UserProfileActivity.class);
-        intent.putExtra("id", userId);
-        intent.putExtra("type", userType);
-        context.startActivity(intent);
-    }
-
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
@@ -148,10 +160,10 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                         break;
                     }
                     if (!isDiveCenterLegacy) {
-                        setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 1));
+                        setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 1, getIntent().getStringExtra(ARG_DIVE_SPOT_ID)));
                         break;
                     }
-                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 2));
+                    setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile, 2, null));
                     break;
                 case 1:
                 case 2:

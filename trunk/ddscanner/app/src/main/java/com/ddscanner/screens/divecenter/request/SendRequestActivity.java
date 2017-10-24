@@ -79,9 +79,9 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     String diveCenterId;
     MaterialDialog materialDialog;
 
-    public static void show(Context context, String diveSpotId, String diveCenterId) {
+    public static void show(Context context, String diveSpotId, int diveCenterId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
-        intent.putExtra("dc_id", diveCenterId);
+        intent.putExtra("dc_id", String.valueOf(diveCenterId));
         intent.putExtra("ds_id", diveSpotId);
         context.startActivity(intent);
     }

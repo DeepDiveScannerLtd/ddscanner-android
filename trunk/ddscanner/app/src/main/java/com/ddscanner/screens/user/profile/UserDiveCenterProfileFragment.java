@@ -39,12 +39,16 @@ public class UserDiveCenterProfileFragment extends Fragment {
     private FragmentDiveCenterProfileBinding binding;
     private LatLng diveCenterLocation = null;
     private int diveCenterType;
+    private static final String ARG_TYPE = "type";
+    private static final String ARG_USER = "user";
+    private static final String ARG_DIVE_SPOT_ID = "divespot_id";
 
-    public static UserDiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile, int diveCenterType) {
+    public static UserDiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile, int diveCenterType, String diveSpotId) {
         UserDiveCenterProfileFragment userDiveCenterProfileFragment = new UserDiveCenterProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", diveCenterProfile);
-        bundle.putInt("type", diveCenterType);
+        bundle.putSerializable(ARG_USER, diveCenterProfile);
+        bundle.putInt(ARG_TYPE, diveCenterType);
+        bundle.putString(ARG_DIVE_SPOT_ID, diveSpotId);
         userDiveCenterProfileFragment.setArguments(bundle);
         return userDiveCenterProfileFragment;
     }
@@ -54,9 +58,13 @@ public class UserDiveCenterProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dive_center_profile, container, false);
-        diveCenterProfile = (DiveCenterProfile) getArguments().getSerializable("user");
+        diveCenterProfile = (DiveCenterProfile) getArguments().getSerializable(ARG_USER);
+        if (getArguments().getString(ARG_DIVE_SPOT_ID) != null) {
+            diveCenterProfile.setForBooking(true);
+            diveCenterProfile.setDiveSpotBookingId(getArguments().getString(ARG_DIVE_SPOT_ID));
+        }
         binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
-        diveCenterType = getArguments().getInt("type", 0);
+        diveCenterType = getArguments().getInt(ARG_TYPE, 0);
         if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
             diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
         }

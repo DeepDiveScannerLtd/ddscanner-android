@@ -58,7 +58,6 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
 
         ImageView logo;
         TextView diveCenterName;
-        TextView showDiveCenter;
 
         public DiveCentersListViewHolder(View itemView) {
             super(itemView);
@@ -66,8 +65,7 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
             context = itemView.getContext();
             logo = itemView.findViewById(R.id.logo);
             diveCenterName = itemView.findViewById(R.id.dc_name);
-            showDiveCenter = itemView.findViewById(R.id.show_dc);
-            showDiveCenter.setOnClickListener(view -> UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0));
+//            showDiveCenter.setOnClickListener(view -> UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0));
         }
 
     }
