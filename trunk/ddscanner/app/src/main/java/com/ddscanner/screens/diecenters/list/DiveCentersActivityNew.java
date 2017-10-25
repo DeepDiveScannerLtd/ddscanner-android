@@ -64,6 +64,7 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
     private String diveSpotId;
     private DiveCentersListAdapterNew diveCentersListAdapterNew;
     private ListItemClickListener<DiveCenter> listItemClickListener;
+    private ListItemClickListener<DiveCenter> viewProfileClickLisetner;
     private ProgressView progressView;
 
     @Override
@@ -74,10 +75,13 @@ public class DiveCentersActivityNew extends BaseAppCompatActivity implements Dia
         progressView = findViewById(R.id.progress_view);
         diveSpotId = getIntent().getStringExtra("id");
         listItemClickListener = item -> {
-            UserProfileActivity.showForBooking(this, item.getId(), 0, diveSpotId);
-//            SendRequestActivity.show(this, diveSpotId, item.getId());
+//            UserProfileActivity.showForBooking(this, item.getId(), 0, diveSpotId);
+            SendRequestActivity.show(this, diveSpotId, Integer.parseInt(item.getId()));
         };
-        diveCentersListAdapterNew = new DiveCentersListAdapterNew(listItemClickListener);
+        viewProfileClickLisetner = item -> {
+            UserProfileActivity.showForBooking(this, item.getId(), 0, diveSpotId);
+        };
+        diveCentersListAdapterNew = new DiveCentersListAdapterNew(listItemClickListener, viewProfileClickLisetner);
         diveCentersList = findViewById(R.id.dive_centers_list);
         diveCentersList.setLayoutManager(new LinearLayoutManager(this));
         diveCentersList.setAdapter(diveCentersListAdapterNew);

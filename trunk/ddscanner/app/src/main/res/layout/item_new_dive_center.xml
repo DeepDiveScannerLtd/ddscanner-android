@@ -33,6 +33,18 @@
             android:lineSpacingExtra="3sp"
             tools:text="No Gravity Dive Center"
             />
+            <TextView
+                android:id="@+id/view_profile"
+                android:layout_marginTop="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#3b528b"
+                android:lineSpacingExtra="8sp"
+                android:text="@string/view_profile"
+                />
         </LinearLayout>
         <ImageView
             android:layout_width="wrap_content"

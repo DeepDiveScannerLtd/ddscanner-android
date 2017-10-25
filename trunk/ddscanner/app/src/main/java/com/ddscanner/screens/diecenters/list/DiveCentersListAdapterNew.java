@@ -23,9 +23,11 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
     Context context;
     ArrayList<DiveCenter> diveCenters = new ArrayList<>();
     ListItemClickListener<DiveCenter> listItemClickListener;
+    ListItemClickListener<DiveCenter> viewProfileClicListener;
 
-    public DiveCentersListAdapterNew(ListItemClickListener<DiveCenter> listItemClickListener) {
+    public DiveCentersListAdapterNew(ListItemClickListener<DiveCenter> listItemClickListener, ListItemClickListener<DiveCenter> viewProfileClicListener) {
         this.listItemClickListener = listItemClickListener;
+        this.viewProfileClicListener = viewProfileClicListener;
     }
 
     @Override
@@ -58,12 +60,15 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
 
         ImageView logo;
         TextView diveCenterName;
+        TextView viewPorfile;
 
         public DiveCentersListViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(view -> listItemClickListener.onItemClick(diveCenters.get(getAdapterPosition())));
             context = itemView.getContext();
             logo = itemView.findViewById(R.id.logo);
+            viewPorfile = itemView.findViewById(R.id.view_profile);
+            viewPorfile.setOnClickListener(v -> viewProfileClicListener.onItemClick(diveCenters.get(getAdapterPosition())));
             diveCenterName = itemView.findViewById(R.id.dc_name);
 //            showDiveCenter.setOnClickListener(view -> UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0));
         }
