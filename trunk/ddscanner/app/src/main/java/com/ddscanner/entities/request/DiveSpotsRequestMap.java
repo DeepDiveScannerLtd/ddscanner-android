@@ -9,6 +9,7 @@ public class DiveSpotsRequestMap extends HashMap<String, Object> {
     public static final String KEY_OBJECT = "type";
     public static final String KEY_RATING = "rating";
     public static final String KEY_VISIBILITY = "visibility";
+    public static final String KEY_COUNTRY_CODE = "country_code";
 
     /*
 currents (string, optional) - The currents filter
@@ -21,6 +22,14 @@ object (string, optional) - The object filter
 rating (integer, optional) - The raring filter
 visibility (string, optional) - The Visibility filter
      */
+
+    public void putCountryCode(String countryCode) {
+        put(KEY_COUNTRY_CODE, countryCode);
+    }
+
+    public String getKeyCountryCode() {
+       return (String) get(KEY_COUNTRY_CODE);
+    }
 
     public void putCurrents(String currents) {
         put(KEY_CURRENTS, currents);

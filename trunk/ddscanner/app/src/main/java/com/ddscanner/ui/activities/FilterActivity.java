@@ -20,10 +20,14 @@ import com.beloo.widget.chipslayoutmanager.SpacingItemDecoration;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.FilterChosenEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
+import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.adapters.CountrySpinnerAdapter;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -39,12 +43,36 @@ import java.util.Map;
 
 public class FilterActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
+    DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> countriesResultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
+        @Override
+        public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
+            countries = result;
+            findViews();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
     private static final String TAG = FilterActivity.class.getSimpleName();
 
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private AppCompatSpinner objectSpinner;
     private AppCompatSpinner levelSpinner;
+    private AppCompatSpinner countrySpinner;
     private Button save;
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
@@ -56,17 +84,20 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
     private RecyclerView sealifesRecyclerView;
     private ArrayList<SealifeShort> sealifes = new ArrayList<>();
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
+    private ArrayList<BaseIdNamePhotoEntity> countries = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_filter);
         sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(this);
-        findViews();
+        toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
         getSupportActionBar().setTitle("Filter");
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getListOfCountries(countriesResultListener);
      //   DDScannerApplication.getInstance().getDdScannerRestClient(this).getFilters(getFiltersResultListener);
     }
 
@@ -75,9 +106,9 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         materialDialog = Helpers.getMaterialDialog(this);
         progressView = findViewById(R.id.progressBar);
         mainLayout = findViewById(R.id.main_layout);
-        toolbar = findViewById(R.id.toolbar);
         objectSpinner = findViewById(R.id.object_spinner);
         levelSpinner = findViewById(R.id.level_spinner);
+        countrySpinner = findViewById(R.id.country_spinner);
         save = findViewById(R.id.applyFilters);
         addSealifeButton = findViewById(R.id.btn_add_sealife);
         sealifesRecyclerView = findViewById(R.id.sealife_recycler_view);
@@ -92,6 +123,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         save.setVisibility(View.VISIBLE);
         setAppCompatSpinnerValues(levelSpinner, Helpers.getDiveLevelTypes(), "Diver Level");
         setAppCompatSpinnerValues(objectSpinner, Helpers.getDiveSpotTypes(), "Object");
+        setCountriesSpinnerValues();
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject().isEmpty()) {
             objectSpinner.setSelection(Integer.parseInt(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject()));
         }
@@ -104,6 +136,15 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
             sealifeListAddingDiveSpotAdapter.addSealifesList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList());
         }
 
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode().isEmpty()) {
+            String code = DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode();
+            for (BaseIdNamePhotoEntity baseIdNamePhotoEntity : countries) {
+                if (baseIdNamePhotoEntity.getCode().equals(code)) {
+                    countrySpinner.setSelection(countries.indexOf(baseIdNamePhotoEntity));
+                }
+            }
+        }
+
     }
 
     private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag) {
@@ -112,6 +153,14 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         objects.addAll(values);
         ArrayAdapter<String> adapter = new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, objects, tag);
         spinner.setAdapter(adapter);
+    }
+
+    private void setCountriesSpinnerValues() {
+        BaseIdNamePhotoEntity baseIdNamePhotoEntity = new BaseIdNamePhotoEntity(null, "Country");
+        baseIdNamePhotoEntity.setCode("");
+        countries.add(0, baseIdNamePhotoEntity);
+        ArrayAdapter<BaseIdNamePhotoEntity> arrayAdapter = new CountrySpinnerAdapter(this, R.layout.spinner_item, countries, "Country");
+        countrySpinner.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -164,6 +213,13 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
                 } else {
                     isFiltersApplied = true;
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setSealifesList(sealifeListAddingDiveSpotAdapter.getSealifes());
+                }
+
+                if (countrySpinner.getSelectedItemPosition() == 0) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode("");
+                } else {
+                    isFiltersApplied = true;
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode(countries.get(countrySpinner.getSelectedItemPosition()).getCode());
                 }
 
                 if (isFiltersApplied) {

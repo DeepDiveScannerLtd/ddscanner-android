@@ -52,6 +52,7 @@ public class SharedPreferenceHelper {
     private static final String IS_NOTIFICATION_ENABLED = "enabled";
     private static final String IS_LIST_TUTORIAL_WATCHED = "is_list_tutorial_watched";
     private static final String IS_NEDD_TO_CONTINUE_SIGN_UP = "is_need_to_continue_registration";
+    private static final String COUNTRY_CODE = "country_code";
     private static SharedPreferences prefs;
 
     public enum SearchSourceType {
@@ -277,6 +278,18 @@ public class SharedPreferenceHelper {
         return prefs.getString(CURRENTS, "");
     }
 
+    public void setCountryCode(String countryCode) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(COUNTRY_CODE, countryCode);
+        editor.apply();
+    }
+
+    public String getCountryCode() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(COUNTRY_CODE, "");
+    }
+
     public void setLevel(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
@@ -333,6 +346,7 @@ public class SharedPreferenceHelper {
         setObject("");
         setLevel("");
         setSealifesList(null);
+        setCountryCode("");
     }
 
     public ArrayList<SealifeShort> getSealifesList() {
