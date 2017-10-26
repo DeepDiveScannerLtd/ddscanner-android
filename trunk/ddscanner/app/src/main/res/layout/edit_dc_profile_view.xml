@@ -95,7 +95,7 @@
                         android:layout_marginTop="10dp"
                         android:paddingLeft="16dp"
                         app:edit_text_hint="Bio"
-                        app:edit_text_length="255"/>
+                        app:edit_text_length="2048"/>
 
                     <LinearLayout
                         android:id="@+id/phones"
