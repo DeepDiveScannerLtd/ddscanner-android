@@ -32,7 +32,7 @@
         android:paddingBottom="10dp">
 
         <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/country_spinner"
+            android:id="@+id/object_spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dropDownWidth="wrap_content"
@@ -47,25 +47,11 @@
             />
 
         <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/object_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:dropDownWidth="150dp"
-            android:gravity="center_vertical"
-            android:popupBackground="@color/white"
-            android:theme="@style/customSpinnerTheme"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            app:backgroundTint="@color/spinner_triangle_color"
-            />
-
-        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/level_spinner"
             android:theme="@style/customSpinnerTheme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dropDownWidth="150dp"
+            android:dropDownWidth="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"

@@ -346,7 +346,7 @@ public class SharedPreferenceHelper {
         setObject("");
         setLevel("");
         setSealifesList(null);
-        setCountryCode("");
+//        setCountryCode("");
     }
 
     public ArrayList<SealifeShort> getSealifesList() {

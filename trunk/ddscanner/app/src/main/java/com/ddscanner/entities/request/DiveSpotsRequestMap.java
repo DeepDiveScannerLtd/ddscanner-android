@@ -23,14 +23,6 @@ rating (integer, optional) - The raring filter
 visibility (string, optional) - The Visibility filter
      */
 
-    public void putCountryCode(String countryCode) {
-        put(KEY_COUNTRY_CODE, countryCode);
-    }
-
-    public String getKeyCountryCode() {
-       return (String) get(KEY_COUNTRY_CODE);
-    }
-
     public void putCurrents(String currents) {
         put(KEY_CURRENTS, currents);
     }

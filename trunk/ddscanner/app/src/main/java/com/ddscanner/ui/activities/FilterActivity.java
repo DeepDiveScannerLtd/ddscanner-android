@@ -72,7 +72,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private AppCompatSpinner objectSpinner;
     private AppCompatSpinner levelSpinner;
-    private AppCompatSpinner countrySpinner;
+//    private AppCompatSpinner countrySpinner;
     private Button save;
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
@@ -97,7 +97,8 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
         getSupportActionBar().setTitle("Filter");
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).getListOfCountries(countriesResultListener);
+        findViews();
+//        DDScannerApplication.getInstance().getDdScannerRestClient(this).getListOfCountries(countriesResultListener);
      //   DDScannerApplication.getInstance().getDdScannerRestClient(this).getFilters(getFiltersResultListener);
     }
 
@@ -108,7 +109,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         mainLayout = findViewById(R.id.main_layout);
         objectSpinner = findViewById(R.id.object_spinner);
         levelSpinner = findViewById(R.id.level_spinner);
-        countrySpinner = findViewById(R.id.country_spinner);
+//        countrySpinner = findViewById(R.id.country_spinner);
         save = findViewById(R.id.applyFilters);
         addSealifeButton = findViewById(R.id.btn_add_sealife);
         sealifesRecyclerView = findViewById(R.id.sealife_recycler_view);
@@ -123,7 +124,7 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         save.setVisibility(View.VISIBLE);
         setAppCompatSpinnerValues(levelSpinner, Helpers.getDiveLevelTypes(), "Diver Level");
         setAppCompatSpinnerValues(objectSpinner, Helpers.getDiveSpotTypes(), "Object");
-        setCountriesSpinnerValues();
+//        setCountriesSpinnerValues();
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject().isEmpty()) {
             objectSpinner.setSelection(Integer.parseInt(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject()));
         }
@@ -136,14 +137,14 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
             sealifeListAddingDiveSpotAdapter.addSealifesList(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList());
         }
 
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode().isEmpty()) {
-            String code = DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode();
-            for (BaseIdNamePhotoEntity baseIdNamePhotoEntity : countries) {
-                if (baseIdNamePhotoEntity.getCode().equals(code)) {
-                    countrySpinner.setSelection(countries.indexOf(baseIdNamePhotoEntity));
-                }
-            }
-        }
+//        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode().isEmpty()) {
+//            String code = DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode();
+//            for (BaseIdNamePhotoEntity baseIdNamePhotoEntity : countries) {
+//                if (baseIdNamePhotoEntity.getCode().equals(code)) {
+//                    countrySpinner.setSelection(countries.indexOf(baseIdNamePhotoEntity));
+//                }
+//            }
+//        }
 
     }
 
@@ -155,13 +156,13 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         spinner.setAdapter(adapter);
     }
 
-    private void setCountriesSpinnerValues() {
-        BaseIdNamePhotoEntity baseIdNamePhotoEntity = new BaseIdNamePhotoEntity(null, "Country");
-        baseIdNamePhotoEntity.setCode("");
-        countries.add(0, baseIdNamePhotoEntity);
-        ArrayAdapter<BaseIdNamePhotoEntity> arrayAdapter = new CountrySpinnerAdapter(this, R.layout.spinner_item, countries, "Country");
-        countrySpinner.setAdapter(arrayAdapter);
-    }
+//    private void setCountriesSpinnerValues() {
+//        BaseIdNamePhotoEntity baseIdNamePhotoEntity = new BaseIdNamePhotoEntity(null, "Country");
+//        baseIdNamePhotoEntity.setCode("");
+//        countries.add(0, baseIdNamePhotoEntity);
+//        ArrayAdapter<BaseIdNamePhotoEntity> arrayAdapter = new CountrySpinnerAdapter(this, R.layout.spinner_item, countries, "Country");
+//        countrySpinner.setAdapter(arrayAdapter);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,12 +216,12 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setSealifesList(sealifeListAddingDiveSpotAdapter.getSealifes());
                 }
 
-                if (countrySpinner.getSelectedItemPosition() == 0) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode("");
-                } else {
-                    isFiltersApplied = true;
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode(countries.get(countrySpinner.getSelectedItemPosition()).getCode());
-                }
+//                if (countrySpinner.getSelectedItemPosition() == 0) {
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode("");
+//                } else {
+//                    isFiltersApplied = true;
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setCountryCode(countries.get(countrySpinner.getSelectedItemPosition()).getCode());
+//                }
 
                 if (isFiltersApplied) {
                     setResult(RESULT_OK);

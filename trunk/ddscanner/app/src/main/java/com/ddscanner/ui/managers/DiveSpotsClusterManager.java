@@ -452,9 +452,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject())) {
             diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
-        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode())) {
-            diveSpotsRequestMap.putCountryCode(DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode());
-        }
+//        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode())) {
+//            diveSpotsRequestMap.putCountryCode(DDScannerApplication.getInstance().getSharedPreferenceHelper().getCountryCode());
+//        }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList() != null) {
             ArrayList<SealifeShort> sealifeShorts = DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList();
             sealifesIds = new ArrayList<>();
