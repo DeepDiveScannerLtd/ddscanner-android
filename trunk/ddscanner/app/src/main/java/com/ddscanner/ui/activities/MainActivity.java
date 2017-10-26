@@ -122,10 +122,11 @@ public class MainActivity extends BaseAppCompatActivity
 
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
-    private DismissListener notificationsTutorialDismissListener = new DismissListener() {
+
+    private DismissListener searchDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
-            DDScannerApplication.getInstance().getTutorialHelper().showProfileTutorial(MainActivity.this, toolbarTabLayout.getTabAt(2).getCustomView(), profileTutorialDismissListener);
+            DDScannerApplication.getInstance().getTutorialHelper().showFilterTutorial(MainActivity.this, btnFilter, filterDismissListener);
         }
 
         @Override
@@ -134,10 +135,34 @@ public class MainActivity extends BaseAppCompatActivity
         }
     };
 
-    private DismissListener profileTutorialDismissListener = new DismissListener() {
+    private DismissListener filterDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
-            DDScannerApplication.getInstance().getTutorialHelper().showAddDiveSpotTutorial(MainActivity.this, mainViewPagerAdapter.getMapListFragment().getAddDsFab());
+            DDScannerApplication.getInstance().getTutorialHelper().showMapListTutorial(MainActivity.this, toolbarTabLayout.getTabAt(0).getCustomView(), mapDismissListener);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener mapDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getTutorialHelper().showGoToPhuketTitle(MainActivity.this, goToPhuketDismissListener);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener goToPhuketDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+
         }
 
         @Override
@@ -349,7 +374,8 @@ public class MainActivity extends BaseAppCompatActivity
         if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
             SharedPreferenceHelper.setIsNeedToShowTutorial();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(true);
-            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 3500);
+            DDScannerApplication.getInstance().getTutorialHelper().showSearchTutorial(this, searchLocationBtn, searchDismissListener);
+//            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 3500);
             return;
         }
         getIsHasNewotifications();

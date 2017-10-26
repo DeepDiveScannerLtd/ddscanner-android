@@ -15,6 +15,81 @@ import me.toptas.fancyshowcase.FocusShape;
 
 public class TutorialHelper {
 
+    public void showBookingTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_book)))
+                .build()
+                .show();
+    }
+
+    public void showSelectPinTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_select_pin)))
+                .build()
+                .show();
+    }
+
+    public void showTapOnInfoWindowTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_tap_on_infowindow)))
+                .build()
+                .show();
+    }
+
+    public void showGoToPhuketTitle(Activity context, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .dismissListener(dismissListener)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_go_to_phuket)))
+                .build()
+                .show();
+    }
+
+    public void showMapListTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_map_list)))
+                .build()
+                .show();
+    }
+
+    public void showFilterTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(Html.fromHtml(context.getString(R.string.onboarding_filter)))
+                .build()
+                .show();
+    }
+
+    public void showSearchTutorial(Activity context, View view, DismissListener dismissListener) {
+        new FancyShowCaseView.Builder(context)
+                .focusOn(view)
+                .dismissListener(dismissListener)
+                .focusCircleRadiusFactor(2)
+                .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .title(context.getString(R.string.onboarding_search))
+                .build()
+                .show();
+    }
+
     public void showNotificationTutorial(Activity context, View view, DismissListener dismissListener) {
         new FancyShowCaseView.Builder(context)
                 .focusOn(view)
