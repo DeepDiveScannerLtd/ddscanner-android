@@ -82,8 +82,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 //TODO def playServicesVersion="9.8.0" def supportVersionVersion="25.0.0"
-def playServicesVersion="11.2.2"
-def supportVersionVersion="26.0.2"
+def playServicesVersion="11.4.2"
+def supportVersionVersion="26.1.0"
 
 dependencies {
     compile project(':ccp')
@@ -156,7 +156,7 @@ dependencies {
         exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
-    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
     compile 'com.steelkiwi:cropiwa:1.0.3'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
