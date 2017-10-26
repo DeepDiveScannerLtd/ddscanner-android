@@ -36,6 +36,7 @@ import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.interfaces.RemoveLayoutClickListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.brands.BrandsActivity;
+import com.ddscanner.screens.photo.crop.CropImageActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.BaseSearchActivity;
 import com.ddscanner.ui.activities.ChangeAddressActivity;
@@ -403,6 +404,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     public void changePhotoButtonCLicked(View view) {
+//        pickCroppedImage(CropImageActivity.CropImageSource.DIVE_CENTER_PROFILE);
         pickSinglePhotoFromGallery();
     }
 

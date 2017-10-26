@@ -22,6 +22,7 @@ import com.ddscanner.R;
 import com.ddscanner.interfaces.PhotUriTakenListener;
 import com.ddscanner.interfaces.ShowPopupLstener;
 import com.ddscanner.screens.dialogs.popup.AchievementPopupDialogFrament;
+import com.ddscanner.screens.photo.crop.CropImageActivity;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
@@ -51,6 +52,8 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
     private File tempFile;
     public boolean isPopupShown = false;
     private boolean isCloseActivityAfterPopupClosed = false;
+    private boolean isForCrooppingImage = false;
+    private CropImageActivity.CropImageSource cropImageSource;
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
@@ -130,9 +133,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         if (checkReadStoragePermission()) {
             Intent intent = new Intent();
             intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= 18) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY);
@@ -154,6 +155,10 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (isForCrooppingImage) {
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_FOR_CROPPING);
+            return;
+        }
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY);
     }
 
@@ -181,7 +186,18 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
                     getLocation(-1);
                 }
                 break;
+            case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_FOR_CROPPING:
+                if (resultCode == RESULT_OK) {
+                    CropImageActivity.showForResult(this, data.getData(), -1, cropImageSource);
+                }
+                break;
         }
+    }
+
+    public void pickCroppedImage(CropImageActivity.CropImageSource source) {
+        isForCrooppingImage = true;
+        this.cropImageSource = source;
+        pickSinglePhotoFromGallery();
     }
 
     @Override
