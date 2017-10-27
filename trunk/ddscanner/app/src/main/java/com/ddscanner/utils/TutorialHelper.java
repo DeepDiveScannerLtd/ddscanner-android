@@ -15,22 +15,21 @@ import me.toptas.fancyshowcase.FocusShape;
 
 public class TutorialHelper {
 
-    public void showBookingTutorial(Activity context, View view, DismissListener dismissListener) {
+    public void showBookingTutorial(Activity context, View view) {
         new FancyShowCaseView.Builder(context)
                 .focusOn(view)
-                .dismissListener(dismissListener)
-                .focusCircleRadiusFactor(2)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
+                .fitSystemWindows(true)
+                .disableFocusAnimation()
                 .title(Html.fromHtml(context.getString(R.string.onboarding_book)))
                 .build()
                 .show();
     }
 
-    public void showSelectPinTutorial(Activity context, View view, DismissListener dismissListener) {
+    public void showSelectPinTutorial(Activity context, DismissListener dismissListener) {
         new FancyShowCaseView.Builder(context)
-                .focusOn(view)
                 .dismissListener(dismissListener)
-                .focusCircleRadiusFactor(2)
                 .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
                 .title(Html.fromHtml(context.getString(R.string.onboarding_select_pin)))
                 .build()
@@ -41,7 +40,7 @@ public class TutorialHelper {
         new FancyShowCaseView.Builder(context)
                 .focusOn(view)
                 .dismissListener(dismissListener)
-                .focusCircleRadiusFactor(2)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
                 .title(Html.fromHtml(context.getString(R.string.onboarding_tap_on_infowindow)))
                 .build()
@@ -61,7 +60,6 @@ public class TutorialHelper {
         new FancyShowCaseView.Builder(context)
                 .focusOn(view)
                 .dismissListener(dismissListener)
-                .focusCircleRadiusFactor(2)
                 .titleStyle(R.style.TutorialTextStyle, Gravity.CENTER)
                 .title(Html.fromHtml(context.getString(R.string.onboarding_map_list)))
                 .build()

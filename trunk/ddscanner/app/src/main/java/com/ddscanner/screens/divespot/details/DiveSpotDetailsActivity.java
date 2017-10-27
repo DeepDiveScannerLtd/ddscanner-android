@@ -420,8 +420,9 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
         binding.scrollView.setNestedScrollingEnabled(true);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMstToShowDiveSpotTutorial()) {
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(false);
-            DDScannerApplication.getInstance().getTutorialHelper().showCheckinTutorial(this, binding.fabCheckin, checkinTutorialDismissListener);
+            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showBookingTutorial(this, binding.buttonShowDivecenters), 500);
+//            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(false);
+//            DDScannerApplication.getInstance().getTutorialHelper().showCheckinTutorial(this, binding.fabCheckin, checkinTutorialDismissListener);
         }
     }
 

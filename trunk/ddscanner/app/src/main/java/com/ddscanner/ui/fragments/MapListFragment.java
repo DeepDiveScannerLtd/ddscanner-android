@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -72,9 +73,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.toptas.fancyshowcase.DismissListener;
+
 public class MapListFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = MapListFragment.class.getName();
+
+    private DismissListener selectPinDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowSelectAPin(false);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener infowWindowTutorialDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowInfoWindow(false);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
 
     private View view;
     private View diveSpotsMapView;
@@ -242,7 +269,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     }
 
     public void showListTutorial() {
-        DDScannerApplication.getInstance().getTutorialHelper().showListButtonTutorial(getActivity(), mapListFAB);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowSelectPin()) {
+            DDScannerApplication.getInstance().getTutorialHelper().showSelectPinTutorial(getActivity(), selectPinDismissListener);
+        }
     }
 
     @Override
@@ -336,6 +365,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
         lastDiveSpotId = event.getDiveSpotShort().getId();
         diveSpotInfo.show(event.getDiveSpotShort());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowInfoWindowTutorial()) {
+            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showTapOnInfoWindowTutorial(getActivity(), diveSpotInfo, infowWindowTutorialDismissListener), 350);
+        }
     }
 
     @Subscribe
@@ -488,4 +520,15 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     public void showMap(CloseListEvent event) {
         mapListFAB.performClick();
     }
+
+
+    public void moveCameraToPhuket() {
+        diveSpotsClusterManager.moveCamera(new LatLngBounds(new LatLng(7.707117, 98.137623), new LatLng(8.185846, 98.545534)));
+    }
+
+
+    public FloatingActionButton getMapListFAB() {
+        return mapListFAB;
+    }
+
 }

@@ -53,6 +53,8 @@ public class SharedPreferenceHelper {
     private static final String IS_LIST_TUTORIAL_WATCHED = "is_list_tutorial_watched";
     private static final String IS_NEDD_TO_CONTINUE_SIGN_UP = "is_need_to_continue_registration";
     private static final String COUNTRY_CODE = "country_code";
+    private static final String IS_MUST_SHOW_SELECT_A_PIN = "is_must_show_pin";
+    private static final String IS_MUST_SHOW_INFO_WINDOW = "is_must_show_info_window";
     private static SharedPreferences prefs;
 
     public enum SearchSourceType {
@@ -82,6 +84,30 @@ public class SharedPreferenceHelper {
         public String getState() {
             return state;
         }
+    }
+
+    public void setIsMustShowSelectAPin(boolean value) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_SHOW_SELECT_A_PIN, value);
+        editor.apply();
+    }
+
+    public boolean getIsMustShowSelectPin() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_SHOW_SELECT_A_PIN, false);
+    }
+
+    public void setIsMustShowInfoWindow(boolean value) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_SHOW_INFO_WINDOW, value);
+        editor.apply();
+    }
+
+    public boolean getIsMustShowInfoWindowTutorial() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_SHOW_INFO_WINDOW, false);
     }
 
     public boolean getIsNeedToContinueRegistration() {
@@ -158,8 +184,9 @@ public class SharedPreferenceHelper {
     }
 
     public boolean getIsMstToShowDiveSpotTutorial() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
+        return true;
+//        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+//        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
     }
 
     public void setTutorialState(TutorialState state) {

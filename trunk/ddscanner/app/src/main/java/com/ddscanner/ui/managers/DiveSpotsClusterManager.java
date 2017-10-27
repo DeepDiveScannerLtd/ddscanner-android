@@ -84,9 +84,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
             hideProgressBar();
             updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
             allDiveSpots =(ArrayList<DiveSpotShort>) diveSpotShorts;
-            if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsListTutorialWatched()) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowSelectPin()) {
                 parentFragment.showListTutorial();
-                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsListTutorialWatched();
+//                DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsListTutorialWatched();
             }
 //            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
         }
@@ -478,6 +478,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         //sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
         googleMap.setOnCameraChangeListener(this);
         requestDiveSpots(true);
+    }
+
+    public void moveCamera(LatLngBounds latLngBounds) {
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
     }
 
 }

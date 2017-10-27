@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -101,8 +102,10 @@ public class MainActivity extends BaseAppCompatActivity
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
     private PercentRelativeLayout menuItemsLayout;
-    private ImageView searchLocationBtn;
-    private ImageView btnFilter;
+    private RelativeLayout searchLocationBtn;
+    private RelativeLayout btnFilter;
+    private ImageView iconFilter;
+    private ImageView iconSearch;
     private MainActivityPagerAdapter mainViewPagerAdapter;
     private ProfileFragment profileFragment;
     private DiverNotificationsFragment diverNotificationsFragment;
@@ -126,7 +129,7 @@ public class MainActivity extends BaseAppCompatActivity
     private DismissListener searchDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
-            DDScannerApplication.getInstance().getTutorialHelper().showFilterTutorial(MainActivity.this, btnFilter, filterDismissListener);
+            DDScannerApplication.getInstance().getTutorialHelper().showFilterTutorial(MainActivity.this, iconFilter, filterDismissListener);
         }
 
         @Override
@@ -138,7 +141,7 @@ public class MainActivity extends BaseAppCompatActivity
     private DismissListener filterDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
-            DDScannerApplication.getInstance().getTutorialHelper().showMapListTutorial(MainActivity.this, toolbarTabLayout.getTabAt(0).getCustomView(), mapDismissListener);
+            DDScannerApplication.getInstance().getTutorialHelper().showMapListTutorial(MainActivity.this, mainViewPagerAdapter.getMapListFragment().getMapListFAB(), mapDismissListener);
         }
 
         @Override
@@ -162,7 +165,8 @@ public class MainActivity extends BaseAppCompatActivity
     private DismissListener goToPhuketDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
-
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowSelectAPin(true);
+            mainViewPagerAdapter.getMapListFragment().moveCameraToPhuket();
         }
 
         @Override
@@ -363,6 +367,8 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn = findViewById(R.id.search_location_menu_button);
         btnFilter = findViewById(R.id.filter_menu_button);
         acountChangeLayout = findViewById(R.id.account_change_layout);
+        iconFilter = findViewById(R.id.icon_filter);
+        iconSearch = findViewById(R.id.icon_search);
         ImageView changeAccountButton = findViewById(R.id.change_account);
         changeAccountButton.setOnClickListener(this);
     }
@@ -374,7 +380,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
             SharedPreferenceHelper.setIsNeedToShowTutorial();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(true);
-            DDScannerApplication.getInstance().getTutorialHelper().showSearchTutorial(this, searchLocationBtn, searchDismissListener);
+        new Handler().postDelayed(() ->  DDScannerApplication.getInstance().getTutorialHelper().showSearchTutorial(this, iconSearch, searchDismissListener), 1000);
 //            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showNotificationTutorial(this, toolbarTabLayout.getTabAt(1).getCustomView().findViewById(R.id.notification_image_view), notificationsTutorialDismissListener), 3500);
             return;
         }
@@ -500,10 +506,10 @@ public class MainActivity extends BaseAppCompatActivity
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
                 if (resultCode == RESULT_OK) {
-                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
+                    iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
                 }
                 if (resultCode == RESULT_CODE_FILTERS_RESETED) {
-                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
+                    iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
@@ -674,9 +680,9 @@ public class MainActivity extends BaseAppCompatActivity
         DDScannerApplication.activityResumed();
         getIsHasNewotifications();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFiltersApplyied()) {
-            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
+            iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
         } else {
-            btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
+            iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
         }
         if (SharedPreferenceHelper.getIsUserSignedIn()) {
             mainViewPagerAdapter.onLoggedIn();
