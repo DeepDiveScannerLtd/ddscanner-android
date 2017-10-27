@@ -82,6 +82,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private DismissListener selectPinDismissListener = new DismissListener() {
         @Override
         public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowInfoWindow(true);
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowSelectAPin(false);
         }
 

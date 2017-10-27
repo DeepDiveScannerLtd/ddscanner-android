@@ -377,7 +377,7 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
-        if (SharedPreferenceHelper.getIsNeedToShowTutorial()) {
+        if (SharedPreferenceHelper.getIsNeedToShowTutorial() && SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
             SharedPreferenceHelper.setIsNeedToShowTutorial();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustToShowDiveSpotDetailsTutorial(true);
         new Handler().postDelayed(() ->  DDScannerApplication.getInstance().getTutorialHelper().showSearchTutorial(this, iconSearch, searchDismissListener), 1000);
