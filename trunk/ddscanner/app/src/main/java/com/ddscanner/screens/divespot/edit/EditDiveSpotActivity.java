@@ -744,11 +744,11 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = addTranslationButton.getBottom();
         }
 
-        if (photosListAdapter.getItemCount() < 2) {
-            isSomethingWrong = true;
-            errorImages.setVisibility(View.VISIBLE);
-            downestCoordinate = errorImages.getBottom();
-        }
+//        if (photosListAdapter.getItemCount() < 2) {
+//            isSomethingWrong = true;
+//            errorImages.setVisibility(View.VISIBLE);
+//            downestCoordinate = errorImages.getBottom();
+//        }
 
         if (isSomethingWrong) {
             scrollToError(downestCoordinate);
