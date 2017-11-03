@@ -409,6 +409,7 @@ public class MainActivity extends BaseAppCompatActivity
         }
         switch (position) {
             case 0:
+                EventsTracker.trackDiveSpotMapView();
                 showSearchFilterMenuItems();
                 changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
@@ -505,6 +506,7 @@ public class MainActivity extends BaseAppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
+                EventsTracker.trackDiveSpotMapView();
                 if (resultCode == RESULT_OK) {
                     iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
                 }
@@ -514,6 +516,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
+                EventsTracker.trackDiveSpotMapView();
                 switch (resultCode) {
                     case RESULT_OK:
                         final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
