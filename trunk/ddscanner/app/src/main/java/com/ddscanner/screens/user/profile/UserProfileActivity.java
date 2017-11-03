@@ -127,7 +127,9 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
         setupToolbar(R.string.profile, R.id.toolbar);
         switch (userType) {
             case 0:
-                EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.USER.getType());
+                if (getIntent().getStringExtra(ARG_DIVE_SPOT_ID) == null) {
+                    EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.USER.getType());
+                }
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterInformation(userId, diveCenterProfileResultListener);
                 break;
             case 1:
@@ -137,7 +139,9 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                 break;
             default:
                 isDiveCenterLegacy = true;
-                EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.LEGACY.getType());
+                if (getIntent().getStringExtra(ARG_DIVE_SPOT_ID) == null) {
+                    EventsTracker.trackDiveCenterView(userId, DiveCenterSearchItem.DiveCenterType.LEGACY.getType());
+                }
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getLegacyDiveCenterInformation(userId, diveCenterProfileResultListener);
                 break;
         }
