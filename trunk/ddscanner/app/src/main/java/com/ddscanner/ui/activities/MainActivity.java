@@ -425,7 +425,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case 2:
                 DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-                EventsTracker.trackUserProfileView();
+                EventsTracker.trackMyProfileView();
                 hideSearchFilterMenuItems();
                 if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
                     DDScannerApplication.getInstance().getDdScannerRestClient(this).postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());

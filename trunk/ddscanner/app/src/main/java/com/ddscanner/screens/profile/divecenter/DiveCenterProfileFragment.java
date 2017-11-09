@@ -265,12 +265,14 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     public void showInstructors(View view) {
         if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0) {
+            EventsTracker.trackMyInstructorsView();
             InstructorsActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
     }
 
     public void showDiveSpots(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
+            EventsTracker.trackMyDiveSpotsView();
             if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses() == null || binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0) == null) {
                 DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
                 return;
@@ -290,23 +292,27 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        EventsTracker.trackMyPhotosView();
         PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), 0)), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
     public void showLanguages(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getLanguages() != null) {
+            EventsTracker.trackMyLanguagesView();
             DiveCenterProfileLanguagesActivity.show(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getContext());
         }
     }
 
     public void showCreated(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCreatedSpotsCount() > 0) {
+            EventsTracker.trackMyCreatedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
     }
 
     public void showEdited(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
+            EventsTracker.trackMyEditedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
     }
@@ -324,6 +330,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     }
 
     public void showAllBrands(View view) {
+        EventsTracker.trackMyBrandsView();
         BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
     }
 

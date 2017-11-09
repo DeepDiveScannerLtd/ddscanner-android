@@ -224,12 +224,12 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_text));
         }
-        EventsTracker.trackImageView();
         materialDialog = Helpers.getMaterialDialog(this);
         images = DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos();
         position = getIntent().getIntExtra("position", 0);
         sourceId = getIntent().getStringExtra("sourceId");
         photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
+        EventsTracker.trackImageView(photoOpenedSource);
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
@@ -376,7 +376,7 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
 
     @Override
     public void onPageSelected(int position) {
-        EventsTracker.trackImageView();
+        EventsTracker.trackImageView(photoOpenedSource);
         changeUiAccrodingPosition(position);
     }
 

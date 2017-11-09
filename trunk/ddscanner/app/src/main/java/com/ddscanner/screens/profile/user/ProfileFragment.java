@@ -74,7 +74,6 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
         public void onSuccess(User result) {
-            EventsTracker.trackUserProfileView();
             if (binding != null) {
                 binding.about.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.GONE);
@@ -252,6 +251,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
             PhotoItemCLickListener photoItemCLickListener = (isNeedToOpenGallery, position) -> {
                 if (isNeedToOpenGallery) {
+                    EventsTracker.trackMyPhotosView();
                     PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
                     return;
                 }
@@ -316,49 +316,49 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showComments(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            EventsTracker.trackUserReviewsView();
+            EventsTracker.trackMyReviewsView();
             ReviewsActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
         }
     }
 
     public void showLikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getLikesCount() > 0) {
-            EventsTracker.trackUserLikesView();
+            EventsTracker.trackMyLikesView();
             UserLikesDislikesActivity.show(getActivity(), true, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showDislikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getDislikesCount() > 0) {
-            EventsTracker.trackUserDislikesView();
+            EventsTracker.trackMyDislikesView();
             UserLikesDislikesActivity.show(getActivity(), false, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showCheckinns(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCheckinsCount() > 0) {
-            EventsTracker.trackUserCheckinsView();
+            EventsTracker.trackMyCheckinsView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showAdded(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getAddedCount() > 0) {
-            EventsTracker.trackUserCreatedView();
+            EventsTracker.trackMyCreatedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showEdited(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getEditedCount() > 0) {
-            EventsTracker.trackUserEditedView();
+            EventsTracker.trackMyEditedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showFavorites(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getFavoritesCount() > 0) {
-            EventsTracker.trackUserFavoritesView();
+            EventsTracker.trackMyFavoritesView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
@@ -374,14 +374,15 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     }
 
     public void showAchievementsDetails(View view) {
-        switch (view.getId()) {
-            case R.id.points_layout:
-                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.POINTS);
-                break;
-            case R.id.show_achievments_details:
-                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.DETAILS);
-                break;
-        }
+        EventsTracker.trackMyAchievemtsView();
+//        switch (view.getId()) {
+//            case R.id.points_layout:
+////                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.POINTS);
+//                break;
+//            case R.id.show_achievments_details:
+////                EventsTracker.trackUserAchievementsView(EventsTracker.AchievementsViewSource.DETAILS);
+//                break;
+//        }
         AchievementsActivity.show(getContext());
     }
 

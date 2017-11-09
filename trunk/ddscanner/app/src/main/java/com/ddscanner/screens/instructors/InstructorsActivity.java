@@ -105,7 +105,6 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructors_list);
-        EventsTracker.trackInstructorsView();
         recyclerView = findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressView = findViewById(R.id.progress_bar);

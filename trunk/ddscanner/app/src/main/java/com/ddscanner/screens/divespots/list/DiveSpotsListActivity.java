@@ -93,6 +93,7 @@ public class DiveSpotsListActivity extends BaseAppCompatActivity implements Dial
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getUsersCheckins(divespotsListResultListener, userId);
                 break;
             case APPROVE:
+                EventsTracker.diveSpotsToApproveView();
                 DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotsForApprove(divespotsListResultListener);
                 break;
         }

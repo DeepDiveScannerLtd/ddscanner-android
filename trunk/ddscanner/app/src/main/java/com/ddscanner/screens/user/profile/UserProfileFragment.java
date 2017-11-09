@@ -58,6 +58,7 @@ public class UserProfileFragment extends Fragment {
         binding.setUserProfileViewModel(new ProfileFragmentViewModel(user));
         View v = binding.getRoot();
         binding.setHandlers(this);
+        EventsTracker.trackUserProfileView(user.getUserTypeString().toLowerCase());
         if (user.getAchievements() != null) {
             binding.achievmentRv.setNestedScrollingEnabled(false);
             binding.achievmentRv.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -73,7 +74,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showCheckinns(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCheckinsCount() > 0) {
-            EventsTracker.trackReviewerCheckInsView();
+            EventsTracker.trackUserCheckinsView(user.getUserTypeString().toLowerCase());
             if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -84,7 +85,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showAdded(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getAddedCount() > 0) {
-            EventsTracker.trackReviewerCreatedView();
+            EventsTracker.trackUserCreatedView(user.getUserTypeString().toLowerCase());
             if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -95,7 +96,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showEdited(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getEditedCount() > 0) {
-            EventsTracker.trackReviewerEditedView();
+            EventsTracker.trackUserEditedView(user.getUserTypeString().toLowerCase());
             if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -106,7 +107,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            EventsTracker.trackReviewerReviewsView();
+            EventsTracker.trackUserReviewsView(user.getUserTypeString().toLowerCase());
             if (SharedPreferenceHelper.getIsUserSignedIn()) {
                 ReviewsActivity.showForResult(getActivity(), binding.getUserProfileViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
             } else {

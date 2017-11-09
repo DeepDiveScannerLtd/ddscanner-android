@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.utils.Constants;
 import com.facebook.appevents.AppEventsConstants;
 import com.flurry.android.FlurryAgent;
@@ -31,6 +32,20 @@ public class EventsTracker {
     private static final String EVENT_NAME_REVIEW_VIEW = "review_view";
     private static final String EVENT_NAME_IMAGE_VIEW = "image_view";
 
+    private static final String EVENT_NAME_MY_PROFILE_VIEW = "my_profile_view";
+    private static final String EVENT_NAME_MY_CHECK_INS_VIEW = "my_check_ins_view";
+    private static final String EVENT_NAME_MY_CREATED_VIEW = "my_created_view";
+    private static final String EVENT_NAME_MY_EDITED_VIEW = "my_edited_view";
+    private static final String EVENT_NAME_MY_FAVORITES_VIEW = "my_favorites_view";
+    private static final String EVENT_NAME_MY_REVIEWS_VIEW = "my_reviews_view";
+    private static final String EVENT_NAME_MY_LIKES_VIEW = "my_likes_view";
+    private static final String EVENT_NAME_MY_DISLIKES_VIEW = "my_dislikes_view";
+    private static final String EVENT_NAME_MY_ACHIEVEMENTS_VIEW = "my_achievements_view";
+    private static final String EVENT_NAME_MY_PHOTOS_VIEW = "my_photos_view";
+    private static final String EVENT_NAME_MY_INSTRUCTORS_VIEW = "my_instructors_view";
+    private static final String EVENT_NAME_MY_LANGUAGES_VIEW = "my_languages_view";
+    private static final String EVENT_NAME_MY_BRANDS_VIEW = "my_brands_view";
+    private static final String EVENT_NAME_MY_DIVE_SPOTS_VIEW = "my_dive_spots_view";
     private static final String EVENT_NAME_DIVE_SPOTS_MAP_VIEW = "dive_spots_map_view";
     private static final String EVENT_NAME_DIVE_SPOTS_LIST_VIEW = "dive_spots_list_view";
     private static final String EVENT_NAME_DIVE_CENTERS_MAP_VIEW = "dive_centers_map_view";
@@ -60,7 +75,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_USER_REVIEWS_VIEW = "user_reviews_view";
 
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
-    private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
+    private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dc_profile_view";
     private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_ID = "dive_spot_id";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
     private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
@@ -69,8 +84,33 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT_MAPS_VIEW = "dive_spot_maps_view";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE = "type";
     private static final String EVENT_NAME_DIVE_SPOT_LOCATION_ON_MAP_VIEW = "dive_spot_location_on_map_view";
-    private static final String EVENT_NAME_INSTRUCTORS_VIEW = "user_instructors_view";
+    private static final String EVENT_NAME_INSTRUCTORS_VIEW = "dc_instructors_view";
     private static final String EVENT_NAME_DIVESPOTS_TO_APPROVE_VIEW = "dive_spots_to_be_approved_view";
+    private static final String EVENT_NAME_DC_LANGUAGES_VIEW = "dc_languages_view";
+    private static final String EVENT_NAME_DC_BRANDS_VIEW = "dc_brands_view";
+    private static final String EVENT_NAME_DC_CREATED_VIEW = "dc_created_view";
+    private static final String EVENT_NAME_DC_EDITED_VIEW = "dc_edited_view";
+    private static final String EVENT_NAME_DC_SPOTS_VIEW = "dc_dive_spots_view";
+
+    public static void trackDcLanguagesView() {
+        trackEventWithoutParameters(EVENT_NAME_DC_LANGUAGES_VIEW);
+    }
+
+    public static void trackDcBrandsView() {
+        trackEventWithoutParameters(EVENT_NAME_DC_BRANDS_VIEW);
+    }
+
+    public static void trackDcCreatedView() {
+        trackEventWithoutParameters(EVENT_NAME_DC_CREATED_VIEW);
+    }
+
+    public static void trackDcEditedView() {
+        trackEventWithoutParameters(EVENT_NAME_DC_EDITED_VIEW);
+    }
+
+    public static void trackDcSpotsView() {
+        trackEventWithoutParameters(EVENT_NAME_DC_SPOTS_VIEW);
+    }
 
     // ----------------------------------------------------
     // Content management
@@ -249,6 +289,62 @@ public class EventsTracker {
         AnalyticsSystemsManager.getLogger().logEvent(eventName, params);
     }
 
+    public static void trackMyProfileView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_PROFILE_VIEW);
+    }
+
+    public static void trackMyCheckinsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_CHECK_INS_VIEW);
+    }
+
+    public static void trackMyFavoritesView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_FAVORITES_VIEW);
+    }
+
+    public static void trackMyEditedView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_EDITED_VIEW);
+    }
+
+    public static void trackMyCreatedView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_CREATED_VIEW);
+    }
+
+    public static void trackMyPhotosView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_PHOTOS_VIEW);
+    }
+
+    public static void trackMyLikesView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_LIKES_VIEW);
+    }
+
+    public static void trackMyDislikesView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_DISLIKES_VIEW);
+    }
+
+    public static void trackMyAchievemtsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_ACHIEVEMENTS_VIEW);
+    }
+
+    public static void trackMyReviewsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_REVIEWS_VIEW);
+    }
+
+    public static void trackMyBrandsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_BRANDS_VIEW);
+    }
+
+    public static void trackMyDiveSpotsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_DIVE_SPOTS_VIEW);
+    }
+
+    public static void trackMyInstructorsView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_INSTRUCTORS_VIEW);
+    }
+
+    public static void trackMyLanguagesView() {
+        trackEventWithoutParameters(EVENT_NAME_MY_LANGUAGES_VIEW);
+    }
+
     public static void trackBookingDcListView() {
         trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_LIST_VIEW);
     }
@@ -327,8 +423,10 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_REVIEW_VIEW);
     }
 
-    public static void trackImageView() {
-        trackEventWithoutParameters(EVENT_NAME_IMAGE_VIEW);
+    public static void trackImageView(PhotoOpenedSource source) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_SOURCE, source.name().toLowerCase());
+        trackEventWithParameters(map, EVENT_NAME_IMAGE_VIEW);
     }
 
     public static void trackMapAdded() {
@@ -347,9 +445,10 @@ public class EventsTracker {
         trackEventWithParameters(map, EVENT_NAME_SKIP_TUTORIAL);
     }
 
-    public static void trackDiveSpotView(String diveSpotId) {
+    public static void trackDiveSpotView(String diveSpotId, SpotViewSource source) {
         Map<String, String> map = new HashMap<>();
         map.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
+        map.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, source.getName());
         trackEventWithParameters(map, EVENT_NAME_DIVE_SPOT_VIEW);
     }
 
@@ -551,11 +650,11 @@ public class EventsTracker {
     }
 
     public static void trackDiveCentersMapView() {
-        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
     }
 
     public static void trackDiveCentersListView() {
-        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
+//        trackEventWithoutParameters(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
     }
 
     public static void trackNotificationsView() {
@@ -566,20 +665,28 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_ACTIVITY_VIEW);
     }
 
-    public static void trackUserProfileView() {
-        trackEventWithoutParameters(EVENT_NAME_USER_PROFILE_VIEW);
+    public static void trackUserProfileView(String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, type);
+        trackEventWithParameters(map, EVENT_NAME_USER_PROFILE_VIEW);
     }
 
-    public static void trackUserCheckinsView() {
-        trackEventWithoutParameters(EVENT_NAME_USER_CHECK_INS_VIEW);
+    public static void trackUserCheckinsView(String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, type);
+        trackEventWithParameters(map, EVENT_NAME_USER_CHECK_INS_VIEW);
     }
 
-    public static void trackUserEditedView() {
-        trackEventWithoutParameters(EVENT_NAME_USER_EDITED_VIEW);
+    public static void trackUserEditedView(String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, type);
+        trackEventWithParameters(map, EVENT_NAME_USER_EDITED_VIEW);
     }
 
-    public static void trackUserCreatedView() {
-        trackEventWithoutParameters(EVENT_NAME_USER_CREATED_VIEW);
+    public static void trackUserCreatedView(String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, type);
+        trackEventWithParameters(map, EVENT_NAME_USER_CREATED_VIEW);
     }
 
     public static void trackUserFavoritesView() {
@@ -656,8 +763,10 @@ public class EventsTracker {
         trackEventWithoutParameters(EVENT_NAME_USER_DISLIKES_VIEW);
     }
 
-    public static void trackUserReviewsView() {
-        trackEventWithoutParameters(EVENT_NAME_USER_REVIEWS_VIEW);
+    public static void trackUserReviewsView(String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put(EVENT_PARAMETER_NAME_DIVE_CENTER_TYPE, type);
+        trackEventWithParameters(map, EVENT_NAME_USER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerReviewsView() {
@@ -831,6 +940,22 @@ public class EventsTracker {
         public String getSource() {
             return source;
         }
+    }
+
+    public enum DiveCenterSearchSource {
+
+        REGISTRATION("registration"), PROFILE("profile");
+
+        String source;
+
+        DiveCenterSearchSource(String source) {
+            this.source = source;
+        }
+
+        public String getSource() {
+            return this.source;
+        }
+
     }
 
 }

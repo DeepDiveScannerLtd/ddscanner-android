@@ -118,34 +118,40 @@ public class UserDiveCenterProfileFragment extends Fragment {
     }
 
     public void showDiveSpots(View view) {
+        EventsTracker.trackDcSpotsView();
         DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
     }
 
     public void showCreated(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCreatedSpotsCount() > 0) {
+            EventsTracker.trackDcCreatedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
     }
 
     public void showEdited(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
+            EventsTracker.trackDcEditedView();
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
     }
 
     public void showLanguages(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getLanguages() != null) {
+            EventsTracker.trackDcLanguagesView();
             DiveCenterProfileLanguagesActivity.show(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getContext());
         }
     }
 
     public void showInstructors(View view) {
         if (Integer.parseInt(binding.getDiveCenterViewModel().getDiveCenterProfile().getInstructorsCount()) > 0 && diveCenterType == 1) {
+            EventsTracker.trackInstructorsView();
             InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
     }
 
     public void showAllBrands(View view) {
+        EventsTracker.trackDcBrandsView();
         BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
     }
 

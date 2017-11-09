@@ -221,7 +221,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id);
+            EventsTracker.trackDiveSpotView(id, spotViewSource);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -230,7 +230,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     public static void showForResult(Activity context, String id, EventsTracker.SpotViewSource spotViewSource, int requestCode) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(id);
+            EventsTracker.trackDiveSpotView(id, spotViewSource);
         }
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -920,7 +920,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
     }
 
     public void trueApproveDiveSpot(View view) {
-        EventsTracker.trackDiveSpotValid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
     }
 
@@ -935,7 +934,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
 
     @Override
     public void onPositiveDialogClicked() {
-        EventsTracker.trackDiveSpotInvalid();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
     }
 
@@ -993,8 +991,10 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
             if (!isTrue) {
                 setResult(RESULT_CODE_DIVE_SPOT_REMOVED);
                 finish();
+                EventsTracker.trackDiveSpotInvalid();
                 return;
             }
+            EventsTracker.trackDiveSpotValid();
             binding.approveLayout.setVisibility(View.GONE);
         }
 
