@@ -379,4 +379,13 @@ public interface DDScannerRestService {
     @GET("v2_2/divecenter.brands.get")
     Call<ResponseBody> getDiveCenterBrands(@Query("id") String id);
 
+    @GET("v2_2/divespot.all.photos.get")
+    Call<ResponseBody> getAllDiveSpotPhotos(@Query("id") String id);
+
+    @GET("v2_2/divespot.reviews.photos.get")
+    Call<ResponseBody> getDiveSpotReviewsPhoto(@Query("id") String id);
+
+    @GET("v2_2/divespot.photos.get")
+    Call<ResponseBody> getOnlyDiveSpotPhotos(@Query("id") String id);
+
 }

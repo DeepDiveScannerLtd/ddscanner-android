@@ -535,6 +535,52 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getDiveSpotReviewPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotReviewsPhoto(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {}.getType();
+                ArrayList<DiveSpotPhoto> diveSpotPhotos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpotPhotos);
+            }
+        });
+    }
+
+    public void getDiveSpotPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getOnlyDiveSpotPhotos(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {}.getType();
+                ArrayList<DiveSpotPhoto> diveSpotPhotos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpotPhotos);
+            }
+        });
+    }    public void getAllDiveSpotPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getAllDiveSpotPhotos(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>() {}.getType();
+                ArrayList<DiveSpotPhoto> diveSpotPhotos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpotPhotos);
+            }
+        });
+    }
+
     public void postAddInstructorToDiveCenter(ResultListener<Void> resultListener, int diveCenterId, int diveCenterType) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

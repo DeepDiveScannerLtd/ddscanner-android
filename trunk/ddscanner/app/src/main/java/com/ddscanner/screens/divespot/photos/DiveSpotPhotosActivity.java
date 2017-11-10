@@ -63,43 +63,6 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
     private DiveSpotReviewsPhotoFragment diveSpotReviewsPhotoFragment = new DiveSpotReviewsPhotoFragment();
 
-    private ProgressView progressView;
-
-    private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> diveSpotPhotosResultListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
-        @Override
-        public void onSuccess(DiveSpotPhotosResponseEntity result) {
-            diveSpotDetails = result;
-            updateFragments(diveSpotDetails);
-            progressView.setVisibility(View.GONE);
-            photosViewPager.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-            switch (errorType) {
-                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-
-                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
-                default:
-
-                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
-            }
-        }
-
-        @Override
-        public void onInternetConnectionClosed() {
-            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
-        }
-
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +76,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
         setupViewPager();
         setUi();
         setUpTabLayout();
-        getDiveSpotPhotos();
+        updateFragments();
     }
 
     private void setUpTabLayout() {
@@ -135,7 +98,6 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void findViews() {
-        progressView = findViewById(R.id.progressBar);
         tabLayout = findViewById(R.id.photos_tab_layout);
         photosViewPager = findViewById(R.id.photos_view_pager);
         photosViewPager.setOnPageChangeListener(this);
@@ -193,7 +155,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
-                    getDiveSpotPhotos();
+                    updateFragments();
                     isDataChanged = true;
                     //   finish();
                 }
@@ -208,7 +170,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
                 if (resultCode == RESULT_OK) {
-                    getDiveSpotPhotos();
+                    updateFragments();
                     isDataChanged = true;
                 }
                 break;
@@ -290,9 +252,7 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
         } else {
             Intent intent = new Intent();
             intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= 18) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
@@ -300,25 +260,11 @@ public class DiveSpotPhotosActivity extends BaseAppCompatActivity implements Vie
         }
     }
 
-    private void getDiveSpotPhotos() {
-        progressView.setVisibility(View.VISIBLE);
-        photosViewPager.setVisibility(View.GONE);
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
-    }
+    private void updateFragments() {
+        diveSpotReviewsPhotoFragment.loadPhotos(dsId);
+        diveSpotAllPhotosFragment.loadPhotos(dsId);
+        diveSpotPhotosFragment.loadPhotos(dsId);
 
-    private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {
-
-        reviewsImages = diveSpotPhotosResponseEntity.getCommentPhotos();
-        diveSpotImages = diveSpotPhotosResponseEntity.getDiveSpotPhotos();
-
-        allPhotos = new ArrayList<>();
-        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-        diveSpotReviewsPhotoFragment.setList(reviewsImages, dsId);
-        diveSpotAllPhotosFragment.setList(allPhotos, dsId);
-        diveSpotPhotosFragment.setList(diveSpotImages, dsId);
-
-        progressView.setVisibility(View.GONE);
-        photosViewPager.setVisibility(View.VISIBLE);
     }
 
     @Override
