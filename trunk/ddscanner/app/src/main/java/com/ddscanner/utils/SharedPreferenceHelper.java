@@ -184,9 +184,9 @@ public class SharedPreferenceHelper {
     }
 
     public boolean getIsMstToShowDiveSpotTutorial() {
-        return true;
-//        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-//        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
+//        return true;
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_TO_SHOW_DIVE_SPOT_DETAILS_TUTORIAL, false);
     }
 
     public void setTutorialState(TutorialState state) {
