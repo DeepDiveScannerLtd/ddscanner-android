@@ -262,7 +262,7 @@
                         android:layout_marginTop="10dp"
                         style="@style/ValidationErrorTextView"
                         android:text="@string/dive_spot_is_required"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="4dp"
                         android:layout_marginBottom="10dp"/>
                 </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
