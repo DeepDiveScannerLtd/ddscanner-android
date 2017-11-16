@@ -46,11 +46,11 @@ android {
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
-            resValue "string", "server_api_address", "https://dev.ddscanner.xyz/"
+            resValue "string", "server_api_address", "https://rc.ddscanner.xyz/"
             resValue "string", "facebook_app_id", "1876585075891068"
             resValue "string", "application_id", "com.ddscanner.debug"
             resValue "string", "external_path", "Android/data/com.ddscanner.debug/files/Pictures"
-            resValue "string", "base_photo_url", "https://dev.ddscanner.xyz/v2_1/image/%1\$s?size=%2\$s"
+            resValue "string", "base_photo_url", "https://rc.ddscanner.xyz/v2_1/image/%1\$s?size=%2\$s"
             resValue "string", "dds_server_id", "416"
             resValue "string", "google_login_manager_key", "195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com"
         }

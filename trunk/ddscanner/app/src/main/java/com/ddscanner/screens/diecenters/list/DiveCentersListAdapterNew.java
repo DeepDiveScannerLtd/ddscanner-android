@@ -38,7 +38,7 @@ public class DiveCentersListAdapterNew extends RecyclerView.Adapter<DiveCentersL
 
     @Override
     public void onBindViewHolder(DiveCentersListViewHolder holder, int position) {
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCenters.get(position).getLogo(), "1")).into(holder.logo);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCenters.get(position).getLogo(), "1")).error(R.drawable.avatar_dc_profile_def).placeholder(R.drawable.placeholder_photo_wit_round_corners).into(holder.logo);
         holder.diveCenterName.setText(diveCenters.get(position).getName());
     }
 
