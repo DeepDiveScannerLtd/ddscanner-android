@@ -376,7 +376,7 @@
     <string name="add_e_mail">+ Add e-mail</string>
     <string name="add_account">+ Add account</string>
     <string name="dive_center_spots_count">MY DIVE SPOTS (%1$s)</string>
-    <string name="dive_center_spots_count_foreign">Dive spots (%1$s)</string>
+    <string name="dive_center_spots_count_foreign">DIVE SPOTS (%1$s)</string>
     <string name="i_am_working_here">I am working here</string>
     <string name="new_language">New language</string>
     <string name="register">Register</string>
