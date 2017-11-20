@@ -55,7 +55,7 @@ android {
             resValue "string", "google_login_manager_key", "195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com"
         }
         release {
-            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "false"
+            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "true"
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
