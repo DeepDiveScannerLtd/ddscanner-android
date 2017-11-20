@@ -600,7 +600,7 @@
     <string name="onboarding_filter">Filter them by object, level and etc.</string>
     <string name="onboarding_map_list">Switch between map and list modes to check spots</string>
     <string name="onboarding_go_to_phuket">Now let\'s check out Phuket - one of our favorite dive places</string>
-    <string name="onboarding_select_pin">Select a dive spot pin on the map</string>
-    <string name="onboarding_tap_on_infowindow">Tap on the infowindow to open spots details</string>
-    <string name="onboarding_book">If you’ll like this spot check out dive centers that can get you there and book a dive!</string>
+    <string name="onboarding_select_pin">Tap on a pin to select a dive spot</string>
+    <string name="onboarding_tap_on_infowindow">Tap on the info window for more details</string>
+    <string name="onboarding_book">Tap here to check out the dive centers\' suggestions and book your dive!</string>
 </resources>
