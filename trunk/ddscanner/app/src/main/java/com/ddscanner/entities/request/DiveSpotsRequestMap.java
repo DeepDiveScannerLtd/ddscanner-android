@@ -5,8 +5,8 @@ import java.util.HashMap;
 public class DiveSpotsRequestMap extends HashMap<String, Object> {
 
     public static final String KEY_CURRENTS = "currents";
-    public static final String KEY_LEVEL = "diving_skill";
-    public static final String KEY_OBJECT = "type";
+    public static final String KEY_LEVEL = "ds_diving_skill";
+    public static final String KEY_OBJECT = "ds_type";
     public static final String KEY_RATING = "rating";
     public static final String KEY_VISIBILITY = "visibility";
     public static final String KEY_COUNTRY_CODE = "country_code";

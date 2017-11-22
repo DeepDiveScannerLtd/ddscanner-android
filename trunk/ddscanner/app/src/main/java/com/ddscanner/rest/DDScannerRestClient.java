@@ -22,6 +22,7 @@ import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
+import com.ddscanner.entities.MapResponseEntity;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.NotificationsResonseEntity;
@@ -284,6 +285,21 @@ public class DDScannerRestClient {
                 }.getType();
                 List<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
+    public void getMapItemsByArea(ArrayList<String> sealifes, DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<MapResponseEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap, sealifes);
+        call.enqueue(new ResponseEntityCallback<MapResponseEntity>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<MapResponseEntity> resultListener, String responseString) {
+                MapResponseEntity mapResponseEntity = gson.fromJson(responseString, MapResponseEntity.class);
+                resultListener.onSuccess(mapResponseEntity);
             }
         });
     }

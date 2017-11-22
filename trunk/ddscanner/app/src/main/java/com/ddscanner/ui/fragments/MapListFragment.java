@@ -365,7 +365,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         addDsFab.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
         lastDiveSpotId = event.getDiveSpotShort().getId();
-        diveSpotInfo.show(event.getDiveSpotShort());
+//        diveSpotInfo.show(event.getDiveSpotShort());
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowInfoWindowTutorial()) {
             new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showTapOnInfoWindowTutorial(getActivity(), diveSpotInfo, infowWindowTutorialDismissListener), 350);
         }

@@ -389,7 +389,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
         mapControlLayout.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
-        diveSpotInfo.show(diveSpotShort);
+        diveSpotInfo.show(diveSpotShort, null);
         lastDiveSpotId = diveSpotShort.getId();
     }
 
