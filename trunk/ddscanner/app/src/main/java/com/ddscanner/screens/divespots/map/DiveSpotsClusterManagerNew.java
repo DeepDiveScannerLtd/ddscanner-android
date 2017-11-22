@@ -2,6 +2,7 @@ package com.ddscanner.screens.divespots.map;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -64,6 +67,7 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
     private float lastZoom;
 
     private boolean isCanMakeRequest = false;
+    private Circle circle;
 
     private Marker lastClickedMarker;
     private Marker userCurrentLocationMarker;
@@ -74,7 +78,7 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
     private ArrayList<BaseMapEntity> allDiveSpots = new ArrayList<>();
     private int newDiveSpotId = -1;
     private FirstTimeSpotsLoadedListener firstTimeSpotsLoadedListener;
-    
+
 
     public DiveSpotsClusterManagerNew(FragmentActivity context, GoogleMap googleMap, DiveSpotMapFragmentController diveSpotMapFragmentController) {
         super(context, googleMap);
@@ -229,7 +233,7 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
         return !(Math.abs(northEast.longitude - southWest.longitude) > 8 || Math.abs(northEast.latitude - southWest.latitude) > 8);
     }
 
-    private void requestDiveSpots(boolean isFromFilters) {
+    public void requestDiveSpots(boolean isFromFilters) {
         diveSpotsRequestMap.clear();
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
@@ -280,7 +284,7 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
             super.onClusterItemRendered(baseMapEntity, marker);
             try {
                 if (baseMapEntity.isDiveCenter()) {
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
                 } else {
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
@@ -365,7 +369,7 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
         newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
         lastClickedMarker = null;
         isNewDiveSpotMarkerClicked = true;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)), 0));
         //sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
         googleMap.setOnCameraChangeListener(this);
         requestDiveSpots(true);
@@ -373,6 +377,29 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
 
     public void moveCamera(LatLngBounds latLngBounds) {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+    }
+
+    public void setUserLocation(LatLng latLng) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(12)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+        if (circle == null) {
+            userCurrentLocationMarker = googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(latLng)
+                    .radius(200)
+                    .strokeColor(android.R.color.transparent)
+                    .fillColor(Color.parseColor("#1A0668a1"));
+            circle = googleMap.addCircle(circleOptions);
+        } else {
+            circle.setCenter(latLng);
+            userCurrentLocationMarker.setPosition(latLng);
+        }
     }
 
 }

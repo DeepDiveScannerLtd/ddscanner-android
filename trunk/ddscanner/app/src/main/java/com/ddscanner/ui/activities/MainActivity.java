@@ -513,6 +513,7 @@ public class MainActivity extends BaseAppCompatActivity
                 if (resultCode == RESULT_CODE_FILTERS_RESETED) {
                     iconFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
                 }
+                mainViewPagerAdapter.getMapListFragment().reloadDataAfterFilters();
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
@@ -520,7 +521,7 @@ public class MainActivity extends BaseAppCompatActivity
                 switch (resultCode) {
                     case RESULT_OK:
                         final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
+                        mainViewPagerAdapter.getMapListFragment().goToLatLngBounds(place);
                         break;
                     case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");

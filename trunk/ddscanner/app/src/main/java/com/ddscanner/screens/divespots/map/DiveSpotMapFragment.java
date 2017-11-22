@@ -1,6 +1,8 @@
 package com.ddscanner.screens.divespots.map;
 
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +25,33 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseMapEntity;
 import com.ddscanner.entities.MapResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.views.DiveCenterInfoView;
 import com.ddscanner.ui.views.DiveSpotMapInfoView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+
+import me.toptas.fancyshowcase.DismissListener;
 
 public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragmentController {
 
@@ -44,6 +60,9 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         public void onSuccess(MapResponseEntity result) {
             clusterManagerNew.updateDiveSpots(result.getAllEntities());
             hideProgressView();
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowSelectPin()) {
+                DDScannerApplication.getInstance().getTutorialHelper().showSelectPinTutorial(getActivity(), selectPinDismissListener);
+            }
         }
 
         @Override
@@ -58,6 +77,31 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
 
         @Override
         public void onInternetConnectionClosed() {
+
+        }
+    };
+
+    private DismissListener selectPinDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowInfoWindow(true);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowSelectAPin(false);
+        }
+
+        @Override
+        public void onSkipped(String id) {
+
+        }
+    };
+
+    private DismissListener infowWindowTutorialDismissListener = new DismissListener() {
+        @Override
+        public void onDismiss(String id) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowInfoWindow(false);
+        }
+
+        @Override
+        public void onSkipped(String id) {
 
         }
     };
@@ -85,7 +129,20 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     private TextView noDataText;
     private ImageView zoomPlus;
     private ImageView zoomMinus;
-    
+    private ImageView goToMyLocationButton;
+    private BaseAppCompatActivity baseAppCompatActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof BaseAppCompatActivity) {
+            baseAppCompatActivity = (BaseAppCompatActivity) context;
+        } else {
+            throw new RuntimeException("MapListFragment: activity must extend BaseAppCompatActivity");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -119,6 +176,8 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         noDataText = view.findViewById(R.id.text);
         zoomMinus = view.findViewById(R.id.zoom_minus);
         zoomPlus = view.findViewById(R.id.zoom_plus);
+        goToMyLocationButton = view.findViewById(R.id.go_to_my_location);
+        goToMyLocationButton.setOnClickListener(this::onGoToMyLocationClicked);
         initLists();
         initMapView();
         initTabLayout();
@@ -148,6 +207,17 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         googleMapView.onResume();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -364,6 +434,30 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
 
     public void onZoomMinusClicked(View view) {
         clusterManagerNew.mapZoomMinus();
+    }
+
+    public void onGoToMyLocationClicked(View view) {
+        baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
+    }
+
+    public void reloadDataAfterFilters() {
+        clusterManagerNew.requestDiveSpots(true);
+    }
+
+    public void goToLatLngBounds(LatLngBounds latLngBounds) {
+        clusterManagerNew.moveCamera(latLngBounds);
+    }
+
+    @Subscribe
+    public void onLocationReady(LocationReadyEvent event) {
+        for (Integer code : event.getRequestCodes()) {
+            switch (code) {
+                case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
+                    clusterManagerNew.setUserLocation(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                    break;
+
+            }
+        }
     }
 
 }
