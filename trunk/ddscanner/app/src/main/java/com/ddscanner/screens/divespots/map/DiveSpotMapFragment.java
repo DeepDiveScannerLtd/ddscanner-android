@@ -350,6 +350,7 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     }
 
     private void showListView() {
+        EventsTracker.trackDiveSpotListView();
         mapView.setVisibility(View.GONE);
         listView.setVisibility(View.VISIBLE);
         addDsFab.setVisibility(View.GONE);
@@ -365,6 +366,7 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     }
 
     private void showMapView() {
+        EventsTracker.trackDiveSpotMapView();
         listView.setVisibility(View.GONE);
         mapView.setVisibility(View.VISIBLE);
         addDsFab.setVisibility(View.VISIBLE);
