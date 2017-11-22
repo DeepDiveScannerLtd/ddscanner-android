@@ -4,6 +4,7 @@ package com.ddscanner.screens.divespots.map;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -279,6 +280,9 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         moveControlsUp();
         diveCenterInfoView.hide(diveSpotInfoHeight);
         diveSpotMapInfoView.show(diveSpotShort, marker);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustShowInfoWindowTutorial()) {
+            new Handler().postDelayed(() -> DDScannerApplication.getInstance().getTutorialHelper().showTapOnInfoWindowTutorial(getActivity(), diveSpotMapInfoView, infowWindowTutorialDismissListener), 350);
+        }
     }
 
     @Override
@@ -460,6 +464,10 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
 
             }
         }
+    }
+
+    public void moveCameraToPhuket() {
+        clusterManagerNew.moveCamera(new LatLngBounds(new LatLng(7.707117, 98.137623), new LatLng(8.185846, 98.545534)));
     }
 
 }

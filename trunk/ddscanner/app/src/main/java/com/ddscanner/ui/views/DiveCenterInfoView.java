@@ -19,7 +19,6 @@ public class DiveCenterInfoView extends RelativeLayout {
 
     private Marker marker;
     private TextView diveCenterName;
-    private RatingView ratingView;
     private TextView address;
     private boolean isShown = false;
     private String lastDcId;
@@ -44,11 +43,10 @@ public class DiveCenterInfoView extends RelativeLayout {
 
         diveCenterName = findViewById(R.id.dive_center_name);
         address = findViewById(R.id.address);
-        ratingView = findViewById(R.id.rating_view);
 
     }
 
-    public void show(BaseMapEntity diveSpotShort, Marker marker) {
+    public void show(BaseMapEntity diveCenter, Marker marker) {
         isShown = true;
         if (this.marker != null) {
             try {
@@ -69,12 +67,11 @@ public class DiveCenterInfoView extends RelativeLayout {
                         setVisibility(View.VISIBLE);
                     }
                 });
-        ratingView.removeAllViews();
-        diveCenterName.setText(diveSpotShort.getName());
-//        diveSpotType.setText(diveSpotShort.getObject());
-        ratingView.setRating(Math.round(diveSpotShort.getRating()), R.drawable.ic_iw_star_full, R.drawable.ic_iw_star_empty);
+        diveCenterName.setText(diveCenter.getName());
+//        diveSpotType.setText(diveCenter.getObject());
+        address.setText(diveCenter.getAddresses().get(0).getName());
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc_selected));
-        lastDcId = String.valueOf(diveSpotShort.getId());
+        lastDcId = String.valueOf(diveCenter.getId());
     }
 
     public void hide(int diveSpotInfoHeight) {
