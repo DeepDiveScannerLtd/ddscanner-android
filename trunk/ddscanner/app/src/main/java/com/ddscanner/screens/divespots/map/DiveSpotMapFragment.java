@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -132,6 +133,7 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     private ImageView zoomMinus;
     private ImageView goToMyLocationButton;
     private BaseAppCompatActivity baseAppCompatActivity;
+    private Button continueShowMap;
 
     @Override
     public void onAttach(Context context) {
@@ -159,16 +161,12 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         progressView = view.findViewById(R.id.request_progress);
         diveSpotMapInfoView = view.findViewById(R.id.dive_spot_info_layout);
         diveCenterInfoView = view.findViewById(R.id.dive_center_info_layout);
-        diveSpotMapInfoView.setOnClickListener(this::onDivSpotInfoClicked);
-        diveCenterInfoView.setOnClickListener(this::onDiveCenterInfoClicked);
         mapListFAB = view.findViewById(R.id.map_list_fab);
         addDsFab = view.findViewById(R.id.add_ds_fab);
-        addDsFab.setOnClickListener(this::onAddDsClicked);
         listView = view.findViewById(R.id.list_view);
         mapView = view.findViewById(R.id.map_view);
         tabLayout = view.findViewById(R.id.tab_layout);
         diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(93, getContext()));
-        mapListFAB.setOnClickListener(this::mapListFabClicked);
         diveSpotsListAdapter = new DiveSpotsMapListAdapter(getActivity());
         diveSpotsMapDiveCenterListAdapter = new DiveSpotsMapDiveCenterListAdapter(getActivity());
         diveSpotsList = view.findViewById(R.id.recycler_view);
@@ -178,10 +176,20 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
         zoomMinus = view.findViewById(R.id.zoom_minus);
         zoomPlus = view.findViewById(R.id.zoom_plus);
         goToMyLocationButton = view.findViewById(R.id.go_to_my_location);
-        goToMyLocationButton.setOnClickListener(this::onGoToMyLocationClicked);
+        continueShowMap = view.findViewById(R.id.continue_button);
+        initClickListeners();
         initLists();
         initMapView();
         initTabLayout();
+    }
+
+    private void initClickListeners() {
+        goToMyLocationButton.setOnClickListener(this::onGoToMyLocationClicked);
+        mapListFAB.setOnClickListener(this::mapListFabClicked);
+        addDsFab.setOnClickListener(this::onAddDsClicked);
+        diveCenterInfoView.setOnClickListener(this::onDiveCenterInfoClicked);
+        diveSpotMapInfoView.setOnClickListener(this::onDivSpotInfoClicked);
+        continueShowMap.setOnClickListener(this::onContinueButonClicked);
     }
 
     @Override
@@ -468,6 +476,10 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
 
     public void moveCameraToPhuket() {
         clusterManagerNew.moveCamera(new LatLngBounds(new LatLng(7.707117, 98.137623), new LatLng(8.185846, 98.545534)));
+    }
+
+    public void onContinueButonClicked(View view) {
+        showMapView();
     }
 
 }

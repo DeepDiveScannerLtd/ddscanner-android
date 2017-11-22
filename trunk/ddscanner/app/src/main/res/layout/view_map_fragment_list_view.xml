@@ -61,7 +61,7 @@
             android:text="@string/please_choose_another_location" />
 
         <Button
-            android:id="@+id/showMapContinue"
+            android:id="@+id/continue_button"
             style="@style/OrangeButtons"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
