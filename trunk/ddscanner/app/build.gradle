@@ -35,7 +35,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         multiDexEnabled true
-        versionCode 47
+        versionCode 48
         versionName "3.0.22"
         testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
