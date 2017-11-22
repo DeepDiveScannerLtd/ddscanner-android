@@ -166,7 +166,7 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onDismiss(String id) {
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustShowSelectAPin(true);
-            mainViewPagerAdapter.getMapListFragment().moveCameraToPhuket();
+//            mainViewPagerAdapter.getMapListFragment().moveCameraToPhuket();
         }
 
         @Override

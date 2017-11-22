@@ -1,6 +1,7 @@
 package com.ddscanner.screens.divespots.map;
 
 
+import com.ddscanner.entities.BaseMapEntity;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 
 public interface DiveSpotMapFragmentController {
 
-    void showDiveSpotInfo(Marker marker, DiveSpotShort diveSpotShort);
+    void showDiveSpotInfo(Marker marker, BaseMapEntity diveSpotShort);
 
     void hideDiveSpotInfo();
 
-    void showDiveCenterInfo(Marker marker, DiveCenter diveCenter);
+    void showDiveCenterInfo(Marker marker, BaseMapEntity diveCenter);
 
     void hideDiveCenternfo();
 

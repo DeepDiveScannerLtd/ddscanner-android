@@ -242,6 +242,7 @@
     <string name="no_one_has_checked_in_here">No one has checked in here</string>
     <string name="one_person_checked_in">person checked in here</string>
     <string name="there_are_no_dive_spots_here">There are no dive spots here</string>
+    <string name="there_are_no_dive_centers_here">There are no dive centers here</string>
     <string name="please_choose_another_location">Please choose another location</string>
     <string name="send">SEND</string>
     <string name="write_a_review">e.g. Got an unforgettable experience. The dive spot is absolutely amazing with colorful reefs and lots of fish. We were lucky to spot manta rays and tiny shrimps.</string>
