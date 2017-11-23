@@ -118,10 +118,19 @@ public class DiveCenterProfileFragmentViewModel {
                 Link link = new Link(email);
                 link.setUnderlined(false);
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
-                link.setOnLongClickListener(clickedText -> EmailIntentBuilder.from(view.getContext()).to(email).start());
+                link.setOnLongClickListener(clickedText -> {
+                    EmailIntentBuilder.from(view.getContext()).to(email).start();
+                    if (viewModel.getDiveCenterProfile().isForBooking()) {
+                        EventsTracker.trackBookingEmailLongClck();
+                    } else {
+                        EventsTracker.trackEmailLongClick();
+                    }
+                });
                 link.setOnClickListener(clickedText -> {
 //                    if (viewModel.getDiveCenterProfile().isForBooking()) {
+                    if (viewModel.getDiveCenterProfile().isForBooking()) {
                         EventsTracker.trackBookingDcProfileEmailClick();
+                    }
                         SendRequestActivity.show(view.getContext(), viewModel.getDiveCenterProfile().getDiveSpotBookingId(), viewModel.getDiveCenterProfile().getId());
 //                        return;
 //                    }
@@ -152,6 +161,8 @@ public class DiveCenterProfileFragmentViewModel {
                 link.setOnClickListener(clickedText -> {
                     if (viewModel.getDiveCenterProfile().isForBooking()) {
                         EventsTracker.trackBookingDcProfilePhoneClick();
+                    } else {
+                        EventsTracker.trackPhoneClick();
                     }
                     PhoneCallIntentBuilder.from(view.getContext()).to(phone).start();
                 });

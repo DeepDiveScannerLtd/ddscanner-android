@@ -4,7 +4,7 @@ public class Constants {
 
     public static final long NOTIFICATION_SHOWING_INTERVAL = 864000000;
 
-    public static final String ANALYTIC_VERSION = "v1_3";
+    public static final String ANALYTIC_VERSION = "v1_4";
     public static final String PLATFORM = "android";
     public static final String TUTORIAL_VERSION = "onboarding_1";
 

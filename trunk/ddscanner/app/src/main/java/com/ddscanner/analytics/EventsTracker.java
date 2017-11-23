@@ -91,6 +91,16 @@ public class EventsTracker {
     private static final String EVENT_NAME_DC_CREATED_VIEW = "dc_created_view";
     private static final String EVENT_NAME_DC_EDITED_VIEW = "dc_edited_view";
     private static final String EVENT_NAME_DC_SPOTS_VIEW = "dc_dive_spots_view";
+    private static final String EVENT_NAME_PHONE_CLICK = "phone_click";
+    private static final String EVENT_NAME_EMAIL_LONG_CLICK = "email_long_click";
+
+    public static void trackPhoneClick() {
+        trackEventWithoutParameters(EVENT_NAME_PHONE_CLICK);
+    }
+
+    public static void trackEmailLongClick() {
+        trackEventWithoutParameters(EVENT_NAME_EMAIL_LONG_CLICK);
+    }
 
     public static void trackDcLanguagesView() {
         trackEventWithoutParameters(EVENT_NAME_DC_LANGUAGES_VIEW);
@@ -205,6 +215,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_BOOKING_DC_PROFILE_VIEW = "booking_dc_profile_view";
     private static final String EVENT_NAME_BOOKING_DC_PROFILE_PHONE_CLICK = "booking_dc_profile_phone_click";
     private static final String EVENT_NAME_BOOKING_DC_PROFILE_EMAIL_CLICK = "booking_dc_profile_email_click";
+    private static final String EVENT_NAME_BOOKING_DC_PROFILE_EMAIL_LONG_CLICK = "booking_dc_profile_email_long_click";
     private static final String EVENT_NAME_BOOKING_REQUEST_SENT = "booking_request_sent";
     private static final String EVENT_NAME_BOOKING_CANCELLED = "booking_cancelled";
     // ----------------------------------------------------
@@ -311,6 +322,10 @@ public class EventsTracker {
 
     public static void trackMyPhotosView() {
         trackEventWithoutParameters(EVENT_NAME_MY_PHOTOS_VIEW);
+    }
+
+    public static void trackBookingEmailLongClck() {
+        trackEventWithoutParameters(EVENT_NAME_BOOKING_DC_PROFILE_EMAIL_LONG_CLICK);
     }
 
     public static void trackMyLikesView() {
