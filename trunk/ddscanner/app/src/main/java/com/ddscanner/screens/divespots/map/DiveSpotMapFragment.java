@@ -214,6 +214,9 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     public void onResume() {
         super.onResume();
         googleMapView.onResume();
+        if (progressView != null && zoomInMessage != null) {
+            progressView.setVisibility(View.GONE);
+        }
     }
 
     @Override
