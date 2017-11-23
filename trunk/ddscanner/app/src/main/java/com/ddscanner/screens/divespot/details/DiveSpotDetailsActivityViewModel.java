@@ -144,10 +144,10 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("visibilityForBookButtonFrom")
     public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
-                view.setVisibility(View.VISIBLE);
-                return;
-            }
+//            if (SharedPreferenceHelper.getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
+//                view.setVisibility(View.VISIBLE);
+//                return;
+//            }
             if (!viewModel.getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
                 view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.text_inactive_button));
             }

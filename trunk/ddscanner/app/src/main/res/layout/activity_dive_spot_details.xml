@@ -658,6 +658,7 @@
                 android:onClick="@{handlers::showDiveCentersButtonClicked}"
                 android:text="@string/contact_dive_centers"
                 android:visibility="gone"
+                android:textColor="@color/black_text"
                 app:visibilityForBookButtonFrom="@{diveSpotViewModel}" />
 
         </RelativeLayout>

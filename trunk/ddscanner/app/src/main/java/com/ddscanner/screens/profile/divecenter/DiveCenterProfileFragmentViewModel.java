@@ -118,6 +118,7 @@ public class DiveCenterProfileFragmentViewModel {
                 Link link = new Link(email);
                 link.setUnderlined(false);
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
+                link.setOnLongClickListener(clickedText -> EmailIntentBuilder.from(view.getContext()).to(email).start());
                 link.setOnClickListener(clickedText -> {
 //                    if (viewModel.getDiveCenterProfile().isForBooking()) {
                         EventsTracker.trackBookingDcProfileEmailClick();

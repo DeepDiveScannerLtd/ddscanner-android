@@ -175,13 +175,17 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
         if (marker.equals(userCurrentLocationMarker)) {
             return true;
         }
-        BaseMapEntity baseMapEntity = itemsMap.get(marker.getPosition());
-        if (!baseMapEntity.isDiveCenter()) {
-            diveSpotMapFragmentController.showDiveSpotInfo(marker, itemsMap.get(marker.getPosition()));
+        try {
+            BaseMapEntity baseMapEntity = itemsMap.get(marker.getPosition());
+            if (!baseMapEntity.isDiveCenter()) {
+                diveSpotMapFragmentController.showDiveSpotInfo(marker, itemsMap.get(marker.getPosition()));
+                return true;
+            }
+            diveSpotMapFragmentController.showDiveCenterInfo(marker, itemsMap.get(marker.getPosition()));
             return true;
+        } catch (Exception e) {
+            return false;
         }
-        diveSpotMapFragmentController.showDiveCenterInfo(marker, itemsMap.get(marker.getPosition()));
-        return true;
     }
 
     @Override
