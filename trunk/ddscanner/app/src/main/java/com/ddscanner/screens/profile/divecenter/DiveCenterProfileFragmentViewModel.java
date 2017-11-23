@@ -119,12 +119,12 @@ public class DiveCenterProfileFragmentViewModel {
                 link.setUnderlined(false);
                 link.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dive_center_charachteristic_color));
                 link.setOnClickListener(clickedText -> {
-                    if (viewModel.getDiveCenterProfile().isForBooking()) {
+//                    if (viewModel.getDiveCenterProfile().isForBooking()) {
                         EventsTracker.trackBookingDcProfileEmailClick();
                         SendRequestActivity.show(view.getContext(), viewModel.getDiveCenterProfile().getDiveSpotBookingId(), viewModel.getDiveCenterProfile().getId());
-                        return;
-                    }
-                    EmailIntentBuilder.from(view.getContext()).to(email).start();
+//                        return;
+//                    }
+//                    EmailIntentBuilder.from(view.getContext()).to(email).start();
                 });
                 links.add(link);
                 if (viewModel.getDiveCenterProfile().getEmails().indexOf(email) != viewModel.getDiveCenterProfile().getEmails().size() - 1) {
