@@ -172,6 +172,9 @@ public class DiveSpotsClusterManagerNew extends ClusterManager<BaseMapEntity> im
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
+        if (marker.equals(userCurrentLocationMarker)) {
+            return true;
+        }
         BaseMapEntity baseMapEntity = itemsMap.get(marker.getPosition());
         if (!baseMapEntity.isDiveCenter()) {
             diveSpotMapFragmentController.showDiveSpotInfo(marker, itemsMap.get(marker.getPosition()));
