@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -41,7 +42,12 @@ public class DiveSpotsMapDiveCenterListAdapter extends RecyclerView.Adapter<Dive
         holder.dcName.setText(list.get(position).getName());
         holder.dcAddress.setText(list.get(position).getAddresses().get(0).getName());
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, list.get(position).getPhoto(), "1")).placeholder(R.drawable.avatar_dc_profile_def).into(holder.dcLogo);
-        holder.dcLanguages.setText(list.get(position).getLanguagesString());
+        if (list.get(position).getLanguagesString().isEmpty()) {
+            holder.languagesBlock.setVisibility(View.GONE);
+        } else {
+            holder.languagesBlock.setVisibility(View.VISIBLE);
+            holder.dcLanguages.setText(list.get(position).getLanguagesString());
+        }
     }
 
     @Override
@@ -55,6 +61,7 @@ public class DiveSpotsMapDiveCenterListAdapter extends RecyclerView.Adapter<Dive
         private TextView dcAddress;
         private TextView dcLanguages;
         private ImageView dcLogo;
+        private LinearLayout languagesBlock;
 
         public DiveCenterMapListItemViewHolder(View itemView) {
             super(itemView);
@@ -63,6 +70,7 @@ public class DiveSpotsMapDiveCenterListAdapter extends RecyclerView.Adapter<Dive
             dcName = itemView.findViewById(R.id.dc_name);
             dcLanguages = itemView.findViewById(R.id.dc_languages);
             dcLogo = itemView.findViewById(R.id.dc_logo);
+            languagesBlock = itemView.findViewById(R.id.languages_block);
         }
 
         @Override
