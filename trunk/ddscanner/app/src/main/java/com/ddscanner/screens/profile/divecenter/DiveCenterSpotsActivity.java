@@ -104,7 +104,6 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private Marker diveCenterMarker;
     private boolean isMapShown = true;
     private RelativeLayout please;
-    private Marker lastClickeMarker;
     private String id;
     private int diveSpotInfoHeight;
     
@@ -386,10 +385,10 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
 
     }
 
-    public void showDiveSpotInfo(DiveSpotShort diveSpotShort) {
+    public void showDiveSpotInfo(DiveSpotShort diveSpotShort, Marker marker) {
         mapControlLayout.animate().translationY(-diveSpotInfoHeight);
         mapListFAB.animate().translationY(-diveSpotInfoHeight);
-        diveSpotInfo.show(diveSpotShort, null);
+        diveSpotInfo.show(diveSpotShort, marker);
         lastDiveSpotId = diveSpotShort.getId();
     }
 
@@ -399,8 +398,6 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             addDsFab.animate().translationY(0);
             mapListFAB.animate().translationY(0);
             diveSpotInfo.hide(diveSpotInfoHeight);
-            lastClickeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            lastClickeMarker = null;
         }
     }
 
@@ -421,13 +418,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         if (marker.equals(diveCenterMarker) || marker.equals(myLocationMarker)) {
             return false;
         }
-        if (lastClickeMarker == null) {
-            lastClickeMarker = marker;
-        } else {
-            lastClickeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-        }
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        showDiveSpotInfo(diveSpotsMap.get(marker.getPosition()));
+        showDiveSpotInfo(diveSpotsMap.get(marker.getPosition()), marker);
         return false;
     }
 

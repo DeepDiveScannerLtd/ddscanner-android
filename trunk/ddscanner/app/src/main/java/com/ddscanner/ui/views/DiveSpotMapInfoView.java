@@ -67,10 +67,9 @@ public class DiveSpotMapInfoView extends RelativeLayout {
         if (this.marker != null) {
             this.marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         }
-        if (marker != null) {
             this.marker = marker;
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        }
+
         this.animate()
                 .translationY(0)
                 .alpha(1.0f)
