@@ -462,7 +462,11 @@ public class DiveSpotMapFragment extends Fragment implements DiveSpotMapFragment
     }
 
     public void goToLatLngBounds(LatLngBounds latLngBounds) {
-        clusterManagerNew.moveCamera(latLngBounds);
+        try {
+            clusterManagerNew.moveCamera(latLngBounds);
+        } catch (Exception ignored) {
+
+        }
     }
 
     @Subscribe
