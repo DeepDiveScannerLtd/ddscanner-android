@@ -604,4 +604,10 @@
     <string name="onboarding_select_pin">Tap on a pin to select a dive spot</string>
     <string name="onboarding_tap_on_infowindow">Tap on the info window for more details</string>
     <string name="onboarding_book">Tap here to check out the dive centers\' suggestions and book your dive!</string>
+    <string name="daily_tours">Daily tours</string>
+    <string name="initiary">Initiary</string>
+    <string name="available">Available</string>
+    <string name="meetin_point">Meeting point</string>
+    <string name="inslusions">Inslusions</string>
+    <string name="book_now_btn">BOOK NOW</string>
 </resources>

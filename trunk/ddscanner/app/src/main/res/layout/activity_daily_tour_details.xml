@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivityViewModel" />
+
+    </data>
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:fitsSystemWindows="true">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:contentScrim="@color/primary"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:popupTheme="@style/ToolbarMenuStyle"
+                    android:fitsSystemWindows="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fitsSystemWindows="true">
+
+                        <ImageView
+                            android:id="@+id/main_photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:fitsSystemWindows="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/iw_card_cave"
+                            />
+                        <LinearLayout
+                            android:layout_alignParentBottom="true"
+                            android:id="@+id/price_block"
+                            android:layout_alignParentLeft="true"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/price_background"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginBottom="12dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:letterSpacing="0.02"
+                                android:text="From"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="bold"
+                                android:textColor="#212121"
+                                android:letterSpacing="0.02"
+                                android:text="2500 B"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:popupTheme="@style/ToolbarMenuStyle" />
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+            </android.support.design.widget.AppBarLayout>
+            <com.ddscanner.ui.views.FlingableNestedScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fbfbfb"
+                android:scrollbars="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/informationLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:paddingTop="16dp"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingBottom="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:letterSpacing="0.01"
+                                android:text="Diving to Racha islands"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#a3a3a3"
+                                android:letterSpacing="0.01"
+                                android:text="2 dives, English, Thai"
+                                />
+
+                            <TextView
+                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="6sp"
+                                android:text="At Crab Island you can experience some strong currents depending on the tide. Usually dives are one way along the reef slope depending on the current’s direction. There is a small bay to the…"
+                                />
+                            <RelativeLayout
+                                android:paddingVertical="8dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/arrow"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_arrow"
+                                    android:layout_alignParentRight="true"/>
+                                <TextView
+                                    android:layout_toLeftOf="@+id/arrow"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="14sp"
+                                    android:fontFamily="sans-serif"
+                                    android:textStyle="normal"
+                                    android:textColor="#a3a3a3"
+                                    android:letterSpacing="0.01"
+                                    android:text="By Aquacenter Thailand"
+                                    />
+                            </RelativeLayout>
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/initiary"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:layout_marginTop="4dp"
+                                android:text="07:30 – 08:30 Hotel transfers to Chalong Pier
+08:30 – 10:00 Light breakfast onboard and boat ride to Racha Yai
+10:00 – 11:00 1st dive, snorkeling
+11:00 – 13:00 Lunch, relaxation
+13:00 – 14:00 2nd dive, snorkeling
+14:00 – 15:30 Boat ride to Phuket
+15:30 – 16:00 Transfers back to your resorts"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/available"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="Every Wednesday and Sunday"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:top_divider="false"
+                            app:bottom_divider="true"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/meetin_point"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="Bungalow Bay and Siam Bay is located in the West side of Racha Yai Island. Both hard have coral gardens and great spots for beginners."
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_marginTop="@dimen/base_block_margin_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:top_divider="true"
+                            app:bottom_divider="true"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/inslusions"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="- hotel transfers from Rawai, Chalong, Kata, Karon,    Patong area;
+- buffet breakfast, buffet lunch,snacks and fruits, coffee, tea, drinking water;
+- guided dives in small groups, max 4 divers/guide ratio;
+- tanks and weights and weight belts."
+                                />
+                            <TextView
+                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="8sp"
+                                android:text="Price: 3400 B "
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.ddscanner.ui.views.FlingableNestedScrollView>
+
+        </android.support.design.widget.CoordinatorLayout>
+    <Button
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button_show_divecenters"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/contact_dive_center_background"
+        android:text="@string/book_now_btn"
+        android:visibility="visible"
+        android:textColor="@color/black_text" />
+
+</RelativeLayout>
+</layout>
