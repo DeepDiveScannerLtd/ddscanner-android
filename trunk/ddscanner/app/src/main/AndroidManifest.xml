@@ -300,9 +300,11 @@
         <activity android:name=".screens.divecenter.edit.DiveCenterEditActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".screens.brands.BrandsActivity" />
-        <activity android:name=".ui.activities.BaseSearchActivity" />
-
+        <activity android:name=".screens.brands.BrandsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.BaseSearchActivity" android:screenOrientation="portrait" />
+        <activity android:name=".screens.profile.divecenter.tours.list.DailyToursActivity" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".screens.profile.divecenter.tours.details.TourDetailsActivity" android:screenOrientation="portrait" />
         <receiver android:name=".receivers.DeviceBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

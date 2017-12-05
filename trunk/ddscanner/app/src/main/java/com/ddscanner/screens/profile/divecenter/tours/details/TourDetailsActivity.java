@@ -13,16 +13,46 @@ import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityDailyTourDetailsBinding;
+import com.ddscanner.entities.DailyTourDetails;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 
 public class TourDetailsActivity extends BaseAppCompatActivity {
 
+    private static final String ARG_ID = "id";
+
+    private DDScannerRestClient.ResultListener<DailyTourDetails> resultListener = new DDScannerRestClient.ResultListener<DailyTourDetails>() {
+        @Override
+        public void onSuccess(DailyTourDetails result) {
+            binding.setViewModel(new TourDetailsActivityViewModel(result));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
     private ActivityDailyTourDetailsBinding binding;
 
-    public static void show(Context context) {
+    private long productId;
+
+    public static void show(Context context, long productId) {
         Intent intent = new Intent(context, TourDetailsActivity.class);
+        intent.putExtra(ARG_ID, productId);
         context.startActivity(intent);
     }
 
@@ -30,8 +60,10 @@ public class TourDetailsActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_daily_tour_details);
+        productId = getIntent().getLongExtra(ARG_ID, -1);
         themeNavAndStatusBar();
         toolbarSettings();
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).getProductDetails(resultListener, productId);
     }
 
     private void toolbarSettings() {

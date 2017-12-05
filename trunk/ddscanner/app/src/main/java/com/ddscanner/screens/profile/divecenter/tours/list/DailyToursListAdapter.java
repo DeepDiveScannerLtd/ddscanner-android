@@ -11,10 +11,13 @@ import com.ddscanner.databinding.ItemDailyTourBinding;
 import com.ddscanner.entities.DailyTour;
 import com.ddscanner.interfaces.ListItemClickListener;
 
+import java.util.ArrayList;
+
 public class DailyToursListAdapter extends RecyclerView.Adapter<DailyToursListAdapter.DailyTourItemViewHolder> {
 
     private DailyTour dailyTour = new DailyTour();
     private ListItemClickListener<DailyTour> dailyTourListItemClickListener;
+    private ArrayList<DailyTour> dailyTours = new ArrayList<>();
 
     public DailyToursListAdapter(ListItemClickListener<DailyTour> dailyTourListItemClickListener) {
         this.dailyTourListItemClickListener = dailyTourListItemClickListener;
@@ -32,9 +35,14 @@ public class DailyToursListAdapter extends RecyclerView.Adapter<DailyToursListAd
         holder.binding.setViewModel(new DailyTourListItemViewModel(dailyTour));
     }
 
+    public void setData(ArrayList<DailyTour> dailyTours) {
+        this.dailyTours = dailyTours;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return 10;
+        return dailyTours.size();
     }
 
     class DailyTourItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

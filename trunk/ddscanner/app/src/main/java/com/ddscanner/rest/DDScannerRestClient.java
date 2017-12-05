@@ -11,6 +11,8 @@ import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.Brand;
 import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.DailyTour;
+import com.ddscanner.entities.DailyTourDetails;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCenterSearchItem;
@@ -285,6 +287,37 @@ public class DDScannerRestClient {
                 }.getType();
                 List<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
+    public void getDiveCenterProducts(ResultListener<ArrayList<DailyTour>> resultListener, String diveCenterId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterProducts(diveCenterId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DailyTour>>(gson ,resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DailyTour>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DailyTour>>() {}.getType();
+                ArrayList<DailyTour> dailyTours = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(dailyTours);
+            }
+        });
+    }
+
+    public void getProductDetails(ResultListener<DailyTourDetails> resultListener, long productId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getProductDetails(productId);
+        call.enqueue(new ResponseEntityCallback<DailyTourDetails>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<DailyTourDetails> resultListener, String responseString) throws JSONException {
+                DailyTourDetails dailyTourDetails = gson.fromJson(responseString, DailyTourDetails.class);
+                resultListener.onSuccess(dailyTourDetails);
             }
         });
     }
