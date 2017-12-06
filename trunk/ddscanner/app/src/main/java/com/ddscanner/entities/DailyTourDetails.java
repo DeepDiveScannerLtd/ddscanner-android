@@ -3,13 +3,12 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DailyTourDetails extends DailyTour {
+public class DailyTourDetails extends DailyTour implements Serializable{
 
     private ArrayList<String> images;
-    @SerializedName("number_of_dives")
-    private String numberOfDives;
     @SerializedName("whats_included")
     private String whatsIncluded;
     @SerializedName("schedule")
@@ -17,6 +16,36 @@ public class DailyTourDetails extends DailyTour {
     @SerializedName("time_start_and_end")
     private String startEndTime;
     private String description;
+    private String photosCount;
+    @SerializedName("dive_center")
+    private DiveCenterProfile diveCenterProfile;
+    private String initiary;
+    @SerializedName("price_diver")
+    private String priceDiver;
+
+    public String getPriceDiver() {
+        return priceDiver;
+    }
+
+    public void setPriceDiver(String priceDiver) {
+        this.priceDiver = priceDiver;
+    }
+
+    public String getInitiary() {
+        return initiary;
+    }
+
+    public void setInitiary(String initiary) {
+        this.initiary = initiary;
+    }
+
+    public DiveCenterProfile getDiveCenterProfile() {
+        return diveCenterProfile;
+    }
+
+    public void setDiveCenterProfile(DiveCenterProfile diveCenterProfile) {
+        this.diveCenterProfile = diveCenterProfile;
+    }
 
     public ArrayList<String> getImages() {
         return images;
@@ -24,14 +53,6 @@ public class DailyTourDetails extends DailyTour {
 
     public void setImages(ArrayList<String> images) {
         this.images = images;
-    }
-
-    public String getNumberOfDives() {
-        return numberOfDives;
-    }
-
-    public void setNumberOfDives(String numberOfDives) {
-        this.numberOfDives = numberOfDives;
     }
 
     public String getWhatsIncluded() {
@@ -64,5 +85,14 @@ public class DailyTourDetails extends DailyTour {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPhotosCount() {
+        if (images == null) {
+            photosCount = "0";
+            return photosCount;
+        }
+        photosCount = String.valueOf(images.size());
+        return photosCount;
     }
 }

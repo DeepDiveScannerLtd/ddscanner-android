@@ -9,6 +9,10 @@
         <import type="android.text.TextUtils" />
 
         <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity"/>
+
+        <variable
             name="viewModel"
             type="com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivityViewModel" />
 
@@ -50,6 +54,8 @@
                             android:fitsSystemWindows="true"
                             android:scaleType="centerCrop"
                             android:src="@drawable/iw_card_cave"
+                            android:onClick="@{handlers::showSliderActivity}"
+                            app:loadMainPhotoFrom="@{viewModel.dailyTourDetails.images}"
                             />
                         <LinearLayout
                             android:layout_alignParentBottom="true"
@@ -81,7 +87,38 @@
                                 android:textStyle="bold"
                                 android:textColor="#212121"
                                 android:letterSpacing="0.02"
-                                android:text="2500 B"
+                                android:text="@{viewModel.dailyTourDetails.priceDiver}"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.images == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_ph_small"/>
+                            <TextView
+                                android:text="@{viewModel.dailyTourDetails.photosCount}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:shadowColor="#80000000"
+                                android:shadowDy="1"
+                                android:shadowRadius="6"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#f6f6f6"
+                                android:letterSpacing="0.02"
+                                android:gravity="end"
+                                tools:text="15"
                                 />
                         </LinearLayout>
                     </RelativeLayout>
@@ -108,12 +145,22 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
+                    <com.rey.material.widget.ProgressView
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="25dp"
+                        app:pv_autostart="true"
+                        app:pv_circular="true"
+                        app:pv_progressMode="indeterminate"
+                        app:pv_progressStyle="@style/CircularProgress" />
+
                     <LinearLayout
                         android:id="@+id/informationLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
                             android:layout_width="match_parent"
@@ -133,10 +180,11 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:letterSpacing="0.01"
-                                android:text="Diving to Racha islands"
+                                android:text="@{viewModel.dailyTourDetails.name}"
                                 />
 
                             <TextView
+                                android:visibility="@{viewModel.dailyTourDetails.numberOfDives == null ? View.GONE : View.VISIBLE}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -144,10 +192,11 @@
                                 android:textStyle="normal"
                                 android:textColor="#a3a3a3"
                                 android:letterSpacing="0.01"
-                                android:text="2 dives, English, Thai"
+                                android:text="@{viewModel.dailyTourDetails.numberOfDivesString}"
                                 />
 
-                            <TextView
+                            <at.blogc.android.views.ExpandableTextView
+                                android:visibility="@{viewModel.dailyTourDetails.description == null ? View.GONE : View.VISIBLE}"
                                 android:layout_marginTop="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -156,9 +205,29 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="6sp"
-                                android:text="At Crab Island you can experience some strong currents depending on the tide. Usually dives are one way along the reef slope depending on the current’s direction. There is a small bay to the…"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:text="@{viewModel.dailyTourDetails.description}"
+                                app:animation_duration="750"
+                                android:id="@+id/description"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:onClick="@{handlers::showMoreClicked}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#3b528b"
+                                android:lineSpacingExtra="7sp"
+                                visibilityForBookButtonFrom="gone"
+                                android:text="@string/show_more"
+                                android:id="@+id/show_more"
+                                android:visibility="@{viewModel.dailyTourDetails.description == null ? View.GONE : View.VISIBLE}"
                                 />
                             <RelativeLayout
+                                android:onClick="@{handlers::showDiveCenter}"
                                 android:paddingVertical="8dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
@@ -177,11 +246,12 @@
                                     android:textStyle="normal"
                                     android:textColor="#a3a3a3"
                                     android:letterSpacing="0.01"
-                                    android:text="By Aquacenter Thailand"
+                                    android:text="@{viewModel.dailyTourDetails.diveCenterProfile.name}"
                                     />
                             </RelativeLayout>
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.initiary == null ? View.GONE : View.VISIBLE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:bottom_divider="true"
@@ -206,16 +276,11 @@
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="10sp"
                                 android:layout_marginTop="4dp"
-                                android:text="07:30 – 08:30 Hotel transfers to Chalong Pier
-08:30 – 10:00 Light breakfast onboard and boat ride to Racha Yai
-10:00 – 11:00 1st dive, snorkeling
-11:00 – 13:00 Lunch, relaxation
-13:00 – 14:00 2nd dive, snorkeling
-14:00 – 15:30 Boat ride to Phuket
-15:30 – 16:00 Transfers back to your resorts"
+                                android:text="@{viewModel.dailyTourDetails.initiary}"
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.schedule == null ? View.GONE : View.VISIBLE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -240,10 +305,11 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="10sp"
-                                android:text="Every Wednesday and Sunday"
+                                android:text="@{viewModel.dailyTourDetails.schedule}"
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp"
@@ -278,7 +344,8 @@
                             android:padding="16dp"
                             app:top_divider="true"
                             app:bottom_divider="true"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.dailyTourDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -297,10 +364,7 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="10sp"
-                                android:text="- hotel transfers from Rawai, Chalong, Kata, Karon,    Patong area;
-- buffet breakfast, buffet lunch,snacks and fruits, coffee, tea, drinking water;
-- guided dives in small groups, max 4 divers/guide ratio;
-- tanks and weights and weight belts."
+                                android:text="@{viewModel.dailyTourDetails.whatsIncluded}"
                                 />
                             <TextView
                                 android:layout_marginTop="8dp"
@@ -326,8 +390,9 @@
         android:layout_height="45dp"
         android:background="@drawable/contact_dive_center_background"
         android:text="@string/book_now_btn"
-        android:visibility="visible"
-        android:textColor="@color/black_text" />
+        android:visibility="gone"
+        android:textColor="@color/black_text"
+        android:onClick="@{handlers::bookNowClicked}" />
 
 </RelativeLayout>
 </layout>

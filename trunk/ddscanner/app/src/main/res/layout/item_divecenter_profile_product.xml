@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:layout_marginTop="3dp">
+
+    <ImageView
+        android:id="@+id/product_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/iw_card_cave"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_marginLeft="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical">
+        <TextView
+            android:lines="1"
+            android:ellipsize="end"
+            android:id="@+id/product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#212121"
+            android:letterSpacing="0.02"
+            android:lineSpacingExtra="4sp"
+            tools:text="Racha Islands"
+            />
+        <TextView
+
+            android:layout_below="@+id/product_name"
+            android:id="@+id/dives_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#a3a3a3"
+            android:letterSpacing="0.01"
+            tools:text="2 dives"
+            />
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#526cae"
+            android:letterSpacing="0.02"
+            android:gravity="end"
+            tools:text="From 3200 B"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/product_name"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

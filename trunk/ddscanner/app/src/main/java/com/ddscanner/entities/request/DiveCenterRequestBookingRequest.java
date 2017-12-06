@@ -18,6 +18,16 @@ public class DiveCenterRequestBookingRequest {
     private String message;
     @SerializedName("user_phone")
     private String phone;
+    @SerializedName("product_id")
+    private long producId;
+
+    public long getProducId() {
+        return producId;
+    }
+
+    public void setProducId(long producId) {
+        this.producId = producId;
+    }
 
     public String getDiveCenterId() {
         return diveCenterId;

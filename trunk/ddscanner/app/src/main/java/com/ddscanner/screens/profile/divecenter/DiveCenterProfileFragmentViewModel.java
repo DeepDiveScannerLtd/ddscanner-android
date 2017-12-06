@@ -108,6 +108,13 @@ public class DiveCenterProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"loadAllProductsText"})
+    public static void setProductsText(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setText(view.getContext().getString(R.string.al_products_pattern, viewModel.getDiveCenterProfile().getProductsCount()));
+        }
+    }
+
     @BindingAdapter({"setEmails"})
     public static void setEmailsFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
         StringBuilder outString = new StringBuilder();

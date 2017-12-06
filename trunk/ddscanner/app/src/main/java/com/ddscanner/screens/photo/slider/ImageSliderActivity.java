@@ -246,8 +246,11 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             finish();
             return;
         }
-        likesCount.setText(images.get(position).getLikesCount());
         photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
+        if (photoOpenedSource == PhotoOpenedSource.PRODUCT) {
+            return;
+        }
+        likesCount.setText(images.get(position).getLikesCount());
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(images.get(position).getAuthor().getId())) {
             likesLayout.setOnClickListener(null);
         } else {
@@ -310,8 +313,15 @@ public class ImageSliderActivity extends BaseAppCompatActivity implements ViewPa
             case MAPS:
                 title.setText(R.string.slider_title_maps);
                 break;
+            case PRODUCT:
+                title.setText(R.string.product_photos);
+                break;
         }
         photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
+        if (photoOpenedSource == PhotoOpenedSource.PRODUCT) {
+            likeIcon.setVisibility(View.GONE);
+            return;
+        }
         options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
         if (photoOpenedSource.equals(PhotoOpenedSource.MAPS)) {

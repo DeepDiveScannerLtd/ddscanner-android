@@ -597,6 +597,7 @@
     <string name="divecenter_type_dc">Dive center</string>
     <string name="divecenter_type_dive_shop">Dive center / Dive shop</string>
     <string name="al_brands_pattern">SHOW ALL BRANDS (%1$s)</string>
+    <string name="al_products_pattern">ALL DAILY TOURS (%1$s)</string>
     <string name="onboarding_search">Search dive spots by location or name</string>
     <string name="onboarding_filter">Filter them by object, level and etc.</string>
     <string name="onboarding_map_list">Switch between map and list modes to check spots</string>
@@ -610,4 +611,7 @@
     <string name="meetin_point">Meeting point</string>
     <string name="inslusions">Inslusions</string>
     <string name="book_now_btn">BOOK NOW</string>
+    <string name="dives_pattern">dives</string>
+    <string name="product_photos">Product photos</string>
+    <string name="show_less">Show less</string>
 </resources>

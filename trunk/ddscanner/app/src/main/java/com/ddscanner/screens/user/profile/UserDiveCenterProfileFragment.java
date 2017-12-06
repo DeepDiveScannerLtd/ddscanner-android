@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,9 @@ import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.BrandsGridListAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileProductsAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.utils.EmailIntentBuilder;
@@ -86,6 +89,13 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.about.setVisibility(View.VISIBLE);
         } else {
             binding.about.setVisibility(View.GONE);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts() != null) {
+            DiveCenterProfileProductsAdapter diveCenterProfileProductsAdapter = new DiveCenterProfileProductsAdapter();
+            diveCenterProfileProductsAdapter.setDailyTours(binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts());
+            binding.productList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.productList.setNestedScrollingEnabled(false);
+            binding.productList.setAdapter(diveCenterProfileProductsAdapter);
         }
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAssociations() != null) {
             ArrayList<String> tags = new ArrayList<>();
@@ -153,6 +163,10 @@ public class UserDiveCenterProfileFragment extends Fragment {
     public void showAllBrands(View view) {
         EventsTracker.trackDcBrandsView();
         BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
+    }
+
+    public void showAllProducts(View view) {
+        DailyToursActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
     }
 
 }

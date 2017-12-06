@@ -26,6 +26,8 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class SendRequestActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
+    private static final String ARG_PRODUCT_ID = "product_id";
+
     DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
         public void onSuccess(User result) {
@@ -80,12 +82,20 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     String diveSpotId;
     String diveCenterId;
     MaterialDialog materialDialog;
+    boolean isForProduct = false;
+    long productId;
 
     public static void show(Context context, String diveSpotId, int diveCenterId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
         intent.putExtra("dc_id", String.valueOf(diveCenterId));
         intent.putExtra("ds_id", diveSpotId);
         EventsTracker.trackBookingRequestView();
+        context.startActivity(intent);
+    }
+
+    public static void showForProduct(Context context, long productId) {
+        Intent intent = new Intent(context, SendRequestActivity.class);
+        intent.putExtra(ARG_PRODUCT_ID, productId);
         context.startActivity(intent);
     }
 
@@ -99,8 +109,13 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
         emailInputView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         messageInputView = findViewById(R.id.message_input);
         phoneInputView = findViewById(R.id.phone_input);
-        diveCenterId = getIntent().getStringExtra("dc_id");
-        diveSpotId = getIntent().getStringExtra("ds_id");
+        if (getIntent().getLongExtra(ARG_PRODUCT_ID, -1) != -1) {
+            isForProduct = true;
+            productId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
+        } else {
+            diveCenterId = getIntent().getStringExtra("dc_id");
+            diveSpotId = getIntent().getStringExtra("ds_id");
+        }
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getUserSelfInformation(userResultListener);
@@ -128,8 +143,12 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
 
     private DiveCenterRequestBookingRequest centerRequestBookingRequest() {
         DiveCenterRequestBookingRequest diveCenterRequestBookingRequest = new DiveCenterRequestBookingRequest();
-        diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
-        diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
+        if (!isForProduct) {
+            diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
+            diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
+        } else {
+            diveCenterRequestBookingRequest.setProducId(productId);
+        }
         diveCenterRequestBookingRequest.setName(nameInputView.getInputText());
         diveCenterRequestBookingRequest.setPhone(phoneInputView.getPhoneWithPlus());
         diveCenterRequestBookingRequest.setEmail(emailInputView.getInputText());

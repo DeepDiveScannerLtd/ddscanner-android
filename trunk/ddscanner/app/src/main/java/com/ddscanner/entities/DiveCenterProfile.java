@@ -53,8 +53,28 @@ public class DiveCenterProfile implements Serializable{
     private int isDiveShop;
     @SerializedName("brands_count")
     private String brandsCount;
+    @SerializedName("products_count")
+    private String productsCount;
     private boolean isForBooking = false;
     private String diveSpotBookingId;
+    private ArrayList<DailyTour> products;
+
+    public String getProductsCount() {
+        return "5";
+//        return productsCount;
+    }
+
+    public void setProductsCount(String productsCount) {
+        this.productsCount = productsCount;
+    }
+
+    public ArrayList<DailyTour> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<DailyTour> products) {
+        this.products = products;
+    }
 
     public boolean isForBooking() {
         return isForBooking;

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.ddscanner.screens.brands.BrandsActivity;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
+import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.MainActivity;
@@ -135,6 +137,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.about.setVisibility(View.VISIBLE);
         } else {
             binding.about.setVisibility(View.GONE);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts() != null) {
+            DiveCenterProfileProductsAdapter diveCenterProfileProductsAdapter = new DiveCenterProfileProductsAdapter();
+            diveCenterProfileProductsAdapter.setDailyTours(binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts());
+            binding.productList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.productList.setNestedScrollingEnabled(false);
+            binding.productList.setAdapter(diveCenterProfileProductsAdapter);
         }
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.aboutLayout.setVisibility(View.VISIBLE);
@@ -332,6 +341,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     public void showAllBrands(View view) {
         EventsTracker.trackMyBrandsView();
         BrandsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), BrandsActivity.BrandSource.DIVECENTER);
+    }
+
+    public void showAllProducts(View view) {
+        DailyToursActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
     }
 
 }

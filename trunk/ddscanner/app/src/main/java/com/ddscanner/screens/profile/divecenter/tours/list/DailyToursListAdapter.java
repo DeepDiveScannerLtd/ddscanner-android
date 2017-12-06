@@ -32,7 +32,8 @@ public class DailyToursListAdapter extends RecyclerView.Adapter<DailyToursListAd
 
     @Override
     public void onBindViewHolder(DailyTourItemViewHolder holder, int position) {
-        holder.binding.setViewModel(new DailyTourListItemViewModel(dailyTour));
+
+        holder.binding.setViewModel(new DailyTourListItemViewModel(dailyTours.get(position)));
     }
 
     public void setData(ArrayList<DailyTour> dailyTours) {
@@ -57,7 +58,7 @@ public class DailyToursListAdapter extends RecyclerView.Adapter<DailyToursListAd
 
         @Override
         public void onClick(View v) {
-            dailyTourListItemClickListener.onItemClick(dailyTour);
+            dailyTourListItemClickListener.onItemClick(dailyTours.get(getAdapterPosition()));
         }
     }
 

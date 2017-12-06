@@ -10,6 +10,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -17,32 +21,45 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityDailyTourDetailsBinding;
 import com.ddscanner.entities.DailyTourDetails;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divecenter.request.SendRequestActivity;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 
-public class TourDetailsActivity extends BaseAppCompatActivity {
+import java.util.ArrayList;
+
+public class TourDetailsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private static final String ARG_ID = "id";
+    private ArrayList<DiveSpotPhoto> photos = new ArrayList<>();
 
     private DDScannerRestClient.ResultListener<DailyTourDetails> resultListener = new DDScannerRestClient.ResultListener<DailyTourDetails>() {
         @Override
         public void onSuccess(DailyTourDetails result) {
             binding.setViewModel(new TourDetailsActivityViewModel(result));
+            binding.progressBar.setVisibility(View.GONE);
+            binding.informationLayout.setVisibility(View.VISIBLE);
+            binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onConnectionFailure() {
-
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, 1, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, 1, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, 1, false);
         }
     };
 
@@ -64,6 +81,7 @@ public class TourDetailsActivity extends BaseAppCompatActivity {
         themeNavAndStatusBar();
         toolbarSettings();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getProductDetails(resultListener, productId);
+        binding.setHandlers(this);
     }
 
     private void toolbarSettings() {
@@ -83,7 +101,7 @@ public class TourDetailsActivity extends BaseAppCompatActivity {
                     scrollRange = binding.appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    binding.collapsingToolbar.setTitle("231231331");
+                    binding.collapsingToolbar.setTitle(binding.getViewModel().getDailyTourDetails().getName());
                     isShow = true;
                 } else if (isShow) {
                     binding.collapsingToolbar.setTitle("");
@@ -105,4 +123,51 @@ public class TourDetailsActivity extends BaseAppCompatActivity {
     }
 
 
+    public void showSliderActivity(View view) {
+        if (binding.getViewModel().getDailyTourDetails().getImages() != null) {
+            if (photos.size() > 0) {
+                ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
+            } else {
+                for (String id : binding.getViewModel().getDailyTourDetails().getImages()) {
+                    DiveSpotPhoto diveSpotPhoto = new DiveSpotPhoto();
+                    diveSpotPhoto.setId(id);
+                    photos.add(diveSpotPhoto);
+                }
+                ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
+            }
+        }
+    }
+
+    public void bookNowClicked(View view) {
+        SendRequestActivity.showForProduct(this, binding.getViewModel().getDailyTourDetails().getId());
+    }
+
+    public void showMoreClicked(View view) {
+        if (binding.description.isExpanded()) {
+            binding.description.collapse();
+            binding.showMore.setText(R.string.show_more);
+        } else {
+            binding.description.expand();
+            binding.showMore.setText(R.string.show_less);
+        }
+    }
+
+    public void showDiveCenter(View view) {
+        UserProfileActivity.show(this, binding.getViewModel().getDailyTourDetails().getDiveCenterProfile().getId().toString(), 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
 }

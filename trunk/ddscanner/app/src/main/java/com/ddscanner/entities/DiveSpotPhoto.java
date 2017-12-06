@@ -17,6 +17,10 @@ public class DiveSpotPhoto implements Parcelable, Serializable{
     @SerializedName("likes_count")
     private String likesCount;
 
+    public DiveSpotPhoto() {
+
+    }
+
     protected DiveSpotPhoto(Parcel in) {
         id = in.readString();
         date = in.readString();
