@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,6 +136,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAbout() != null) {
             binding.about.setText(binding.getDiveCenterViewModel().getDiveCenterProfile().getAbout());
             binding.about.setVisibility(View.VISIBLE);
+            checkLines();
         } else {
             binding.about.setVisibility(View.GONE);
         }
@@ -180,7 +182,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.brandsList.setAdapter(brandsGridListAdapter);
             brandsGridListAdapter.setBrands(binding.getDiveCenterViewModel().getDiveCenterProfile().getBrands());
         }
-
     }
 
     @TargetApi(23)
@@ -345,6 +346,30 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     public void showAllProducts(View view) {
         DailyToursActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
+    }
+
+    private void checkLines() {
+        Layout l = binding.about.getLayout();
+        if (l != null) {
+            int lines = l.getLineCount();
+            if (lines > 0) {
+                if (l.getEllipsisCount(lines - 1) > 0) {
+                    binding.showMore.setVisibility(View.VISIBLE);
+                } else {
+                    binding.showMore.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
+    public void showMoreClicked(View view) {
+        if (binding.about.isExpanded()) {
+            binding.about.collapse();
+            binding.showMore.setText(R.string.show_more);
+        } else {
+            binding.about.expand();
+            binding.showMore.setText(R.string.show_less);
+        }
     }
 
 }

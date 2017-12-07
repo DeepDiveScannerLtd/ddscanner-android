@@ -78,7 +78,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <TextView
+            <at.blogc.android.views.ExpandableTextView
                 android:id="@+id/about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +91,25 @@
                 android:paddingHorizontal="13dp"
                 android:background="@color/white"
                 android:paddingBottom="10dp"
+                android:maxLines="3"
+                android:ellipsize="end"
                 tools:text="Don’t leave your shopping to the last minute. The more time you have to shop around, the you can."
+                />
+            <TextView
+                android:onClick="@{handlers::showMoreClicked}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:paddingHorizontal="13dp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="#3b528b"
+                android:lineSpacingExtra="7sp"
+                android:text="@string/show_more"
+                android:id="@+id/show_more"
+                android:background="@color/white"
+                android:paddingBottom="8dp"
+                android:visibility="gone"
                 />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tags"

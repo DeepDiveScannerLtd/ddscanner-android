@@ -343,6 +343,7 @@
                             android:layout_height="wrap_content"
                             android:padding="16dp"
                             app:bottom_divider="true"
+                            app:top_divider="false"
                             android:orientation="vertical"
                             android:visibility="@{viewModel.dailyTourDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
                             <TextView
@@ -370,7 +371,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp"
-                            app:bottom_divider="true">
+                            app:bottom_divider="true"
+                            app:top_divider="false">
                             <android.support.percent.PercentRelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">

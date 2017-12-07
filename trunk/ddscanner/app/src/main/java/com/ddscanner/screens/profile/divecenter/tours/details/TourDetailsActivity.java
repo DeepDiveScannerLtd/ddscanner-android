@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
             binding.progressBar.setVisibility(View.GONE);
             binding.informationLayout.setVisibility(View.VISIBLE);
             binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
+            checkLines();
         }
 
         @Override
@@ -170,4 +172,19 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
     public void onDialogClosed(int requestCode) {
         finish();
     }
+
+    private void checkLines() {
+        Layout l = binding.description.getLayout();
+        if (l != null) {
+            int lines = l.getLineCount();
+            if (lines > 0) {
+                if (l.getEllipsisCount(lines - 1) > 0) {
+                    binding.showMore.setVisibility(View.VISIBLE);
+                } else {
+                    binding.showMore.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
 }
