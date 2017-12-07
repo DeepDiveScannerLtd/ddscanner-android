@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DailyTour;
+import com.ddscanner.interfaces.ListItemClickListener;
 import com.ddscanner.utils.Helpers;
 import com.klinker.android.link_builder.Link;
 import com.klinker.android.link_builder.LinkBuilder;
@@ -26,6 +27,11 @@ public class DiveCenterProfileProductsAdapter extends RecyclerView.Adapter<DiveC
 
     private ArrayList<DailyTour> dailyTours = new ArrayList<>();
     private Context context;
+    private ListItemClickListener<DailyTour> listItemClickListener;
+
+    public DiveCenterProfileProductsAdapter(ListItemClickListener<DailyTour> listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
+    }
 
     @Override
     public DiveCenterProfileProductiewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,7 +72,7 @@ public class DiveCenterProfileProductsAdapter extends RecyclerView.Adapter<DiveC
         notifyDataSetChanged();
     }
 
-    class DiveCenterProfileProductiewHolder extends RecyclerView.ViewHolder {
+    class DiveCenterProfileProductiewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView logo;
         private TextView price;
@@ -75,12 +81,18 @@ public class DiveCenterProfileProductsAdapter extends RecyclerView.Adapter<DiveC
 
         public DiveCenterProfileProductiewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             context = itemView.getContext();
             logo = itemView.findViewById(R.id.product_logo);
             price = itemView.findViewById(R.id.price);
             name = itemView.findViewById(R.id.product_name);
             divesCount = itemView.findViewById(R.id.dives_count);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            listItemClickListener.onItemClick(dailyTours.get(getAdapterPosition()));
         }
     }
 

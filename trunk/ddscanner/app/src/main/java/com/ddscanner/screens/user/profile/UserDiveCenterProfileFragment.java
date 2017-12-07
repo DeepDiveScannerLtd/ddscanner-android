@@ -29,6 +29,7 @@ import com.ddscanner.screens.profile.divecenter.BrandsGridListAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileProductsAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
@@ -94,7 +95,7 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.about.setVisibility(View.GONE);
         }
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts() != null) {
-            DiveCenterProfileProductsAdapter diveCenterProfileProductsAdapter = new DiveCenterProfileProductsAdapter();
+            DiveCenterProfileProductsAdapter diveCenterProfileProductsAdapter = new DiveCenterProfileProductsAdapter(item -> TourDetailsActivity.show(getContext(), item.getId()));
             diveCenterProfileProductsAdapter.setDailyTours(binding.getDiveCenterViewModel().getDiveCenterProfile().getProducts());
             binding.productList.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.productList.setNestedScrollingEnabled(false);
