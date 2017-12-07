@@ -14,6 +14,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DailyTour;
 import com.ddscanner.utils.Helpers;
+import com.klinker.android.link_builder.Link;
+import com.klinker.android.link_builder.LinkBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -40,7 +42,12 @@ public class DiveCenterProfileProductsAdapter extends RecyclerView.Adapter<DiveC
             holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.photo_dailytour_default_small));
         }
         holder.name.setText(dailyTour.getName());
-        holder.price.setText(dailyTour.getPrice());
+        Link link = new Link(dailyTour.getPrice());
+        link.setUnderlined(false);
+        link.setBold(true);
+        link.setTextColor(ContextCompat.getColor(context, R.color.price_color));
+        holder.price.setText(String.format("From %s", dailyTour.getPrice()));
+        LinkBuilder.on(holder.price).addLink(link).build();
         if (dailyTour.getNumberOfDives() != null) {
             holder.divesCount.setText(String.format("%s dives", dailyTour.getNumberOfDives()));
         } else {

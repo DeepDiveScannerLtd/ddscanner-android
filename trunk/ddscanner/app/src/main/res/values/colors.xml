@@ -95,4 +95,6 @@
 
     <color name="text_inactive_button">#80202020</color>
 
+    <color name="price_color">#526cae</color>
+
 </resources>

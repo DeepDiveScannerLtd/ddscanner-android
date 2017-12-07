@@ -53,7 +53,6 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:fontFamily="sans-serif"
-            android:textStyle="bold"
             android:textColor="#526cae"
             android:letterSpacing="0.02"
             android:gravity="end"

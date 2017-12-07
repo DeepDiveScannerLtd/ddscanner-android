@@ -87,7 +87,7 @@
                                 android:textStyle="bold"
                                 android:textColor="#212121"
                                 android:letterSpacing="0.02"
-                                android:text="@{viewModel.dailyTourDetails.priceDiver}"
+                                android:text="@{viewModel.dailyTourDetails.price}"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -236,7 +236,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_arrow"
-                                    android:layout_alignParentRight="true"/>
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"/>
                                 <TextView
                                     android:layout_toLeftOf="@+id/arrow"
                                     android:layout_width="match_parent"
