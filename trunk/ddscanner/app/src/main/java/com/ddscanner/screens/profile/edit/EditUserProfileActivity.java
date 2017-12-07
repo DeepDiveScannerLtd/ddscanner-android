@@ -161,7 +161,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         levels.addAll(Helpers.getDiveLevelTypes());
         binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, levels, "Diver level"));
         if (user.getDiverLevel() != null) {
-            binding.levelSpinner.setSelection(user.getDiverLevel());
+            binding.levelSpinner.setSelection(user.getDiverLevel() + 1);
         } else {
             binding.levelSpinner.setSelection(1);
         }
@@ -227,7 +227,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             diveCenterId = null;
             diveCenterTypeRequestBody = null;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId, diveCenterTypeRequestBody);
+        DDScannerApplication.getInstance().getDdScannerRestClient(this).potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString().trim()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString().trim()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()) - 1)), diveCenterId, diveCenterTypeRequestBody);
     }
 
     private void hideErrorsMap() {

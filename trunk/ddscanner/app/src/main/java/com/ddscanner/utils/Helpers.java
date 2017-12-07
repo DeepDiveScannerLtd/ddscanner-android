@@ -402,6 +402,7 @@ public class Helpers {
 
     public static List<String> getDiveLevelTypes() {
         List<String> levels = new ArrayList<>();
+        levels.add("Non-Diver");
         levels.add("Beginner");
         levels.add("Advanced");
         levels.add("Expert");
@@ -456,12 +457,12 @@ public class Helpers {
     }
 
     public static String getDiverLevel(Integer position) {
-        if (position != null && position > 0) {
+        if (position != null && position > -1) {
             List<String> levels = getDiveLevelTypes();
-            if (levels.get(position - 1) == null) {
+            if (levels.get(position) == null) {
                 return "";
             }
-            return levels.get(position - 1);
+            return levels.get(position);
         }
         return "";
     }
