@@ -53,7 +53,7 @@
                             android:layout_height="200dp"
                             android:fitsSystemWindows="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/iw_card_cave"
+                            android:src="@drawable/produc_def"
                             android:onClick="@{handlers::showSliderActivity}"
                             app:loadMainPhotoFrom="@{viewModel.dailyTourDetails.images}"
                             />
@@ -338,11 +338,9 @@
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
-                            android:layout_marginTop="@dimen/base_block_margin_top"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp"
-                            app:top_divider="true"
                             app:bottom_divider="true"
                             android:orientation="vertical"
                             android:visibility="@{viewModel.dailyTourDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
@@ -366,17 +364,97 @@
                                 android:lineSpacingExtra="10sp"
                                 android:text="@{viewModel.dailyTourDetails.whatsIncluded}"
                                 />
-                            <TextView
-                                android:layout_marginTop="8dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium"
-                                android:textStyle="normal"
-                                android:textColor="#212121"
-                                android:lineSpacingExtra="8sp"
-                                android:text="Price: 3400 B "
-                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:bottom_divider="true">
+                            <android.support.percent.PercentRelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:id="@+id/diver_price"
+                                    app:layout_widthPercent="50%"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif"
+                                        android:textStyle="normal"
+                                        android:textColor="#212121"
+                                        android:text="Diver"
+                                        />
+                                    <TextView
+                                        android:layout_marginTop="4dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="16sp"
+                                        android:fontFamily="sans-serif"
+                                        android:textStyle="bold"
+                                        android:textColor="#526cae"
+                                        tools:text="3200 B"
+                                        android:text="@{viewModel.dailyTourDetails.priceDiver}"
+                                        />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:visibility="@{viewModel.dailyTourDetails.priceNonDiver == null ? View.GONE : View.VISIBLE}"
+                                    android:layout_toRightOf="@+id/diver_price"
+                                    app:layout_widthPercent="50%"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif"
+                                        android:textStyle="normal"
+                                        android:textColor="#212121"
+                                        android:text="Non diver"
+                                        />
+                                    <TextView
+                                        android:layout_marginTop="4dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="16sp"
+                                        android:fontFamily="sans-serif"
+                                        android:textStyle="bold"
+                                        android:textColor="#526cae"
+                                        tools:text="3200 B"
+                                        android:text="@{viewModel.dailyTourDetails.priceNonDiver}"
+                                        />
+                                </LinearLayout>
+                            </android.support.percent.PercentRelativeLayout>
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.priceEquipment == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:bottom_divider="true"
+                            android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="14sp"
+                                    android:fontFamily="sans-serif"
+                                    android:textStyle="normal"
+                                    android:textColor="#212121"
+                                    android:text="@string/equipment_rental"
+                                    />
+                                <TextView
+                                    android:layout_marginTop="4dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif"
+                                    android:textStyle="bold"
+                                    android:textColor="#526cae"
+                                    tools:text="3200 B"
+                                    android:text="@{viewModel.dailyTourDetails.priceEquipment}"
+                                    />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                     </LinearLayout>
                 </LinearLayout>

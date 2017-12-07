@@ -22,6 +22,26 @@ public class DailyTourDetails extends DailyTour implements Serializable{
     private String initiary;
     @SerializedName("price_diver")
     private String priceDiver;
+    @SerializedName("price_non_diver")
+    private String priceNonDiver;
+    @SerializedName("price_equipment")
+    private String priceEquipment;
+
+    public String getPriceNonDiver() {
+        return priceNonDiver;
+    }
+
+    public void setPriceNonDiver(String priceNonDiver) {
+        this.priceNonDiver = priceNonDiver;
+    }
+
+    public String getPriceEquipment() {
+        return priceEquipment;
+    }
+
+    public void setPriceEquipment(String priceEquipment) {
+        this.priceEquipment = priceEquipment;
+    }
 
     public String getPriceDiver() {
         return priceDiver;

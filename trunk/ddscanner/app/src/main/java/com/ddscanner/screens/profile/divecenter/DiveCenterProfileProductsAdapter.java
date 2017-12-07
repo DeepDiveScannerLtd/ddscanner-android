@@ -35,9 +35,9 @@ public class DiveCenterProfileProductsAdapter extends RecyclerView.Adapter<DiveC
     public void onBindViewHolder(DiveCenterProfileProductiewHolder holder, int position) {
         DailyTour dailyTour = dailyTours.get(position);
         if (dailyTour.getPhoto() != null) {
-            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, dailyTour.getPhoto(), "1")).resize(Helpers.convertDpToIntPixels(40, context), Helpers.convertDpToIntPixels(40, context)).transform(new RoundedCornersTransformation(Helpers.convertDpToIntPixels(2, context), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.logo);
+            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, dailyTour.getPhoto(), "1")).resize(Helpers.convertDpToIntPixels(40, context), Helpers.convertDpToIntPixels(40, context)).transform(new RoundedCornersTransformation(Helpers.convertDpToIntPixels(2, context), 0, RoundedCornersTransformation.CornerType.ALL)).placeholder(R.drawable.placeholder_photo_wit_round_corners).into(holder.logo);
         } else {
-            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_update));
+            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.photo_dailytour_default_small));
         }
         holder.name.setText(dailyTour.getName());
         holder.price.setText(dailyTour.getPrice());
