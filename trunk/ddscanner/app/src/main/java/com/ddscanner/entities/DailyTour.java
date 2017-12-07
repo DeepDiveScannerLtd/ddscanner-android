@@ -12,6 +12,7 @@ public class DailyTour implements Serializable {
     private long id;
     private String name;
     private String photo;
+    @SerializedName("price_from")
     private String price;
     @SerializedName("number_of_dives")
     private String numberOfDives;
