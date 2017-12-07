@@ -59,8 +59,7 @@
                     android:textStyle="normal"
                     android:textColor="#a3a3a3"
                     android:letterSpacing="0.01"
-                    app:loadDivesCountFrom="@{viewModel.dailyTour.numberOfDives}"
-                    tools:text="2 dives, English, Thai"
+                    tools:text="@{viewModel.dailyTour.divesLevelString}"
                     />
             </LinearLayout>
             <LinearLayout

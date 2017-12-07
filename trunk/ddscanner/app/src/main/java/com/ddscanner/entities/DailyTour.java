@@ -3,6 +3,7 @@ package com.ddscanner.entities;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -17,6 +18,17 @@ public class DailyTour implements Serializable {
     @SerializedName("number_of_dives")
     private String numberOfDives;
     private String numberOfDivesString;
+    @SerializedName("level")
+    private int diverLevel;
+    private String divesLevelString;
+
+    public int getDiverLevel() {
+        return diverLevel;
+    }
+
+    public void setDiverLevel(int diverLevel) {
+        this.diverLevel = diverLevel;
+    }
 
     public String getNumberOfDives() {
         return numberOfDives;
@@ -69,4 +81,12 @@ public class DailyTour implements Serializable {
         }
         return numberOfDivesString;
     }
+
+    public String getDivesLevelString() {
+        if (numberOfDives == null) {
+            return Helpers.getDiverLevel(diverLevel);
+        }
+        return numberOfDives + " dives, " + Helpers.getDiverLevel(diverLevel);
+    }
+
 }
