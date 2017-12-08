@@ -47,6 +47,7 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
             binding.informationLayout.setVisibility(View.VISIBLE);
             binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
             checkLines();
+            toolbarSettings();
         }
 
         @Override
@@ -81,7 +82,6 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
         binding = DataBindingUtil.setContentView(this, R.layout.activity_daily_tour_details);
         productId = getIntent().getLongExtra(ARG_ID, -1);
         themeNavAndStatusBar();
-        toolbarSettings();
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getProductDetails(resultListener, productId);
         binding.setHandlers(this);
     }
@@ -126,16 +126,18 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
 
 
     public void showSliderActivity(View view) {
-        if (binding.getViewModel().getDailyTourDetails().getImages() != null) {
-            if (photos.size() > 0) {
-                ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
-            } else {
-                for (String id : binding.getViewModel().getDailyTourDetails().getImages()) {
-                    DiveSpotPhoto diveSpotPhoto = new DiveSpotPhoto();
-                    diveSpotPhoto.setId(id);
-                    photos.add(diveSpotPhoto);
+        if (binding.getViewModel() != null) {
+            if (binding.getViewModel().getDailyTourDetails().getImages() != null) {
+                if (photos.size() > 0) {
+                    ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
+                } else {
+                    for (String id : binding.getViewModel().getDailyTourDetails().getImages()) {
+                        DiveSpotPhoto diveSpotPhoto = new DiveSpotPhoto();
+                        diveSpotPhoto.setId(id);
+                        photos.add(diveSpotPhoto);
+                    }
+                    ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
                 }
-                ImageSliderActivity.showForResult(this, photos, 0, -1, PhotoOpenedSource.PRODUCT, "-1");
             }
         }
     }
@@ -174,17 +176,19 @@ public class TourDetailsActivity extends BaseAppCompatActivity implements Dialog
     }
 
     private void checkLines() {
-        Layout l = binding.description.getLayout();
-        if (l != null) {
-            int lines = l.getLineCount();
-            if (lines > 0) {
-                if (l.getEllipsisCount(lines - 1) > 0) {
-                    binding.showMore.setVisibility(View.VISIBLE);
-                } else {
-                    binding.showMore.setVisibility(View.GONE);
+        ViewTreeObserver viewTreeObserver = binding.description.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(() -> {
+            Layout l = binding.description.getLayout();
+            if (l != null) {
+                int lines = l.getLineCount();
+                if (lines > 0) {
+                    if (l.getEllipsisCount(lines - 1) > 0) {
+                        binding.showMore.setVisibility(View.VISIBLE);
+                    }
                 }
             }
-        }
+
+        });
     }
 
 }

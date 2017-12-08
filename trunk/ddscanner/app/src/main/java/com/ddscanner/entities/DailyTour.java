@@ -77,7 +77,7 @@ public class DailyTour implements Serializable {
         if (numberOfDives == null) {
             numberOfDivesString = "";
         } else {
-            numberOfDivesString = numberOfDives + DDScannerApplication.getInstance().getString(R.string.dives_pattern);
+            numberOfDivesString = numberOfDives + " " + DDScannerApplication.getInstance().getString(R.string.dives_pattern);
         }
         return numberOfDivesString;
     }

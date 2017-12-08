@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.design.widget.CoordinatorLayout
+            android:layout_above="@+id/button_show_divecenters"
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -221,10 +222,9 @@
                                 android:textStyle="normal"
                                 android:textColor="#3b528b"
                                 android:lineSpacingExtra="7sp"
-                                visibilityForBookButtonFrom="gone"
                                 android:text="@string/show_more"
                                 android:id="@+id/show_more"
-                                android:visibility="@{viewModel.dailyTourDetails.description == null ? View.GONE : View.VISIBLE}"
+                                android:visibility="gone"
                                 />
                             <RelativeLayout
                                 android:onClick="@{handlers::showDiveCenter}"
@@ -437,6 +437,7 @@
                             android:layout_height="wrap_content"
                             android:padding="16dp"
                             app:bottom_divider="true"
+                            app:top_divider="false"
                             android:orientation="vertical">
                                 <TextView
                                     android:layout_width="wrap_content"
