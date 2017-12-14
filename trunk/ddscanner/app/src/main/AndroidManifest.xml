@@ -286,6 +286,11 @@
             android:name="io.fabric.ApiKey"
             android:value="ed7107427d4db24c8d8509e14cd4e3e30daf7805" />
 
+        <activity android:name=".screens.profile.divecenter.fundives.list.FunDivesActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".screens.profile.divecenter.fundives.details.FunDiveDetailsActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:screenOrientation="portrait"
             android:name=".screens.profile.edit.divecenter.search.CreateDiveCenterActivity" />

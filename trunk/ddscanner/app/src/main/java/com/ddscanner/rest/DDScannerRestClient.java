@@ -21,6 +21,8 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FlagsEntity;
+import com.ddscanner.entities.FunDive;
+import com.ddscanner.entities.FunDiveDetails;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
@@ -1258,6 +1260,36 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<NotificationsCountEntity> resultListener, String responseString) throws JSONException {
                 NotificationsCountEntity notificationsCountEntity = gson.fromJson(responseString, NotificationsCountEntity.class);
                 resultListener.onSuccess(notificationsCountEntity);
+            }
+        });
+    }
+
+    public void getDiveCenterFunDives(ResultListener<ArrayList<FunDive>> resultListener, long id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCeterFunDives(id);
+        call.enqueue(new ResponseEntityCallback<ArrayList<FunDive>>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<FunDive>> resultListener, String responseString) throws JSONException {
+                Type listType= new TypeToken<ArrayList<FunDive>>(){}.getType();
+                ArrayList<FunDive> funDives = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(funDives);
+            }
+        });
+    }
+
+    public void getFunDiveDetails(ResultListener<FunDiveDetails> resultListener, long id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFunDiveDetails(id);
+        call.enqueue(new ResponseEntityCallback<FunDiveDetails>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<FunDiveDetails> resultListener, String responseString) throws JSONException {
+                resultListener.onSuccess(gson.fromJson(responseString, FunDiveDetails.class));
             }
         });
     }

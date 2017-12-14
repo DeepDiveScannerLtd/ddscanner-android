@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity"/>
+
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivityViewModel" />
+
+    </data>
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_above="@+id/button_show_divecenters"
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:fitsSystemWindows="true">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:contentScrim="@color/primary"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:popupTheme="@style/ToolbarMenuStyle"
+                    android:fitsSystemWindows="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fitsSystemWindows="true">
+
+                        <ImageView
+                            android:id="@+id/main_photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:fitsSystemWindows="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/produc_def"
+                            app:loadMainPhotoFrom="@{viewModel.funDive.photo}"
+                            />
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:popupTheme="@style/ToolbarMenuStyle" />
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+            </android.support.design.widget.AppBarLayout>
+            <com.ddscanner.ui.views.FlingableNestedScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fbfbfb"
+                android:scrollbars="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.rey.material.widget.ProgressView
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="25dp"
+                        app:pv_autostart="true"
+                        app:pv_circular="true"
+                        app:pv_progressMode="indeterminate"
+                        app:pv_progressStyle="@style/CircularProgress" />
+
+                    <LinearLayout
+                        android:id="@+id/informationLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:paddingTop="16dp"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingBottom="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:letterSpacing="0.01"
+                                android:text="@{viewModel.funDiveDetails.name}"
+                                />
+
+                            <TextView
+                                android:visibility="@{viewModel.funDiveDetails.diverLevelString == null ? View.GONE : View.VISIBLE}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#a3a3a3"
+                                android:letterSpacing="0.01"
+                                android:text="@{viewModel.funDiveDetails.diverLevelString}"
+                                />
+
+                            <at.blogc.android.views.ExpandableTextView
+                                android:visibility="@{viewModel.funDiveDetails.description == null ? View.GONE : View.VISIBLE}"
+                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="6sp"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:text="@{viewModel.funDiveDetails.description}"
+                                app:animation_duration="750"
+                                android:id="@+id/description"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:onClick="@{handlers::showMoreClicked}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#3b528b"
+                                android:lineSpacingExtra="7sp"
+                                android:text="@string/show_more"
+                                android:id="@+id/show_more"
+                                android:visibility="gone"
+                                />
+                            <RelativeLayout
+                                android:onClick="@{handlers::showDiveCenter}"
+                                android:paddingVertical="8dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/arrow"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_arrow"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"/>
+                                <TextView
+                                    android:layout_toLeftOf="@+id/arrow"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="14sp"
+                                    android:fontFamily="sans-serif"
+                                    android:textStyle="normal"
+                                    android:textColor="#a3a3a3"
+                                    android:letterSpacing="0.01"
+                                    android:text="@{viewModel.funDiveDetails.diveCenterProfile.name}"
+                                    />
+                            </RelativeLayout>
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.initiary == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/initiary"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:layout_marginTop="4dp"
+                                android:text="@{viewModel.funDiveDetails.initiary}"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.dailyTourDetails.schedule == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/available"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="@{viewModel.dailyTourDetails.schedule}"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.funDiveDetails.priceByDivesCount == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:top_divider="false"
+                            app:bottom_divider="true"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/meetin_point"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="@{viewModel.funDiveDetails.priceByDivesCount}"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:visibility="@{viewModel.funDiveDetails.priceForOptional == null ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:top_divider="false"
+                            app:bottom_divider="true"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/meetin_point"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="@{viewModel.funDiveDetails.priceForOptional}"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <com.ddscanner.ui.views.ContentBlockLinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            app:bottom_divider="true"
+                            app:top_divider="false"
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.dailyTourDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="#313131"
+                                android:text="@string/inslusions"
+                                />
+                            <TextView
+                                android:layout_marginTop="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="#212121"
+                                android:lineSpacingExtra="10sp"
+                                android:text="@{viewModel.dailyTourDetails.whatsIncluded}"
+                                />
+                        </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.ddscanner.ui.views.FlingableNestedScrollView>
+
+        </android.support.design.widget.CoordinatorLayout>
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/button_show_divecenters"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/contact_dive_center_background"
+            android:text="@string/book_now_btn"
+            android:visibility="gone"
+            android:textColor="@color/black_text"
+            android:onClick="@{handlers::bookNowClicked}" />
+
+    </RelativeLayout>
+</layout>

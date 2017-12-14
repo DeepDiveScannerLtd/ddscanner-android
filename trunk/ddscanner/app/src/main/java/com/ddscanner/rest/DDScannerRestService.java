@@ -394,4 +394,10 @@ public interface DDScannerRestService {
     @GET("v2_3/product.get")
     Call<ResponseBody> getProductDetails(@Query("id") long id);
 
+    @GET("v2_4/user.divecenter.fundives.get")
+    Call<ResponseBody> getDiveCeterFunDives(@Query("id") long id);
+
+    @GET("v2_4/fundive.get")
+    Call<ResponseBody> getFunDiveDetails(@Query("id") long id);
+
 }

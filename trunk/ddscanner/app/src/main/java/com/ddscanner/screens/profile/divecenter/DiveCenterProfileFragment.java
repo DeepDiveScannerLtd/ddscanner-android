@@ -148,6 +148,8 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.productList.setNestedScrollingEnabled(false);
             binding.productList.setAdapter(diveCenterProfileProductsAdapter);
         }
+
+
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.aboutLayout.setVisibility(View.VISIBLE);
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
