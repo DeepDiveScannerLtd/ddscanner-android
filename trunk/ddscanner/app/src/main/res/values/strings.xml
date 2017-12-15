@@ -617,4 +617,7 @@
     <string name="show_less">Show less</string>
     <string name="equipment_rental">Equipment rental</string>
     <string name="schedule">Schedule</string>
+    <string name="inclusions">Inclusions</string>
+    <string name="extra_price">Extra price</string>
+    <string name="fee">Fee</string>
 </resources>
