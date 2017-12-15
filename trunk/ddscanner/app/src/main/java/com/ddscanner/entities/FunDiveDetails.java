@@ -21,6 +21,16 @@ public class FunDiveDetails extends FunDive implements Serializable {
     @SerializedName("dive_center")
     private DiveCenterProfile diveCenterProfile;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description;
+
     public DiveCenterProfile getDiveCenterProfile() {
         return diveCenterProfile;
     }

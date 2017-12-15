@@ -55,7 +55,7 @@
                             android:fitsSystemWindows="true"
                             android:scaleType="centerCrop"
                             android:src="@drawable/produc_def"
-                            app:loadMainPhotoFrom="@{viewModel.funDive.photo}"
+                            app:loadMainPhotoFrom="@{viewModel.funDiveDetails.photo}"
                             />
                     </RelativeLayout>
 
@@ -187,7 +187,7 @@
                             </RelativeLayout>
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
-                            android:visibility="@{viewModel.dailyTourDetails.initiary == null ? View.GONE : View.VISIBLE}"
+                            android:visibility="@{viewModel.funDiveDetails.initiary == null ? View.GONE : View.VISIBLE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:bottom_divider="true"
@@ -216,7 +216,7 @@
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
-                            android:visibility="@{viewModel.dailyTourDetails.schedule == null ? View.GONE : View.VISIBLE}"
+                            android:visibility="@{viewModel.funDiveDetails.schedule == null ? View.GONE : View.VISIBLE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -241,7 +241,7 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="10sp"
-                                android:text="@{viewModel.dailyTourDetails.schedule}"
+                                android:text="@{viewModel.funDiveDetails.schedule}"
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                         <com.ddscanner.ui.views.ContentBlockLinearLayout
@@ -309,7 +309,7 @@
                             app:bottom_divider="true"
                             app:top_divider="false"
                             android:orientation="vertical"
-                            android:visibility="@{viewModel.dailyTourDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
+                            android:visibility="@{viewModel.funDiveDetails.whatsIncluded == null ? View.GONE : View.VISIBLE}">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -328,7 +328,7 @@
                                 android:textStyle="normal"
                                 android:textColor="#212121"
                                 android:lineSpacingExtra="10sp"
-                                android:text="@{viewModel.dailyTourDetails.whatsIncluded}"
+                                android:text="@{viewModel.funDiveDetails.whatsIncluded}"
                                 />
                         </com.ddscanner.ui.views.ContentBlockLinearLayout>
                     </LinearLayout>
