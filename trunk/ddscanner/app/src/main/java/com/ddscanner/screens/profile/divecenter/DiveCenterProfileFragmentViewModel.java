@@ -115,6 +115,13 @@ public class DiveCenterProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"loadAllFunDivesText"})
+    public static void setFunDivesText(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setText(view.getContext().getString(R.string.al_fun_dives_pattern, viewModel.getDiveCenterProfile().getFunDivesCount()));
+        }
+    }
+
     @BindingAdapter({"setEmails"})
     public static void setEmailsFrom(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
         StringBuilder outString = new StringBuilder();

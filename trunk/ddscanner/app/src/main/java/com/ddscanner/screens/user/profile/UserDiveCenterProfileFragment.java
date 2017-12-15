@@ -26,9 +26,12 @@ import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLangu
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.BrandsGridListAdapter;
+import com.ddscanner.screens.profile.divecenter.DiveCenterFunDivesAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileProductsAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity;
+import com.ddscanner.screens.profile.divecenter.fundives.list.FunDivesActivity;
 import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.ui.adapters.TagsAdapter;
@@ -100,6 +103,13 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.productList.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.productList.setNestedScrollingEnabled(false);
             binding.productList.setAdapter(diveCenterProfileProductsAdapter);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getFunDives() != null) {
+            DiveCenterFunDivesAdapter diveCenterFunDivesAdapter = new DiveCenterFunDivesAdapter(item -> FunDiveDetailsActivity.show(getContext(), item.getId()));
+            diveCenterFunDivesAdapter.setFunDives(binding.getDiveCenterViewModel().getDiveCenterProfile().getFunDives());
+            binding.funDivesList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.funDivesList.setNestedScrollingEnabled(false);
+            binding.funDivesList.setAdapter(diveCenterFunDivesAdapter);
         }
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAssociations() != null) {
             ArrayList<String> tags = new ArrayList<>();
@@ -199,6 +209,10 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.about.expand();
             binding.showMore.setText(R.string.show_less);
         }
+    }
+
+    public void showAllFunDives(View view) {
+        FunDivesActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
     }
 
 }

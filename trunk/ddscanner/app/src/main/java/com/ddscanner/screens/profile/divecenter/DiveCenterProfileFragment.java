@@ -39,6 +39,8 @@ import com.ddscanner.screens.brands.BrandsActivity;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
+import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity;
+import com.ddscanner.screens.profile.divecenter.fundives.list.FunDivesActivity;
 import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
@@ -149,6 +151,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.productList.setAdapter(diveCenterProfileProductsAdapter);
         }
 
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getFunDives() != null) {
+            DiveCenterFunDivesAdapter diveCenterFunDivesAdapter = new DiveCenterFunDivesAdapter(item -> FunDiveDetailsActivity.show(getContext(), item.getId()));
+            diveCenterFunDivesAdapter.setFunDives(binding.getDiveCenterViewModel().getDiveCenterProfile().getFunDives());
+            binding.funDivesList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.funDivesList.setNestedScrollingEnabled(false);
+            binding.funDivesList.setAdapter(diveCenterFunDivesAdapter);
+        }
 
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.aboutLayout.setVisibility(View.VISIBLE);
@@ -373,6 +382,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.about.expand();
             binding.showMore.setText(R.string.show_less);
         }
+    }
+
+    public void showAllFunDives(View view) {
+        FunDivesActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
     }
 
 }
