@@ -620,4 +620,7 @@
     <string name="inclusions">Inclusions</string>
     <string name="extra_price">Extra price</string>
     <string name="fee">Fee</string>
+    <string name="what_will_be_learned">What will be learned</string>
+    <string name="requirments">Requirements</string>
+    <string name="required_certificates">Required certificates</string>
 </resources>

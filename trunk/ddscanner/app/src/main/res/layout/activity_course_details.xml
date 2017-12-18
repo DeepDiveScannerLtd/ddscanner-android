@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.profile.divecenter.courses.CourseDetailsActivityViewModel"/>
+    </data>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -41,7 +49,8 @@
             android:textColor="#a3a3a3"
             android:textSize="14sp"
             android:textStyle="normal"
-            tools:text="By Aquacenter Thailand" />
+            tools:text="By Aquacenter Thailand"
+            android:text="@{viewModel.courseDetails.diveCenterProfile.name}"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,6 +63,7 @@
             android:textColor="#212121"
             android:textSize="18sp"
             android:textStyle="normal"
+            android:text="@{viewModel.courseDetails.certificate.name}"
             tools:text="The Open Water Diver Referral Course 3 Dives PADI" />
 
         <TextView
@@ -248,3 +258,4 @@ Photos 2500 B" />
         android:visibility="visible"
         android:textColor="@color/black_text" />
 </RelativeLayout>
+</layout>
