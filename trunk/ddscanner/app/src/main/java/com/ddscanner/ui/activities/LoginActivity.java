@@ -60,9 +60,9 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
         w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        w.setNavigationBarColor(ContextCompat.getColor(this ,android.R.color.transparent));
         w.setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
-        if (isForAddAccount) {
+//        if (isForAddAccount) {
             Helpers.setMargins(close, 0,getStatusBarHeight(), 0,0);
-        }
+//        }
     }
 
     private int getStatusBarHeight() {
@@ -77,11 +77,9 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
     private void findViews() {
         Button signUp = findViewById(R.id.sign_up);
         Button login = findViewById(R.id.login);
-        if (isForAddAccount) {
             close = findViewById(R.id.close_button);
             close.setVisibility(View.VISIBLE);
             close.setOnClickListener(view -> onBackPressed());
-        }
         videoView = findViewById(R.id.video_view);
         Uri uri = Uri.parse(getString(R.string.vido_resource_pattern, getPackageName(), R.raw.login_video));
         videoView.setVideoURI(uri);
@@ -114,9 +112,8 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
                         finish();
                         return;
                     }
-                    Intent intent  = new Intent(this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    setResult(RESULT_OK);
+                    finish();
                 }
                 break;
         }
@@ -124,9 +121,9 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
 
     @Override
     public void onBackPressed() {
-        if (isForAddAccount) {
+//        if (isForAddAccount) {
             finish();
-        }
+//        }
     }
 
 

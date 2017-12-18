@@ -28,6 +28,7 @@ import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.ui.activities.ForgotPasswordActivity;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
 import com.ddscanner.ui.activities.TermsOfServiceActivity;
 import com.ddscanner.utils.Constants;
@@ -125,7 +126,6 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
     private void init(AttributeSet attrs) {
         inflate(getContext(), R.layout.view_login, this);
-
         userType = Constants.USER_TYPE_DIVER;
 
         titleTextView = findViewById(R.id.need_to_login_message);

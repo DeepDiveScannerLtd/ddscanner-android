@@ -23,8 +23,13 @@ import com.ddscanner.entities.User;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.brands.BrandsActivity;
+import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
+import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -33,6 +38,7 @@ import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
@@ -51,7 +57,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     private static final String ARG_DIVE_SPOT_ID = "divespot_id";
     private static final String ARG_TYPE = "type";
     private static final String ARG_USER_ID = "user_id";
-
+    private LatLng diveCeneterLocation;
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -157,6 +163,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
             switch (userType) {
                 case 0:
                     DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
+                    diveCeneterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
                     photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), 0);
                     if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                         DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
@@ -257,6 +264,42 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                 if (resultCode == RESULT_OK) {
                     profileFragment.reloadData();
                 }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_BRANDS:
+                if (resultCode == RESULT_OK) {
+                    BrandsActivity.show(this, userId, BrandsActivity.BrandSource.DIVECENTER);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_CREATED:
+                if (resultCode == RESULT_OK) {
+                    DiveSpotsListActivity.show(this, DiveSpotListSource.ADDED, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_EDITED:
+                if (resultCode == RESULT_OK) {
+                    DiveSpotsListActivity.show(this, DiveSpotListSource.EDITED, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_INSTRUCTORS:
+                if (resultCode == RESULT_OK) {
+                    InstructorsActivity.showForResult(this, -1, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_LANGUAGES:
+                if (resultCode == RESULT_OK) {
+                    DiveCenterProfileLanguagesActivity.show(userId, this);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_PRODUCTS:
+                if (resultCode == RESULT_OK) {
+                    DailyToursActivity.show(this, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DC_PROFILE_SHOW_WORKING_SPOTS:
+                if (resultCode == RESULT_OK) {
+                    DiveCenterSpotsActivity.show(this, userId, diveCeneterLocation);
+                }
+                break;
         }
     }
 }

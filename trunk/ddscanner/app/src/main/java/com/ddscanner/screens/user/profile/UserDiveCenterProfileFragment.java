@@ -34,11 +34,14 @@ import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsA
 import com.ddscanner.screens.profile.divecenter.fundives.list.FunDivesActivity;
 import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.EmailIntentBuilder;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.PhoneCallIntentBuilder;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -187,15 +190,15 @@ public class UserDiveCenterProfileFragment extends Fragment {
         boolean flag = true;
         ViewTreeObserver viewTreeObserver = binding.about.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(() -> {
-                Layout l = binding.about.getLayout();
-                if (l != null) {
-                    int lines = l.getLineCount();
-                    if (lines > 0) {
-                        if (l.getEllipsisCount(lines - 1) > 0) {
-                            binding.showMore.setVisibility(View.VISIBLE);
-                        }
+            Layout l = binding.about.getLayout();
+            if (l != null) {
+                int lines = l.getLineCount();
+                if (lines > 0) {
+                    if (l.getEllipsisCount(lines - 1) > 0) {
+                        binding.showMore.setVisibility(View.VISIBLE);
                     }
                 }
+            }
 
         });
 

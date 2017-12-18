@@ -236,9 +236,9 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP:
             case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN:
-                if (resultCode == RESULT_OK) {
+//                if (resultCode == RESULT_OK) {
                     showMainActivity();
-                }
+//                }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SIGN_UP_ACTIVITY_DIVE_CENTER_LOGIN:
                 showMainActivity();

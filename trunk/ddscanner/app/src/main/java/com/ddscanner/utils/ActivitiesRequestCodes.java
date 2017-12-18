@@ -208,6 +208,15 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES = 4605;
     public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS = 4606;
 
+    //User Dive Center Profile fragmnet
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_CREATED = 6401;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_EDITED = 6402;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_LANGUAGES = 6403;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_INSTRUCTORS = 6404;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_PRODUCTS = 6405;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_BRANDS = 6406;
+    public static final int REQUEST_CODE_DC_PROFILE_SHOW_WORKING_SPOTS = 6407;
+
     //Dive Center Languages Activity
     public static final int REQUEST_CODE_LANGUAGES_ACTIVITY_LOGIN = 4701;
 

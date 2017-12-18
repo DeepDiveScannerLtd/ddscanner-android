@@ -985,7 +985,7 @@ public class MainActivity extends BaseAppCompatActivity
             setupTabLayout();
             DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         } else {
-            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS);
+//            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_FOR_PROFILE_OR_NOTIFICATIONS);
             changeVisibilityChangeAccountLayout(View.GONE);
             mainViewPagerAdapter.notifyDataSetChanged();
             mainViewPager.destroyDrawingCache();

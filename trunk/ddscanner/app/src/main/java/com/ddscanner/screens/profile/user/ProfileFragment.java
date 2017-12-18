@@ -99,17 +99,20 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
         @Override
         public void onConnectionFailure() {
+            binding.progressBar.setVisibility(View.GONE);
             UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            binding.progressBar.setVisibility(View.GONE);
             UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
 
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            binding.progressBar.setVisibility(View.GONE);
             UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
@@ -198,7 +201,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         super.onResume();
         userResultListener.setCancelled(false);
         if (binding.getProfileFragmentViewModel() == null) {
-            binding.progressBar.setVisibility(View.VISIBLE);
+//            binding.progressBar.setVisibility(View.VISIBLE);
             binding.about.setVisibility(View.GONE);
         }
     }
@@ -287,13 +290,26 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Override
     public void onLoggedIn() {
+        if (binding != null && binding.loginView != null && binding.about != null) {
+            binding.loginView.setVisibility(View.GONE);
+            binding.swiperefresh.setEnabled(true);
+            binding.about.setVisibility(View.VISIBLE);
 
+        }
+//            binding.loginView.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoggedOut() {
-        if (binding != null) {
-            binding.setProfileFragmentViewModel(null);
+        if (binding != null && binding.loginView != null && binding.about != null) {
+            binding.swiperefresh.setEnabled(false);
+            binding.loginView.setVisibility(View.VISIBLE);
+            binding.about.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            if (binding != null) {
+                binding.setProfileFragmentViewModel(null);
+            }
+
         }
     }
 
