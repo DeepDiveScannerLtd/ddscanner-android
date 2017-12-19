@@ -27,6 +27,7 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 public class SendRequestActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private static final String ARG_PRODUCT_ID = "product_id";
+    private static final String ARG_SOURCE = "source";
 
     DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -84,11 +85,18 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     MaterialDialog materialDialog;
     boolean isForProduct = false;
     long productId;
+    RequestSource requestSource;
+    private long funDiveId;
+
+    enum RequestSource {
+        PRODUCT, NONE, FUNDIVE
+    }
 
     public static void show(Context context, String diveSpotId, int diveCenterId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
         intent.putExtra("dc_id", String.valueOf(diveCenterId));
         intent.putExtra("ds_id", diveSpotId);
+        intent.putExtra(ARG_SOURCE, RequestSource.NONE);
         EventsTracker.trackBookingRequestView();
         context.startActivity(intent);
     }
@@ -96,6 +104,14 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     public static void showForProduct(Context context, long productId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
         intent.putExtra(ARG_PRODUCT_ID, productId);
+        intent.putExtra(ARG_SOURCE, RequestSource.PRODUCT);
+        context.startActivity(intent);
+    }
+
+    public static void showForFunDive(Context context, long funDiveId) {
+        Intent intent = new Intent(context, SendRequestActivity.class);
+        intent.putExtra(ARG_PRODUCT_ID, funDiveId);
+        intent.putExtra(ARG_SOURCE, RequestSource.FUNDIVE);
         context.startActivity(intent);
     }
 
@@ -109,12 +125,18 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
         emailInputView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         messageInputView = findViewById(R.id.message_input);
         phoneInputView = findViewById(R.id.phone_input);
-        if (getIntent().getLongExtra(ARG_PRODUCT_ID, -1) != -1) {
-            isForProduct = true;
-            productId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
-        } else {
-            diveCenterId = getIntent().getStringExtra("dc_id");
-            diveSpotId = getIntent().getStringExtra("ds_id");
+        requestSource = (RequestSource) getIntent().getSerializableExtra(ARG_SOURCE);
+        switch (requestSource) {
+            case NONE:
+                diveCenterId = getIntent().getStringExtra("dc_id");
+                diveSpotId = getIntent().getStringExtra("ds_id");
+                break;
+            case FUNDIVE:
+                funDiveId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
+                break;
+            case PRODUCT:
+                productId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
+                break;
         }
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
@@ -143,12 +165,19 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
 
     private DiveCenterRequestBookingRequest centerRequestBookingRequest() {
         DiveCenterRequestBookingRequest diveCenterRequestBookingRequest = new DiveCenterRequestBookingRequest();
-        if (!isForProduct) {
-            diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
-            diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
-        } else {
-            diveCenterRequestBookingRequest.setProducId(productId);
+        switch (requestSource) {
+            case PRODUCT:
+                diveCenterRequestBookingRequest.setProducId(productId);
+                break;
+            case FUNDIVE:
+                diveCenterRequestBookingRequest.setFunDiveId(funDiveId);
+                break;
+            case NONE:
+                diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
+                diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
+                break;
         }
+
         diveCenterRequestBookingRequest.setName(nameInputView.getInputText());
         diveCenterRequestBookingRequest.setPhone(phoneInputView.getPhoneWithPlus());
         diveCenterRequestBookingRequest.setEmail(emailInputView.getInputText());

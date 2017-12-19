@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile.divecenter.courses;
+package com.ddscanner.screens.profile.divecenter.courses.certificate;
 
 
 import android.os.Bundle;
@@ -31,6 +31,8 @@ public class CertificateDetailsActivity extends BaseAppCompatActivity {
 
         }
     };
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

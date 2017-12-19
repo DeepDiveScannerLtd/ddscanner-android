@@ -1,6 +1,8 @@
 package com.ddscanner.entities;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class CourseDetails implements Serializable {
@@ -10,6 +12,7 @@ public class CourseDetails implements Serializable {
     private String description;
     private String duration;
     private String inclusions;
+    @SerializedName("itinerary")
     private String initiary;
     private Integer divesCount;
     private String price;
@@ -95,4 +98,29 @@ public class CourseDetails implements Serializable {
     public void setFee(String fee) {
         this.fee = fee;
     }
+
+    public String getDurationDivesString() {
+        String returnedString = "";
+        if (duration == null) {
+            if (divesCount == null) {
+                return returnedString;
+            }
+            returnedString = String.format("%d dives", divesCount);
+            return returnedString;
+        }
+        if (divesCount == null) {
+            return duration;
+        }
+        returnedString = String.format("%s, %d dives", duration, divesCount);
+        return returnedString;
+    }
+
+//    public Integer getResourceId() {
+//        Integer resourceId;
+//        if (certificate == null) {
+//            return null;
+//        }
+//
+//    }
+
 }

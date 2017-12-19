@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.profile.divecenter.courses.list.CourceListItemViewModel" />
+    </data>
+<com.ddscanner.ui.views.ContentBlockRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    app:cbrl_top_divider="false"
+    app:cbrl_bottom_divider="true"
+    android:padding="16dp">
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:src="@drawable/logo_padi"/>
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/logo"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:textColor="#de000000"
+            android:lineSpacingExtra="5sp"
+            android:text="@{viewModel.courseDetails.certificate.name}"
+            tools:text="Advanced Open Water Diver"
+            />
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#a3a3a3"
+            android:letterSpacing="0.01"
+            android:text="@{viewModel.courseDetails.durationDivesString}"
+            tools:text="3 days"
+            />
+        <TextView
+            android:layout_marginTop="13dp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="8dp"
+            android:background="@drawable/price_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:letterSpacing="0.02"
+            android:text="@{viewModel.courseDetails.price}"
+            tools:text="10900 B"
+            />
+    </LinearLayout>
+</com.ddscanner.ui.views.ContentBlockRelativeLayout>
+</layout>

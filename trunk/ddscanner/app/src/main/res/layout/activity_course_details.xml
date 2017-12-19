@@ -7,7 +7,7 @@
     <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.ddscanner.screens.profile.divecenter.courses.CourseDetailsActivityViewModel"/>
+            type="com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivityViewModel"/>
     </data>
 <RelativeLayout
     android:layout_width="match_parent"

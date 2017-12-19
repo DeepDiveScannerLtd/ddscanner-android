@@ -19,6 +19,7 @@ public class DailyTourDetails extends DailyTour implements Serializable{
     private String photosCount;
     @SerializedName("dive_center")
     private DiveCenterProfile diveCenterProfile;
+    @SerializedName("itinerary")
     private String initiary;
     @SerializedName("price_diver")
     private String priceDiver;

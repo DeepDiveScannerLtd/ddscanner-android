@@ -218,14 +218,20 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
 
     @Override
     public void onLoggedIn() {
-        if (notificationsViewPager != null) {
-            getUserNotifications(true);
+        if (customLoginView != null && notificationsViewPager != null) {
+            customLoginView.setVisibility(View.GONE);
+            notificationsViewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onLoggedOut() {
-
+        if (customLoginView != null && notificationsViewPager != null) {
+            customLoginView.setVisibility(View.VISIBLE);
+            notificationsViewPager.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
+        }
     }
 
     public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {

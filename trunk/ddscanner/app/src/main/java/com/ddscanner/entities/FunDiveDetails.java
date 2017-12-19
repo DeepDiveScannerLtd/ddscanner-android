@@ -16,6 +16,7 @@ public class FunDiveDetails extends FunDive implements Serializable {
     @SerializedName("whats_included")
     private String whatsIncluded;
     private String schedule;
+    @SerializedName("itinerary")
     private String initiary;
     private String requirements;
     @SerializedName("dive_center")

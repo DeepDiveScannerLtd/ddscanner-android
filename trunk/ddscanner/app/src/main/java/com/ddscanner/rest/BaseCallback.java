@@ -70,12 +70,12 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 break;
             case 401:
 
-//                try {
-//                    generalError = gson.fromJson(json, GeneralError.class);
-////                    resultListener.onError(DDScannerRestClient.ErrorType.UNAUTHORIZED_401, generalError, call.request().url().toString(), generalError.getMessage());
-//                } catch (JsonSyntaxException e) {
-////                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
-//                }
+                try {
+                    generalError = gson.fromJson(json, GeneralError.class);
+//                    resultListener.onError(DDScannerRestClient.ErrorType.UNAUTHORIZED_401, generalError, call.request().url().toString(), generalError.getMessage());
+                } catch (JsonSyntaxException e) {
+//                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                }
                 break;
             case 403:
                 try {

@@ -20,6 +20,16 @@ public class DiveCenterRequestBookingRequest {
     private String phone;
     @SerializedName("product_id")
     private long producId;
+    @SerializedName("fundive_id")
+    private long funDiveId;
+
+    public long getFunDiveId() {
+        return funDiveId;
+    }
+
+    public void setFunDiveId(long funDiveId) {
+        this.funDiveId = funDiveId;
+    }
 
     public long getProducId() {
         return producId;

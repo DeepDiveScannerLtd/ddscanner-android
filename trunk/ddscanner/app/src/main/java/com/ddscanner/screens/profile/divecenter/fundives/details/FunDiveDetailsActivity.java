@@ -110,7 +110,7 @@ public class FunDiveDetailsActivity extends BaseAppCompatActivity {
     }
 
     public void bookNowClicked(View view) {
-        SendRequestActivity.showForProduct(this, binding.getViewModel().getFunDiveDetails().getId());
+        SendRequestActivity.showForFunDive(this, binding.getViewModel().getFunDiveDetails().getId());
     }
 
     public void showMoreClicked(View view) {
