@@ -15,6 +15,15 @@ public class Certificate implements Serializable {
     @SerializedName("requirments")
     private String requirements;
     private ArrayList<Certificate> requiredCertificates;
+    private int associationType;
+
+    public int getAssociationType() {
+        return associationType;
+    }
+
+    public void setAssociationType(int associationType) {
+        this.associationType = associationType;
+    }
 
     public long getId() {
         return id;

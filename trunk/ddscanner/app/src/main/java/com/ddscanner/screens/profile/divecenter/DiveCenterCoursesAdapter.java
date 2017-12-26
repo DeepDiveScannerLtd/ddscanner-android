@@ -1,6 +1,8 @@
 package com.ddscanner.screens.profile.divecenter;
 
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ public class DiveCenterCoursesAdapter extends RecyclerView.Adapter<DiveCenterCou
 
     private ArrayList<CourseDetails> cources = new ArrayList<>();
     private ListItemClickListener<CourseDetails> listItemClickListener;
+    private Context context;
 
     public DiveCenterCoursesAdapter(ListItemClickListener<CourseDetails> listItemClickListener) {
         this.listItemClickListener = listItemClickListener;
@@ -36,9 +39,10 @@ public class DiveCenterCoursesAdapter extends RecyclerView.Adapter<DiveCenterCou
 
     @Override
     public void onBindViewHolder(DiveCenterCourseViewHolder holder, int position) {
-        holder.name.setText(cources.get(position).getCertificate().getName());
+        holder.name.setText(cources.get(position).getName());
         holder.duration.setText(cources.get(position).getDurationDivesString());
         holder.price.setText(cources.get(position).getPrice());
+        holder.logo.setImageDrawable(ContextCompat.getDrawable(context, cources.get(position).getResourceId()));
     }
 
     @Override
@@ -55,7 +59,7 @@ public class DiveCenterCoursesAdapter extends RecyclerView.Adapter<DiveCenterCou
 
         public DiveCenterCourseViewHolder(View itemView) {
             super(itemView);
-
+            context = itemView.getContext();
             name = itemView.findViewById(R.id.name);
             price = itemView.findViewById(R.id.price);
             logo = itemView.findViewById(R.id.logo);

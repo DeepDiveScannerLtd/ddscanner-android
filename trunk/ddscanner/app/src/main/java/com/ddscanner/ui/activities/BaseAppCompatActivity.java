@@ -89,6 +89,13 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         getSupportActionBar().setTitle(titleresId);
     }
 
+    public void setupToolbar(String title, int toolbarId) {
+        setSupportActionBar(findViewById(toolbarId));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(title);
+    }
+
     /**
      * Show default toolbar with back button with title and menu
      * @param titleresId resource id for toolbar title
@@ -101,6 +108,15 @@ public class BaseAppCompatActivity extends AppCompatActivity implements ShowPopu
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(titleresId);
+        invalidateOptionsMenu();
+    }
+
+    public void setupToolbar(String title, int toolbarId, int menuResId) {
+        this.menuResourceId = menuResId;
+        setSupportActionBar(findViewById(toolbarId));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(title);
         invalidateOptionsMenu();
     }
 

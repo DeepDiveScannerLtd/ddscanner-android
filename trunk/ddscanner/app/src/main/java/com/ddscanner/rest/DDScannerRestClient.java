@@ -10,7 +10,9 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievementTitle;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.Brand;
+import com.ddscanner.entities.Certificate;
 import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.CourseDetails;
 import com.ddscanner.entities.DailyTour;
 import com.ddscanner.entities.DailyTourDetails;
 import com.ddscanner.entities.DiveCenter;
@@ -309,6 +311,22 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getDiveCenterCourses(ResultListener<ArrayList<CourseDetails>> resultListener, long diveCenterId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterCourses(diveCenterId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<CourseDetails>>(gson ,resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<CourseDetails>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<CourseDetails>>() {}.getType();
+                ArrayList<CourseDetails> dailyTours = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(dailyTours);
+            }
+        });
+    }
+
     public void getProductDetails(ResultListener<DailyTourDetails> resultListener, long productId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
@@ -320,6 +338,36 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<DailyTourDetails> resultListener, String responseString) throws JSONException {
                 DailyTourDetails dailyTourDetails = gson.fromJson(responseString, DailyTourDetails.class);
                 resultListener.onSuccess(dailyTourDetails);
+            }
+        });
+    }
+
+    public void getCourseDetails(ResultListener<CourseDetails> resultListener, long id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCourseDeatails(id);
+        call.enqueue(new ResponseEntityCallback<CourseDetails>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<CourseDetails> resultListener, String responseString) throws JSONException {
+                CourseDetails courseDetails = gson.fromJson(responseString, CourseDetails.class);
+                resultListener.onSuccess(courseDetails);
+            }
+        });
+    }
+
+    public void getCertificate(ResultListener<Certificate> resultListener, long id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCertificateDetails(id);
+        call.enqueue(new ResponseEntityCallback<Certificate>(gson, resultListener, context) {
+            @Override
+            void handleResponseString(ResultListener<Certificate> resultListener, String responseString) throws JSONException {
+                Certificate certificate = gson.fromJson(responseString, Certificate.class);
+                resultListener.onSuccess(certificate);
             }
         });
     }

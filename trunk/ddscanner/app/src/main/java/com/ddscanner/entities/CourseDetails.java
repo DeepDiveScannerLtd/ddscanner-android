@@ -1,6 +1,7 @@
 package com.ddscanner.entities;
 
 
+import com.ddscanner.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -18,6 +19,34 @@ public class CourseDetails implements Serializable {
     private String price;
     private String fee;
     private DiveCenterProfile diveCenterProfile;
+    @SerializedName("association_type")
+    private int associationType;
+    private String name;
+    private String extraPrice;
+
+    public String getExtraPrice() {
+        return extraPrice;
+    }
+
+    public void setExtraPrice(String extraPrice) {
+        this.extraPrice = extraPrice;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAssociationType() {
+        return associationType;
+    }
+
+    public void setAssociationType(int associationType) {
+        this.associationType = associationType;
+    }
 
     public DiveCenterProfile getDiveCenterProfile() {
         return diveCenterProfile;
@@ -115,12 +144,15 @@ public class CourseDetails implements Serializable {
         return returnedString;
     }
 
-//    public Integer getResourceId() {
-//        Integer resourceId;
-//        if (certificate == null) {
-//            return null;
-//        }
-//
-//    }
+    public Integer getResourceId() {
+        switch (associationType) {
+            case 1:
+                return R.drawable.logo_padi;
+            case 3:
+                return R.drawable.logo_ssi;
+
+        }
+        return null;
+    }
 
 }

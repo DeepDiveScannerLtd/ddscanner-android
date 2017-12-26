@@ -310,6 +310,10 @@
         <activity android:name=".screens.profile.divecenter.tours.list.DailyToursActivity" android:screenOrientation="portrait">
         </activity>
         <activity android:name=".screens.profile.divecenter.tours.details.TourDetailsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".screens.profile.divecenter.courses.certificate.CertificateDetailsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".screens.profile.divecenter.courses.list.CoursesListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".screens.profile.divecenter.courses.details.CourseDetailsActivity" android:screenOrientation="portrait" />
+
         <receiver android:name=".receivers.DeviceBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

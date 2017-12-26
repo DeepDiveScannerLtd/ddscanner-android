@@ -7,11 +7,11 @@ import android.widget.ImageView;
 
 import com.ddscanner.entities.CourseDetails;
 
-public class CourceListItemViewModel {
+public class CourseListItemViewModel {
 
     private CourseDetails courseDetails;
 
-    public CourceListItemViewModel(CourseDetails courseDetails) {
+    public CourseListItemViewModel(CourseDetails courseDetails) {
         this.courseDetails = courseDetails;
     }
 

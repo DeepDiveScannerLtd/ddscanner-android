@@ -1,8 +1,6 @@
 package com.ddscanner.screens.user.profile;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,22 +24,20 @@ import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLangu
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.BrandsGridListAdapter;
+import com.ddscanner.screens.profile.divecenter.DiveCenterCoursesAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterFunDivesAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileProductsAdapter;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
+import com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivity;
+import com.ddscanner.screens.profile.divecenter.courses.list.CoursesListActivity;
 import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.fundives.list.FunDivesActivity;
 import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.tours.list.DailyToursActivity;
-import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.TagsAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
-import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.EmailIntentBuilder;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.PhoneCallIntentBuilder;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -113,6 +109,13 @@ public class UserDiveCenterProfileFragment extends Fragment {
             binding.funDivesList.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.funDivesList.setNestedScrollingEnabled(false);
             binding.funDivesList.setAdapter(diveCenterFunDivesAdapter);
+        }
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCourses() != null) {
+            DiveCenterCoursesAdapter diveCenterCoursesAdapter = new DiveCenterCoursesAdapter(item -> CourseDetailsActivity.show(getContext(), item.getId()));
+            diveCenterCoursesAdapter.setCources(binding.getDiveCenterViewModel().getDiveCenterProfile().getCourses());
+            binding.coursesList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.coursesList.setNestedScrollingEnabled(false);
+            binding.coursesList.setAdapter(diveCenterCoursesAdapter);
         }
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAssociations() != null) {
             ArrayList<String> tags = new ArrayList<>();
@@ -216,6 +219,10 @@ public class UserDiveCenterProfileFragment extends Fragment {
 
     public void showAllFunDives(View view) {
         FunDivesActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
+    }
+
+    public void showAllCourses(View view) {
+        CoursesListActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
     }
 
 }

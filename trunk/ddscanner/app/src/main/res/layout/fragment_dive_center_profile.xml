@@ -417,6 +417,51 @@
                 android:orientation="vertical"
                 app:top_divider="true"
                 app:bottom_divider="true"
+                android:visibility="@{diveCenterViewModel.diveCenterProfile.courses != null ? View.VISIBLE : View.GONE}">
+                <TextView
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:textColor="#313131"
+                    android:text="@string/courses"
+                    android:layout_marginBottom="2dp"
+                    />
+                <android.support.v7.widget.RecyclerView
+                    android:paddingHorizontal="16dp"
+                    android:id="@+id/courses_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"/>
+                <ImageView
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.coursesCount > 3 ? View.VISIBLE : View.GONE}"
+                    style="@style/DividerStyleFull" />
+                <TextView
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.coursesCount > 3 ? View.VISIBLE : View.GONE}"
+                    android:paddingHorizontal="16dp"
+                    android:onClick="@{handlers::showAllCourses}"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="normal"
+                    android:textColor="#3b528b"
+                    android:letterSpacing="0.02"
+                    tools:text="Show all brands (20)"
+                    app:loadAllCoursesText="@{diveCenterViewModel}"
+                    />
+            </com.ddscanner.ui.views.ContentBlockLinearLayout>
+            <com.ddscanner.ui.views.ContentBlockLinearLayout
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:top_divider="true"
+                app:bottom_divider="true"
                 android:visibility="@{diveCenterViewModel.diveCenterProfile.brands != null ? View.VISIBLE : View.GONE}">
                 <TextView
                     android:layout_marginLeft="16dp"

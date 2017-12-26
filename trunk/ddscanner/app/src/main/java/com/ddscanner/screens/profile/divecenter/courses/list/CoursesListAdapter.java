@@ -13,12 +13,12 @@ import com.ddscanner.interfaces.ListItemClickListener;
 
 import java.util.ArrayList;
 
-public class CourcesListAdapter extends RecyclerView.Adapter<CourcesListAdapter.CourseItemViewHolder> {
+public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.CourseItemViewHolder> {
 
     private ListItemClickListener<CourseDetails> listItemClickListener;
     private ArrayList<CourseDetails> cources = new ArrayList<>();
 
-    public CourcesListAdapter(ListItemClickListener<CourseDetails> listItemClickListener) {
+    public CoursesListAdapter(ListItemClickListener<CourseDetails> listItemClickListener) {
         this.listItemClickListener = listItemClickListener;
     }
 
@@ -35,7 +35,7 @@ public class CourcesListAdapter extends RecyclerView.Adapter<CourcesListAdapter.
 
     @Override
     public void onBindViewHolder(CourseItemViewHolder holder, int position) {
-        holder.binding.setViewModel(new CourceListItemViewModel(cources.get(position)));
+        holder.binding.setViewModel(new CourseListItemViewModel(cources.get(position)));
     }
 
     @Override

@@ -115,6 +115,13 @@ public class DiveCenterProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"loadAllCoursesText"})
+    public static void setCoursesText(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            view.setText(view.getContext().getString(R.string.al_courses_pattern, viewModel.getDiveCenterProfile().getCoursesCount()));
+        }
+    }
+
     @BindingAdapter({"loadAllFunDivesText"})
     public static void setFunDivesText(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
         if (viewModel != null) {

@@ -400,4 +400,13 @@ public interface DDScannerRestService {
     @GET("v2_4/fundive.get")
     Call<ResponseBody> getFunDiveDetails(@Query("id") long id);
 
+    @GET("v2_5/user.divecenter.courses.get")
+    Call<ResponseBody> getDiveCenterCourses(@Query("id") long id);
+
+    @GET("v2_5/course.get")
+    Call<ResponseBody> getCourseDeatails(@Query("id") long id);
+
+    @GET("v2_5/certificate.get")
+    Call<ResponseBody> getCertificateDetails(@Query("id") long id);
+
 }

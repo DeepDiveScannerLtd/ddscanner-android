@@ -3,9 +3,7 @@ package com.ddscanner.screens.profile.divecenter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +37,8 @@ import com.ddscanner.screens.brands.BrandsActivity;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
+import com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivity;
+import com.ddscanner.screens.profile.divecenter.courses.list.CoursesListActivity;
 import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity;
 import com.ddscanner.screens.profile.divecenter.fundives.list.FunDivesActivity;
 import com.ddscanner.screens.profile.divecenter.tours.details.TourDetailsActivity;
@@ -158,7 +158,13 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
             binding.funDivesList.setNestedScrollingEnabled(false);
             binding.funDivesList.setAdapter(diveCenterFunDivesAdapter);
         }
-
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCourses() != null) {
+            DiveCenterCoursesAdapter diveCenterCoursesAdapter = new DiveCenterCoursesAdapter(item -> CourseDetailsActivity.show(getContext(), item.getId()));
+            diveCenterCoursesAdapter.setCources(binding.getDiveCenterViewModel().getDiveCenterProfile().getCourses());
+            binding.coursesList.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.coursesList.setNestedScrollingEnabled(false);
+            binding.coursesList.setAdapter(diveCenterCoursesAdapter);
+        }
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.aboutLayout.setVisibility(View.VISIBLE);
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
@@ -386,6 +392,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     public void showAllFunDives(View view) {
         FunDivesActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
+    }
+
+    public void showAllCourses(View view) {
+        CoursesListActivity.show(getContext(), binding.getDiveCenterViewModel().getDiveCenterProfile().getId());
     }
 
 }

@@ -38,7 +38,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_padi" />
+            android:src="@drawable/logo_padi"
+            app:loadAssociationLogo="@{viewModel.courseDetails.resourceId}"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,6 +68,7 @@
             tools:text="The Open Water Diver Referral Course 3 Dives PADI" />
 
         <TextView
+            android:visibility="@{viewModel.courseDetails.durationDivesString == null ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -75,9 +77,11 @@
             android:textColor="#a3a3a3"
             android:textSize="14sp"
             android:textStyle="normal"
-            tools:text="8 dives" />
+            tools:text="8 dives"
+            android:text="@{viewModel.courseDetails.durationDivesString}"/>
 
         <TextView
+            android:visibility="@{viewModel.courseDetails.price == null ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -90,7 +94,8 @@
             android:textColor="#212121"
             android:textSize="15sp"
             android:textStyle="bold"
-            tools:text="12500 B" />
+            tools:text="12500 B"
+            android:text="@{viewModel.courseDetails.price}"/>
     </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
     <com.ddscanner.ui.views.ContentBlockLinearLayout
@@ -99,7 +104,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         app:bottom_divider="true"
-        app:top_divider="true">
+        app:top_divider="true"
+        android:visibility="@{viewModel.courseDetails.description == null ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,6 +125,7 @@
             android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="normal"
+            android:text="@{viewModel.courseDetails.description}"
             tools:text="The PADI Tec 40 course is where you transition from recreational scuba diving to technical diving. It’s a great place to start because it’s the first subdivision of the full PADI Tec Diver course and bridges the gap between no stop diving and full technical deep decompression diving. " />
     </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
@@ -128,7 +135,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         app:bottom_divider="true"
-        app:top_divider="false">
+        app:top_divider="false"
+        android:visibility="@{viewModel.courseDetails.initiary == null ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="wrap_content"
@@ -148,6 +156,7 @@
             android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="normal"
+            android:text="@{viewModel.courseDetails.initiary}"
             tools:text="07:30 – 08:30 Hotel transfers to Chalong Pier
 08:30 – 10:00 Light breakfast onboard and boat ride to Racha Yai
 10:00 – 11:00 1st dive, snorkeling
@@ -163,7 +172,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         app:bottom_divider="true"
-        app:top_divider="false">
+        app:top_divider="false"
+        android:visibility="@{viewModel.courseDetails.inclusions == null ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="wrap_content"
@@ -183,6 +193,7 @@
             android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="normal"
+            android:text="@{viewModel.courseDetails.inclusions}"
             tools:text="- hotel transfers from Rawai, Chalong, Kata, Karon,    Patong area;
 - buffet breakfast, buffet lunch,snacks and fruits, coffee, tea, drinking water;
 - guided dives in small groups, max 4 divers/guide ratio;
@@ -194,7 +205,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         app:bottom_divider="true"
-        app:top_divider="false">
+        app:top_divider="false"
+        android:visibility="@{viewModel.courseDetails.extraPrice == null ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="wrap_content"
@@ -214,6 +226,7 @@
             android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="normal"
+            android:text="@{viewModel.courseDetails.extraPrice}"
             tools:text="Dive 1000 B
 Equipment 900 B
 Photos 2500 B" />
@@ -224,7 +237,8 @@ Photos 2500 B" />
         android:orientation="vertical"
         android:padding="16dp"
         app:bottom_divider="true"
-        app:top_divider="false">
+        app:top_divider="false"
+        android:visibility="@{viewModel.courseDetails.fee == null ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="wrap_content"
@@ -244,7 +258,8 @@ Photos 2500 B" />
             android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="normal"
-            tools:text="Low season selling -20%" />
+            tools:text="Low season selling -20%"
+            android:text="@{viewModel.courseDetails.fee}"/>
     </com.ddscanner.ui.views.ContentBlockLinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -1,9 +1,0 @@
-diff a/trunk/ddscanner/app/src/main/java/com/ddscanner/screens/profile/user/ProfileFragment.java b/trunk/ddscanner/app/src/main/java/com/ddscanner/screens/profile/user/ProfileFragment.java	(rejected hunks)
-@@ -207,7 +207,6 @@
-     }
- 
-     @Subscribe
--    public void changeLoginView(ChangeLoginViewEvent event) {
-     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-         if (SharedPreferenceHelper.getIsUserSignedIn())  {
-             if (binding != null) {

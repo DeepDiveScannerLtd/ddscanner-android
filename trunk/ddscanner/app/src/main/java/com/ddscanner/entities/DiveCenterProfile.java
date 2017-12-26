@@ -61,6 +61,25 @@ public class DiveCenterProfile implements Serializable{
     private ArrayList<FunDive> funDives;
     @SerializedName("fundives_count")
     private int funDivesCount;
+    private ArrayList<CourseDetails> courses;
+    @SerializedName("courses_count")
+    private int coursesCount;
+
+    public int getCoursesCount() {
+        return coursesCount;
+    }
+
+    public void setCoursesCount(int coursesCount) {
+        this.coursesCount = coursesCount;
+    }
+
+    public ArrayList<CourseDetails> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<CourseDetails> courses) {
+        this.courses = courses;
+    }
 
     public int getFunDivesCount() {
         return funDivesCount;
@@ -79,8 +98,8 @@ public class DiveCenterProfile implements Serializable{
     }
 
     public String getProductsCount() {
-        return "5";
-//        return productsCount;
+//        return "5";
+        return productsCount;
     }
 
     public void setProductsCount(String productsCount) {

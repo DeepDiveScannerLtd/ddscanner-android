@@ -599,6 +599,7 @@
     <string name="al_brands_pattern">SHOW ALL BRANDS (%1$s)</string>
     <string name="al_products_pattern">ALL DAILY TOURS (%1$s)</string>
     <string name="al_fun_dives_pattern">ALL FUN DIVES (%1$d)</string>
+    <string name="al_courses_pattern">ALL COURSES (%1$d)</string>
     <string name="onboarding_search">Search dive spots by location or name</string>
     <string name="onboarding_filter">Filter them by object, level and etc.</string>
     <string name="onboarding_map_list">Switch between map and list modes to check spots</string>
@@ -623,4 +624,6 @@
     <string name="what_will_be_learned">What will be learned</string>
     <string name="requirments">Requirements</string>
     <string name="required_certificates">Required certificates</string>
+    <string name="courses">Courses</string>
+    <string name="about_certiicate">ABOUT</string>
 </resources>
