@@ -56,7 +56,7 @@ public class CourseDetailsActivity extends BaseAppCompatActivity implements Dial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_course_details);
-        setupToolbar("Course details", R.id.toolbar, R.menu.menu_course_details);
+        setupToolbar(R.string.course_details, R.id.toolbar, R.menu.menu_course_details);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getCourseDetails(resultListener, getIntent().getLongExtra(ARG_ID, -1));
     }
 
@@ -72,7 +72,7 @@ public class CourseDetailsActivity extends BaseAppCompatActivity implements Dial
                 finish();
                 return true;
             case R.id.about:
-                CertificateDetailsActivity.show(this, binding.getViewModel().getCourseDetails().getCertificate().getId(), binding.getViewModel().getCourseDetails().getCertificate().getName());
+                CertificateDetailsActivity.show(this, binding.getViewModel().getCourseDetails().getCrtificateId(), binding.getViewModel().getCourseDetails().getName());
                 return true;
         }
         return super.onOptionsItemSelected(item);

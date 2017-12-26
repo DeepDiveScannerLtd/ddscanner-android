@@ -16,6 +16,7 @@ public class FunDive implements Serializable {
     private String priceFrom;
     private String diverLevelString;
 
+
     public long getId() {
         return id;
     }
@@ -25,6 +26,9 @@ public class FunDive implements Serializable {
     }
 
     public String getName() {
+        if (name == null) {
+            return "Fun dive";
+        }
         return name;
     }
 

@@ -15,10 +15,10 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/top"
         layout="@layout/view_toolbar" />
     <ScrollView
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/top"
         android:layout_above="@+id/button_book_now"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/logo_padi"
-            app:loadAssociationLogo="@{viewModel.courseDetails.resourceId}"/>
+            app:loadAssociationLogo="@{viewModel}"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
             android:textColor="#212121"
             android:textSize="18sp"
             android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.certificate.name}"
+            android:text="@{viewModel.courseDetails.name}"
             tools:text="The Open Water Diver Referral Course 3 Dives PADI" />
 
         <TextView

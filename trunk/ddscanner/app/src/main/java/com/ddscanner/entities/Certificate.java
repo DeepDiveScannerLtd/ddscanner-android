@@ -1,6 +1,7 @@
 package com.ddscanner.entities;
 
 
+import com.ddscanner.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -14,7 +15,9 @@ public class Certificate implements Serializable {
     private String whatWillBeLearned;
     @SerializedName("requirments")
     private String requirements;
+    @SerializedName("required_certificates")
     private ArrayList<Certificate> requiredCertificates;
+    @SerializedName("association_type")
     private int associationType;
 
     public int getAssociationType() {
@@ -64,4 +67,16 @@ public class Certificate implements Serializable {
     public void setRequiredCertificates(ArrayList<Certificate> requiredCertificates) {
         this.requiredCertificates = requiredCertificates;
     }
+
+    public Integer getResourceId() {
+        switch (associationType) {
+            case 1:
+                return R.drawable.logo_padi;
+            case 3:
+                return R.drawable.logo_ssi;
+
+        }
+        return null;
+    }
+
 }

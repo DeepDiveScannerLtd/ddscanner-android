@@ -74,7 +74,7 @@ public class DiveCenterFunDivesAdapter extends RecyclerView.Adapter<DiveCenterFu
         return funDives.size();
     }
 
-    class DiveCenterFunDiveItemViewHolder extends RecyclerView.ViewHolder {
+    class DiveCenterFunDiveItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView logo;
         private TextView name;
@@ -83,12 +83,18 @@ public class DiveCenterFunDivesAdapter extends RecyclerView.Adapter<DiveCenterFu
 
         public DiveCenterFunDiveItemViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             context = itemView.getContext();
             logo = itemView.findViewById(R.id.fun_dive_logo);
             name = itemView.findViewById(R.id.fun_dive_name);
             level = itemView.findViewById(R.id.diver_level);
             price = itemView.findViewById(R.id.price);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            listItemClickListener.onItemClick(funDives.get(getAdapterPosition()));
         }
     }
 

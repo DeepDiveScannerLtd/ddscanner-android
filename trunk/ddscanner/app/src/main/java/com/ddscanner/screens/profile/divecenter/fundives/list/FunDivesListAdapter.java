@@ -36,7 +36,7 @@ public class FunDivesListAdapter extends RecyclerView.Adapter<FunDivesListAdapte
 
     @Override
     public void onBindViewHolder(FunDiveListItemViewHolder holder, int position) {
-
+        holder.binding.setViewModel(new FunDiveListItemViewModel(funDives.get(position)));
     }
 
     @Override

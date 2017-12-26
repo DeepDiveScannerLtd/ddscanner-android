@@ -259,7 +259,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:textStyle="normal"
                                 android:textColor="#313131"
-                                android:text="@string/meetin_point"
+                                android:text="@string/prices"
                                 />
                             <TextView
                                 android:layout_marginTop="4dp"
@@ -288,7 +288,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:textStyle="normal"
                                 android:textColor="#313131"
-                                android:text="@string/meetin_point"
+                                android:text="@string/optional"
                                 />
                             <TextView
                                 android:layout_marginTop="4dp"

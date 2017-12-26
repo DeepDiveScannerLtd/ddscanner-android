@@ -15,14 +15,26 @@ public class CourseDetails implements Serializable {
     private String inclusions;
     @SerializedName("itinerary")
     private String initiary;
+    @SerializedName("dives_count")
     private Integer divesCount;
     private String price;
     private String fee;
+    @SerializedName("dive_center")
     private DiveCenterProfile diveCenterProfile;
     @SerializedName("association_type")
     private int associationType;
     private String name;
     private String extraPrice;
+    @SerializedName("certificate_id")
+    private int crtificateId;
+
+    public int getCrtificateId() {
+        return crtificateId;
+    }
+
+    public void setCrtificateId(int crtificateId) {
+        this.crtificateId = crtificateId;
+    }
 
     public String getExtraPrice() {
         return extraPrice;
@@ -129,10 +141,10 @@ public class CourseDetails implements Serializable {
     }
 
     public String getDurationDivesString() {
-        String returnedString = "";
+        String returnedString;
         if (duration == null) {
             if (divesCount == null) {
-                return returnedString;
+                return null;
             }
             returnedString = String.format("%d dives", divesCount);
             return returnedString;

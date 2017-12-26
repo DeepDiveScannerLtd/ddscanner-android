@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:foreground="?attr/selectableItemBackground">
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/logo"
+        tools:src="@drawable/logo_padi"/>
+    <com.ddscanner.ui.views.ContentBlockRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cbrl_bottom_divider="true"
+        app:cbrl_top_divider="false"
+        android:layout_marginLeft="16dp">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#212121"
+            android:lineSpacingExtra="44sp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            tools:text="Advanced Open Water"
+            />
+    </com.ddscanner.ui.views.ContentBlockRelativeLayout>
+</LinearLayout>

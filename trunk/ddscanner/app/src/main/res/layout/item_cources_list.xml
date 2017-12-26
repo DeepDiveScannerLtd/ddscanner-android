@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="com.ddscanner.screens.profile.divecenter.courses.list.CourseListItemViewModel" />
@@ -13,13 +14,14 @@
     android:background="@color/white"
     app:cbrl_top_divider="false"
     app:cbrl_bottom_divider="true"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:foreground="?attr/selectableItemBackground">
     <ImageView
         android:id="@+id/logo"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:src="@drawable/logo_padi"
-        app:loadAssociationLogo="@{viewModel.courseDetails.resourceId}"/>
+        app:loadAssociationLogo="@{viewModel}"/>
     <LinearLayout
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/logo"
@@ -34,10 +36,11 @@
             android:textStyle="normal"
             android:textColor="#de000000"
             android:lineSpacingExtra="5sp"
-            android:text="@{viewModel.courseDetails.certificate.name}"
+            android:text="@{viewModel.courseDetails.name}"
             tools:text="Advanced Open Water Diver"
             />
         <TextView
+            android:visibility="@{viewModel.courseDetails.durationDivesString == null ? View.GONE : View.VISIBLE}"
             android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +53,7 @@
             tools:text="3 days"
             />
         <TextView
+            android:visibility="@{viewModel.courseDetails.price == null ? View.GONE : View.VISIBLE}"
             android:layout_marginTop="13dp"
             android:paddingVertical="5dp"
             android:paddingHorizontal="8dp"

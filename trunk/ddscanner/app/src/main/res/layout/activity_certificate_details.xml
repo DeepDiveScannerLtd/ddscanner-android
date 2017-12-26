@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.ddscanner.screens.profile.divecenter.courses.certificate.CerificateDetailsActivityViewModel"/>
@@ -78,7 +79,8 @@
                     />
             </com.ddscanner.ui.views.ContentBlockLinearLayout>
                 <com.ddscanner.ui.views.ContentBlockLinearLayout
-                android:layout_width="match_parent"
+                    android:visibility="@{viewModel.certificate.requirements == null ? View.GONE : View.VISIBLE}"
+                    android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:top_divider="false"
                 app:bottom_divider="true"
@@ -102,9 +104,23 @@
                     android:textStyle="normal"
                     android:textColor="#212121"
                     android:lineSpacingExtra="10sp"
+                    app:setTextRequiredCertificatesFrom="@{viewModel.certificate.name}"
                     tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:"
                     />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+            <com.ddscanner.ui.views.ContentBlockLinearLayout
+                android:visibility="@{viewModel.certificate.requiredCertificates == null ? View.GONE : View.VISIBLE}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:top_divider="false"
+                app:bottom_divider="true"
+                android:paddingLeft="16dp">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/certificates_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

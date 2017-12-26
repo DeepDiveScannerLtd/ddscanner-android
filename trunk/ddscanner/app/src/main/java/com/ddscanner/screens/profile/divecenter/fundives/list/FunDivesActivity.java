@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FunDive;
+import com.ddscanner.entities.FunDiveDetails;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.divecenter.fundives.details.FunDiveDetailsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.rey.material.widget.ProgressView;
@@ -65,6 +68,7 @@ public class FunDivesActivity extends BaseAppCompatActivity implements DialogClo
         setContentView(R.layout.activity_divecenter_daily_tours);
         findViews();
         setupList();
+        setupToolbar("Fun dives", R.id.toolbar);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getDiveCenterFunDives(resultListener, getIntent().getLongExtra(ARG_ID, 0));
     }
 
@@ -75,10 +79,20 @@ public class FunDivesActivity extends BaseAppCompatActivity implements DialogClo
 
     private void setupList() {
         funDivesListAdapter = new FunDivesListAdapter(item -> {
-
+            FunDiveDetailsActivity.show(this, item.getId());
         });
         fundDivesList.setLayoutManager(new LinearLayoutManager(this));
         fundDivesList.setAdapter(funDivesListAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

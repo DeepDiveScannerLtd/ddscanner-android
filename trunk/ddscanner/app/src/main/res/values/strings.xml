@@ -626,4 +626,8 @@
     <string name="required_certificates">Required certificates</string>
     <string name="courses">Courses</string>
     <string name="about_certiicate">ABOUT</string>
+    <string name="course_details">Course details</string>
+    <string name="required_certificates_pattern">To enroll in the %1$s course, you must be:</string>
+    <string name="prices">Prices</string>
+    <string name="optional">Optional</string>
 </resources>

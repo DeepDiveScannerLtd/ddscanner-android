@@ -19,10 +19,10 @@ public class CourseListItemViewModel {
         return courseDetails;
     }
 
-    @BindingAdapter("{loadAssociationLogo}")
-    public static void loadAssociationPhoto(ImageView view, Integer resourceId) {
-        if (resourceId != null) {
-            view.setImageDrawable(ContextCompat.getDrawable(view.getContext(), resourceId));
+    @BindingAdapter("loadAssociationLogo")
+    public static void loadAssociationPhoto(ImageView view, CourseListItemViewModel viewModel) {
+        if (viewModel != null) {
+            view.setImageDrawable(ContextCompat.getDrawable(view.getContext(), viewModel.getCourseDetails().getResourceId()));
         }
     }
 

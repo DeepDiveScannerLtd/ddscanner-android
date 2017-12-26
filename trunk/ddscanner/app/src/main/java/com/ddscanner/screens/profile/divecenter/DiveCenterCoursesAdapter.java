@@ -50,7 +50,7 @@ public class DiveCenterCoursesAdapter extends RecyclerView.Adapter<DiveCenterCou
         return cources.size();
     }
 
-    class DiveCenterCourseViewHolder extends RecyclerView.ViewHolder {
+    class DiveCenterCourseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView name;
         private TextView price;
@@ -59,12 +59,18 @@ public class DiveCenterCoursesAdapter extends RecyclerView.Adapter<DiveCenterCou
 
         public DiveCenterCourseViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             context = itemView.getContext();
             name = itemView.findViewById(R.id.name);
             price = itemView.findViewById(R.id.price);
             logo = itemView.findViewById(R.id.logo);
             duration = itemView.findViewById(R.id.duration);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            listItemClickListener.onItemClick(cources.get(getAdapterPosition()));
         }
     }
 

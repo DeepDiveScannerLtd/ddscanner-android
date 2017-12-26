@@ -58,6 +58,7 @@ public class DiveCenterProfile implements Serializable{
     private boolean isForBooking = false;
     private String diveSpotBookingId;
     private ArrayList<DailyTour> products;
+    @SerializedName("fundives")
     private ArrayList<FunDive> funDives;
     @SerializedName("fundives_count")
     private int funDivesCount;

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
@@ -33,6 +34,7 @@ public class CertificateDetailsActivity extends BaseAppCompatActivity implements
         @Override
         public void onSuccess(Certificate result) {
             binding.setViewModel(new CerificateDetailsActivityViewModel(result));
+            setUi();
         }
 
         @Override
@@ -59,6 +61,16 @@ public class CertificateDetailsActivity extends BaseAppCompatActivity implements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_certificate_details);
         setupToolbar(getIntent().getStringExtra(ARG_NAME), R.id.toolbar);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getCertificate(resultListener, getIntent().getLongExtra(ARG_ID, -1));
+    }
+
+    private void setUi() {
+        if (binding.getViewModel().getCertificate().getRequiredCertificates() != null) {
+            RequiredCertificatesListAdapter requiredCertificatesListAdapter = new RequiredCertificatesListAdapter(item -> CertificateDetailsActivity.show(this, item.getId(), item.getName()));
+            requiredCertificatesListAdapter.setCertificates(binding.getViewModel().getCertificate().getRequiredCertificates());
+            binding.certificatesList.setLayoutManager(new LinearLayoutManager(this));
+            binding.certificatesList.setNestedScrollingEnabled(false);
+            binding.certificatesList.setAdapter(requiredCertificatesListAdapter);
+        }
     }
 
     @Override
