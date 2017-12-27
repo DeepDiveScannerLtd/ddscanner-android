@@ -116,7 +116,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getAllSealifesByLocation(@Query("lat") double lat, @Query("lng") double lng);
 
     @Multipart
-    @POST("v2_1/divespot.add")
+    @POST("v2_4/divespot.add")
     Call<ResponseBody> postAddDiveSpot(
             @Part("lat") RequestBody lat,
             @Part("lng") RequestBody lng,
