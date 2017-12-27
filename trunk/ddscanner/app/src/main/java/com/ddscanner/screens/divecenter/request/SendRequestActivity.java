@@ -82,6 +82,7 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     PhoneInputView phoneInputView;
     String diveSpotId;
     String diveCenterId;
+    long courseId;
     MaterialDialog materialDialog;
     boolean isForProduct = false;
     long productId;
@@ -89,7 +90,7 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     private long funDiveId;
 
     enum RequestSource {
-        PRODUCT, NONE, FUNDIVE
+        PRODUCT, NONE, FUNDIVE, COURSE
     }
 
     public static void show(Context context, String diveSpotId, int diveCenterId) {
@@ -109,6 +110,13 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
     }
 
     public static void showForFunDive(Context context, long funDiveId) {
+        Intent intent = new Intent(context, SendRequestActivity.class);
+        intent.putExtra(ARG_PRODUCT_ID, funDiveId);
+        intent.putExtra(ARG_SOURCE, RequestSource.FUNDIVE);
+        context.startActivity(intent);
+    }
+
+    public static void showForCourse(Context context, long funDiveId) {
         Intent intent = new Intent(context, SendRequestActivity.class);
         intent.putExtra(ARG_PRODUCT_ID, funDiveId);
         intent.putExtra(ARG_SOURCE, RequestSource.FUNDIVE);
@@ -136,6 +144,9 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
                 break;
             case PRODUCT:
                 productId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
+                break;
+            case COURSE:
+                courseId = getIntent().getLongExtra(ARG_PRODUCT_ID, -1);
                 break;
         }
         materialDialog = Helpers.getMaterialDialog(this);
@@ -175,6 +186,9 @@ public class SendRequestActivity extends BaseAppCompatActivity implements Dialog
             case NONE:
                 diveCenterRequestBookingRequest.setDiveCenterId(diveCenterId);
                 diveCenterRequestBookingRequest.setDiveSpotId(diveSpotId);
+                break;
+            case COURSE:
+                diveCenterRequestBookingRequest.setCourseId(courseId);
                 break;
         }
 

@@ -2,275 +2,306 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
-    <import type="android.view.View" />
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivityViewModel"/>
+            type="com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivityViewModel" />
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.divecenter.courses.details.CourseDetailsActivity" />
     </data>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <include
-        android:id="@+id/top"
-        layout="@layout/view_toolbar" />
-    <ScrollView
-        android:layout_below="@+id/top"
-        android:layout_above="@+id/button_book_now"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/top"
+            layout="@layout/view_toolbar" />
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true">
+            android:layout_above="@+id/button_book_now"
+            android:layout_below="@+id/top">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/logo_padi"
-            app:loadAssociationLogo="@{viewModel}"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif"
-            android:letterSpacing="0.01"
-            android:textColor="#a3a3a3"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            tools:text="By Aquacenter Thailand"
-            android:text="@{viewModel.courseDetails.diveCenterProfile.name}"/>
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/progress_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="25dp"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/CircularProgress" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_horizontal"
-            android:letterSpacing="0.01"
-            android:lineSpacingExtra="6sp"
-            android:textColor="#212121"
-            android:textSize="18sp"
-            android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.name}"
-            tools:text="The Open Water Diver Referral Course 3 Dives PADI" />
+                <LinearLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-        <TextView
-            android:visibility="@{viewModel.courseDetails.durationDivesString == null ? View.GONE : View.VISIBLE}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:letterSpacing="0.01"
-            android:textColor="#a3a3a3"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            tools:text="8 dives"
-            android:text="@{viewModel.courseDetails.durationDivesString}"/>
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        app:bottom_divider="true">
 
-        <TextView
-            android:visibility="@{viewModel.courseDetails.price == null ? View.GONE : View.VISIBLE}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/price_background"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:letterSpacing="0.02"
-            android:paddingHorizontal="11dp"
-            android:paddingVertical="5dp"
-            android:textColor="#212121"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="12500 B"
-            android:text="@{viewModel.courseDetails.price}"/>
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/logo_padi"
+                            app:loadAssociationLogo="@{viewModel}" />
 
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true"
-        app:top_divider="true"
-        android:visibility="@{viewModel.courseDetails.description == null ? View.GONE : View.VISIBLE}">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="sans-serif"
+                            android:letterSpacing="0.01"
+                            android:text="@{viewModel.courseDetails.diveCenterProfile.name}"
+                            android:textColor="#a3a3a3"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="By Aquacenter Thailand" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/description"
-            android:textColor="#313131"
-            android:textSize="15sp"
-            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:letterSpacing="0.01"
+                            android:lineSpacingExtra="6sp"
+                            android:text="@{viewModel.courseDetails.name}"
+                            android:textColor="#212121"
+                            android:textSize="18sp"
+                            android:textStyle="normal"
+                            tools:text="The Open Water Diver Referral Course 3 Dives PADI" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
-            android:lineSpacingExtra="10sp"
-            android:textColor="#212121"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.description}"
-            tools:text="The PADI Tec 40 course is where you transition from recreational scuba diving to technical diving. It’s a great place to start because it’s the first subdivision of the full PADI Tec Diver course and bridges the gap between no stop diving and full technical deep decompression diving. " />
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="sans-serif"
+                            android:letterSpacing="0.01"
+                            android:text="@{viewModel.courseDetails.durationDivesString}"
+                            android:textColor="#a3a3a3"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            android:visibility="@{viewModel.courseDetails.durationDivesString == null ? View.GONE : View.VISIBLE}"
+                            tools:text="8 dives" />
 
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true"
-        app:top_divider="false"
-        android:visibility="@{viewModel.courseDetails.initiary == null ? View.GONE : View.VISIBLE}">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/price_background"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:letterSpacing="0.02"
+                            android:paddingHorizontal="11dp"
+                            android:paddingVertical="5dp"
+                            android:text="@{viewModel.courseDetails.price}"
+                            android:textColor="#212121"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:visibility="@{viewModel.courseDetails.price == null ? View.GONE : View.VISIBLE}"
+                            tools:text="12500 B" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/initiary"
-            android:textColor="#313131"
-            android:textSize="15sp"
-            android:textStyle="normal" />
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.courseDetails.description == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
-            android:lineSpacingExtra="10sp"
-            android:textColor="#212121"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.initiary}"
-            tools:text="07:30 – 08:30 Hotel transfers to Chalong Pier
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/description"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.courseDetails.description}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="The PADI Tec 40 course is where you transition from recreational scuba diving to technical diving. It’s a great place to start because it’s the first subdivision of the full PADI Tec Diver course and bridges the gap between no stop diving and full technical deep decompression diving. " />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.courseDetails.initiary == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/initiary"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.courseDetails.initiary}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="07:30 – 08:30 Hotel transfers to Chalong Pier
 08:30 – 10:00 Light breakfast onboard and boat ride to Racha Yai
 10:00 – 11:00 1st dive, snorkeling
 11:00 – 13:00 Lunch, relaxation
 13:00 – 14:00 2nd dive, snorkeling
 14:00 – 15:30 Boat ride to Phuket
 15:30 – 16:00 Transfers back to your resorts" />
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true"
-        app:top_divider="false"
-        android:visibility="@{viewModel.courseDetails.inclusions == null ? View.GONE : View.VISIBLE}">
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.courseDetails.inclusions == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/inclusions"
-            android:textColor="#313131"
-            android:textSize="15sp"
-            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/inclusions"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
-            android:lineSpacingExtra="10sp"
-            android:textColor="#212121"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.inclusions}"
-            tools:text="- hotel transfers from Rawai, Chalong, Kata, Karon,    Patong area;
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.courseDetails.inclusions}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="- hotel transfers from Rawai, Chalong, Kata, Karon,    Patong area;
 - buffet breakfast, buffet lunch,snacks and fruits, coffee, tea, drinking water;
 - guided dives in small groups, max 4 divers/guide ratio;
 - tanks and weights and weight belts." />
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true"
-        app:top_divider="false"
-        android:visibility="@{viewModel.courseDetails.extraPrice == null ? View.GONE : View.VISIBLE}">
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/extra_price"
-            android:textColor="#313131"
-            android:textSize="15sp"
-            android:textStyle="normal" />
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.courseDetails.extraPrice == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
-            android:lineSpacingExtra="10sp"
-            android:textColor="#212121"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:text="@{viewModel.courseDetails.extraPrice}"
-            tools:text="Dive 1000 B
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/extra_price"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.courseDetails.extraPrice}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="Dive 1000 B
 Equipment 900 B
 Photos 2500 B" />
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
-    <com.ddscanner.ui.views.ContentBlockLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:bottom_divider="true"
-        app:top_divider="false"
-        android:visibility="@{viewModel.courseDetails.fee == null ? View.GONE : View.VISIBLE}">
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/fee"
-            android:textColor="#313131"
-            android:textSize="15sp"
-            android:textStyle="normal" />
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.courseDetails.fee == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
-            android:lineSpacingExtra="10sp"
-            android:textColor="#212121"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            tools:text="Low season selling -20%"
-            android:text="@{viewModel.courseDetails.fee}"/>
-    </com.ddscanner.ui.views.ContentBlockLinearLayout>
-        </LinearLayout>
-    </ScrollView>
-    <Button
-        android:layout_alignParentBottom="true"
-        android:id="@+id/button_book_now"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/contact_dive_center_background"
-        android:text="@string/book_now_btn"
-        android:visibility="visible"
-        android:textColor="@color/black_text" />
-</RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/fee"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.courseDetails.fee}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="Low season selling -20%" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button_book_now"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/contact_dive_center_background"
+            android:text="@string/book_now_btn"
+            android:textColor="@color/black_text"
+            android:visibility="gone"
+            android:onClick="@{handlers::bookNowClicked}"/>
+    </RelativeLayout>
 </layout>

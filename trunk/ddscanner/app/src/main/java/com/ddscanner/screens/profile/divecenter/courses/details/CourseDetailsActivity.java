@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -14,6 +15,7 @@ import com.ddscanner.databinding.ActivityCourseDetailsBinding;
 import com.ddscanner.entities.CourseDetails;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divecenter.request.SendRequestActivity;
 import com.ddscanner.screens.profile.divecenter.courses.certificate.CertificateDetailsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -24,6 +26,9 @@ public class CourseDetailsActivity extends BaseAppCompatActivity implements Dial
         @Override
         public void onSuccess(CourseDetails result) {
             binding.setViewModel(new CourseDetailsActivityViewModel(result));
+            binding.progressView.setVisibility(View.GONE);
+            binding.content.setVisibility(View.VISIBLE);
+            binding.buttonBookNow.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -76,6 +81,10 @@ public class CourseDetailsActivity extends BaseAppCompatActivity implements Dial
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void bookNowClicked(View view) {
+        SendRequestActivity.showForCourse(this, binding.getViewModel().getCourseDetails().getId());
     }
 
 }

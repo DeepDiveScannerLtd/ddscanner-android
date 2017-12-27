@@ -22,6 +22,16 @@ public class DiveCenterRequestBookingRequest {
     private long producId;
     @SerializedName("fundive_id")
     private long funDiveId;
+    @SerializedName("course_id")
+    private long courseId;
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
+    }
 
     public long getFunDiveId() {
         return funDiveId;

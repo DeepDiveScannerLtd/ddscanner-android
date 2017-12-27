@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -35,6 +36,8 @@ public class CertificateDetailsActivity extends BaseAppCompatActivity implements
         public void onSuccess(Certificate result) {
             binding.setViewModel(new CerificateDetailsActivityViewModel(result));
             setUi();
+            binding.progressView.setVisibility(View.GONE);
+            binding.content.setVisibility(View.VISIBLE);
         }
 
         @Override

@@ -1,127 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.ddscanner.screens.profile.divecenter.courses.certificate.CerificateDetailsActivityViewModel"/>
+            type="com.ddscanner.screens.profile.divecenter.courses.certificate.CerificateDetailsActivityViewModel" />
     </data>
-<LinearLayout android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <include layout="@layout/view_toolbar" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <com.ddscanner.ui.views.ContentBlockLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:top_divider="false"
-                app:bottom_divider="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textStyle="normal"
-                    android:textColor="#313131"
-                    android:text="@string/what_will_be_learned"
-                    />
-                <TextView
-                    android:layout_marginTop="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="normal"
-                    android:textColor="#212121"
-                    android:lineSpacingExtra="10sp"
-                    android:text="@{viewModel.certificate.whatWillBeLearned}"
-                    tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:"
-                    />
-            </com.ddscanner.ui.views.ContentBlockLinearLayout>
-            <com.ddscanner.ui.views.ContentBlockLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:top_divider="false"
-                app:bottom_divider="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textStyle="normal"
-                    android:textColor="#313131"
-                    android:text="@string/requirments"
-                    />
-                <TextView
-                    android:layout_marginTop="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="normal"
-                    android:textColor="#212121"
-                    android:lineSpacingExtra="10sp"
-                    android:text="@{viewModel.certificate.requirements}"
-                    tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:"
-                    />
-            </com.ddscanner.ui.views.ContentBlockLinearLayout>
-                <com.ddscanner.ui.views.ContentBlockLinearLayout
-                    android:visibility="@{viewModel.certificate.requirements == null ? View.GONE : View.VISIBLE}"
-                    android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:top_divider="false"
-                app:bottom_divider="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textStyle="normal"
-                    android:textColor="#313131"
-                    android:text="@string/required_certificates"
-                    />
-                <TextView
-                    android:layout_marginTop="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="normal"
-                    android:textColor="#212121"
-                    android:lineSpacingExtra="10sp"
-                    app:setTextRequiredCertificatesFrom="@{viewModel.certificate.name}"
-                    tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:"
-                    />
-                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
-            <com.ddscanner.ui.views.ContentBlockLinearLayout
-                android:visibility="@{viewModel.certificate.requiredCertificates == null ? View.GONE : View.VISIBLE}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:top_divider="false"
-                app:bottom_divider="true"
-                android:paddingLeft="16dp">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/certificates_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.ddscanner.ui.views.ContentBlockLinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/progress_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="25dp"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/CircularProgress" />
+
+                <LinearLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/what_will_be_learned"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.certificate.whatWillBeLearned}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/requirments"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:text="@{viewModel.certificate.requirements}"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="@{viewModel.certificate.requirements == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/required_certificates"
+                            android:textColor="#313131"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:lineSpacingExtra="10sp"
+                            android:textColor="#212121"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            app:setTextRequiredCertificatesFrom="@{viewModel.certificate.name}"
+                            tools:text="The Tec 40 course consists of three knowledge development sections, three practical application sessions and four training dives. You’ll learn about:" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+
+                    <com.ddscanner.ui.views.ContentBlockLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:visibility="@{viewModel.certificate.requiredCertificates == null ? View.GONE : View.VISIBLE}"
+                        app:bottom_divider="true"
+                        app:top_divider="false">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/certificates_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </com.ddscanner.ui.views.ContentBlockLinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </layout>
