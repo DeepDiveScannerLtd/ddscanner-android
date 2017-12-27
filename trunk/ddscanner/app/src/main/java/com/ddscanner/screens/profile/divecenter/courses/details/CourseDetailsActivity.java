@@ -61,6 +61,7 @@ public class CourseDetailsActivity extends BaseAppCompatActivity implements Dial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_course_details);
+        binding.setHandlers(this);
         setupToolbar(R.string.course_details, R.id.toolbar, R.menu.menu_course_details);
         DDScannerApplication.getInstance().getDdScannerRestClient(this).getCourseDetails(resultListener, getIntent().getLongExtra(ARG_ID, -1));
     }

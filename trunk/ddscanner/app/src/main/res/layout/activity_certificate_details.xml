@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="16dp"
-                        android:visibility="@{viewModel.certificate.requirements == null ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.certificate.requiredCertificates == null ? View.GONE : View.VISIBLE}"
                         app:bottom_divider="true"
                         app:top_divider="false">
 
