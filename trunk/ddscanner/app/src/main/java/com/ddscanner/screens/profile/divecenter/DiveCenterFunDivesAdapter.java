@@ -63,7 +63,7 @@ public class DiveCenterFunDivesAdapter extends RecyclerView.Adapter<DiveCenterFu
             holder.price.setText(R.string.empty_string);
         }
         if (funDive.getDiverLevelString() != null) {
-            holder.level.setText(String.format("%s dives", funDive.getDiverLevelString()));
+            holder.level.setText(funDive.getDiverLevelString());
         } else {
             holder.level.setText(R.string.empty_string);
         }
