@@ -18,7 +18,7 @@ public class DiveCenterRequestBookingRequest {
     private String message;
     @SerializedName("user_phone")
     private String phone;
-    @SerializedName("product_id")
+    @SerializedName("daily_tour_id")
     private long producId;
     @SerializedName("fundive_id")
     private long funDiveId;
