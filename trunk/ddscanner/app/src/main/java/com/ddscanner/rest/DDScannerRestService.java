@@ -370,7 +370,7 @@ public interface DDScannerRestService {
             @Part("diving_skill") RequestBody skill
     );
 
-    @POST("v2_5/divecenter.request_booking")
+    @POST("v2_7/divecenter.request_booking")
     Call<ResponseBody> postRequestBooking(@Body DiveCenterRequestBookingRequest request);
 
     @GET("v2_5/brands.get")
@@ -388,10 +388,10 @@ public interface DDScannerRestService {
     @GET("v2_5/divespot.photos.get")
     Call<ResponseBody> getOnlyDiveSpotPhotos(@Query("id") String id);
 
-    @GET("v2_5/user.divecenter.products.get")
+    @GET("v2_7/user.divecenter.daily_tours.get")
     Call<ResponseBody> getDiveCenterProducts(@Query("id") String id);
 
-    @GET("v2_5/product.get")
+    @GET("v2_7/daily_tour.get")
     Call<ResponseBody> getProductDetails(@Query("id") long id);
 
     @GET("v2_5/user.divecenter.fundives.get")
